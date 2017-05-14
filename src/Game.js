@@ -9,6 +9,7 @@ import ModelLoader from '../utils/ModelLoader';
 
 import {TweenMax, Power2, TimelineLite} from "gsap";
 import * as THREE from 'three';
+// import createTHREEViewClass from './createTHREEViewClass';
 const THREEView = Expo.createTHREEViewClass(THREE);
 
 // Setup THREE//
@@ -16,7 +17,9 @@ const {width, height} = Dimensions.get('window');
 
 import RetroText from './RetroText'
 import Hero from './Hero'
-// import Car from './Car'
+import Car from './Car'
+import Log from './Log'
+
 // import Hero from './Hero'
 
 function material(color) {
@@ -71,15 +74,29 @@ export default class App extends React.Component {
     shadowLight.position.set(-30, 40, 20);
     // shadowLight.shadowCameraVisible = true;
 
-    shadowLight.castShadow = true;
-    shadowLight.shadow.camera.left = -5;
-    shadowLight.shadow.camera.right = 5;
-    shadowLight.shadow.camera.top = 50;
-    shadowLight.shadow.camera.bottom = -50;
+    // this.camera = new THREE.PerspectiveCamera(75, 1, 1, 10000);
+    // this.camera.position.z = 1000;
 
-    shadowLight.shadow.camera.near = 1;
-    shadowLight.shadow.camera.far = 2000;
-    shadowLight.shadow.mapSize.width = shadowLight.shadow.mapSize.height = 2048 * 3;
+    // shadowLight.position.set(-1, 22.8, -2.9); // Change -1 to -.02
+
+
+    // shadowLight.shadow.camera.left = -5;
+    // shadowLight.shadow.camera.right = 5;
+    // shadowLight.shadow.camera.top = 50;
+    // shadowLight.shadow.camera.bottom = -50;
+    // shadowLight.shadow.mapSize.width = shadowLight.shadow.mapSize.height = 2048;
+
+    shadowLight.shadow = new THREE.LightShadow( new THREE.PerspectiveCamera(-width, width, height, -height, -30, 30 ) );
+    shadowLight.shadow.mapSize.width = width;
+    shadowLight.shadow.mapSize.height = height;
+    shadowLight.castShadow = true;
+
+    shadowLight.shadowCameraHelper = new THREE.CameraHelper( shadowLight.shadow.camera );
+    // this.scene.add( shadowLight.shadowCameraHelper );
+
+    // shadowLight.shadow.camera.near = 1;
+    // shadowLight.shadow.camera.far = 2000;
+    // shadowLight.shadow.mapSize.width = shadowLight.shadow.mapSize.height = 2048 * 3;
 
     this.scene.add(globalLight);
     this.scene.add(shadowLight);
@@ -113,7 +130,7 @@ export default class App extends React.Component {
   }
 
 
-  doGame = () => {
+  doGame = async () => {
 
     this.setState({score: 0, pause: false})
 
@@ -153,15 +170,15 @@ export default class App extends React.Component {
     this.lCollide = (this.heroWidth / 4 + this.logWidth / 4) + .5;
 
     // Geometry, material
-    this.heroGeo = new THREE.BoxGeometry(this.heroWidth, .69, this.heroWidth);
-    this.heroMat = material(0xffde1a);
+    // this.heroGeo = new THREE.BoxGeometry(this.heroWidth, .69, this.heroWidth);
+    // this.heroMat = material(0xffde1a);
 
     this.terrainGeo = new THREE.BoxGeometry(19, 1, 1);
     this.terrainGeo.applyMatrix(new THREE.Matrix4().makeTranslation(0, 0, -0.5));
     this.grassMat = material(0x55cc5f);
     this.grassDarkMat = material(0x3c9143);
 
-    this.waterMat = material(0x2Fe0e9);
+    this.waterMat = material(0x71d7ff);
 
     this.roadMat = material(0x777777);
 
@@ -180,69 +197,69 @@ export default class App extends React.Component {
     this.logGeo = new THREE.BoxGeometry(this.logWidth, .25, .6);
     this.logMat = material(0x7F4D48);
 
-    Car = function() {
-      this.carGeo = new THREE.BoxGeometry(this.carWidth, .5, .7);
-
-      this.accentMat = material(0x073350);
-      this.whiteMat = material(0x000000);
-      this.mesh = new THREE.Mesh(this.carGeo, this.carMat);
-
-      this.stripe = new THREE.Mesh(this.carGeo, this.accentMat);
-      this.stripe.scale.set(1.01, 1.1, 0.7);
-      this.stripe.position.x = 0;
-      this.stripe.position.z = 0;
-      this.stripe.position.y = 0;
-      // this.earL.rotation.z = -Math.PI / 12;
-      this.stripe.castShadow = true;
-      // this.mesh.add(this.stripe);
-      this.mesh.castShadow = true;
-
-      var earGeom = new THREE.CubeGeometry(0.3, 0.3, .75, 1);
-
-      this.mesh.applyMatrix(new THREE.Matrix4().makeTranslation(0, 0.5, 0));
-
-      this.earL = new THREE.Mesh(earGeom, this.whiteMat);
-      this.earL.position.x = -0.5;
-      this.earL.position.z = -0.1;
-      this.earL.position.y = -0.2;
-      // this.earL.rotation.z = -Math.PI / 12;
-      this.earL.castShadow = true;
-      this.mesh.add(this.earL);
-
-      this.earR = this.earL.clone();
-      this.earR.position.x = -this.earL.position.x;
-      // this.earR.rotation.z = -this.earL.rotation.z;
-      this.earR.castShadow = true;
-      this.mesh.add(this.earR);
-
-      this.cabin = new THREE.Mesh(this.earGeom, this.carMat);
-      this.cabin.scale.set(2.5, 1, 0.7);
-      this.cabin.position.x = 0.2;
-      this.cabin.position.z = -0.1;
-      this.cabin.position.y = 0.5;
-      // this.earL.rotation.z = -Math.PI / 12;
-      this.cabin.castShadow = true;
-      this.mesh.add(this.cabin);
-
-      this.window = new THREE.Mesh(earGeom, this.whiteMat);
-      this.window.scale.set(0.5, 0.9, 1.1);
-      this.window.position.x = 0.;
-      this.window.position.z = -0;
-      this.window.position.y = 0;
-      // this.earL.rotation.z = -Math.PI / 12;
-      this.window.castShadow = true;
-      // this.cabin.add(this.window);
-
-      this.windshield = new THREE.Mesh(earGeom, this.whiteMat);
-      this.windshield.scale.set(1.01, 0.9, 0.7);
-      this.windshield.position.x = 0.;
-      this.windshield.position.z = -0;
-      this.windshield.position.y = 0;
-      // this.earL.rotation.z = -Math.PI / 12;
-      this.windshield.castShadow = true;
-      // this.cabin.add(this.windshield);
-
-    }
+    // Car = function() {
+    //   this.carGeo = new THREE.BoxGeometry(this.carWidth, .5, .7);
+    //
+    //   this.accentMat = material(0x073350);
+    //   this.whiteMat = material(0x000000);
+    //   this.mesh = new THREE.Mesh(this.carGeo, this.carMat);
+    //
+    //   this.stripe = new THREE.Mesh(this.carGeo, this.accentMat);
+    //   this.stripe.scale.set(1.01, 1.1, 0.7);
+    //   this.stripe.position.x = 0;
+    //   this.stripe.position.z = 0;
+    //   this.stripe.position.y = 0;
+    //   // this.earL.rotation.z = -Math.PI / 12;
+    //   this.stripe.castShadow = true;
+    //   // this.mesh.add(this.stripe);
+    //   this.mesh.castShadow = true;
+    //
+    //   var earGeom = new THREE.CubeGeometry(0.3, 0.3, .75, 1);
+    //
+    //   this.mesh.applyMatrix(new THREE.Matrix4().makeTranslation(0, 0.5, 0));
+    //
+    //   this.earL = new THREE.Mesh(earGeom, this.whiteMat);
+    //   this.earL.position.x = -0.5;
+    //   this.earL.position.z = -0.1;
+    //   this.earL.position.y = -0.2;
+    //   // this.earL.rotation.z = -Math.PI / 12;
+    //   this.earL.castShadow = true;
+    //   this.mesh.add(this.earL);
+    //
+    //   this.earR = this.earL.clone();
+    //   this.earR.position.x = -this.earL.position.x;
+    //   // this.earR.rotation.z = -this.earL.rotation.z;
+    //   this.earR.castShadow = true;
+    //   this.mesh.add(this.earR);
+    //
+    //   this.cabin = new THREE.Mesh(this.earGeom, this.carMat);
+    //   this.cabin.scale.set(2.5, 1, 0.7);
+    //   this.cabin.position.x = 0.2;
+    //   this.cabin.position.z = -0.1;
+    //   this.cabin.position.y = 0.5;
+    //   // this.earL.rotation.z = -Math.PI / 12;
+    //   this.cabin.castShadow = true;
+    //   this.mesh.add(this.cabin);
+    //
+    //   this.window = new THREE.Mesh(earGeom, this.whiteMat);
+    //   this.window.scale.set(0.5, 0.9, 1.1);
+    //   this.window.position.x = 0.;
+    //   this.window.position.z = -0;
+    //   this.window.position.y = 0;
+    //   // this.earL.rotation.z = -Math.PI / 12;
+    //   this.window.castShadow = true;
+    //   // this.cabin.add(this.window);
+    //
+    //   this.windshield = new THREE.Mesh(earGeom, this.whiteMat);
+    //   this.windshield.scale.set(1.01, 0.9, 0.7);
+    //   this.windshield.position.x = 0.;
+    //   this.windshield.position.z = -0;
+    //   this.windshield.position.y = 0;
+    //   // this.earL.rotation.z = -Math.PI / 12;
+    //   this.windshield.castShadow = true;
+    //   // this.cabin.add(this.windshield);
+    //
+    // }
 
     Tree = function() {
       this.treeGeo = new THREE.CubeGeometry(.6, 1, .6, 1);
@@ -332,47 +349,23 @@ export default class App extends React.Component {
 
         // Mesh
         this.hero = new THREE.Object3D();
-        this.hero.receiveShadow = true;
-        this.hero.castShadow = true;
+        // this.hero.receiveShadow = true;
+        // this.hero.castShadow = true;
         // this.hero.position.y = .25;
         this.scene.add(this.hero);
 
 
 
-    ( async () => {
 
-      const loader = new THREE.OBJLoader();
-this.model = await new Promise((resolve, reject) =>
-  loader.load(
-    Expo.Asset.fromModule(require('../assets/model.obj')).uri,
-    resolve,
-    () => {},
-    reject
-  )
-);
-const textureAsset = Expo.Asset.fromModule(
-  require('../assets/UV_Grid_Sm.png')
-);
-await textureAsset.downloadAsync();
-const texture = THREEView.textureFromAsset(textureAsset);
-texture.magFilter = THREE.LinearFilter;
-texture.minFilter = THREE.LinearFilter;
-this.model.traverse(child => {
-  if (child instanceof THREE.Mesh) {
-    // child.material.color = 0x00ff00;
-    child.material.map = texture;
-  }
-});
-// this.model.position.y -= 95;
-// this.scene.add(this.model);
-const s = 0.05;
-this.model.scale.set(s, s, s);
-this.model.position.y = -0.25
-this.hero.add(this.model);
-this.setState({ ready: true });
+    const _hero = new Hero();
+    const _heroMesh = await _hero.setup();
+    const s = 0.05;
+    _heroMesh.scale.set(s, s, s);
+    _heroMesh.position.y = -0.25
+    this.hero.add(_heroMesh);
 
 
-    })()
+
 
 
 
@@ -398,8 +391,13 @@ this.setState({ ready: true });
     this.road[0].receiveShadow = true;
 
     this.trees[0] = new Tree().mesh;
-    this.cars[0] = new Car().mesh;
-    this.logs[0] = new THREE.Mesh(this.logGeo, this.logMat);
+    this.trees[0].traverse( function( node ) { if ( node instanceof THREE.Mesh ) { node.castShadow = true; } } );
+
+    let _car = new Car();
+    this.cars[0] = await _car.setup();
+
+    let _log = new Log();
+    this.logs[0] = await _log.setup();
 
     // Mesh orientation
     this.leftShade.rotation.x = 270 * Math.PI / 180;
@@ -427,6 +425,8 @@ this.setState({ ready: true });
 
     this.trees[0].position.set(0, .5, -30);
     this.cars[0].position.set(0, .25, -30);
+    this.cars[0].rotation.set(0, 0,0);
+
     this.logs[0].position.set(0, 0, -30);
 
     // Assign mesh to corresponding array
@@ -515,6 +515,9 @@ this.setState({ ready: true });
     for (i = 1; i < 15; i++) {
       this.newRow();
     }
+
+    this.setState({ ready: true });
+
   }
 
   // Scene generators
@@ -1091,6 +1094,8 @@ this.setState({ ready: true });
                   this.onSwipeBegin(swipeDirections.SWIPE_UP, {});
                 }}>
               <THREEView
+                shadowMapEnabled={true}
+                shadowMapRenderSingleSided={false}
                 style={{ flex: 1, backgroundColor: 'red' }}
                 scene={this.scene}
                 camera={this.camera}

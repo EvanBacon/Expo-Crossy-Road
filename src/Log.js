@@ -15,23 +15,25 @@ import * as THREE from 'three';
 // let redMat = material(0xff0000);
 // let greenMat = material(0x00ff00);
 
-export default class Car {
+
+export default class Log {
   constructor() {
     this.model = new THREE.Object3D();
   }
-  setup = async () => {
 
+  setup = async () => {
     try {
-      const model = await ModelLoader("police_car");
+      const model = await ModelLoader("log");
       model.receiveShadow = true;
       model.castShadow = true;
-      model.rotation.y = Math.PI / 2;
+      model.position.y -= 0.4;
       model.traverse( function( node ) { if ( node instanceof THREE.Mesh ) { node.castShadow = true; } } );
+
+      // model.rotation.y = Math.PI / 2;
       this.model.add(model);
       return this.model;
     } catch (error) {
       console.error(error);
     }
-
   }
 }
