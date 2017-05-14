@@ -1,0 +1,4 @@
+node_modules/**/*
+.expo/*
+.babelrc
+npm-debug.*
