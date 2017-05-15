@@ -489,15 +489,29 @@ export default class App extends React.Component {
   }
 
   treeGen = (isFull = false) => {
+    // 0 - 8
     for (x = -3; x < 12; x++) {
-      if ((x !== 4 && Math.random() > .6) || isFull) {
-        if (this.treeCount < 54) {
-          this.treeCount++;
-        } else {
-          this.treeCount = 0;
-        }
-        this.trees[this.treeCount].position.set(x - 4, .4, this.rowCount);
+      if (x == 9 || x == -1 || isFull) {
+          if (this.treeCount < 54) {
+            this.treeCount++;
+          } else {
+            this.treeCount = 0;
+          }
+          const tree = this._tree.getRandom();
+          tree.position.set(x - 4, .4, this.rowCount);
+          this.scene.add(tree);
+          // this.trees[this.treeCount].position.set(x - 4, .4, this.rowCount);
+      } else {
+        // if ((x !== 4 && Math.random() > .6) || isFull) {
+        //   if (this.treeCount < 54) {
+        //     this.treeCount++;
+        //   } else {
+        //     this.treeCount = 0;
+        //   }
+        //   this.trees[this.treeCount].position.set(x - 4, .4, this.rowCount);
+        // }
       }
+
     }
   }
 
@@ -523,6 +537,9 @@ export default class App extends React.Component {
 
       this.cars[this.carCount].position.set(xPos, .25, this.rowCount);
       this.carSpeed[this.carCount] = this.speed * xDir;
+
+      this.cars[this.carCount].rotation.y = (Math.PI / 2) * xDir;
+
 
       xPos -= 5 * xDir;
     }
@@ -1027,6 +1044,7 @@ export default class App extends React.Component {
                   this.onSwipeBegin(swipeDirections.SWIPE_UP, {});
                 }}>
                 <THREEView
+                  backgroundColor={0x6dceea}
                   shadowMapEnabled={true}
                   shadowMapRenderSingleSided={false}
                   style={{ flex: 1, backgroundColor: 'red' }}
@@ -1042,7 +1060,7 @@ export default class App extends React.Component {
               </View>
             )}
 
-            <RetroText style={{color: 'white', fontSize: 48, backgroundColor: 'transparent', position: 'absolute', top: 32, right: 16}}>{this.state.score}</RetroText>
+            <RetroText style={{color: 'white', fontSize: 48, backgroundColor: 'transparent', position: 'absolute', top: 32, left: 16}}>{this.state.score}</RetroText>
 
 
         </GestureRecognizer>
