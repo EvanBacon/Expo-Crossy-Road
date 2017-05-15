@@ -39,10 +39,6 @@ export default {
     model: require('./assets/models/police_car/model.obj'),
     texture: require('./assets/models/police_car/texture.png'),
   },
-  road: {
-    model: require('./assets/models/road/model.obj'),
-    texture: require('./assets/models/road/texture.png'),
-  },
   river: {
     model: require('./assets/models/river/model.obj'),
     texture: require('./assets/models/river/texture.png'),

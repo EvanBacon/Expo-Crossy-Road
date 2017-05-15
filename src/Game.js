@@ -20,7 +20,6 @@ import RetroText from './RetroText'
 import Hero from './Hero'
 import Car from './Car'
 import Log from './Log'
-import Tree from './Tree'
 // import Hero from './Hero'
 
 function material(color) {
@@ -42,12 +41,13 @@ export default class App extends React.Component {
   state = { ready: false, score: 0, pause: false };
 
   levelWidth = 19
-  levelHeight = 50 /// Crossy is infinite.
+  // levelHeight = 50 /// Crossy is infinite.
 
+  levelHeight = 19 /// Crossy is infinite.
 
   componentWillMount() {
     this.scene = new THREE.Scene();
-
+    console.log("FROG: Start settin' up the game")
     this.camera = new THREE.OrthographicCamera(-width, width, height, -height, -30, 30);
     // this.camera = new THREE.PerspectiveCamera(75, 1, 1, 10000);
     // this.camera.position.z = 1000;
@@ -57,10 +57,10 @@ export default class App extends React.Component {
     this.camera.updateProjectionMatrix();
     this.camera.lookAt(this.scene.position);
 
-    this.map = new Map({width: this.levelWidth, height: this.levelHeight});
+    // this.map = new Map({width: this.levelWidth, height: this.levelHeight});
 
     const position = new THREE.Vector3( 0, 0, 0 );
-    this.map.buildLevel({position, parentNode: this.scene});
+    // this.map.buildLevel({position, parentNode: this.scene});
 
     this.doGame();
   }
@@ -179,9 +179,6 @@ export default class App extends React.Component {
     this.cCollide = this.heroWidth / 2 + this.carWidth / 2 - .1;
     this.lCollide = (this.heroWidth / 4 + this.logWidth / 4) + .5;
 
-    // Geometry, material
-    // this.heroGeo = new THREE.BoxGeometry(this.heroWidth, .69, this.heroWidth);
-    // this.heroMat = material(0xffde1a);
 
     this.terrainGeo = new THREE.BoxGeometry(19, 1, 1);
     this.terrainGeo.applyMatrix(new THREE.Matrix4().makeTranslation(0, 0, -0.5));
@@ -358,13 +355,11 @@ export default class App extends React.Component {
 
 
         // Mesh
-        this.hero = new THREE.Object3D();
+    this.hero = new THREE.Object3D();
         // this.hero.receiveShadow = true;
         // this.hero.castShadow = true;
         // this.hero.position.y = .25;
-        this.scene.add(this.hero);
-
-
+    this.scene.add(this.hero);
 
 
     const _hero = new Hero();

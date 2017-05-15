@@ -3,18 +3,22 @@ var ndarray = require("ndarray")
 import * as THREE from 'three';
 
 import Grass from './Grass';
+import Tree from './Tree';
+import Car from './Car';
+
+
 export class Direction {
-  static const Forward = 'Forward';
-  static const Backward = 'Backward';
-  static const Left = 'Left';
-  static const Right = 'Right';
+  static Forward = 'Forward';
+  static Backward = 'Backward';
+  static Left = 'Left';
+  static Right = 'Right';
 }
 
 export class MapItem {
-  static const Obstacle = 'Obstacle';
-  static const Invalid = 'Invalid';
-  static const Grass = 'Grass';
-  static const Road = 'Road';
+  static Obstacle = 'Obstacle';
+  static Invalid = 'Invalid';
+  static Grass = 'Grass';
+  static Road = 'Road';
 }
 
 export default class Map {
@@ -49,40 +53,33 @@ export default class Map {
 
   fillLevelDataRowWithType = ({type, row}) => {
 
-    for (let column = 0; column < this.data.shape[1]; column++) {
+    for (let column = 0; column < this.data.shape[1]; column += 1) {
      var obstacleCountInRow = 0
      if (column < 5 || column > this.data.shape[1] - 6) {
        // Always obstacles at borders
-       this.data[column, row] = MapItem.Obstacle;
+       this.data.set(column, row, MapItem.Obstacle);
      } else {
-       if (type == MapItem.Grass && obstacleCountInRow < maxObstaclesPerRow) {
+       if (type == MapItem.Grass && obstacleCountInRow < this.maxObstaclesPerRow) {
          // Determine if an obstacle should be added
-         if (100 * Math.random() << 0) > 80 {
+         if (((100 * Math.random()) << 0) > 80) {
            // Add obstacle
-           this.data[column, row] = MapItem.Obstacle
+           this.data.set(column, row, MapItem.Obstacle);
            obstacleCountInRow++
          } else {
            // Add grass
-           this.data[column, row] = type
+           this.data.set(column, row, type)
          }
        } else {
-         this.data[column, row] = type
+         this.data.set(column, row, type);
        }
      }
    }
-
+console.log("FROG: Got that level data", this.data)
   }
 
-
-
-
-
-
-
-
-  const coordinatesForGridPosition = ({column, row}) => {
+  coordinatesForGridPosition = ({column, row}) => {
     // Raise an error is the column or row is out of bounds
-    if column < 0 || column > this.data.shape[1] - 1 || row < 0 || row > this.data.shape[0] - 1 {
+    if (column < 0 || column > this.data.shape[1] - 1 || row < 0 || row > this.data.shape[0] - 1) {
       fatalError("The row or column is out of bounds")
     }
 
@@ -92,13 +89,13 @@ export default class Map {
   }
 
 
-  const gridColumnAndRowAfterMoveInDirection = (direction, currentGridColumn, currentGridRow) => {
+  gridColumnAndRowAfterMoveInDirection = ({direction, currentGridColumn, currentGridRow}) => {
 
     // Calculate the new grid position after the move
     var newGridColumn = currentGridColumn
     var newGridRow = currentGridRow
 
-    switch direction {
+    switch (direction) {
     case Direction.Forward:
       newGridRow += 1
       break;
@@ -115,7 +112,7 @@ export default class Map {
     // Determine the type of data at new position
     let type = this.gameLevelDataTypeForGridPosition({column: newGridColumn, row: newGridRow})
 
-    switch type {
+    switch (type) {
     case MapItem.Invalid:
     case MapItem.Obstacle:
       // Cannot move here, so return the column and row passed.
@@ -127,36 +124,45 @@ export default class Map {
   }
 
 
-  const gameLevelDataTypeForGridPosition = ({column, row}) => {
+  gameLevelDataTypeForGridPosition = ({column, row}) => {
     // Raise an error is the column or row is out of bounds
-    if column < 0 || column > this.data.shape[1] - 1 || row < 0 || row > this.data.shape[0] - 1 {
+    if (column < 0 || column > this.data.shape[1] - 1 || row < 0 || row > this.data.shape[0] - 1) {
       return MapItem.Invalid
     }
 
     let type = this.data[column, row];
-    return type!
+    return type
   }
 
 
-  const gameLevelWidth = () => {
+  gameLevelWidth = () => {
     return this.data.shape[1] * segmentSize
   }
-  const gameLevelHeight = () => {
+  gameLevelHeight = () => {
     return this.data.shape[0] * segmentSize
   }
 
-  const buildLevel = async ({position, parentNode}) => {
+  buildLevel = async ({position, parentNode}) => {
     this._grass = new Grass();
-
+    this._tree  = new Tree();
+    this._car   = new Car();
     await Promise.all([
       this._grass.setup(),
-
+      this._tree.setup(),
+      this._car.setup(),
     ])
 
     this.setupLevelAtPosition({position, parentNode})
   }
 
-  const setupLevelAtPosition = ({position, parentNode}) => {
+  addCar = ({position, direction, parentNode}) => {
+    let car = this._car.model.clone();
+    car.position.set(position.x, position.y, position.z);
+
+    parentNode.add(car);
+  }
+
+  setupLevelAtPosition = ({position, parentNode}) => {
 
 
     let levelNode = THREE.Object3D()
@@ -188,7 +194,7 @@ export default class Map {
     // roadMaterial.locksAmbientWithDiffuse = false
 
 
-    /*
+
 
     // First, create geometry for grass and roads
     for (let row = 0; row < this.data.shape[0]; row++) {
@@ -197,60 +203,74 @@ export default class Map {
       let type = this.gameLevelDataTypeForGridPosition({column: 5, row: row})
       switch (type) {
       case MapItem.Road:
+{
 
-        // Create a road row
-        let roadGeometry = SCNPlane(width: this.gameLevelWidth(), height: segmentSize)
-        roadGeometry.widthSegmentCount = 1
-        roadGeometry.heightSegmentCount = 1
-        roadGeometry.firstMaterial = roadMaterial
+        let road = this._road.model.clone();
 
-        let roadNode = SCNNode(geometry: roadGeometry)
-        roadNode.position = this.coordinatesForGridPosition({column: Int(data.columnCount() / 2), row: row})
-        roadNode.rotation = SCNVector4(x: 1.0, y: 0.0, z: 0.0, w: -3.1415 / 2.0)
-        levelNode.addChildNode(roadNode)
+        // // Create a road row
+        // let roadGeometry = SCNPlane(width: this.gameLevelWidth(), height: segmentSize)
+        // roadGeometry.widthSegmentCount = 1
+        // roadGeometry.heightSegmentCount = 1
+        // roadGeometry.firstMaterial = roadMaterial
+        //
+        // let roadNode = SCNNode(geometry: roadGeometry)
+        const point = this.coordinatesForGridPosition({column: this.data.shape[1] / 2, row: row})
+        road.position.set(point.x,point.y,point.z);
+        // roadNode.rotation = SCNVector4(x: 1.0, y: 0.0, z: 0.0, w: -3.1415 / 2.0)
+        parentNode.add(road);
 
         // Create a spawn node at one side of the road depending on whether the row is even or odd
 
         // Determine if the car should start from the left of the right
-        let startCol = row % 2 == 0 ? 0 : data.shape[1] - 1
+        // let startCol = row % 2 == 0 ? 0 : this.data.shape[1] - 1
         let moveDirection = row % 2 == 0 ? 1.0 : -1.0
 
         // Determine the position of the node
         var position = this.coordinatesForGridPosition({column: startCol, row: row})
-        position = SCNVector3(x: position.x, y: 0.15, z: position.z)
+        position = {x: position.x, y: 0.15, z: position.z};
 
-        // Create node
-        let spawnNode = SCNNode()
-        spawnNode.position = position
+        setTimeout(_=> {
+          this.addCar({parentNode, position, direction});
+        }, 5000);
+        // // Create node
+        // let spawnNode = SCNNode()
+        // spawnNode.position = position
 
         // Create an action to make the node spawn cars
-        let spawnAction = SCNAction.runBlock({ node in
-          self.spawnDelegate!.spawnCarAtPosition(node.position)
-        })
+        // let spawnAction = SCNAction.runBlock({ node in
+        //   self.spawnDelegate!.spawnCarAtPosition(node.position)
+        // })
 
         // Will spawn a new car every 5 + (random time interval up to 5 seconds)
-        let delayAction = SCNAction.waitForDuration(5.0, withRange: 5.0)
-
-        spawnNode.runAction(SCNAction.repeatActionForever(SCNAction.sequence([delayAction, spawnAction])))
-
-        parentNode.addChildNode(spawnNode)
-
+        // let delayAction = SCNAction.waitForDuration(5.0, withRange: 5.0)
+        //
+        // spawnNode.runAction(SCNAction.repeatActionForever(SCNAction.sequence([delayAction, spawnAction])))
+        //
+        // parentNode.add(spawnNode)
+}
         break;
       default:
 
-        // Create a grass row
-        let grassGeometry = SCNPlane(width: CGFloat(gameLevelWidth()), height: CGFloat(segmentSize))
-        grassGeometry.widthSegmentCount = 1
-        grassGeometry.heightSegmentCount = 1
-        grassGeometry.firstMaterial = row % 2 == 0 ? lightGrassMaterial : darkGrassMaterial
+        const point = this.coordinatesForGridPosition({column: (this.data.shape[1] / 2), row: row});
 
-        let grassNode = SCNNode(geometry: grassGeometry)
-        grassNode.position = coordinatesForGridPosition(column: Int(data.columnCount() / 2), row: row)
-        grassNode.rotation = SCNVector4(x: 1.0, y: 0.0, z: 0.0, w: -3.1415 / 2.0)
-        levelNode.addChildNode(grassNode)
+        let grass = this._grass.models[row % 2].clone();
+        grass.position.set(point.x, 0.05, point.z);
+        parentNode.add(grass);
+
+        //
+        // // Create a grass row
+        // let grassGeometry = SCNPlane(width: CGFloat(this.gameLevelWidth()), height: CGFloat(this.segmentSize))
+        // grassGeometry.widthSegmentCount = 1
+        // grassGeometry.heightSegmentCount = 1
+        // grassGeometry.firstMaterial = row % 2 == 0 ? lightGrassMaterial : darkGrassMaterial
+        //
+        // let grassNode = SCNNode(geometry: grassGeometry)
+        // grassNode.position = this.coordinatesForGridPosition(column: Int(this.data.shape[1] / 2), row: row)
+        // // grassNode.rotation = SCNVector4(x: 1.0, y: 0.0, z: 0.0, w: -3.1415 / 2.0)
+        // levelNode.addChild(grassNode)
 
         // Create obstacles
-        for (let col = 0; col < data.shape[1]; col++) {
+        for (let col = 0; col < this.data.shape[1]; col++) {
           let subType = this.gameLevelDataTypeForGridPosition({column: col, row: row})
           if (subType == MapItem.Obstacle) {
             // Height of tree top is random
@@ -258,18 +278,22 @@ export default class Map {
             const treeTopPosition = (treeHeight / 2.0 + 0.1)
 
             // Create a tree
-            let treeTopGeomtery = SCNBox(width: 0.1, height: treeHeight, length: 0.1, chamferRadius: 0.0)
-            treeTopGeomtery.firstMaterial = treeTopMaterial
-            let treeTopNode = SCNNode(geometry: treeTopGeomtery)
-            let gridPosition = coordinatesForGridPosition(column: col, row: row)
-            treeTopNode.position = SCNVector3(x: gridPosition.x, y: treeTopPosition, z: gridPosition.z)
-            levelNode.addChildNode(treeTopNode)
+            // let treeTopGeomtery = SCNBox(width: 0.1, height: treeHeight, length: 0.1, chamferRadius: 0.0)
+            // treeTopGeomtery.firstMaterial = treeTopMaterial
+            // let treeTopNode = SCNNode(geometry: treeTopGeomtery)
+            // let gridPosition = this.coordinatesForGridPosition({column: col, row: row})
+            // treeTopNode.position.set(gridPosition.x, treeTopPosition, gridPosition.z);
+            // levelNode.addChild(treeTopNode)
 
-            let treeTrunkGeometry = SCNBox(width: 0.05, height: 0.1, length: 0.05, chamferRadius: 0.0)
-            treeTrunkGeometry.firstMaterial = treeTrunkMaterial
-            let treeTrunkNode = SCNNode(geometry: treeTrunkGeometry)
-            treeTrunkNode.position = SCNVector3(x: gridPosition.x, y: 0.05, z: gridPosition.z)
-            levelNode.addChildNode(treeTrunkNode)
+            // let treeTrunkGeometry = SCNBox(width: 0.05, height: 0.1, length: 0.05, chamferRadius: 0.0)
+            // treeTrunkGeometry.firstMaterial = treeTrunkMaterial
+            // let treeTrunkNode = SCNNode(geometry: treeTrunkGeometry);
+            // treeTrunkNode.position.set(gridPosition.x, 0.05, gridPosition.z);
+            // levelNode.addChild(treeTrunkNode);
+
+            let tree = _tree.getRandomTree().clone();
+            tree.position.set(gridPosition.x, 0.05, gridPosition.z);
+            parentNode.add(tree);
 
           }
         }
@@ -277,15 +301,15 @@ export default class Map {
       }
     }
 
-    // Combine all the geometry into one - this will reduce the number of draw calls and improve performance
-    let flatLevelNode = levelNode.flattenedClone()
-    flatLevelNode.name = "Level"
+    // // Combine all the geometry into one - this will reduce the number of draw calls and improve performance
+    // let flatLevelNode = levelNode.flattenedClone()
+    // flatLevelNode.name = "Level"
+    //
+    // // Add the flattened node
+    // // parentNode.position = position
+    // parentNode.addChild(flatLevelNode)
 
-    // Add the flattened node
-    // parentNode.position = position
-    parentNode.addChild(flatLevelNode)
 
-    */
   }
 
 

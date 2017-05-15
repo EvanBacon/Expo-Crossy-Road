@@ -17,7 +17,7 @@ export default class Grass {
 
   setup = async () => {
 
-    for (let i = 0; i < 4; i++) {
+    for (let i = 0; i < 2; i++) {
 
       try {
         const model = await ModelLoader(`grass_${i}`);

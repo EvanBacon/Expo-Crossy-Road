@@ -8,7 +8,6 @@ import * as THREE from 'three';
 export default class Tree {
   models = [];
   constructor() {
-    setup();
   }
 
   getRandomTree = () => {
@@ -17,9 +16,7 @@ export default class Tree {
   }
 
   setup = async () => {
-
     for (let i = 0; i < 4; i++) {
-
       try {
         const model = await ModelLoader(`tree_${i}`);
         model.receiveShadow = true;
@@ -31,8 +28,4 @@ export default class Tree {
       }
     }
   }
-
-
-
-
 }
