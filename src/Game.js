@@ -364,9 +364,9 @@ export default class App extends React.Component {
 
     const _hero = new Hero();
     const _heroMesh = await _hero.setup();
-    const s = 0.05;
-    _heroMesh.scale.set(s, s, s);
-    _heroMesh.position.y = -0.25
+    // const s = 0.05;
+    // _heroMesh.scale.set(s, s, s);
+    // _heroMesh.position.y = -0.25
     this.hero.add(_heroMesh);
 
 
@@ -402,7 +402,9 @@ export default class App extends React.Component {
     this.cars[0] = await _car.setup();
 
     let _log = new Log();
-    this.logs[0] = await _log.setup();
+
+    await _log.setup();
+    this.logs[0] = _log.getRandomTree();
 
     // Mesh orientation
     this.leftShade.rotation.x = 270 * Math.PI / 180;
@@ -1108,8 +1110,14 @@ export default class App extends React.Component {
               />
             </TouchableWithoutFeedback>
 
+            { this.state.pause && (
+              <View pointerEvents="none" style={{position: 'absolute', left: 0, top: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0,0,0,0.2)', justifyContent: 'center', alignItems: 'center'}}>
+                <RetroText style={{color: 'white', fontSize: 48, backgroundColor: 'transparent',  textAlign: 'center'}}>Tap To Play!</RetroText>
+                </View>
+              )}
+              
               <RetroText style={{color: 'white', fontSize: 48, backgroundColor: 'transparent', position: 'absolute', top: 32, right: 16}}>{this.state.score}</RetroText>
-            { this.state.pause && <RetroText style={{color: 'white', fontSize: 48, backgroundColor: 'transparent', position: 'absolute', top: 128, right: 16, left: 16, textAlign: 'center'}}>Tap To Play!</RetroText>}
+
 
             </GestureRecognizer>
           );
