@@ -23,7 +23,7 @@ import Log from './Log'
 import Road from './Road'
 import Grass from './Grass'
 import River from './River'
-
+import Tree from './Tree'
 // import Hero from './Hero'
 
 function material(color) {
@@ -191,13 +191,19 @@ export default class App extends React.Component {
 
     this.waterMat = material(0x71d7ff);
 
-
     this._road = new Road();
-    await this._road.setup();
     this._grass = new Grass();
-    await this._grass.setup();
-    this._river = new Grass();
-    await this._river.setup();
+    this._river = new River();
+    this._tree = new Tree();
+
+    await Promise.all([
+      this._road.setup(),
+      this._grass.setup(),
+      this._river.setup(),
+      this._tree.setup(),
+
+    ])
+
 
     this.roadMat = material(0x777777);
 
@@ -215,97 +221,6 @@ export default class App extends React.Component {
 
     this.logGeo = new THREE.BoxGeometry(this.logWidth, .25, .6);
     this.logMat = material(0x7F4D48);
-
-    // Car = function() {
-    //   this.carGeo = new THREE.BoxGeometry(this.carWidth, .5, .7);
-    //
-    //   this.accentMat = material(0x073350);
-    //   this.whiteMat = material(0x000000);
-    //   this.mesh = new THREE.Mesh(this.carGeo, this.carMat);
-    //
-    //   this.stripe = new THREE.Mesh(this.carGeo, this.accentMat);
-    //   this.stripe.scale.set(1.01, 1.1, 0.7);
-    //   this.stripe.position.x = 0;
-    //   this.stripe.position.z = 0;
-    //   this.stripe.position.y = 0;
-    //   // this.earL.rotation.z = -Math.PI / 12;
-    //   this.stripe.castShadow = true;
-    //   // this.mesh.add(this.stripe);
-    //   this.mesh.castShadow = true;
-    //
-    //   var earGeom = new THREE.CubeGeometry(0.3, 0.3, .75, 1);
-    //
-    //   this.mesh.applyMatrix(new THREE.Matrix4().makeTranslation(0, 0.5, 0));
-    //
-    //   this.earL = new THREE.Mesh(earGeom, this.whiteMat);
-    //   this.earL.position.x = -0.5;
-    //   this.earL.position.z = -0.1;
-    //   this.earL.position.y = -0.2;
-    //   // this.earL.rotation.z = -Math.PI / 12;
-    //   this.earL.castShadow = true;
-    //   this.mesh.add(this.earL);
-    //
-    //   this.earR = this.earL.clone();
-    //   this.earR.position.x = -this.earL.position.x;
-    //   // this.earR.rotation.z = -this.earL.rotation.z;
-    //   this.earR.castShadow = true;
-    //   this.mesh.add(this.earR);
-    //
-    //   this.cabin = new THREE.Mesh(this.earGeom, this.carMat);
-    //   this.cabin.scale.set(2.5, 1, 0.7);
-    //   this.cabin.position.x = 0.2;
-    //   this.cabin.position.z = -0.1;
-    //   this.cabin.position.y = 0.5;
-    //   // this.earL.rotation.z = -Math.PI / 12;
-    //   this.cabin.castShadow = true;
-    //   this.mesh.add(this.cabin);
-    //
-    //   this.window = new THREE.Mesh(earGeom, this.whiteMat);
-    //   this.window.scale.set(0.5, 0.9, 1.1);
-    //   this.window.position.x = 0.;
-    //   this.window.position.z = -0;
-    //   this.window.position.y = 0;
-    //   // this.earL.rotation.z = -Math.PI / 12;
-    //   this.window.castShadow = true;
-    //   // this.cabin.add(this.window);
-    //
-    //   this.windshield = new THREE.Mesh(earGeom, this.whiteMat);
-    //   this.windshield.scale.set(1.01, 0.9, 0.7);
-    //   this.windshield.position.x = 0.;
-    //   this.windshield.position.z = -0;
-    //   this.windshield.position.y = 0;
-    //   // this.earL.rotation.z = -Math.PI / 12;
-    //   this.windshield.castShadow = true;
-    //   // this.cabin.add(this.windshield);
-    //
-    // }
-
-    Tree = function() {
-      this.treeGeo = new THREE.CubeGeometry(.6, 1, .6, 1);
-
-      this.treeMat = material(0x006400);
-
-      this.truncMat = material(0x765841);
-
-      this.mesh = new THREE.Mesh(this.treeGeo, this.truncMat);
-      this.mesh.castShadow = true;
-      this.mesh.receiveShadow = true;
-
-      this.mesh.applyMatrix(new THREE.Matrix4().makeTranslation(0, 1, 0));
-      this.mesh.scale.set(0.5, 1, 0.5);
-      this.mesh.position.y = 10;
-
-      this.trunc = new THREE.Mesh(this.treeGeo, this.treeMat);
-
-      this.trunc.scale.set(2.5, 1, 2.5);
-      this.trunc.position.x = 0;
-      this.trunc.position.z = 0;
-      this.trunc.position.y = 1;
-      // this.earL.rotation.z = -Math.PI / 12;
-      this.trunc.castShadow = true;
-      this.trunc.receiveShadow = true;
-      this.mesh.add(this.trunc);
-    }
 
     let bonusParticles;
 
@@ -375,14 +290,12 @@ export default class App extends React.Component {
 
 
     const _hero = new Hero();
-    const _heroMesh = await _hero.setup();
+    await _hero.setup();
+
     // const s = 0.05;
     // _heroMesh.scale.set(s, s, s);
     // _heroMesh.position.y = -0.25
-    this.hero.add(_heroMesh);
-
-
-
+    this.hero.add(_hero.getNode());
 
 
 
@@ -399,14 +312,13 @@ export default class App extends React.Component {
     this.grass[1].receiveShadow = true;
 
 
-    this.road[0] = this._road.getRandomRoad();
+    this.road[0] = this._road.getRandom();
 
     this.road[0].applyMatrix(new THREE.Matrix4().makeTranslation(0, 0.1, 0));
 
     this.road[0].receiveShadow = true;
 
-    this.trees[0] = new Tree().mesh;
-    this.trees[0].traverse( function( node ) { if ( node instanceof THREE.Mesh ) { node.castShadow = true; } } );
+    this.trees[0] = this._tree.getRandom();
 
     let _car = new Car();
     this.cars[0] = await _car.setup();
@@ -414,7 +326,7 @@ export default class App extends React.Component {
     let _log = new Log();
 
     await _log.setup();
-    this.logs[0] = _log.getRandomTree();
+    this.logs[0] = _log.getRandom();
     // Mesh orientation
     this.leftShade.rotation.x = 270 * Math.PI / 180;
     this.leftShade.position.set(6.65, 1, 248.47);
@@ -448,11 +360,11 @@ export default class App extends React.Component {
     // Assign mesh to corresponding array
     // and add mesh to scene
     for (i = 0; i < 15; i++) {
-      this.grass[i] = this._grass.models[i % 2].clone();
+      this.grass[i] = this._grass.getNode(`${i % 2}`);
       this.grass[i].receiveShadow = true;
 
-      this.water[i] = this._river.models['0'].clone();
-      this.road[i] = this._road.getRandomRoad().clone();
+      this.water[i] = this._river.getNode();
+      this.road[i] = this._road.getRandom();
       this.road[i].receiveShadow = true;
       this.water[i].receiveShadow = true;
 
@@ -463,18 +375,9 @@ export default class App extends React.Component {
 
     // Repeat above for terrain objects
     for (i = 0; i < 55; i++) {
-      this.trees[i] = this.trees[0].clone();
+      this.trees[i] = this._tree.getRandom();
       this.scene.add(this.trees[i]);
     }
-
-    //Build dead trees
-    // this.deadTreeGeo = new THREE.Geometry();
-    // for (x = 0; x < 5; x++) {
-    //   this.trees[0].position.set(x + 5, .4, 0);
-    //   this.deadTreeGeo.merge(this.trees[0])
-    //   this.trees[0].position.set(-(x + 5), .4, 0);
-    //   this.deadTreeGeo.merge(this.trees[0])
-    // }
 
     for (i = 0; i < 40; i++) {
       this.cars[i] = this.cars[0].clone();
@@ -510,7 +413,6 @@ export default class App extends React.Component {
       this.grass[i].position.z = -30;
       this.water[i].position.z = -30;
       this.road[i].position.z = -30;
-      // deadTrees[i].position.z = -30;
     }
     for (i = 0; i < 55; i++) {
       this.trees[i].position.z = -30;
@@ -525,7 +427,6 @@ export default class App extends React.Component {
 
     this.treeGen();
     this.grass[this.grassCount].position.z = this.rowCount;
-    // deadTrees[this.grassCount].position.z = rowCount;
     this.grassCount++;
     this.rowCount++;
     for (i = 1; i < 15; i++) {
@@ -552,7 +453,6 @@ export default class App extends React.Component {
       case 1:
       this.treeGen();
       this.grass[this.grassCount].position.z = this.rowCount;
-      // deadTrees[this.grassCount].position.z = rowCount;
       this.grassCount++;
       break;
 

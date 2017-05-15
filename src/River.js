@@ -1,35 +1,13 @@
 import Expo from 'expo'
 import React, {Component} from 'react';
-
+import GenericNode from './GenericNode';
 import ModelLoader from '../utils/ModelLoader';
-import {TweenMax, Power2, TimelineLite} from "gsap";
 import * as THREE from 'three';
 
-export default class River {
-  models = [];
-  constructor() {
-  }
-
-  getRandom = () => {
-    var keys = Object.keys(this.models)
-    return this.models[keys[ keys.length * Math.random() << 0]];
-  }
-
+export default class River extends GenericNode {
   setup = async () => {
-
-
-      try {
-        const model = await ModelLoader(`river`);
-        model.receiveShadow = true;
-        model.castShadow = true;
-        model.traverse( function( node ) { if ( node instanceof THREE.Mesh ) { node.castShadow = true; } } );
-        this.models[`${0}`] = model;
-      } catch (error) {
-        console.error(error);
-      }
+    const model = await this._download(`river`);
+    this.models[`${0}`] = model;
+    return model;
   }
-
-
-
-
 }
