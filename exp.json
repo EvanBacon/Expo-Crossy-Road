@@ -1,8 +1,8 @@
 {
-  "name": "frogger",
+  "name": "Crossy Road",
   "description": "An empty new project",
-  "slug": "frogger",
-  "privacy": "public",
+  "slug": "crossy-road",
+  "privacy": "unlisted",
   "sdkVersion": "16.0.0",
   "version": "1.0.0",
   "orientation": "portrait",

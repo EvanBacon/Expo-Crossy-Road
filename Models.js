@@ -109,6 +109,10 @@ export default {
     texture: require('./assets/models/taxi/texture.png'),
   },
 
+  railroad: {
+    model: require('./assets/models/railroad/model.obj'),
+    texture: require('./assets/models/railroad/texture.png'),
+  },
 
   boulder_0: {
     model: require('./assets/models/boulder_0/model.obj'),

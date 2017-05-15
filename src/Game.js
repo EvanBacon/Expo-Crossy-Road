@@ -26,6 +26,9 @@ import Road from './Road'
 import Grass from './Grass'
 import River from './River'
 import Tree from './Tree'
+import Train from './Train'
+import RailRoad from './RailRoad'
+
 // import Hero from './Hero'
 
 function material(color) {
@@ -197,6 +200,8 @@ export default class App extends React.Component {
     this._river = new River();
     this._tree = new Tree();
     this._car = new Car();
+    this._railroad = new RailRoad();
+    this._train = new Train();
 
     await Promise.all([
       this._road.setup(),
@@ -204,6 +209,8 @@ export default class App extends React.Component {
       this._river.setup(),
       this._tree.setup(),
       this._car.setup(),
+      this._railroad.setup(),
+      this._train.setup()
     ])
 
 
@@ -315,13 +322,7 @@ export default class App extends React.Component {
 
 
     this.road[0] = this._road.getRandom();
-
-    // this.road[0].applyMatrix(new THREE.Matrix4().makeTranslation(0, 0.1, 0));
-
-    // this.road[0].receiveShadow = true;
-
     this.trees[0] = this._tree.getRandom();
-
     this.cars[0] = this._car.getRandom();
 
     let _log = new Log();
@@ -428,7 +429,7 @@ export default class App extends React.Component {
     this.grass[this.grassCount].position.z = this.rowCount;
     this.grassCount++;
     this.rowCount++;
-    for (i = 1; i < 15; i++) {
+    for (i = 1; i < 25; i++) {
       this.newRow();
     }
 
@@ -488,6 +489,15 @@ export default class App extends React.Component {
         this.water[this.waterCount].position.z = this.rowCount;
         this.waterCount++;
         break;
+        case 4:
+        // this.trainGen();
+
+        let railroad = this._railroad.getNode();
+        railroad.position.z = this.rowCount;
+        this.scene.add(railroad);
+        this.railroadCount++;
+
+        break;
       }
     }
     this.rowCount++;
@@ -506,19 +516,44 @@ export default class App extends React.Component {
           const tree = this._tree.getRandom();
           tree.position.set(x - 4, .4, this.rowCount);
           this.scene.add(tree);
+          this.trees.push(tree);
           // this.trees[this.treeCount].position.set(x - 4, .4, this.rowCount);
       } else {
-        // if ((x !== 4 && Math.random() > .6) || isFull) {
-        //   if (this.treeCount < 54) {
-        //     this.treeCount++;
-        //   } else {
-        //     this.treeCount = 0;
-        //   }
-        //   this.trees[this.treeCount].position.set(x - 4, .4, this.rowCount);
-        // }
+        if ((x !== 4 && Math.random() > .6) || isFull) {
+          if (this.treeCount < 54) {
+            this.treeCount++;
+          } else {
+            this.treeCount = 0;
+          }
+          this.trees[this.treeCount].position.set(x - 4, .4, this.rowCount);
+        }
       }
 
     }
+  }
+
+  trainGen = () => {
+    // Speeds: .01 through .08
+    // Number of cars: 1 through 3
+    this.speed = .08
+    this.numCars = Math.floor(Math.random() * (4 - 2)) + 2;
+    xDir = 1;
+
+    if (Math.random() > .5) {
+      xDir = -1;
+    }
+
+    xPos = -6 * xDir;
+
+
+    let train = this._train.withSize(this.numCars);
+    this.scene.add(train);
+    train.position.set(xPos, .25, this.rowCount);
+    // this.trainSpeed[this.carCount] = this.speed * xDir;
+
+    this.train.rotation.y = (Math.PI / 2) * xDir;
+
+    xPos -= 5 * xDir;
   }
 
   carGen = () => {
@@ -574,7 +609,7 @@ export default class App extends React.Component {
         this.logCount = 0;
       }
 
-      this.logs[this.logCount].position.set(xPos, -0.3, this.rowCount);
+      this.logs[this.logCount].position.set(xPos, -0.1, this.rowCount);
       this.logSpeed[this.logCount] = this.speed * xDir;
 
       xPos -= 5 * xDir;
@@ -650,25 +685,25 @@ export default class App extends React.Component {
                 this.currentLog = l;
                 let timing = 0.2;
                 TweenMax.to(this.logs[l].position, timing * 0.9, {
-                  y: -0.1,
+                  y: -0.3,
                 });
 
                 TweenMax.to(this.logs[l].position, timing, {
-                  y: 0,
+                  y: -0.1,
                   delay: timing
                 });
 
                 TweenMax.to(this.hero.position, timing * 0.9, {
-                  y: 0.4,
+                  y: -0.1,
                 });
 
                 TweenMax.to(this.hero.position, timing, {
-                  y: 0.5,
+                  y: 0.0,
                   delay: timing
                 });
               }
 
-              // if (!this.moving) {
+              if (!this.moving) {
 
 
               if (this.hero.position.x > this.logs[l].position.x) {
@@ -678,7 +713,7 @@ export default class App extends React.Component {
                 let target = (this.logs[l].position.x - .5);
                 this.hero.position.x += ((target - this.hero.position.x));
               }
-              // }
+              }
               if (this.hero.position.x > 5 || this.hero.position.x < -5) {
                 this.gameOver();
               }
@@ -755,6 +790,10 @@ export default class App extends React.Component {
         this.waterCollision();
         this.forwardScene();
         this.updateScore();
+
+        if (this.hero.position.z < this.camera.position.z - 8) {
+          this.gameOver();
+        }
       }
 
       updateScore = () => {
@@ -788,9 +827,9 @@ export default class App extends React.Component {
           if (!this.treeCollision("left")) {
             if (this.hero.position.x !== 4) {
 
-              // if (this.moving) {
-              //   return
-              // };
+              if (this.moving) {
+                return
+              };
               this.moving = true
 
               TweenMax.to(this.hero.position, this.timing, {
@@ -834,9 +873,9 @@ export default class App extends React.Component {
           if (!this.treeCollision("right")) {
             if (this.hero.position.x !== -4) {
 
-              // if (this.moving) {
-              //   return
-              // };
+              if (this.moving) {
+                return
+              };
               this.moving = true
 
               TweenMax.to(this.hero.position, this.timing, {
@@ -880,9 +919,9 @@ export default class App extends React.Component {
           let targetHorizontal = Math.round(this.hero.position.x);
 
           if (!this.treeCollision("up")) {
-            // if (this.moving) {
-            //   return
-            // };
+            if (this.moving) {
+              return
+            };
             this.moving = true
 
             TweenMax.to(this.hero.position, this.timing, {
@@ -925,9 +964,9 @@ export default class App extends React.Component {
           this.hero.position.x = Math.round(this.hero.position.x);
           if (!this.treeCollision("down")) {
 
-            // if (this.moving) {
-            //   return
-            // };
+            if (this.moving) {
+              return
+            };
             this.moving = true
 
             TweenMax.to(this.hero.position, this.timing, {

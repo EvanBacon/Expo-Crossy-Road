@@ -6,7 +6,7 @@ import {TweenMax, Power2, TimelineLite} from "gsap";
 const {THREE} = global;
 
 export default class GenericNode {
-  models = [];
+  models = {};
 
   constructor() {
   }
