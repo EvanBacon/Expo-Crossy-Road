@@ -64,19 +64,19 @@ export default {
     texture: require('./assets/models/train_front/texture.png'),
   },
   tree_0: {
-    model: require('./assets/models/tree_0/model.obj'),
-    texture: require('./assets/models/tree_0/texture.png'),
+    model: require('./assets/models/tree_0/tree_0.obj'),
+    texture: require('./assets/models/tree_0/tree_0.png'),
   },
   tree_1: {
-    model: require('./assets/models/tree_1/model.obj'),
-    texture: require('./assets/models/tree_1/texture.png'),
+    model: require('./assets/models/tree_1/tree_1.obj'),
+    texture: require('./assets/models/tree_1/tree_1.png'),
   },
   tree_2: {
-    model: require('./assets/models/tree_2/model.obj'),
-    texture: require('./assets/models/tree_2/texture.png'),
+    model: require('./assets/models/tree_2/tree_2.obj'),
+    texture: require('./assets/models/tree_2/tree_2.png'),
   },
   tree_3: {
-    model: require('./assets/models/tree_3/model.obj'),
-    texture: require('./assets/models/tree_3/texture.png'),
+    model: require('./assets/models/tree_3/tree_3.obj'),
+    texture: require('./assets/models/tree_3/tree_3.png'),
   },
 }

@@ -57,7 +57,7 @@ export default class App extends React.Component {
     // this.camera.position.z = 1000;
 
     this.camera.position.set(-1, 2.8, -2.9); // Change -1 to -.02
-    this.camera.zoom = 120; // for birds eye view
+    this.camera.zoom = 110; // for birds eye view
     this.camera.updateProjectionMatrix();
     this.camera.lookAt(this.scene.position);
 
@@ -160,8 +160,7 @@ export default class App extends React.Component {
     this.road = [],
     this.roadCount = 0; //
 
-    // var deadTrees = [],
-    this.deadCount = 0; //
+
     this.trees = [],
     this.treeCount = 0; //
     this.logs = [],
@@ -245,7 +244,7 @@ export default class App extends React.Component {
       var explosionSpeed = 0.5;
 
       const removeParticle = (p) => {
-          p.visible = false;
+        p.visible = false;
       }
       for (var i = 0; i < this.parts.length; i++) {
 
@@ -281,11 +280,11 @@ export default class App extends React.Component {
     this.createLights();
 
 
-        // Mesh
+    // Mesh
     this.hero = new THREE.Object3D();
-        // this.hero.receiveShadow = true;
-        // this.hero.castShadow = true;
-        // this.hero.position.y = .25;
+    // this.hero.receiveShadow = true;
+    // this.hero.castShadow = true;
+    // this.hero.position.y = .25;
     this.scene.add(this.hero);
 
 
@@ -395,18 +394,16 @@ export default class App extends React.Component {
 
   // Setup initial scene
   init = () => {
-    this.score = 0;
+    const startingRow = 8;
     this.setState({score: 0})
-    this.camera.position.z = -2.9;
-    this.hero.position.set(0, .25, 0);
-    this.hero.scale.y = 1;
+    this.camera.position.z = startingRow;
+    this.hero.position.set(0, 0, startingRow);
+    this.hero.scale.set(1,1,1);
+
     this.grassCount = 0;
     this.waterCount = 0;
     this.roadCount = 0;
-
-    this.deadCount = 0;
     this.treeCount = 0;
-    this.roadCount = 0;
     this.rowCount = 0;
 
     for (i = 0; i < 15; i++) {
@@ -449,32 +446,51 @@ export default class App extends React.Component {
       this.waterCount = 0;
     }
 
-    switch (Math.floor(Math.random() * (4 - 1)) + 1) {
-      case 1:
+    /// Special layers
+    if (this.rowCount <= 0) {
+      this.grass[this.grassCount].position.z = this.rowCount;
+      this.grassCount++;
+
+    } else if (this.rowCount > 0 && this.rowCount <= 4) {
+      this.treeGen(true);
+      this.grass[this.grassCount].position.z = this.rowCount;
+      this.grassCount++;
+    } else if (this.rowCount > 4 && this.rowCount <= 10) {
       this.treeGen();
       this.grass[this.grassCount].position.z = this.rowCount;
       this.grassCount++;
-      break;
 
-      case 2:
-      this.carGen();
-      this.road[this.roadCount].position.z = this.rowCount;
-      this.roadCount++;
-      break;
+    } else {
 
-      case 3:
-      this.logGen();
-      this.water[this.waterCount].position.z = this.rowCount;
-      this.waterCount++;
-      break;
+
+
+      switch (Math.floor(Math.random() * (4 - 1)) + 1) {
+        case 1:
+        this.treeGen();
+        this.grass[this.grassCount].position.z = this.rowCount;
+        this.grassCount++;
+        break;
+
+        case 2:
+        this.carGen();
+        this.road[this.roadCount].position.z = this.rowCount;
+        this.roadCount++;
+        break;
+
+        case 3:
+        this.logGen();
+        this.water[this.waterCount].position.z = this.rowCount;
+        this.waterCount++;
+        break;
+      }
     }
     this.rowCount++;
 
   }
 
-  treeGen = () => {
+  treeGen = (isFull = false) => {
     for (x = -3; x < 12; x++) {
-      if (x !== 4 && Math.random() > .6) {
+      if ((x !== 4 && Math.random() > .6) || isFull) {
         if (this.treeCount < 54) {
           this.treeCount++;
         } else {
@@ -632,13 +648,13 @@ export default class App extends React.Component {
               // if (!this.moving) {
 
 
-                if (this.hero.position.x > this.logs[l].position.x) {
-                  let target = (this.logs[l].position.x + .5);
-                  this.hero.position.x += ((target - this.hero.position.x)) ;
-                } else {
-                  let target = (this.logs[l].position.x - .5);
-                  this.hero.position.x += ((target - this.hero.position.x));
-                }
+              if (this.hero.position.x > this.logs[l].position.x) {
+                let target = (this.logs[l].position.x + .5);
+                this.hero.position.x += ((target - this.hero.position.x)) ;
+              } else {
+                let target = (this.logs[l].position.x - .5);
+                this.hero.position.x += ((target - this.hero.position.x));
+              }
               // }
               if (this.hero.position.x > 5 || this.hero.position.x < -5) {
                 this.gameOver();
@@ -1010,26 +1026,26 @@ export default class App extends React.Component {
               <TouchableWithoutFeedback style={{flex: 1}} onPress={_=> {
                   this.onSwipeBegin(swipeDirections.SWIPE_UP, {});
                 }}>
-              <THREEView
-                shadowMapEnabled={true}
-                shadowMapRenderSingleSided={false}
-                style={{ flex: 1, backgroundColor: 'red' }}
-                scene={this.scene}
-                camera={this.camera}
-                tick={this.tick}
-              />
-            </TouchableWithoutFeedback>
+                <THREEView
+                  shadowMapEnabled={true}
+                  shadowMapRenderSingleSided={false}
+                  style={{ flex: 1, backgroundColor: 'red' }}
+                  scene={this.scene}
+                  camera={this.camera}
+                  tick={this.tick}
+                />
+              </TouchableWithoutFeedback>
 
-            { this.state.pause && (
-              <View pointerEvents="none" style={{position: 'absolute', left: 0, top: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0,0,0,0.2)', justifyContent: 'center', alignItems: 'center'}}>
-                <RetroText style={{color: 'white', fontSize: 48, backgroundColor: 'transparent',  textAlign: 'center'}}>Tap To Play!</RetroText>
-                </View>
-              )}
+              { this.state.pause && (
+                <View pointerEvents="none" style={{position: 'absolute', left: 0, top: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0,0,0,0.2)', justifyContent: 'center', alignItems: 'center'}}>
+                  <RetroText style={{color: 'white', fontSize: 48, backgroundColor: 'transparent',  textAlign: 'center'}}>Tap To Play!</RetroText>
+              </View>
+            )}
 
-              <RetroText style={{color: 'white', fontSize: 48, backgroundColor: 'transparent', position: 'absolute', top: 32, right: 16}}>{this.state.score}</RetroText>
+            <RetroText style={{color: 'white', fontSize: 48, backgroundColor: 'transparent', position: 'absolute', top: 32, right: 16}}>{this.state.score}</RetroText>
 
 
-            </GestureRecognizer>
-          );
-        }
-      }
+        </GestureRecognizer>
+      );
+    }
+  }
