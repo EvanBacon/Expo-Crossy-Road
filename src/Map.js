@@ -1,11 +1,11 @@
 var ndarray = require("ndarray")
 
-import * as THREE from 'three';
+const {THREE} = global;
 
 import Grass from './Grass';
 import Tree from './Tree';
 import Car from './Car';
-
+import RailRoad from './RailRoad';
 
 export class Direction {
   static Forward = 'Forward';
@@ -21,6 +21,27 @@ export class MapItem {
   static Road = 'Road';
 }
 
+
+/*
+  Map Goals:
+
+    • Starting Padding: 11
+      1 Empty Layer
+      4 layers of solid obstacles
+      3 traversable layers behind spawn point
+      1 spawn point
+      1 safe layer in front of player
+
+    • River
+    • Road
+      Single Lane
+      Multi Lane
+    • RailRoad
+
+    Procedrually create world as the player moves.
+    Deallocate unused layers.
+
+*/
 export default class Map {
 
   constructor({width, height}) {
@@ -134,7 +155,6 @@ console.log("FROG: Got that level data", this.data)
     return type
   }
 
-
   gameLevelWidth = () => {
     return this.data.shape[1] * segmentSize
   }
@@ -146,10 +166,13 @@ console.log("FROG: Got that level data", this.data)
     this._grass = new Grass();
     this._tree  = new Tree();
     this._car   = new Car();
+    this._river   = new River();
+    this._railroad = new RailRoad();
     await Promise.all([
       this._grass.setup(),
       this._tree.setup(),
       this._car.setup(),
+      this._railroad.setup()
     ])
 
     this.setupLevelAtPosition({position, parentNode})

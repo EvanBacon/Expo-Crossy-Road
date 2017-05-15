@@ -2,7 +2,6 @@ import Expo from 'expo'
 import React, {Component} from 'react';
 import GenericNode from './GenericNode';
 import ModelLoader from '../utils/ModelLoader';
-import * as THREE from 'three';
 
 export default class Car extends GenericNode {
 

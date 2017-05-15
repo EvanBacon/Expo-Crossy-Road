@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import GenericNode from './GenericNode';
 import ModelLoader from '../utils/ModelLoader';
-import * as THREE from 'three';
+const {THREE} = global;
 
 export default class Train extends GenericNode {
 

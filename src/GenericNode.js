@@ -3,7 +3,7 @@ import React, {Component} from 'react';
 
 import ModelLoader from '../utils/ModelLoader';
 import {TweenMax, Power2, TimelineLite} from "gsap";
-import * as THREE from 'three';
+const {THREE} = global;
 
 export default class GenericNode {
   models = [];

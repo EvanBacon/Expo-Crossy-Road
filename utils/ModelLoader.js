@@ -20,7 +20,7 @@ export default (async name => {
   let asset = Models[name];
 
   const loader = new THREE.OBJLoader();
-  this.model = await new Promise((resolve, reject) =>
+  let model = await new Promise((resolve, reject) =>
   loader.load(
     Expo.Asset.fromModule(asset.model).uri,
     resolve,
@@ -33,7 +33,7 @@ export default (async name => {
   const texture = THREEView.textureFromAsset(textureAsset);
   texture.magFilter = THREE.LinearFilter;
   texture.minFilter = THREE.LinearFilter;
-  this.model.traverse(child => {
+  model.traverse(child => {
     if (child instanceof THREE.Mesh) {
       // child.material.color = 0x00ff00;
       child.material.map = texture;

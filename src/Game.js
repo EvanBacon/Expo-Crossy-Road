@@ -8,7 +8,9 @@ import GestureRecognizer, {swipeDirections} from 'react-native-swipe-gestures';
 import ModelLoader from '../utils/ModelLoader';
 
 import {TweenMax, Power2, TimelineLite} from "gsap";
-import * as THREE from 'three';
+
+const {THREE} = global;
+
 // import createTHREEViewClass from './createTHREEViewClass';
 const THREEView = Expo.createTHREEViewClass(THREE);
 
@@ -313,9 +315,9 @@ export default class App extends React.Component {
 
     this.road[0] = this._road.getRandom();
 
-    this.road[0].applyMatrix(new THREE.Matrix4().makeTranslation(0, 0.1, 0));
+    // this.road[0].applyMatrix(new THREE.Matrix4().makeTranslation(0, 0.1, 0));
 
-    this.road[0].receiveShadow = true;
+    // this.road[0].receiveShadow = true;
 
     this.trees[0] = this._tree.getRandom();
 
@@ -344,11 +346,11 @@ export default class App extends React.Component {
     this.grass[1].rotation.x = 270 * Math.PI / 180;
 
 
-    this.road[0].rotation.x = 270 * Math.PI / 180;
+    // this.road[0].rotation.x = 270 * Math.PI / 180;
 
     this.grass[0].position.z = -30;
 
-    this.road[0].position.z = -30;
+    // this.road[0].position.z = -30;
 
     this.trees[0].position.set(0, .5, -30);
     this.cars[0].position.set(0, .25, -30);
@@ -364,8 +366,8 @@ export default class App extends React.Component {
 
       this.water[i] = this._river.getNode();
       this.road[i] = this._road.getRandom();
-      this.road[i].receiveShadow = true;
-      this.water[i].receiveShadow = true;
+      // this.road[i].receiveShadow = true;
+      // this.water[i].receiveShadow = true;
 
       this.scene.add(this.grass[i]);
       this.scene.add(this.water[i]);
@@ -435,7 +437,7 @@ export default class App extends React.Component {
   }
 
   // Scene generators
-  newRow = () => {
+  newRow = (rowKind) => {
     if (this.grassCount == 15) {
       this.grassCount = 0;
     }
@@ -459,12 +461,8 @@ export default class App extends React.Component {
       this.treeGen();
       this.grass[this.grassCount].position.z = this.rowCount;
       this.grassCount++;
-
     } else {
-
-
-
-      switch (Math.floor(Math.random() * (4 - 1)) + 1) {
+      switch (rowKind || Math.floor(Math.random() * (4 - 1)) + 1) {
         case 1:
         this.treeGen();
         this.grass[this.grassCount].position.z = this.rowCount;
@@ -473,7 +471,15 @@ export default class App extends React.Component {
 
         case 2:
         this.carGen();
-        this.road[this.roadCount].position.z = this.rowCount;
+
+        let isMultiLane = rowKind ? true : false;
+        if (Math.floor(Math.random() * (2 - 1)) == 1) {
+          this.newRow(2);
+        }
+
+        let road = this._road.getNode(!isMultiLane ? "0" : "1");
+        road.position.z = this.rowCount;
+        this.scene.add(road);
         this.roadCount++;
         break;
 
@@ -1047,7 +1053,7 @@ export default class App extends React.Component {
                   backgroundColor={0x6dceea}
                   shadowMapEnabled={true}
                   shadowMapRenderSingleSided={false}
-                  style={{ flex: 1, backgroundColor: 'red' }}
+                  style={{ flex: 1 }}
                   scene={this.scene}
                   camera={this.camera}
                   tick={this.tick}

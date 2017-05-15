@@ -2,7 +2,7 @@ import Expo, {AppLoading} from 'expo';
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import Game from './src/Game'
-
+import ModelLoader from './utils/ModelLoader';
 function cacheFonts(fonts) {
   return fonts.map(font => Expo.Font.loadAsync(font));
 }
@@ -40,7 +40,6 @@ console.log("FROG: Start Loading fonts");
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'green',
     alignItems: 'center',
     justifyContent: 'center',
   },
