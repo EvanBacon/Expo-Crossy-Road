@@ -35,10 +35,6 @@ export default {
     model: require('./assets/models/log_3/model.obj'),
     texture: require('./assets/models/log_3/texture.png'),
   },
-  police_car: {
-    model: require('./assets/models/police_car/model.obj'),
-    texture: require('./assets/models/police_car/texture.png'),
-  },
   river: {
     model: require('./assets/models/river/river.obj'),
     texture: require('./assets/models/river/river.png'),
@@ -79,4 +75,48 @@ export default {
     model: require('./assets/models/tree_3/tree_3.obj'),
     texture: require('./assets/models/tree_3/tree_3.png'),
   },
+
+  police_car: {
+    model: require('./assets/models/police_car/model.obj'),
+    texture: require('./assets/models/police_car/texture.png'),
+  },
+  blue_car: {
+    model: require('./assets/models/blue_car/model.obj'),
+    texture: require('./assets/models/blue_car/texture.png'),
+  },
+  blue_truck: {
+    model: require('./assets/models/blue_truck/model.obj'),
+    texture: require('./assets/models/blue_truck/texture.png'),
+  },
+  green_car: {
+    model: require('./assets/models/green_car/model.obj'),
+    texture: require('./assets/models/green_car/texture.png'),
+  },
+  orange_car: {
+    model: require('./assets/models/orange_car/model.obj'),
+    texture: require('./assets/models/orange_car/texture.png'),
+  },
+  purple_car: {
+    model: require('./assets/models/purple_car/model.obj'),
+    texture: require('./assets/models/purple_car/texture.png'),
+  },
+  red_truck: {
+    model: require('./assets/models/red_truck/model.obj'),
+    texture: require('./assets/models/red_truck/texture.png'),
+  },
+  taxi: {
+    model: require('./assets/models/taxi/model.obj'),
+    texture: require('./assets/models/taxi/texture.png'),
+  },
+
+
+  boulder_0: {
+    model: require('./assets/models/boulder_0/model.obj'),
+    texture: require('./assets/models/boulder_0/texture.png'),
+  },
+  boulder_1: {
+    model: require('./assets/models/boulder_1/model.obj'),
+    texture: require('./assets/models/boulder_1/texture.png'),
+  },
+
 }

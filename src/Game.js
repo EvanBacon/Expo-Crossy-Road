@@ -196,13 +196,14 @@ export default class App extends React.Component {
     this._grass = new Grass();
     this._river = new River();
     this._tree = new Tree();
+    this._car = new Car();
 
     await Promise.all([
       this._road.setup(),
       this._grass.setup(),
       this._river.setup(),
       this._tree.setup(),
-
+      this._car.setup(),
     ])
 
 
@@ -321,8 +322,7 @@ export default class App extends React.Component {
 
     this.trees[0] = this._tree.getRandom();
 
-    let _car = new Car();
-    this.cars[0] = await _car.setup();
+    this.cars[0] = this._car.getRandom();
 
     let _log = new Log();
 
@@ -381,7 +381,7 @@ export default class App extends React.Component {
     }
 
     for (i = 0; i < 40; i++) {
-      this.cars[i] = this.cars[0].clone();
+      this.cars[i] = this._car.getRandom();
       this.scene.add(this.cars[i]);
     }
     for (i = 0; i < 40; i++) {
