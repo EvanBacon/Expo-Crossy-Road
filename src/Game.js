@@ -12,6 +12,7 @@ import * as THREE from 'three';
 // import createTHREEViewClass from './createTHREEViewClass';
 const THREEView = Expo.createTHREEViewClass(THREE);
 
+import Map from './Map';
 // Setup THREE//
 const {width, height} = Dimensions.get('window');
 
@@ -19,7 +20,7 @@ import RetroText from './RetroText'
 import Hero from './Hero'
 import Car from './Car'
 import Log from './Log'
-
+import Tree from './Tree'
 // import Hero from './Hero'
 
 function material(color) {
@@ -40,6 +41,10 @@ export default class App extends React.Component {
   sineInc = Math.PI / 50;
   state = { ready: false, score: 0, pause: false };
 
+  levelWidth = 19
+  levelHeight = 50 /// Crossy is infinite.
+
+
   componentWillMount() {
     this.scene = new THREE.Scene();
 
@@ -51,6 +56,11 @@ export default class App extends React.Component {
     this.camera.zoom = 120; // for birds eye view
     this.camera.updateProjectionMatrix();
     this.camera.lookAt(this.scene.position);
+
+    this.map = new Map({width: this.levelWidth, height: this.levelHeight});
+
+    const position = new THREE.Vector3( 0, 0, 0 );
+    this.map.buildLevel({position, parentNode: this.scene});
 
     this.doGame();
   }
