@@ -20,6 +20,10 @@ import RetroText from './RetroText'
 import Hero from './Hero'
 import Car from './Car'
 import Log from './Log'
+import Road from './Road'
+import Grass from './Grass'
+import River from './River'
+
 // import Hero from './Hero'
 
 function material(color) {
@@ -186,6 +190,14 @@ export default class App extends React.Component {
     this.grassDarkMat = material(0x3c9143);
 
     this.waterMat = material(0x71d7ff);
+
+
+    this._road = new Road();
+    await this._road.setup();
+    this._grass = new Grass();
+    await this._grass.setup();
+    this._river = new Grass();
+    await this._river.setup();
 
     this.roadMat = material(0x777777);
 
@@ -386,10 +398,8 @@ export default class App extends React.Component {
     this.grass[1] = new THREE.Mesh(this.terrainGeo, this.grassDarkMat);
     this.grass[1].receiveShadow = true;
 
-    this.water[0] = new THREE.Mesh(this.terrainGeo, this.waterMat);
-    this.water[0].receiveShadow = true;
-    this.road[0] = new THREE.Mesh(this.terrainGeo, this.roadMat);
-    this.water[0].applyMatrix(new THREE.Matrix4().makeTranslation(0, -0.1, 0));
+
+    this.road[0] = this._road.getRandomRoad();
 
     this.road[0].applyMatrix(new THREE.Matrix4().makeTranslation(0, 0.1, 0));
 
@@ -405,7 +415,6 @@ export default class App extends React.Component {
 
     await _log.setup();
     this.logs[0] = _log.getRandomTree();
-
     // Mesh orientation
     this.leftShade.rotation.x = 270 * Math.PI / 180;
     this.leftShade.position.set(6.65, 1, 248.47);
@@ -423,27 +432,27 @@ export default class App extends React.Component {
     this.grass[0].rotation.x = 270 * Math.PI / 180;
     this.grass[1].rotation.x = 270 * Math.PI / 180;
 
-    this.water[0].rotation.x = 270 * Math.PI / 180;
+
     this.road[0].rotation.x = 270 * Math.PI / 180;
 
     this.grass[0].position.z = -30;
-    this.water[0].position.z = -30;
+
     this.road[0].position.z = -30;
 
     this.trees[0].position.set(0, .5, -30);
     this.cars[0].position.set(0, .25, -30);
     this.cars[0].rotation.set(0, 0,0);
 
-    this.logs[0].position.set(0, 0, -30);
+    this.logs[0].position.set(0, -10.5, -30);
 
     // Assign mesh to corresponding array
     // and add mesh to scene
     for (i = 0; i < 15; i++) {
-      this.grass[i] = this.grass[0].clone();
+      this.grass[i] = this._grass.models[i % 2].clone();
       this.grass[i].receiveShadow = true;
 
-      this.water[i] = this.water[0].clone();
-      this.road[i] = this.road[0].clone();
+      this.water[i] = this._river.models['0'].clone();
+      this.road[i] = this._road.getRandomRoad().clone();
       this.road[i].receiveShadow = true;
       this.water[i].receiveShadow = true;
 
@@ -626,7 +635,7 @@ export default class App extends React.Component {
         this.logCount = 0;
       }
 
-      this.logs[this.logCount].position.set(xPos, 0, this.rowCount);
+      this.logs[this.logCount].position.set(xPos, -0.3, this.rowCount);
       this.logSpeed[this.logCount] = this.speed * xDir;
 
       xPos -= 5 * xDir;
@@ -720,7 +729,7 @@ export default class App extends React.Component {
                 });
               }
 
-              if (!this.moving) {
+              // if (!this.moving) {
 
 
                 if (this.hero.position.x > this.logs[l].position.x) {
@@ -730,7 +739,7 @@ export default class App extends React.Component {
                   let target = (this.logs[l].position.x - .5);
                   this.hero.position.x += ((target - this.hero.position.x));
                 }
-              }
+              // }
               if (this.hero.position.x > 5 || this.hero.position.x < -5) {
                 this.gameOver();
               }
@@ -840,9 +849,9 @@ export default class App extends React.Component {
           if (!this.treeCollision("left")) {
             if (this.hero.position.x !== 4) {
 
-              if (this.moving) {
-                return
-              };
+              // if (this.moving) {
+              //   return
+              // };
               this.moving = true
 
               TweenMax.to(this.hero.position, this.timing, {
@@ -886,9 +895,9 @@ export default class App extends React.Component {
           if (!this.treeCollision("right")) {
             if (this.hero.position.x !== -4) {
 
-              if (this.moving) {
-                return
-              };
+              // if (this.moving) {
+              //   return
+              // };
               this.moving = true
 
               TweenMax.to(this.hero.position, this.timing, {
@@ -929,15 +938,16 @@ export default class App extends React.Component {
           }
           break;
           case SWIPE_UP:
-          this.hero.position.x = Math.round(this.hero.position.x);
+          let targetHorizontal = Math.round(this.hero.position.x);
+
           if (!this.treeCollision("up")) {
-            if (this.moving) {
-              return
-            };
+            // if (this.moving) {
+            //   return
+            // };
             this.moving = true
 
             TweenMax.to(this.hero.position, this.timing, {
-              x: this.hero.position.x,
+              x: targetHorizontal,
               y: this.hero.position.y + 0.5,
               z: this.hero.position.z + 0.75,
             });
@@ -962,7 +972,7 @@ export default class App extends React.Component {
             });
 
             TweenMax.to(this.hero.position, this.timing, {
-              x: this.hero.position.x,
+              x: targetHorizontal,
               y: this.hero.position.y,
               z: this.hero.position.z + 1,
               ease: Power4.easeOut,
@@ -976,9 +986,9 @@ export default class App extends React.Component {
           this.hero.position.x = Math.round(this.hero.position.x);
           if (!this.treeCollision("down")) {
 
-            if (this.moving) {
-              return
-            };
+            // if (this.moving) {
+            //   return
+            // };
             this.moving = true
 
             TweenMax.to(this.hero.position, this.timing, {
@@ -1115,7 +1125,7 @@ export default class App extends React.Component {
                 <RetroText style={{color: 'white', fontSize: 48, backgroundColor: 'transparent',  textAlign: 'center'}}>Tap To Play!</RetroText>
                 </View>
               )}
-              
+
               <RetroText style={{color: 'white', fontSize: 48, backgroundColor: 'transparent', position: 'absolute', top: 32, right: 16}}>{this.state.score}</RetroText>
 
 

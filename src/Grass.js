@@ -10,7 +10,7 @@ export default class Grass {
   constructor() {
   }
 
-  getRandomTree = () => {
+  getRandom = () => {
     var keys = Object.keys(this.models)
     return this.models[keys[ keys.length * Math.random() << 0]];
   }

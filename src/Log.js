@@ -24,7 +24,6 @@ export default class Log {
         model.receiveShadow = true;
         model.castShadow = true;
         model.traverse( function( node ) { if ( node instanceof THREE.Mesh ) { node.castShadow = true; } } );
-        model.position.y += 0.3
         this.models[`${i}`] = model;
       } catch (error) {
         console.error(error);
