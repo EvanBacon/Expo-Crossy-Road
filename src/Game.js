@@ -45,15 +45,14 @@ function material(color) {
   });
 
 }
-let redMat = material(0xff0000);
-let greenMat = material(0x00ff00);
 
 
 export default class App extends React.Component {
-
+  maxRows = 10;
   sineCount = 0;
   sineInc = Math.PI / 50;
   state = { ready: false, score: 0, pause: false };
+  currentLog = -1;
 
   levelWidth = 19
   // levelHeight = 50 /// Crossy is infinite.
@@ -173,6 +172,8 @@ export default class App extends React.Component {
     this.waterCount = 0; // Terrain tiles
     this.road = [],
     this.roadCount = 0; //
+    this.railRoad = [],
+    this.railRoadCount = 0; //
     this.trees = [],
     this.treeCount = 0; //
     this.logs = [],
@@ -210,9 +211,6 @@ export default class App extends React.Component {
       this._railroad.setup(),
       this._train.setup()
     ])
-
-
-    this.roadMat = material(0x777777);
 
     this.shadeGeo = new THREE.PlaneGeometry(5, 500);
     this.shadeMat = new THREE.MeshBasicMaterial({
@@ -301,6 +299,7 @@ export default class App extends React.Component {
     this.rightBlind = new THREE.Mesh(this.shadeGeo, this.blindMat);
 
 
+    this.railRoad[0] = this._railroad.getRandom();
     this.road[0] = this._road.getRandom();
     this.trees[0] = this._tree.getRandom();
 
@@ -337,16 +336,18 @@ export default class App extends React.Component {
 
     // Assign mesh to corresponding array
     // and add mesh to scene
-    for (i = 0; i < 15; i++) {
+    for (i = 0; i < this.maxRows; i++) {
       this.grass[i] = this._grass.getNode(`${i % 2}`);
       this.grass[i].receiveShadow = true;
 
       this.water[i] = this._river.getNode();
       this.road[i] = this._road.getRandom();
-
+      this.railRoad[i] = this._railroad.getRandom();
       this.scene.add(this.grass[i]);
       this.scene.add(this.water[i]);
       this.scene.add(this.road[i]);
+      this.scene.add(this.railRoad[i]);
+
     }
 
     // Repeat above for terrain objects
@@ -385,13 +386,16 @@ export default class App extends React.Component {
     this.grassCount = 0;
     this.waterCount = 0;
     this.roadCount = 0;
+    this.railRoadCount = 0;
     this.treeCount = 0;
     this.rowCount = 0;
 
-    for (i = 0; i < 15; i++) {
+    for (i = 0; i < this.maxRows; i++) {
       this.grass[i].position.z = offset;
       this.water[i].position.z = offset;
       this.road[i].position.z = offset;
+      this.railRoad[i].position.z = offset;
+
     }
 
     for (i = 0; i < 55; i++) {
@@ -421,15 +425,19 @@ export default class App extends React.Component {
 
   // Scene generators
   newRow = rowKind => {
-    if (this.grassCount == 15) {
+    if (this.grassCount == this.maxRows) {
       this.grassCount = 0;
     }
-    if (this.roadCount == 15) {
+    if (this.roadCount == this.maxRows) {
       this.roadCount = 0;
     }
-    if (this.waterCount == 15) {
+    if (this.waterCount == this.maxRows) {
       this.waterCount = 0;
     }
+    if (this.railRoadCount == this.maxRows) {
+      this.railRoadCount = 0;
+    }
+
 
     /// Special layers
     if (this.rowCount <= 0) {
@@ -461,7 +469,7 @@ export default class App extends React.Component {
         // }
 
         // let road = this._road.getNode(!isMultiLane ? "0" : "1");
-        this.roads[this.roadCount].position.z = this.rowCount;
+        this.road[this.roadCount].position.z = this.rowCount;
         // this.scene.add(road);
         this.roadCount++;
         break;
@@ -472,13 +480,8 @@ export default class App extends React.Component {
         this.waterCount++;
         break;
         case 4:
-        // this.trainGen();
-
-        let railroad = this._railroad.getNode();
-        railroad.position.z = this.rowCount;
-        this.scene.add(railroad);
-        this.railroadCount++;
-
+        this.railRoad[this.railRoadCount].position.z = this.rowCount;
+        this.railRoadCount++;
         break;
       }
     }
@@ -661,7 +664,6 @@ export default class App extends React.Component {
     }
   }
 
-  currentLog = -1;
 
   bounceLog = mesh => {
     let timing = 0.2;
