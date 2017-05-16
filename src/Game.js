@@ -35,8 +35,8 @@ import RailRoad from './RailRoad'
 // import Hero from './Hero'
 
 const groundLevel = 0.5;
-
 const sceneColor = 0x6dceea;
+
 function material(color) {
 
   return new THREE.MeshPhongMaterial({
@@ -829,6 +829,11 @@ export default class App extends React.Component {
 
     const {SWIPE_UP, SWIPE_DOWN, SWIPE_LEFT, SWIPE_RIGHT} = swipeDirections;
 
+
+    if (!this.initialPosition) {
+      this.initialPosition = this.hero.position;
+    }
+
     switch (direction) {
       case SWIPE_LEFT:
       this.hero.rotation.y = Math.PI/2
@@ -841,9 +846,9 @@ export default class App extends React.Component {
           this.moving = true
 
           TweenMax.to(this.hero.position, this.timing, {
-            x: this.hero.position.x + 0.75,
+            x: this.initialPosition.x + 0.75,
             y: groundLevel + 0.5,
-            z: this.hero.position.z,
+            z: this.initialPosition.z,
           });
           TweenMax.to(this.hero.scale, this.timing, {
             x: 1,
@@ -866,9 +871,9 @@ export default class App extends React.Component {
           });
 
           TweenMax.to(this.hero.position, this.timing, {
-            x: this.hero.position.x + 1,
-            y: this.hero.position.y,
-            z: this.hero.position.z,
+            x: this.initialPosition.x + 1,
+            y: this.initialPosition.y,
+            z: this.initialPosition.z,
             ease: Power4.easeOut,
             delay: 0.151,
             onComplete: this.doneMoving,
@@ -880,7 +885,7 @@ export default class App extends React.Component {
       case SWIPE_RIGHT:
       this.hero.rotation.y = -Math.PI/2
       if (!this.treeCollision("right")) {
-        if (this.hero.position.x !== -4) {
+        if (this.initialPosition.x !== -4) {
 
           if (this.moving) {
             return
@@ -890,9 +895,9 @@ export default class App extends React.Component {
 
 
           TweenMax.to(this.hero.position, this.timing, {
-            x: this.hero.position.x - 0.75,
+            x: this.initialPosition.x - 0.75,
             y: groundLevel + 0.5,
-            z: this.hero.position.z,
+            z: this.initialPosition.z,
           });
           TweenMax.to(this.hero.scale, this.timing, {
             x: 1,
@@ -915,9 +920,9 @@ export default class App extends React.Component {
           });
 
           TweenMax.to(this.hero.position, this.timing, {
-            x: this.hero.position.x - 1,
-            y: this.hero.position.y,
-            z: this.hero.position.z,
+            x: this.initialPosition.x - 1,
+            y: this.initialPosition.y,
+            z: this.initialPosition.z,
             ease: Power4.easeOut,
             delay: 0.151,
             onComplete: this.doneMoving,
@@ -927,7 +932,7 @@ export default class App extends React.Component {
       }
       break;
       case SWIPE_UP:
-      let targetHorizontal = Math.round(this.hero.position.x);
+      let targetHorizontal = Math.round(this.initialPosition.x);
       this.hero.rotation.y = 0;
       if (!this.treeCollision("up")) {
         if (this.moving) {
@@ -938,7 +943,7 @@ export default class App extends React.Component {
         TweenMax.to(this.hero.position, this.timing, {
           x: targetHorizontal,
           y: groundLevel + 0.5,
-          z: this.hero.position.z + 0.75,
+          z: this.initialPosition.z + 0.75,
         });
         TweenMax.to(this.hero.scale, this.timing, {
           x: 1,
@@ -962,8 +967,8 @@ export default class App extends React.Component {
 
         TweenMax.to(this.hero.position, this.timing, {
           x: targetHorizontal,
-          y: this.hero.position.y,
-          z: this.hero.position.z + 1,
+          y: this.initialPosition.y,
+          z: this.initialPosition.z + 1,
           ease: Power4.easeOut,
           delay: 0.151,
           onComplete: this.doneMoving,
@@ -972,7 +977,7 @@ export default class App extends React.Component {
       }
       break;
       case SWIPE_DOWN:
-      this.hero.position.x = Math.round(this.hero.position.x);
+      // this.hero.position.x = Math.round(this.initialPosition.x);
       this.hero.rotation.y = Math.PI
       if (!this.treeCollision("down")) {
 
@@ -982,9 +987,9 @@ export default class App extends React.Component {
         this.moving = true
 
         TweenMax.to(this.hero.position, this.timing, {
-          x: this.hero.position.x,
+          x: this.initialPosition.x,
           y: groundLevel + 0.5,
-          z: this.hero.position.z - 0.75,
+          z: this.initialPosition.z - 0.75,
         });
         TweenMax.to(this.hero.scale, this.timing, {
           x: 1,
@@ -1006,9 +1011,9 @@ export default class App extends React.Component {
         });
 
         TweenMax.to(this.hero.position, this.timing, {
-          x: this.hero.position.x,
-          y: this.hero.position.y,
-          z: this.hero.position.z - 1,
+          x: this.initialPosition.x,
+          y: this.initialPosition.y,
+          z: this.initialPosition.z - 1,
           ease: Power4.easeOut,
           delay: 0.151,
           onComplete: this.doneMoving,
@@ -1018,6 +1023,8 @@ export default class App extends React.Component {
       }
       break;
     }
+    this.initialPosition = this.hero.position;
+
   }
 
   beginMoveWithDirection = direction => {
