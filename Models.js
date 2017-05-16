@@ -36,8 +36,8 @@ export default {
     texture: require('./assets/models/log_3/texture.png'),
   },
   river: {
-    model: require('./assets/models/river/river.obj'),
-    texture: require('./assets/models/river/river.png'),
+    model: require('./assets/models/river/model.obj'),
+    texture: require('./assets/models/river/texture.png'),
   },
   road_0: {
     model: require('./assets/models/road_0/model.obj'),

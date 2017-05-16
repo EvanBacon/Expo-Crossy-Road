@@ -1,9 +1,9 @@
 import Expo from 'expo'
 
 import React, {Component} from 'react';
-import {TouchableWithoutFeedback, Dimensions,Text,View} from 'react-native'
+import {TouchableWithoutFeedback, Animated, Dimensions,Text,View} from 'react-native'
 
-import GestureRecognizer, {swipeDirections} from 'react-native-swipe-gestures';
+import GestureRecognizer, {swipeDirections} from './GestureView';
 
 import ModelLoader from '../utils/ModelLoader';
 
@@ -18,6 +18,11 @@ import Map from './Map';
 // Setup THREE//
 const {width, height} = Dimensions.get('window');
 
+const AnimatedText = Animated.createAnimatedComponent(RetroText);
+const AnimatedGestureRecognizer = Animated.createAnimatedComponent(GestureRecognizer);
+
+let scoreAnimation = new Animated.Value(0);
+
 import RetroText from './RetroText'
 import Hero from './Hero'
 import Car from './Car'
@@ -31,6 +36,9 @@ import RailRoad from './RailRoad'
 
 // import Hero from './Hero'
 
+const groundLevel = 0.5;
+
+const sceneColor = 0x6dceea;
 function material(color) {
 
   return new THREE.MeshPhongMaterial({
@@ -56,6 +64,8 @@ export default class App extends React.Component {
 
   componentWillMount() {
     this.scene = new THREE.Scene();
+    this.scene.fog = new THREE.Fog(sceneColor, 350, 500);
+
     console.log("FROG: Start settin' up the game")
     this.camera = new THREE.OrthographicCamera(-width, width, height, -height, -30, 30);
     // this.camera = new THREE.PerspectiveCamera(75, 1, 1, 10000);
@@ -80,10 +90,10 @@ export default class App extends React.Component {
     this.scene.add(this.bonusParticles.mesh);
   }
 
-  useParticle = model => {
+  useParticle = (model, type) => {
     this.bonusParticles.mesh.position.copy(model.position);
     this.bonusParticles.mesh.visible = true;
-    this.bonusParticles.explose();
+    this.bonusParticles.explose(type);
   }
 
   createLights = () => {
@@ -123,6 +133,13 @@ export default class App extends React.Component {
   }
 
   endScore = () => {
+Animated.timing(scoreAnimation, {
+  toValue: 2,
+  duration: 200,
+  useNativeDriver: true,
+  delay: 800
+}).start();
+
     // scoreDiv.style.transition = "top 2s, width 2s, left 2s, font-size 2s";
     // scoreDiv.style.top = "50%";
     // scoreDiv.style.width = "100%";
@@ -132,6 +149,11 @@ export default class App extends React.Component {
   }
 
   newScore = () => {
+    Animated.timing(scoreAnimation, {
+      toValue: 0,
+      duration: 500,
+      useNativeDriver: true
+    }).start();
     // scoreDiv.style.transition = "top 2s, width 2s,left 2s, font-size 2s";
     // scoreDiv.style.top = "40px";
     // scoreDiv.style.width = "0px";
@@ -148,6 +170,10 @@ export default class App extends React.Component {
     // this.hero.position.set(Math.round(this.hero.position.x), this.hero.position.y, Math.round(this.hero.position.z))
   }
 
+  getWidth = (mesh) => {
+    // console.log( box.min, box.max, box.size() );
+    return (new THREE.Box3().setFromObject( mesh )).size().width;
+  }
 
   doGame = async () => {
 
@@ -164,6 +190,7 @@ export default class App extends React.Component {
     this.waterCount = 0; // Terrain tiles
     this.road = [],
     this.roadCount = 0; //
+
 
 
     this.trees = [],
@@ -323,7 +350,10 @@ export default class App extends React.Component {
 
     this.road[0] = this._road.getRandom();
     this.trees[0] = this._tree.getRandom();
-    this.cars[0] = this._car.getRandom();
+
+    let _carMesh = this._car.getRandom();
+    let _carWidth = this.getWidth(_carMesh);
+    this.cars[0] = {mesh: _carMesh, width: _carWidth, collisionBox: (this.heroWidth / 2 + _carWidth / 2 - .1) };
 
     let _log = new Log();
 
@@ -354,8 +384,8 @@ export default class App extends React.Component {
     // this.road[0].position.z = -30;
 
     this.trees[0].position.set(0, .5, -30);
-    this.cars[0].position.set(0, .25, -30);
-    this.cars[0].rotation.set(0, 0,0);
+    this.cars[0].mesh.position.set(0, .25, -30);
+    this.cars[0].mesh.rotation.set(0, 0,0);
 
     this.logs[0].position.set(0, -10.5, -30);
 
@@ -382,8 +412,11 @@ export default class App extends React.Component {
     }
 
     for (i = 0; i < 40; i++) {
-      this.cars[i] = this._car.getRandom();
-      this.scene.add(this.cars[i]);
+      let _carMesh = this._car.getRandom();
+      let _carWidth = this.getWidth(_carMesh);
+      this.cars[i] = {mesh: _carMesh, width: _carWidth, collisionBox: (this.heroWidth / 2 + _carWidth / 2 - .1) };
+
+      this.scene.add(_carMesh);
     }
     for (i = 0; i < 40; i++) {
       this.logs[i] = this.logs[0].clone();
@@ -400,7 +433,7 @@ export default class App extends React.Component {
     const startingRow = 8;
     this.setState({score: 0})
     this.camera.position.z = startingRow;
-    this.hero.position.set(0, 0, startingRow);
+    this.hero.position.set(0, groundLevel, startingRow);
     this.hero.scale.set(1,1,1);
 
     this.grassCount = 0;
@@ -414,11 +447,14 @@ export default class App extends React.Component {
       this.water[i].position.z = -30;
       this.road[i].position.z = -30;
     }
+
     for (i = 0; i < 55; i++) {
       this.trees[i].position.z = -30;
     }
+
     for (i = 0; i < 40; i++) {
-      this.cars[i].position.z = -30;
+
+      this.cars[i].mesh.position.z = -30;
       this.carSpeed[i] = 0;
 
       this.logs[i].position.z = -30;
@@ -429,16 +465,16 @@ export default class App extends React.Component {
     this.grass[this.grassCount].position.z = this.rowCount;
     this.grassCount++;
     this.rowCount++;
+
     for (i = 1; i < 25; i++) {
       this.newRow();
     }
 
     this.setState({ ready: true });
-
   }
 
   // Scene generators
-  newRow = (rowKind) => {
+  newRow = rowKind => {
     if (this.grassCount == 15) {
       this.grassCount = 0;
     }
@@ -474,9 +510,9 @@ export default class App extends React.Component {
         this.carGen();
 
         let isMultiLane = rowKind ? true : false;
-        if (Math.floor(Math.random() * (2 - 1)) == 1) {
-          this.newRow(2);
-        }
+        // if (Math.floor(Math.random() * (2 - 1)) == 1) {
+        //   this.newRow(2);
+        // }
 
         let road = this._road.getNode(!isMultiLane ? "0" : "1");
         road.position.z = this.rowCount;
@@ -576,10 +612,10 @@ export default class App extends React.Component {
         this.carCount = 0;
       }
 
-      this.cars[this.carCount].position.set(xPos, .25, this.rowCount);
+      this.cars[this.carCount].mesh.position.set(xPos, .25, this.rowCount);
       this.carSpeed[this.carCount] = this.speed * xDir;
 
-      this.cars[this.carCount].rotation.y = (Math.PI / 2) * xDir;
+      this.cars[this.carCount].mesh.rotation.y = (Math.PI / 2) * xDir;
 
 
       xPos -= 5 * xDir;
@@ -619,13 +655,13 @@ export default class App extends React.Component {
   // Animate cars/logs
   drive = () => {
     for (d = 0; d < this.cars.length; d++) {
-      this.cars[d].position.x += this.carSpeed[d];
+      this.cars[d].mesh.position.x += this.carSpeed[d];
       this.logs[d].position.x += this.logSpeed[d];
 
-      if (this.cars[d].position.x > 11 && this.carSpeed[d] > 0) {
-        this.cars[d].position.x = -11;
-      } else if (this.cars[d].position.x < -11 && this.carSpeed[d] < 0) {
-        this.cars[d].position.x = 11;
+      if (this.cars[d].mesh.position.x > 11 && this.carSpeed[d] > 0) {
+        this.cars[d].mesh.position.x = -11;
+      } else if (this.cars[d].mesh.position.x < -11 && this.carSpeed[d] < 0) {
+        this.cars[d].mesh.position.x = 11;
       }
       if (this.logs[d].position.x > 11 && this.logSpeed[d] > 0) {
         this.logs[d].position.x = -10;
@@ -659,14 +695,22 @@ export default class App extends React.Component {
   }
 
   carCollision = () => {
+
+
     for (c = 0; c < this.cars.length; c++) {
-      if (this.hero.position.z == this.cars[c].position.z) {
-        if (this.hero.position.x < this.cars[c].position.x + this.cCollide &&
-          this.hero.position.x > this.cars[c].position.x - this.cCollide) {
+      let car = this.cars[c];
+      if (this.hero.position.z == car.mesh.position.z) {
 
+        const {collisionBox} = car;
+
+        if (this.hero.position.x < this.cars[c].mesh.position.x + collisionBox &&
+          this.hero.position.x > this.cars[c].mesh.position.x - collisionBox) {
+
+            ///Run Over Hero. ///TODO: Add a side collide
             this.hero.scale.y = 0.001;
-            this.hero.position.y = .1;
+            this.hero.position.y = groundLevel + .1;
 
+            this.useParticle(this.hero, 'feathers');
             this.gameOver();
           }
         }
@@ -694,11 +738,11 @@ export default class App extends React.Component {
                 });
 
                 TweenMax.to(this.hero.position, timing * 0.9, {
-                  y: -0.1,
+                  y: groundLevel + -0.1,
                 });
 
                 TweenMax.to(this.hero.position, timing, {
-                  y: 0.0,
+                  y: groundLevel,
                   delay: timing
                 });
               }
@@ -715,6 +759,9 @@ export default class App extends React.Component {
               }
               }
               if (this.hero.position.x > 5 || this.hero.position.x < -5) {
+
+                ///TODO: Rumble death
+
                 this.gameOver();
               }
             }
@@ -727,6 +774,9 @@ export default class App extends React.Component {
         if (this.onLog === false) {
           for (w = 0; w < this.water.length; w++) {
             if (this.hero.position.z == this.water[w].position.z) {
+
+              this.useParticle(this.hero, 'water');
+
               this.gameOver();
 
               let y = Math.sin(this.sineCount) * .08 - .2;
@@ -774,30 +824,35 @@ export default class App extends React.Component {
       // Reset variables, restart game
       gameOver = () => {
         if (!this.state.pause) {
-          this.useParticle(this.hero);
+          // this.useParticle(this.hero);
         }
+        // this.trees.map(val => this.scene.remove(val) );
         this.setState({pause: true});
 
         this.endScore();
       }
 
-
-
-      tick = (dt) => {
+      tick = dt => {
         this.drive();
         this.carCollision();
         this.logCollision();
         this.waterCollision();
         this.forwardScene();
         this.updateScore();
+        this.checkIfUserHasFallenOutOfFrame();
+      }
 
+
+      checkIfUserHasFallenOutOfFrame = () => {
         if (this.hero.position.z < this.camera.position.z - 8) {
+
+          ///TODO: rumble
           this.gameOver();
         }
       }
 
       updateScore = () => {
-        const position = Math.floor(this.hero.position.z);
+        const position = Math.floor(this.hero.position.z) - 8;
         if (this.state.score < position) {
           this.setState({score: position})
         }
@@ -806,24 +861,24 @@ export default class App extends React.Component {
       moveWithDirection = direction => {
         if (this.state.pause ) {
           this.newScore();
+          return;
         }
         this.onLog = false;
 
-
-
         let timing = 0.5;
 
-        TweenMax.to(this.hero.scale, timing, {
-          x: 1.2,
-          y: 0.8,
-          z: 1,
-          ease: Bounce.easeOut,
-        });
+        // TweenMax.to(this.hero.scale, timing, {
+        //   x: 1.2,
+        //   y: 0.8,
+        //   z: 1,
+        //   ease: Bounce.easeOut,
+        // });
 
         const {SWIPE_UP, SWIPE_DOWN, SWIPE_LEFT, SWIPE_RIGHT} = swipeDirections;
 
         switch (direction) {
           case SWIPE_LEFT:
+          this.hero.rotation.y = Math.PI/2
           if (!this.treeCollision("left")) {
             if (this.hero.position.x !== 4) {
 
@@ -834,7 +889,7 @@ export default class App extends React.Component {
 
               TweenMax.to(this.hero.position, this.timing, {
                 x: this.hero.position.x + 0.75,
-                y: this.hero.position.y + 0.5,
+                y: groundLevel + 0.5,
                 z: this.hero.position.z,
               });
               TweenMax.to(this.hero.scale, this.timing, {
@@ -870,17 +925,20 @@ export default class App extends React.Component {
           }
           break;
           case SWIPE_RIGHT:
+          this.hero.rotation.y = -Math.PI/2
           if (!this.treeCollision("right")) {
             if (this.hero.position.x !== -4) {
 
               if (this.moving) {
                 return
-              };
+              }
+
               this.moving = true
+
 
               TweenMax.to(this.hero.position, this.timing, {
                 x: this.hero.position.x - 0.75,
-                y: this.hero.position.y + 0.5,
+                y: groundLevel + 0.5,
                 z: this.hero.position.z,
               });
               TweenMax.to(this.hero.scale, this.timing, {
@@ -917,7 +975,7 @@ export default class App extends React.Component {
           break;
           case SWIPE_UP:
           let targetHorizontal = Math.round(this.hero.position.x);
-
+this.hero.rotation.y = 0;
           if (!this.treeCollision("up")) {
             if (this.moving) {
               return
@@ -926,7 +984,7 @@ export default class App extends React.Component {
 
             TweenMax.to(this.hero.position, this.timing, {
               x: targetHorizontal,
-              y: this.hero.position.y + 0.5,
+              y: groundLevel + 0.5,
               z: this.hero.position.z + 0.75,
             });
             TweenMax.to(this.hero.scale, this.timing, {
@@ -962,6 +1020,7 @@ export default class App extends React.Component {
           break;
           case SWIPE_DOWN:
           this.hero.position.x = Math.round(this.hero.position.x);
+          this.hero.rotation.y = Math.PI
           if (!this.treeCollision("down")) {
 
             if (this.moving) {
@@ -971,7 +1030,7 @@ export default class App extends React.Component {
 
             TweenMax.to(this.hero.position, this.timing, {
               x: this.hero.position.x,
-              y: this.hero.position.y + 0.5,
+              y: groundLevel + 0.5,
               z: this.hero.position.z - 0.75,
             });
             TweenMax.to(this.hero.scale, this.timing, {
@@ -1006,7 +1065,6 @@ export default class App extends React.Component {
           }
           break;
         }
-
       }
 
       beginMoveWithDirection = direction => {
@@ -1014,7 +1072,7 @@ export default class App extends React.Component {
           return;
         }
 
-        let timing = 0.5;
+        let timing = 0.3;
 
         TweenMax.to(this.hero.scale, timing, {
           x: 1.2,
@@ -1022,50 +1080,11 @@ export default class App extends React.Component {
           z: 1,
           ease: Bounce.easeOut,
         });
-
-
-        let rotation;
-        const {SWIPE_UP, SWIPE_DOWN, SWIPE_LEFT, SWIPE_RIGHT} = swipeDirections;
-
-        switch (direction) {
-          case SWIPE_LEFT:
-          rotation = Math.PI / 2;
-
-          break;
-          case SWIPE_RIGHT:
-          rotation = -Math.PI / 2;
-
-          break;
-          case SWIPE_UP:
-          rotation = 0;
-
-          break;
-          case SWIPE_DOWN:
-          rotation = Math.PI;
-
-          break;
-        }
-
-
-        // if (rotation) {
-        TweenMax.to(this.hero.rotation, timing * 0.5, {
-          y: rotation,
-        });
-
-
       }
 
-
-      onSwipeBegin = (gestureName, gestureState) => {
-        this.beginMoveWithDirection(gestureName);
+      onSwipe = (gestureName, gestureState) => {
         this.moveWithDirection(gestureName);
-
       }
-
-      onSwipeEnd({ direction }) {
-        this.moveWithDirection(direction);
-      }
-
 
       render() {
         const config = {
@@ -1076,20 +1095,31 @@ export default class App extends React.Component {
         if (!this.state.ready) {
           return null;
         }
-        return (
 
-          <GestureRecognizer
-            onSwipe={(direction, state) => this.onSwipeBegin(direction, state)}
+        return (
+          <View style={{flex: 1, backgroundColor: '#6dceea'}}>
+          <AnimatedGestureRecognizer
+            onResponderGrant={_=> {
+              this.beginMoveWithDirection();
+            }}
+            onSwipe={(direction, state) => this.onSwipe(direction, state)}
             config={config}
             style={{
               flex: 1,
+              // opacity: scoreAnimation.interpolate({
+              //   inputRange: [0, 1],
+              //   outputRange: [1, 0],
+              // })
             }}
             >
-              <TouchableWithoutFeedback style={{flex: 1}} onPress={_=> {
-                  this.onSwipeBegin(swipeDirections.SWIPE_UP, {});
+              <TouchableWithoutFeedback onPressIn={_=> {
+                this.beginMoveWithDirection();
+
+                }} style={{flex: 1}} onPress={_=> {
+                  this.onSwipe(swipeDirections.SWIPE_UP, {});
                 }}>
                 <THREEView
-                  backgroundColor={0x6dceea}
+                  backgroundColor={sceneColor}
                   shadowMapEnabled={true}
                   shadowMapRenderSingleSided={false}
                   style={{ flex: 1 }}
@@ -1098,17 +1128,29 @@ export default class App extends React.Component {
                   tick={this.tick}
                 />
               </TouchableWithoutFeedback>
-
-              { this.state.pause && (
-                <View pointerEvents="none" style={{position: 'absolute', left: 0, top: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0,0,0,0.2)', justifyContent: 'center', alignItems: 'center'}}>
-                  <RetroText style={{color: 'white', fontSize: 48, backgroundColor: 'transparent',  textAlign: 'center'}}>Tap To Play!</RetroText>
-              </View>
-            )}
-
-            <RetroText style={{color: 'white', fontSize: 48, backgroundColor: 'transparent', position: 'absolute', top: 32, left: 16}}>{this.state.score}</RetroText>
-
-
-        </GestureRecognizer>
+        </AnimatedGestureRecognizer>
+        { this.state.pause && (
+          <View pointerEvents="none" style={{position: 'absolute', left: 0, top: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0,0,0,0.2)', justifyContent: 'center', alignItems: 'center'}}>
+            <RetroText style={{color: 'white', fontSize: 48, backgroundColor: 'transparent',  textAlign: 'center'}}>Tap To Play!</RetroText>
+          </View>
+        )}
+        <AnimatedText pointerEvents={'none'} style={[{color: 'white', fontSize: 48, backgroundColor: 'transparent', position: 'absolute', top: 32, left: 16}, {transform: [
+            {translateX: scoreAnimation.interpolate({
+              inputRange: [0, 1],
+              outputRange: [0, 50]
+            })},
+            {translateY: scoreAnimation.interpolate({
+              inputRange: [0, 1],
+              outputRange: [0, 50]
+            })},
+            {scale: scoreAnimation.interpolate({
+              inputRange: [0, 1],
+              outputRange: [1, 2.5]
+            })},
+          ]}]}>
+          {this.state.score}
+        </AnimatedText>
+      </View>
       );
     }
   }
