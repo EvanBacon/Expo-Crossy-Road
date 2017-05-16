@@ -1,10 +1,11 @@
 import Expo from 'expo'
 
 import React, {Component} from 'react';
-import {TouchableWithoutFeedback, Animated, Dimensions,Text,View} from 'react-native'
+import {TouchableWithoutFeedback,Vibration, Animated, Dimensions,Text,View} from 'react-native'
 
 import GestureRecognizer, {swipeDirections} from './GestureView';
-
+import Water from './Particles/Water';
+import Feathers from './Particles/Feathers';
 import {TweenMax, Power2, TimelineLite} from "gsap";
 
 const {THREE} = global;
@@ -79,12 +80,31 @@ export default class App extends React.Component {
     this.bonusParticles = new BonusParticles();
     this.bonusParticles.mesh.visible = false;
     this.scene.add(this.bonusParticles.mesh);
+
+    this.waterParticles = new Water(THREE);
+    this.scene.add(this.waterParticles.mesh);
+
+    this.featherParticles = new Feathers(THREE);
+    this.scene.add(this.featherParticles.mesh);
+
   }
 
-  useParticle = (model, type) => {
-    this.bonusParticles.mesh.position.copy(model.position);
-    this.bonusParticles.mesh.visible = true;
-    this.bonusParticles.explose(type);
+  useParticle = (model, type, direction) => {
+    if (type === 'water') {
+      this.waterParticles.mesh.position.copy(model.position);
+      this.waterParticles.mesh.visible = true;
+      this.waterParticles.run(type);
+    } else if (type == 'feathers') {
+      this.featherParticles.mesh.position.copy(model.position);
+      this.featherParticles.mesh.visible = true;
+      this.featherParticles.run(type, direction);
+
+    } else {
+      this.bonusParticles.mesh.position.copy(model.position);
+      this.bonusParticles.mesh.visible = true;
+      this.bonusParticles.explose(type);
+    }
+
   }
 
   createLights = () => {
@@ -131,6 +151,7 @@ export default class App extends React.Component {
   }
 
   newScore = () => {
+    Vibration.cancel();
     Animated.timing(scoreAnimation, {
       toValue: 0,
       duration: 500,
@@ -219,6 +240,7 @@ export default class App extends React.Component {
       opacity: .3
     });
     this.blindMat = material(0xADD8E6);
+
 
 
     let bonusParticles;
@@ -418,7 +440,7 @@ export default class App extends React.Component {
     this.grassCount++;
     this.rowCount++;
 
-    for (i = 1; i < 25; i++) {
+    for (i = 0; i < 25; i++) {
       this.newRow();
     }
 
@@ -647,6 +669,9 @@ export default class App extends React.Component {
   }
 
   carCollision = () => {
+    if (this.state.pause) {
+      return
+    }
     for (let c = 0; c < this.cars.length; c++) {
       let car = this.cars[c];
       if (this.hero.position.z == car.mesh.position.z) {
@@ -659,7 +684,9 @@ export default class App extends React.Component {
           this.hero.scale.y = 0.1;
           this.hero.position.y = groundLevel;
 
-          this.useParticle(this.hero, 'feathers');
+          this.useParticle(this.hero, 'feathers', this.carSpeed[c]);
+          this.rumbleScreen()
+
           this.gameOver();
         }
       }
@@ -696,17 +723,19 @@ export default class App extends React.Component {
     const log = this.logs[this.currentLog];
     let target = log.mesh.position.x + this.currentLogSubIndex;
     this.hero.position.x = target;
-
+    this.initialPosition.x = target;
   }
 
   logCollision = () => {
-
+    if (this.state.pause) {
+      return
+    }
     for (let l = 0; l < this.logs.length; l++) {
       let log = this.logs[l];
       if (this.hero.position.z == log.mesh.position.z) {
         const {collisionBox, mesh} = log;
-        const logX = mesh.position.x | 0;
-        const heroX = this.hero.position.x | 0;
+        const logX = mesh.position.x;
+        const heroX = this.hero.position.x;
 
         if (heroX < logX + collisionBox && heroX > logX - collisionBox) {
           this.onLog = true;
@@ -726,21 +755,30 @@ export default class App extends React.Component {
       for (w = 0; w < this.water.length; w++) {
         if (this.hero.position.z == this.water[w].position.z) {
 
-          this.useParticle(this.hero, 'water');
-          this.gameOver();
+          if (!this.state.pause) {
+            this.useParticle(this.hero, 'water');
+            this.rumbleScreen()
+            this.gameOver();
+          } else {
 
-          let y = Math.sin(this.sineCount) * .08 - .2;
-          this.sineCount += this.sineInc;
-          this.hero.position.y = y;
+            let y = Math.sin(this.sineCount) * .08 - .2;
+            this.sineCount += this.sineInc;
+            this.hero.position.y = y;
 
-          for (w = 0; w < this.logSpeed.length; w++) {
-            if (this.hero.position.z == this.logs[w].mesh.position.z) {
-              this.hero.position.x += this.logSpeed[w] / 3;
+            for (w = 0; w < this.logSpeed.length; w++) {
+              if (this.hero.position.z == this.logs[w].mesh.position.z) {
+                this.hero.position.x += this.logSpeed[w] / 3;
+              }
             }
           }
+
         }
       }
     }
+  }
+
+  rumbleScreen = () => {
+    Vibration.vibrate();
   }
 
   // Move scene forward
@@ -783,11 +821,12 @@ export default class App extends React.Component {
   tick = dt => {
     this.drive();
     if (!this.moving) {
+      this.moveUserOnLog();
+
       this.carCollision();
       this.logCollision();
       this.waterCollision();
 
-      this.moveUserOnLog();
 
       this.updateScore();
       this.checkIfUserHasFallenOutOfFrame();
@@ -798,9 +837,14 @@ export default class App extends React.Component {
 
 
   checkIfUserHasFallenOutOfFrame = () => {
+    if (this.state.pause) {
+      return
+    }
     if (this.hero.position.z < this.camera.position.z - 8) {
 
       ///TODO: rumble
+      this.rumbleScreen()
+
       this.gameOver();
     }
 
@@ -808,6 +852,7 @@ export default class App extends React.Component {
     if (this.hero.position.x < -5 || this.hero.position.x > 5) {
 
       ///TODO: Rumble death
+      this.rumbleScreen()
 
       this.gameOver();
     }
@@ -825,9 +870,6 @@ export default class App extends React.Component {
       this.newScore();
       return;
     }
-    this.onLog = false;
-    this.currentLog = null;
-    let timing = 0.5;
 
     const {SWIPE_UP, SWIPE_DOWN, SWIPE_LEFT, SWIPE_RIGHT} = swipeDirections;
 
@@ -838,7 +880,7 @@ export default class App extends React.Component {
     }
 
     if (this.moving) {
-        this.hero.position = this.targetPosition;
+      this.hero.position = this.targetPosition;
       // return
     };
 
@@ -854,8 +896,8 @@ export default class App extends React.Component {
       case SWIPE_RIGHT:
       this.hero.rotation.y = -Math.PI/2
       if (!this.treeCollision("right")) {
-          this.targetPosition = {x: this.initialPosition.x - 1, y: this.initialPosition.y, z: this.initialPosition.z};
-          this.moving = true
+        this.targetPosition = {x: this.initialPosition.x - 1, y: this.initialPosition.y, z: this.initialPosition.z};
+        this.moving = true
 
       }
       break;
@@ -879,8 +921,26 @@ export default class App extends React.Component {
 
 
 
-    const {targetPosition, initialPosition} = this;
-    const delta = {x: targetPosition.x - initialPosition.x, y: targetPosition.y - initialPosition.y, z: targetPosition.z - initialPosition.z}
+    let {targetPosition, initialPosition} = this;
+
+
+    // if (Math.abs(targetPosition.x - initialPosition.x) > 0 && this.onLog && this.currentLog && this.currentLog >= 0) {
+    //   const {speed} = this.logSpeed[this.currentLog];
+    //   // delta.x = (targetPosition.x - Math.round(initialPosition.x))
+    //   // delta.z += (speed < 0) ? -1 : 1;
+    //   if (speed > 0) {
+    //   targetPosition.x = Math.ceil(targetPosition.x)
+    // } else {
+    //   targetPosition.x = Math.floor(targetPosition.x)
+    // }
+    //
+    // }
+    let delta = {x: (targetPosition.x - initialPosition.x), y: targetPosition.y - initialPosition.y, z: targetPosition.z - initialPosition.z}
+
+    this.onLog = false;
+    this.currentLog = null;
+    let timing = 0.5;
+
 
     TweenMax.to(this.hero.position, this.timing, {
       x: this.initialPosition.x + (delta.x * 0.75),
