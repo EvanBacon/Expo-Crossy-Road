@@ -57,26 +57,20 @@ export default class App extends React.Component {
 
   levelWidth = 19
   // levelHeight = 50 /// Crossy is infinite.
-
   levelHeight = 19 /// Crossy is infinite.
 
   componentWillMount() {
     this.scene = new THREE.Scene();
     this.scene.fog = new THREE.Fog(sceneColor, 350, 500);
 
-    console.log("FROG: Start settin' up the game")
     this.camera = new THREE.OrthographicCamera(-width, width, height, -height, -30, 30);
-    // this.camera = new THREE.PerspectiveCamera(75, 1, 1, 10000);
-    // this.camera.position.z = 1000;
-
     this.camera.position.set(-1, 2.8, -2.9); // Change -1 to -.02
     this.camera.zoom = 110; // for birds eye view
     this.camera.updateProjectionMatrix();
     this.camera.lookAt(this.scene.position);
 
     // this.map = new Map({width: this.levelWidth, height: this.levelHeight});
-
-    const position = new THREE.Vector3( 0, 0, 0 );
+    // const position = new THREE.Vector3( 0, 0, 0 );
     // this.map.buildLevel({position, parentNode: this.scene});
 
     this.doGame();
@@ -105,8 +99,6 @@ export default class App extends React.Component {
     // this.camera.position.z = 1000;
 
     // shadowLight.position.set(-1, 22.8, -2.9); // Change -1 to -.02
-
-
     // shadowLight.shadow.camera.left = -5;
     // shadowLight.shadow.camera.right = 5;
     // shadowLight.shadow.camera.top = 50;
@@ -137,13 +129,6 @@ export default class App extends React.Component {
       useNativeDriver: true,
       delay: 800
     }).start();
-
-    // scoreDiv.style.transition = "top 2s, width 2s, left 2s, font-size 2s";
-    // scoreDiv.style.top = "50%";
-    // scoreDiv.style.width = "100%";
-    // scoreDiv.style.left = "0px";
-    // scoreDiv.style.fontSize = "300px";
-    // resetDiv.style.visibility = "visible";
   }
 
   newScore = () => {
@@ -152,12 +137,6 @@ export default class App extends React.Component {
       duration: 500,
       useNativeDriver: true
     }).start();
-    // scoreDiv.style.transition = "top 2s, width 2s,left 2s, font-size 2s";
-    // scoreDiv.style.top = "40px";
-    // scoreDiv.style.width = "0px";
-    // scoreDiv.style.left = "10px";
-    // scoreDiv.style.fontSize = "80px";
-    // resetDiv.style.visibility = "hidden";
 
     this.setState({pause: false});
     this.init();
@@ -171,7 +150,6 @@ export default class App extends React.Component {
   getWidth = (mesh) => {
     let box3 = new THREE.Box3();
     box3.setFromObject(mesh);
-
     // console.log( box.min, box.max, box.size() );
     return Math.round(box3.max.x - box3.min.x);
   }
@@ -183,10 +161,8 @@ export default class App extends React.Component {
   }
 
   doGame = async () => {
-
     this.setState({score: 0, pause: false})
 
-    // document.addEventListener("keyup", keyUp);
     this.moving = false;
     this.timing = 0.10;
 
@@ -197,9 +173,6 @@ export default class App extends React.Component {
     this.waterCount = 0; // Terrain tiles
     this.road = [],
     this.roadCount = 0; //
-
-
-
     this.trees = [],
     this.treeCount = 0; //
     this.logs = [],
@@ -210,24 +183,12 @@ export default class App extends React.Component {
     this.carSpeed = []; //
     this.onLog = true;
 
+
     this.rowCount = 0;
     this.camCount = 0,
     this.camSpeed = .02;
-
-    // Widths used also in carCollision()
     this.heroWidth = .7;
-    this.carWidth = 1.5;
-    this.logWidth = 2;
-    this.cCollide = this.heroWidth / 2 + this.carWidth / 2 - .1;
-    this.lCollide = (this.heroWidth / 4 + this.logWidth / 4) + .5;
 
-
-    this.terrainGeo = new THREE.BoxGeometry(19, 1, 1);
-    this.terrainGeo.applyMatrix(new THREE.Matrix4().makeTranslation(0, 0, -0.5));
-    this.grassMat = material(0x55cc5f);
-    this.grassDarkMat = material(0x3c9143);
-
-    this.waterMat = material(0x71d7ff);
 
     this._road = new Road();
     this._grass = new Grass();
@@ -261,17 +222,11 @@ export default class App extends React.Component {
     });
     this.blindMat = material(0xADD8E6);
 
-    this.carGeo = new THREE.BoxGeometry(this.carWidth, .5, .7);
-    this.carMat = material(0x0077FF);
-
-
-    this.logGeo = new THREE.BoxGeometry(this.logWidth, .25, .6);
-    this.logMat = material(0x7F4D48);
 
     let bonusParticles;
 
     BonusParticles = function() {
-
+      this.waterMat = material(0x71d7ff);
       this.mesh = new THREE.Group();
       var bigParticleGeom = new THREE.CubeGeometry(10, 10, 10, 1);
       var smallParticleGeom = new THREE.CubeGeometry(0.1, 0.1, 0.1, 1);
@@ -322,10 +277,7 @@ export default class App extends React.Component {
     }
 
     this.createBonusParticles();
-
-
     this.createLights();
-
 
     // Mesh
     this.hero = new THREE.Object3D();
@@ -343,19 +295,10 @@ export default class App extends React.Component {
     // _heroMesh.position.y = -0.25
     this.hero.add(_hero.getNode());
 
-
-
-
     this.leftShade = new THREE.Mesh(this.shadeGeo, this.shadeMat);
     this.rightShade = new THREE.Mesh(this.shadeGeo, this.shadeMat);
     this.leftBlind = new THREE.Mesh(this.shadeGeo, this.blindMat);
     this.rightBlind = new THREE.Mesh(this.shadeGeo, this.blindMat);
-
-    this.grass[0] = new THREE.Mesh(this.terrainGeo, this.grassMat);
-    this.grass[0].receiveShadow = true;
-
-    this.grass[1] = new THREE.Mesh(this.terrainGeo, this.grassDarkMat);
-    this.grass[1].receiveShadow = true;
 
 
     this.road[0] = this._road.getRandom();
@@ -385,15 +328,6 @@ export default class App extends React.Component {
     this.scene.add(this.leftBlind);
     this.scene.add(this.rightBlind);
 
-    this.grass[0].rotation.x = 270 * Math.PI / 180;
-    this.grass[1].rotation.x = 270 * Math.PI / 180;
-
-
-    // this.road[0].rotation.x = 270 * Math.PI / 180;
-
-    this.grass[0].position.z = -30;
-
-    // this.road[0].position.z = -30;
 
     this.trees[0].position.set(0, .5, -30);
     this.cars[0].mesh.position.set(0, .25, -30);
@@ -409,8 +343,6 @@ export default class App extends React.Component {
 
       this.water[i] = this._river.getNode();
       this.road[i] = this._road.getRandom();
-      // this.road[i].receiveShadow = true;
-      // this.water[i].receiveShadow = true;
 
       this.scene.add(this.grass[i]);
       this.scene.add(this.water[i]);
@@ -433,7 +365,6 @@ export default class App extends React.Component {
       let _logMesh = this._log.getRandom();
       let _logWidth = this.getWidth(_logMesh);
       this.logs[i] = {mesh: _logMesh, width: _logWidth, collisionBox: (this.heroWidth / 2 + _logWidth / 2 - .1) };
-
       this.scene.add(_logMesh);
     }
 
@@ -444,6 +375,7 @@ export default class App extends React.Component {
 
   // Setup initial scene
   init = () => {
+    const offset = -30;
     const startingRow = 8;
     this.setState({score: 0})
     this.camera.position.z = startingRow;
@@ -457,21 +389,21 @@ export default class App extends React.Component {
     this.rowCount = 0;
 
     for (i = 0; i < 15; i++) {
-      this.grass[i].position.z = -30;
-      this.water[i].position.z = -30;
-      this.road[i].position.z = -30;
+      this.grass[i].position.z = offset;
+      this.water[i].position.z = offset;
+      this.road[i].position.z = offset;
     }
 
     for (i = 0; i < 55; i++) {
-      this.trees[i].position.z = -30;
+      this.trees[i].position.z = offset;
     }
 
     for (i = 0; i < 40; i++) {
 
-      this.cars[i].mesh.position.z = -30;
+      this.cars[i].mesh.position.z = offset;
       this.carSpeed[i] = 0;
 
-      this.logs[i].mesh.position.z = -30;
+      this.logs[i].mesh.position.z = offset;
       this.logSpeed[i] = 0;
     }
 
@@ -513,7 +445,7 @@ export default class App extends React.Component {
       this.grass[this.grassCount].position.z = this.rowCount;
       this.grassCount++;
     } else {
-      switch (rowKind || Math.floor(Math.random() * (4 - 1)) + 1) {
+      switch (rowKind || Math.floor(Math.random() * 3) + 1) {
         case 1:
         this.treeGen();
         this.grass[this.grassCount].position.z = this.rowCount;
@@ -528,9 +460,9 @@ export default class App extends React.Component {
         //   this.newRow(2);
         // }
 
-        let road = this._road.getNode(!isMultiLane ? "0" : "1");
-        road.position.z = this.rowCount;
-        this.scene.add(road);
+        // let road = this._road.getNode(!isMultiLane ? "0" : "1");
+        this.roads[this.roadCount].position.z = this.rowCount;
+        // this.scene.add(road);
         this.roadCount++;
         break;
 
@@ -567,6 +499,7 @@ export default class App extends React.Component {
         tree.position.set(x - 4, .4, this.rowCount);
         this.scene.add(tree);
         this.trees.push(tree);
+        this.treeCount ++;
         // this.trees[this.treeCount].position.set(x - 4, .4, this.rowCount);
       } else {
         if ((x !== 4 && Math.random() > .6) || isFull) {
@@ -709,8 +642,7 @@ export default class App extends React.Component {
   }
 
   carCollision = () => {
-
-    for (c = 0; c < this.cars.length; c++) {
+    for (let c = 0; c < this.cars.length; c++) {
       let car = this.cars[c];
       if (this.hero.position.z == car.mesh.position.z) {
 
@@ -719,7 +651,7 @@ export default class App extends React.Component {
         if (this.hero.position.x < this.cars[c].mesh.position.x + collisionBox && this.hero.position.x > this.cars[c].mesh.position.x - collisionBox) {
 
           ///Run Over Hero. ///TODO: Add a side collide
-          this.hero.scale.y = 0.01;
+          this.hero.scale.y = 0.1;
           this.hero.position.y = groundLevel;
 
           this.useParticle(this.hero, 'feathers');
@@ -752,7 +684,6 @@ export default class App extends React.Component {
     });
   }
 
-
   moveUserOnLog = () => {
     if (!this.currentLog || this.currentLog < 0 || this.currentLog >= this.logs.length) {
       return;
@@ -774,425 +705,403 @@ export default class App extends React.Component {
         const heroX = this.hero.position.x | 0;
 
         if (heroX < logX + collisionBox && heroX > logX - collisionBox) {
-            this.onLog = true;
-            if (this.currentLog != l) {
-              this.currentLog = l;
-              this.currentLogSubIndex = (heroX - logX);
-              console.warn(this.currentLogSubIndex);
-              this.bounceLog(mesh);
-            }
-
-              // let target = 0;
-              // if (heroX > logX) {
-              //   target = (mesh.position.x + 0.5);
-              // } else {
-              //   target = (mesh.position.x - .5);
-              // }
-              // this.hero.position.x += ((target - this.hero.position.x));
-
-
-
+          this.onLog = true;
+          if (this.currentLog != l) {
+            this.currentLog = l;
+            this.currentLogSubIndex = (heroX - logX);
+            this.bounceLog(mesh);
           }
         }
       }
-    }
-
-    waterCollision = () => {
-
-      if (this.onLog === false) {
-        for (w = 0; w < this.water.length; w++) {
-          if (this.hero.position.z == this.water[w].position.z) {
-
-            this.useParticle(this.hero, 'water');
-            this.gameOver();
-
-            let y = Math.sin(this.sineCount) * .08 - .2;
-            this.sineCount += this.sineInc;
-            this.hero.position.y = y;
-
-            for (w = 0; w < this.logSpeed.length; w++) {
-              if (this.hero.position.z == this.logs[w].mesh.position.z) {
-                this.hero.position.x += this.logSpeed[w] / 3;
-              }
-            }
-          }
-        }
-      }
-    }
-
-    // Move scene forward
-    forwardScene = () => {
-      if (!this.state.pause) {
-        if (Math.floor(this.camera.position.z) < this.hero.position.z - 4) {
-          // speed up camera to follow player
-          this.camera.position.z += .033;
-          if (this.camCount > 1.8) {
-            this.camCount = 0;
-            this.newRow();
-            this.newRow();
-            this.newRow();
-          } else {
-            this.camCount += this.camSpeed;
-          }
-
-        } else {
-          this.camera.position.z += .011;
-          // normal camera speed
-          if (this.camCount > 1.8) {
-            this.camCount = 0;
-            this.newRow();
-          } else {
-            this.camCount += this.camSpeed;
-          }
-        }
-
-      }
-    }
-
-    // Reset variables, restart game
-    gameOver = () => {
-      if (!this.state.pause) {
-        // this.useParticle(this.hero);
-      }
-      // this.trees.map(val => this.scene.remove(val) );
-      this.setState({pause: true});
-
-      this.endScore();
-    }
-
-    tick = dt => {
-      this.drive();
-      if (!this.moving) {
-        this.carCollision();
-        this.logCollision();
-        this.waterCollision();
-
-        this.moveUserOnLog();
-
-        this.updateScore();
-        this.checkIfUserHasFallenOutOfFrame();
-      }
-
-      this.forwardScene();
-    }
-
-
-    checkIfUserHasFallenOutOfFrame = () => {
-      if (this.hero.position.z < this.camera.position.z - 8) {
-
-        ///TODO: rumble
-        this.gameOver();
-      }
-
-      /// Check if offscreen
-      if (this.hero.position.x < -5 || this.hero.position.x > 5) {
-
-        ///TODO: Rumble death
-
-        this.gameOver();
-      }
-    }
-
-    updateScore = () => {
-      const position = Math.floor(this.hero.position.z) - 8;
-      if (this.state.score < position) {
-        this.setState({score: position})
-      }
-    }
-
-    moveWithDirection = direction => {
-      if (this.state.pause ) {
-        this.newScore();
-        return;
-      }
-      this.onLog = false;
-      this.currentLog = null;
-      let timing = 0.5;
-
-      // TweenMax.to(this.hero.scale, timing, {
-      //   x: 1.2,
-      //   y: 0.8,
-      //   z: 1,
-      //   ease: Bounce.easeOut,
-      // });
-
-      const {SWIPE_UP, SWIPE_DOWN, SWIPE_LEFT, SWIPE_RIGHT} = swipeDirections;
-
-      switch (direction) {
-        case SWIPE_LEFT:
-        this.hero.rotation.y = Math.PI/2
-        if (!this.treeCollision("left")) {
-          if (this.hero.position.x !== 4) {
-
-            if (this.moving) {
-              return
-            };
-            this.moving = true
-
-            TweenMax.to(this.hero.position, this.timing, {
-              x: this.hero.position.x + 0.75,
-              y: groundLevel + 0.5,
-              z: this.hero.position.z,
-            });
-            TweenMax.to(this.hero.scale, this.timing, {
-              x: 1,
-              y: 1.2,
-              z: 1,
-            });
-            TweenMax.to(this.hero.scale, this.timing, {
-              x: 1.0,
-              y: 0.8,
-              z: 1,
-              delay: this.timing
-            });
-            TweenMax.to(this.hero.scale, this.timing, {
-              x: 1,
-              y: 1,
-              z: 1,
-              ease: Bounce.easeOut,
-              delay: this.timing * 2
-
-            });
-
-            TweenMax.to(this.hero.position, this.timing, {
-              x: this.hero.position.x + 1,
-              y: this.hero.position.y,
-              z: this.hero.position.z,
-              ease: Power4.easeOut,
-              delay: 0.151,
-              onComplete: this.doneMoving,
-              onCompleteParams: []
-            });
-          }
-        }
-        break;
-        case SWIPE_RIGHT:
-        this.hero.rotation.y = -Math.PI/2
-        if (!this.treeCollision("right")) {
-          if (this.hero.position.x !== -4) {
-
-            if (this.moving) {
-              return
-            }
-
-            this.moving = true
-
-
-            TweenMax.to(this.hero.position, this.timing, {
-              x: this.hero.position.x - 0.75,
-              y: groundLevel + 0.5,
-              z: this.hero.position.z,
-            });
-            TweenMax.to(this.hero.scale, this.timing, {
-              x: 1,
-              y: 1.2,
-              z: 1,
-            });
-            TweenMax.to(this.hero.scale, this.timing, {
-              x: 1.0,
-              y: 0.8,
-              z: 1,
-              delay: this.timing
-            });
-            TweenMax.to(this.hero.scale, this.timing, {
-              x: 1,
-              y: 1,
-              z: 1,
-              ease: Bounce.easeOut,
-              delay: this.timing * 2
-
-            });
-
-            TweenMax.to(this.hero.position, this.timing, {
-              x: this.hero.position.x - 1,
-              y: this.hero.position.y,
-              z: this.hero.position.z,
-              ease: Power4.easeOut,
-              delay: 0.151,
-              onComplete: this.doneMoving,
-              onCompleteParams: []
-            });
-          }
-        }
-        break;
-        case SWIPE_UP:
-        let targetHorizontal = Math.round(this.hero.position.x);
-        this.hero.rotation.y = 0;
-        if (!this.treeCollision("up")) {
-          if (this.moving) {
-            return
-          };
-          this.moving = true
-
-          TweenMax.to(this.hero.position, this.timing, {
-            x: targetHorizontal,
-            y: groundLevel + 0.5,
-            z: this.hero.position.z + 0.75,
-          });
-          TweenMax.to(this.hero.scale, this.timing, {
-            x: 1,
-            y: 1.2,
-            z: 1,
-          });
-          TweenMax.to(this.hero.scale, this.timing, {
-            x: 1.0,
-            y: 0.8,
-            z: 1,
-            delay: this.timing
-          });
-          TweenMax.to(this.hero.scale, this.timing, {
-            x: 1,
-            y: 1,
-            z: 1,
-            ease: Bounce.easeOut,
-            delay: this.timing * 2
-
-          });
-
-          TweenMax.to(this.hero.position, this.timing, {
-            x: targetHorizontal,
-            y: this.hero.position.y,
-            z: this.hero.position.z + 1,
-            ease: Power4.easeOut,
-            delay: 0.151,
-            onComplete: this.doneMoving,
-            onCompleteParams: []
-          });
-        }
-        break;
-        case SWIPE_DOWN:
-        this.hero.position.x = Math.round(this.hero.position.x);
-        this.hero.rotation.y = Math.PI
-        if (!this.treeCollision("down")) {
-
-          if (this.moving) {
-            return
-          };
-          this.moving = true
-
-          TweenMax.to(this.hero.position, this.timing, {
-            x: this.hero.position.x,
-            y: groundLevel + 0.5,
-            z: this.hero.position.z - 0.75,
-          });
-          TweenMax.to(this.hero.scale, this.timing, {
-            x: 1,
-            y: 1.2,
-            z: 1,
-          });
-          TweenMax.to(this.hero.scale, this.timing, {
-            x: 1.0,
-            y: 0.8,
-            z: 1,
-            delay: this.timing
-          });
-          TweenMax.to(this.hero.scale, this.timing, {
-            x: 1,
-            y: 1,
-            z: 1,
-            ease: Bounce.easeOut,
-            delay: this.timing * 2
-          });
-
-          TweenMax.to(this.hero.position, this.timing, {
-            x: this.hero.position.x,
-            y: this.hero.position.y,
-            z: this.hero.position.z - 1,
-            ease: Power4.easeOut,
-            delay: 0.151,
-            onComplete: this.doneMoving,
-            onCompleteParams: []
-          });
-
-        }
-        break;
-      }
-    }
-
-    beginMoveWithDirection = direction => {
-      if (this.state.pause) {
-        return;
-      }
-
-      let timing = 0.3;
-
-      TweenMax.to(this.hero.scale, timing, {
-        x: 1.2,
-        y: 0.8,
-        z: 1,
-        ease: Bounce.easeOut,
-      });
-    }
-
-    onSwipe = (gestureName, gestureState) => {
-      this.moveWithDirection(gestureName);
-    }
-
-    render() {
-      const config = {
-        velocityThreshold: 0.3,
-        directionalOffsetThreshold: 80
-      };
-
-      if (!this.state.ready) {
-        return null;
-      }
-
-      return (
-        <View style={{flex: 1, backgroundColor: '#6dceea'}}>
-          <AnimatedGestureRecognizer
-            onResponderGrant={_=> {
-              this.beginMoveWithDirection();
-            }}
-            onSwipe={(direction, state) => this.onSwipe(direction, state)}
-            config={config}
-            style={{
-              flex: 1,
-              // opacity: scoreAnimation.interpolate({
-              //   inputRange: [0, 1],
-              //   outputRange: [1, 0],
-              // })
-            }}
-            >
-              <TouchableWithoutFeedback onPressIn={_=> {
-                  this.beginMoveWithDirection();
-
-                }} style={{flex: 1}} onPress={_=> {
-                  this.onSwipe(swipeDirections.SWIPE_UP, {});
-                }}>
-                <THREEView
-                  backgroundColor={sceneColor}
-                  shadowMapEnabled={true}
-                  shadowMapRenderSingleSided={false}
-                  style={{ flex: 1 }}
-                  scene={this.scene}
-                  camera={this.camera}
-                  tick={this.tick}
-                />
-              </TouchableWithoutFeedback>
-            </AnimatedGestureRecognizer>
-            { this.state.pause && (
-              <View pointerEvents="none" style={{position: 'absolute', left: 0, top: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0,0,0,0.2)', justifyContent: 'center', alignItems: 'center'}}>
-                <RetroText style={{color: 'white', fontSize: 48, backgroundColor: 'transparent',  textAlign: 'center'}}>Tap To Play!</RetroText>
-            </View>
-          )}
-          <AnimatedText pointerEvents={'none'} style={[{color: 'white', fontSize: 48, backgroundColor: 'transparent', position: 'absolute', top: 32, left: 16}, {transform: [
-              {translateX: scoreAnimation.interpolate({
-                inputRange: [0, 1],
-                outputRange: [0, 50]
-              })},
-              {translateY: scoreAnimation.interpolate({
-                inputRange: [0, 1],
-                outputRange: [0, 50]
-              })},
-              {scale: scoreAnimation.interpolate({
-                inputRange: [0, 1],
-                outputRange: [1, 2.5]
-              })},
-            ]}]}>
-            {this.state.score}
-          </AnimatedText>
-        </View>
-      );
     }
   }
+
+  waterCollision = () => {
+
+    if (this.onLog === false) {
+      for (w = 0; w < this.water.length; w++) {
+        if (this.hero.position.z == this.water[w].position.z) {
+
+          this.useParticle(this.hero, 'water');
+          this.gameOver();
+
+          let y = Math.sin(this.sineCount) * .08 - .2;
+          this.sineCount += this.sineInc;
+          this.hero.position.y = y;
+
+          for (w = 0; w < this.logSpeed.length; w++) {
+            if (this.hero.position.z == this.logs[w].mesh.position.z) {
+              this.hero.position.x += this.logSpeed[w] / 3;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  // Move scene forward
+  forwardScene = () => {
+    if (!this.state.pause) {
+      if (Math.floor(this.camera.position.z) < this.hero.position.z - 4) {
+        // speed up camera to follow player
+        this.camera.position.z += .033;
+        if (this.camCount > 1.8) {
+          this.camCount = 0;
+          this.newRow();
+          this.newRow();
+          this.newRow();
+        } else {
+          this.camCount += this.camSpeed;
+        }
+
+      } else {
+        this.camera.position.z += .011;
+        // normal camera speed
+        if (this.camCount > 1.8) {
+          this.camCount = 0;
+          this.newRow();
+        } else {
+          this.camCount += this.camSpeed;
+        }
+      }
+
+    }
+  }
+
+  // Reset variables, restart game
+  gameOver = () => {
+    // this.trees.map(val => this.scene.remove(val) );
+    this.setState({pause: true});
+
+    this.endScore();
+  }
+
+  tick = dt => {
+    this.drive();
+    if (!this.moving) {
+      this.carCollision();
+      this.logCollision();
+      this.waterCollision();
+
+      this.moveUserOnLog();
+
+      this.updateScore();
+      this.checkIfUserHasFallenOutOfFrame();
+    }
+
+    this.forwardScene();
+  }
+
+
+  checkIfUserHasFallenOutOfFrame = () => {
+    if (this.hero.position.z < this.camera.position.z - 8) {
+
+      ///TODO: rumble
+      this.gameOver();
+    }
+
+    /// Check if offscreen
+    if (this.hero.position.x < -5 || this.hero.position.x > 5) {
+
+      ///TODO: Rumble death
+
+      this.gameOver();
+    }
+  }
+
+  updateScore = () => {
+    const position = Math.floor(this.hero.position.z) - 8;
+    if (this.state.score < position) {
+      this.setState({score: position})
+    }
+  }
+
+  moveWithDirection = direction => {
+    if (this.state.pause ) {
+      this.newScore();
+      return;
+    }
+    this.onLog = false;
+    this.currentLog = null;
+    let timing = 0.5;
+
+    const {SWIPE_UP, SWIPE_DOWN, SWIPE_LEFT, SWIPE_RIGHT} = swipeDirections;
+
+    switch (direction) {
+      case SWIPE_LEFT:
+      this.hero.rotation.y = Math.PI/2
+      if (!this.treeCollision("left")) {
+        if (this.hero.position.x !== 4) {
+
+          if (this.moving) {
+            return
+          };
+          this.moving = true
+
+          TweenMax.to(this.hero.position, this.timing, {
+            x: this.hero.position.x + 0.75,
+            y: groundLevel + 0.5,
+            z: this.hero.position.z,
+          });
+          TweenMax.to(this.hero.scale, this.timing, {
+            x: 1,
+            y: 1.2,
+            z: 1,
+          });
+          TweenMax.to(this.hero.scale, this.timing, {
+            x: 1.0,
+            y: 0.8,
+            z: 1,
+            delay: this.timing
+          });
+          TweenMax.to(this.hero.scale, this.timing, {
+            x: 1,
+            y: 1,
+            z: 1,
+            ease: Bounce.easeOut,
+            delay: this.timing * 2
+
+          });
+
+          TweenMax.to(this.hero.position, this.timing, {
+            x: this.hero.position.x + 1,
+            y: this.hero.position.y,
+            z: this.hero.position.z,
+            ease: Power4.easeOut,
+            delay: 0.151,
+            onComplete: this.doneMoving,
+            onCompleteParams: []
+          });
+        }
+      }
+      break;
+      case SWIPE_RIGHT:
+      this.hero.rotation.y = -Math.PI/2
+      if (!this.treeCollision("right")) {
+        if (this.hero.position.x !== -4) {
+
+          if (this.moving) {
+            return
+          }
+
+          this.moving = true
+
+
+          TweenMax.to(this.hero.position, this.timing, {
+            x: this.hero.position.x - 0.75,
+            y: groundLevel + 0.5,
+            z: this.hero.position.z,
+          });
+          TweenMax.to(this.hero.scale, this.timing, {
+            x: 1,
+            y: 1.2,
+            z: 1,
+          });
+          TweenMax.to(this.hero.scale, this.timing, {
+            x: 1.0,
+            y: 0.8,
+            z: 1,
+            delay: this.timing
+          });
+          TweenMax.to(this.hero.scale, this.timing, {
+            x: 1,
+            y: 1,
+            z: 1,
+            ease: Bounce.easeOut,
+            delay: this.timing * 2
+
+          });
+
+          TweenMax.to(this.hero.position, this.timing, {
+            x: this.hero.position.x - 1,
+            y: this.hero.position.y,
+            z: this.hero.position.z,
+            ease: Power4.easeOut,
+            delay: 0.151,
+            onComplete: this.doneMoving,
+            onCompleteParams: []
+          });
+        }
+      }
+      break;
+      case SWIPE_UP:
+      let targetHorizontal = Math.round(this.hero.position.x);
+      this.hero.rotation.y = 0;
+      if (!this.treeCollision("up")) {
+        if (this.moving) {
+          return
+        };
+        this.moving = true
+
+        TweenMax.to(this.hero.position, this.timing, {
+          x: targetHorizontal,
+          y: groundLevel + 0.5,
+          z: this.hero.position.z + 0.75,
+        });
+        TweenMax.to(this.hero.scale, this.timing, {
+          x: 1,
+          y: 1.2,
+          z: 1,
+        });
+        TweenMax.to(this.hero.scale, this.timing, {
+          x: 1.0,
+          y: 0.8,
+          z: 1,
+          delay: this.timing
+        });
+        TweenMax.to(this.hero.scale, this.timing, {
+          x: 1,
+          y: 1,
+          z: 1,
+          ease: Bounce.easeOut,
+          delay: this.timing * 2
+
+        });
+
+        TweenMax.to(this.hero.position, this.timing, {
+          x: targetHorizontal,
+          y: this.hero.position.y,
+          z: this.hero.position.z + 1,
+          ease: Power4.easeOut,
+          delay: 0.151,
+          onComplete: this.doneMoving,
+          onCompleteParams: []
+        });
+      }
+      break;
+      case SWIPE_DOWN:
+      this.hero.position.x = Math.round(this.hero.position.x);
+      this.hero.rotation.y = Math.PI
+      if (!this.treeCollision("down")) {
+
+        if (this.moving) {
+          return
+        };
+        this.moving = true
+
+        TweenMax.to(this.hero.position, this.timing, {
+          x: this.hero.position.x,
+          y: groundLevel + 0.5,
+          z: this.hero.position.z - 0.75,
+        });
+        TweenMax.to(this.hero.scale, this.timing, {
+          x: 1,
+          y: 1.2,
+          z: 1,
+        });
+        TweenMax.to(this.hero.scale, this.timing, {
+          x: 1.0,
+          y: 0.8,
+          z: 1,
+          delay: this.timing
+        });
+        TweenMax.to(this.hero.scale, this.timing, {
+          x: 1,
+          y: 1,
+          z: 1,
+          ease: Bounce.easeOut,
+          delay: this.timing * 2
+        });
+
+        TweenMax.to(this.hero.position, this.timing, {
+          x: this.hero.position.x,
+          y: this.hero.position.y,
+          z: this.hero.position.z - 1,
+          ease: Power4.easeOut,
+          delay: 0.151,
+          onComplete: this.doneMoving,
+          onCompleteParams: []
+        });
+
+      }
+      break;
+    }
+  }
+
+  beginMoveWithDirection = direction => {
+    if (this.state.pause) {
+      return;
+    }
+
+    let timing = 0.3;
+
+    TweenMax.to(this.hero.scale, timing, {
+      x: 1.2,
+      y: 0.8,
+      z: 1,
+      ease: Bounce.easeOut,
+    });
+  }
+
+  onSwipe = (gestureName, gestureState) => {
+    this.moveWithDirection(gestureName);
+  }
+
+  render() {
+    const config = {
+      velocityThreshold: 0.3,
+      directionalOffsetThreshold: 80
+    };
+
+    if (!this.state.ready) {
+      return null;
+    }
+
+    return (
+      <View style={{flex: 1, backgroundColor: '#6dceea'}}>
+        <AnimatedGestureRecognizer
+          onResponderGrant={_=> {
+            this.beginMoveWithDirection();
+          }}
+          onSwipe={(direction, state) => this.onSwipe(direction, state)}
+          config={config}
+          style={{
+            flex: 1,
+            // opacity: scoreAnimation.interpolate({
+            //   inputRange: [0, 1],
+            //   outputRange: [1, 0],
+            // })
+          }}
+          >
+            <TouchableWithoutFeedback onPressIn={_=> {
+                this.beginMoveWithDirection();
+
+              }} style={{flex: 1}} onPress={_=> {
+                this.onSwipe(swipeDirections.SWIPE_UP, {});
+              }}>
+              <THREEView
+                backgroundColor={sceneColor}
+                shadowMapEnabled={true}
+                shadowMapRenderSingleSided={false}
+                style={{ flex: 1 }}
+                scene={this.scene}
+                camera={this.camera}
+                tick={this.tick}
+              />
+            </TouchableWithoutFeedback>
+          </AnimatedGestureRecognizer>
+          { this.state.pause && (
+            <View pointerEvents="none" style={{position: 'absolute', left: 0, top: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0,0,0,0.2)', justifyContent: 'center', alignItems: 'center'}}>
+              <RetroText style={{color: 'white', fontSize: 48, backgroundColor: 'transparent',  textAlign: 'center'}}>Tap To Play!</RetroText>
+          </View>
+        )}
+        <AnimatedText pointerEvents={'none'} style={[{color: 'white', fontSize: 48, backgroundColor: 'transparent', position: 'absolute', top: 32, left: 16}, {transform: [
+            {translateX: scoreAnimation.interpolate({
+              inputRange: [0, 1],
+              outputRange: [0, 50]
+            })},
+            {translateY: scoreAnimation.interpolate({
+              inputRange: [0, 1],
+              outputRange: [0, 50]
+            })},
+            {scale: scoreAnimation.interpolate({
+              inputRange: [0, 1],
+              outputRange: [1, 2.5]
+            })},
+          ]}]}>
+          {this.state.score}
+        </AnimatedText>
+      </View>
+    );
+  }
+}
