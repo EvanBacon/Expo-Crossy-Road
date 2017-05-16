@@ -5,8 +5,6 @@ import {TouchableWithoutFeedback, Animated, Dimensions,Text,View} from 'react-na
 
 import GestureRecognizer, {swipeDirections} from './GestureView';
 
-import ModelLoader from '../utils/ModelLoader';
-
 import {TweenMax, Power2, TimelineLite} from "gsap";
 
 const {THREE} = global;
@@ -429,7 +427,6 @@ export default class App extends React.Component {
       let _carMesh = this._car.getRandom();
       let _carWidth = this.getDepth(_carMesh);
       this.cars[i] = {mesh: _carMesh, width: _carWidth, collisionBox: (this.heroWidth / 2 + _carWidth / 2 - .1) };
-console.warn(_carWidth);
       this.scene.add(_carMesh);
     }
     for (i = 0; i < 40; i++) {
@@ -734,53 +731,67 @@ console.warn(_carWidth);
 
   currentLog = -1;
 
+  bounceLog = mesh => {
+    let timing = 0.2;
+    TweenMax.to(mesh.position, timing * 0.9, {
+      y: -0.3,
+    });
+
+    TweenMax.to(mesh.position, timing, {
+      y: -0.1,
+      delay: timing
+    });
+
+    TweenMax.to(this.hero.position, timing * 0.9, {
+      y: groundLevel + -0.1,
+    });
+
+    TweenMax.to(this.hero.position, timing, {
+      y: groundLevel,
+      delay: timing
+    });
+  }
+
+
+  moveUserOnLog = () => {
+    if (!this.currentLog || this.currentLog < 0 || this.currentLog >= this.logs.length) {
+      return;
+    }
+
+    const log = this.logs[this.currentLog];
+    let target = log.mesh.position.x + this.currentLogSubIndex;
+    this.hero.position.x = target;
+
+  }
+
   logCollision = () => {
+
     for (let l = 0; l < this.logs.length; l++) {
       let log = this.logs[l];
       if (this.hero.position.z == log.mesh.position.z) {
-        const {collisionBox} = log;
-        if (this.hero.position.x < log.mesh.position.x + collisionBox && this.hero.position.x > log.mesh.position.x - collisionBox) {
+        const {collisionBox, mesh} = log;
+        const logX = mesh.position.x | 0;
+        const heroX = this.hero.position.x | 0;
+
+        if (heroX < logX + collisionBox && heroX > logX - collisionBox) {
             this.onLog = true;
             if (this.currentLog != l) {
               this.currentLog = l;
-              let timing = 0.2;
-              TweenMax.to(log.mesh.position, timing * 0.9, {
-                y: -0.3,
-              });
-
-              TweenMax.to(log.mesh.position, timing, {
-                y: -0.1,
-                delay: timing
-              });
-
-              TweenMax.to(this.hero.position, timing * 0.9, {
-                y: groundLevel + -0.1,
-              });
-
-              TweenMax.to(this.hero.position, timing, {
-                y: groundLevel,
-                delay: timing
-              });
+              this.currentLogSubIndex = (heroX - logX);
+              console.warn(this.currentLogSubIndex);
+              this.bounceLog(mesh);
             }
 
-            if (!this.moving) {
+              // let target = 0;
+              // if (heroX > logX) {
+              //   target = (mesh.position.x + 0.5);
+              // } else {
+              //   target = (mesh.position.x - .5);
+              // }
+              // this.hero.position.x += ((target - this.hero.position.x));
 
-              if (this.hero.position.x > log.mesh.position.x) {
-                let target = (log.mesh.position.x + .5);
-                this.hero.position.x += ((target - this.hero.position.x)) ;
-              } else {
-                let target = (log.mesh.position.x - .5);
-                this.hero.position.x += ((target - this.hero.position.x));
-              }
-            }
 
-            /// Check if offscreen
-            if (this.hero.position.x < -5 || this.hero.position.x > 5) {
 
-              ///TODO: Rumble death
-
-              this.gameOver();
-            }
           }
         }
       }
@@ -793,12 +804,12 @@ console.warn(_carWidth);
           if (this.hero.position.z == this.water[w].position.z) {
 
             this.useParticle(this.hero, 'water');
-
             this.gameOver();
 
             let y = Math.sin(this.sineCount) * .08 - .2;
             this.sineCount += this.sineInc;
             this.hero.position.y = y;
+
             for (w = 0; w < this.logSpeed.length; w++) {
               if (this.hero.position.z == this.logs[w].mesh.position.z) {
                 this.hero.position.x += this.logSpeed[w] / 3;
@@ -851,12 +862,18 @@ console.warn(_carWidth);
 
     tick = dt => {
       this.drive();
-      this.carCollision();
-      this.logCollision();
-      this.waterCollision();
+      if (!this.moving) {
+        this.carCollision();
+        this.logCollision();
+        this.waterCollision();
+
+        this.moveUserOnLog();
+
+        this.updateScore();
+        this.checkIfUserHasFallenOutOfFrame();
+      }
+
       this.forwardScene();
-      this.updateScore();
-      this.checkIfUserHasFallenOutOfFrame();
     }
 
 
@@ -864,6 +881,14 @@ console.warn(_carWidth);
       if (this.hero.position.z < this.camera.position.z - 8) {
 
         ///TODO: rumble
+        this.gameOver();
+      }
+
+      /// Check if offscreen
+      if (this.hero.position.x < -5 || this.hero.position.x > 5) {
+
+        ///TODO: Rumble death
+
         this.gameOver();
       }
     }
@@ -881,7 +906,7 @@ console.warn(_carWidth);
         return;
       }
       this.onLog = false;
-
+      this.currentLog = null;
       let timing = 0.5;
 
       // TweenMax.to(this.hero.scale, timing, {

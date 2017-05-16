@@ -1,7 +1,6 @@
 import Expo from 'expo'
 import React, {Component} from 'react';
 import GenericNode from './GenericNode';
-import ModelLoader from '../utils/ModelLoader';
 
 const cars = [
   'police_car',
@@ -22,7 +21,7 @@ export default class Car extends GenericNode {
       const model = await this._download(car);
       this.models[`${index}`] = model;
     }
-  
+
     return this.models;
   }
 }

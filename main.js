@@ -2,8 +2,6 @@ import Expo, {AppLoading} from 'expo';
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import Game from './src/Game'
-import ModelLoader from './utils/ModelLoader';
-
 
 import * as THREE from 'three';
 

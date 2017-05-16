@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import GenericNode from './GenericNode';
-import ModelLoader from '../utils/ModelLoader';
 
 export default class Grass extends GenericNode {
   setup = async () => {
