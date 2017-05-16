@@ -383,6 +383,8 @@ export default class App extends React.Component {
     this.hero.position.set(0, groundLevel, startingRow);
     this.hero.scale.set(1,1,1);
 
+    this.initialPosition = null;
+    this.targetPosition = null;
     this.grassCount = 0;
     this.waterCount = 0;
     this.roadCount = 0;
@@ -832,198 +834,91 @@ export default class App extends React.Component {
 
     if (!this.initialPosition) {
       this.initialPosition = this.hero.position;
+      this.targetPosition = this.initialPosition;
     }
+
+    if (this.moving) {
+        this.hero.position = this.targetPosition;
+      // return
+    };
 
     switch (direction) {
       case SWIPE_LEFT:
       this.hero.rotation.y = Math.PI/2
       if (!this.treeCollision("left")) {
-        if (this.hero.position.x !== 4) {
+        this.targetPosition = {x: this.initialPosition.x + 1, y: this.initialPosition.y, z: this.initialPosition.z};
+        this.moving = true
 
-          if (this.moving) {
-            return
-          };
-          this.moving = true
-
-          TweenMax.to(this.hero.position, this.timing, {
-            x: this.initialPosition.x + 0.75,
-            y: groundLevel + 0.5,
-            z: this.initialPosition.z,
-          });
-          TweenMax.to(this.hero.scale, this.timing, {
-            x: 1,
-            y: 1.2,
-            z: 1,
-          });
-          TweenMax.to(this.hero.scale, this.timing, {
-            x: 1.0,
-            y: 0.8,
-            z: 1,
-            delay: this.timing
-          });
-          TweenMax.to(this.hero.scale, this.timing, {
-            x: 1,
-            y: 1,
-            z: 1,
-            ease: Bounce.easeOut,
-            delay: this.timing * 2
-
-          });
-
-          TweenMax.to(this.hero.position, this.timing, {
-            x: this.initialPosition.x + 1,
-            y: this.initialPosition.y,
-            z: this.initialPosition.z,
-            ease: Power4.easeOut,
-            delay: 0.151,
-            onComplete: this.doneMoving,
-            onCompleteParams: []
-          });
-        }
       }
       break;
       case SWIPE_RIGHT:
       this.hero.rotation.y = -Math.PI/2
       if (!this.treeCollision("right")) {
-        if (this.initialPosition.x !== -4) {
-
-          if (this.moving) {
-            return
-          }
-
+          this.targetPosition = {x: this.initialPosition.x - 1, y: this.initialPosition.y, z: this.initialPosition.z};
           this.moving = true
 
-
-          TweenMax.to(this.hero.position, this.timing, {
-            x: this.initialPosition.x - 0.75,
-            y: groundLevel + 0.5,
-            z: this.initialPosition.z,
-          });
-          TweenMax.to(this.hero.scale, this.timing, {
-            x: 1,
-            y: 1.2,
-            z: 1,
-          });
-          TweenMax.to(this.hero.scale, this.timing, {
-            x: 1.0,
-            y: 0.8,
-            z: 1,
-            delay: this.timing
-          });
-          TweenMax.to(this.hero.scale, this.timing, {
-            x: 1,
-            y: 1,
-            z: 1,
-            ease: Bounce.easeOut,
-            delay: this.timing * 2
-
-          });
-
-          TweenMax.to(this.hero.position, this.timing, {
-            x: this.initialPosition.x - 1,
-            y: this.initialPosition.y,
-            z: this.initialPosition.z,
-            ease: Power4.easeOut,
-            delay: 0.151,
-            onComplete: this.doneMoving,
-            onCompleteParams: []
-          });
-        }
       }
       break;
       case SWIPE_UP:
-      let targetHorizontal = Math.round(this.initialPosition.x);
       this.hero.rotation.y = 0;
       if (!this.treeCollision("up")) {
-        if (this.moving) {
-          return
-        };
+        this.targetPosition = {x: this.initialPosition.x, y: this.initialPosition.y, z: this.initialPosition.z + 1};
         this.moving = true
 
-        TweenMax.to(this.hero.position, this.timing, {
-          x: targetHorizontal,
-          y: groundLevel + 0.5,
-          z: this.initialPosition.z + 0.75,
-        });
-        TweenMax.to(this.hero.scale, this.timing, {
-          x: 1,
-          y: 1.2,
-          z: 1,
-        });
-        TweenMax.to(this.hero.scale, this.timing, {
-          x: 1.0,
-          y: 0.8,
-          z: 1,
-          delay: this.timing
-        });
-        TweenMax.to(this.hero.scale, this.timing, {
-          x: 1,
-          y: 1,
-          z: 1,
-          ease: Bounce.easeOut,
-          delay: this.timing * 2
-
-        });
-
-        TweenMax.to(this.hero.position, this.timing, {
-          x: targetHorizontal,
-          y: this.initialPosition.y,
-          z: this.initialPosition.z + 1,
-          ease: Power4.easeOut,
-          delay: 0.151,
-          onComplete: this.doneMoving,
-          onCompleteParams: []
-        });
       }
       break;
       case SWIPE_DOWN:
-      // this.hero.position.x = Math.round(this.initialPosition.x);
       this.hero.rotation.y = Math.PI
       if (!this.treeCollision("down")) {
-
-        if (this.moving) {
-          return
-        };
+        this.targetPosition = {x: this.initialPosition.x, y: this.initialPosition.y, z: this.initialPosition.z - 1};
         this.moving = true
-
-        TweenMax.to(this.hero.position, this.timing, {
-          x: this.initialPosition.x,
-          y: groundLevel + 0.5,
-          z: this.initialPosition.z - 0.75,
-        });
-        TweenMax.to(this.hero.scale, this.timing, {
-          x: 1,
-          y: 1.2,
-          z: 1,
-        });
-        TweenMax.to(this.hero.scale, this.timing, {
-          x: 1.0,
-          y: 0.8,
-          z: 1,
-          delay: this.timing
-        });
-        TweenMax.to(this.hero.scale, this.timing, {
-          x: 1,
-          y: 1,
-          z: 1,
-          ease: Bounce.easeOut,
-          delay: this.timing * 2
-        });
-
-        TweenMax.to(this.hero.position, this.timing, {
-          x: this.initialPosition.x,
-          y: this.initialPosition.y,
-          z: this.initialPosition.z - 1,
-          ease: Power4.easeOut,
-          delay: 0.151,
-          onComplete: this.doneMoving,
-          onCompleteParams: []
-        });
 
       }
       break;
     }
-    this.initialPosition = this.hero.position;
+
+
+
+    const {targetPosition, initialPosition} = this;
+    const delta = {x: targetPosition.x - initialPosition.x, y: targetPosition.y - initialPosition.y, z: targetPosition.z - initialPosition.z}
+
+    TweenMax.to(this.hero.position, this.timing, {
+      x: this.initialPosition.x + (delta.x * 0.75),
+      y: groundLevel + 0.5,
+      z: this.initialPosition.z + (delta.z * 0.75),
+    });
+
+    TweenMax.to(this.hero.scale, this.timing, {
+      x: 1,
+      y: 1.2,
+      z: 1,
+    });
+    TweenMax.to(this.hero.scale, this.timing, {
+      x: 1.0,
+      y: 0.8,
+      z: 1,
+      delay: this.timing
+    });
+    TweenMax.to(this.hero.scale, this.timing, {
+      x: 1,
+      y: 1,
+      z: 1,
+      ease: Bounce.easeOut,
+      delay: this.timing * 2
+    });
+
+    TweenMax.to(this.hero.position, this.timing, {
+      x: this.targetPosition.x,
+      y: this.targetPosition.y,
+      z: this.targetPosition.z,
+      ease: Power4.easeOut,
+      delay: 0.151,
+      onComplete: this.doneMoving,
+      onCompleteParams: []
+    });
+
+
+    this.initialPosition = this.targetPosition;
 
   }
 
