@@ -1,6 +1,6 @@
 import Expo from 'expo'
 import React, {Component} from 'react';
-import GenericNode from './GenericNode';
+import Generic from './Generic';
 
 const cars = [
   'police_car',
@@ -13,7 +13,7 @@ const cars = [
   'taxi',
 ];
 
-export default class Car extends GenericNode {
+export default class Car extends Generic {
 
   setup = async () => {
     for (let index in cars) {

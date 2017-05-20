@@ -6,6 +6,8 @@ import {TouchableWithoutFeedback,Vibration, Animated, Dimensions,Text,View} from
 import {TweenMax,TimelineMax, Power2,Bounce, TimelineLite} from "gsap";
 
 let THREE;
+//// TODO: use vertices
+
 export default class Feathers  {
 
   constructor(_THREE) {

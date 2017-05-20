@@ -1,63 +1,52 @@
 import Expo, {AppLoading} from 'expo';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
 import Game from './src/Game'
 
-import * as THREE from 'three';
+import Images from './Images'
+import CharacterSelect from './src/CharacterSelect'
+import cacheAssetsAsync from './utils/cacheAssetsAsync';
+import arrayFromObject from './utils/arrayFromObject';
 
-global.THREE = THREE;
-require('three/examples/js/loaders/OBJLoader');
-const THREEView = Expo.createTHREEViewClass(THREE);
+import {THREE} from './utils/THREEglobal'
 
-if (!console.time) {
-  console.time = () => {};
-}
-if (!console.timeEnd) {
-  console.timeEnd = () => {};
-}
-
-
-
-function cacheFonts(fonts) {
-  return fonts.map(font => Expo.Font.loadAsync(font));
-}
-
-console.ignoredYellowBox = ['THREE.WebGLRenderer'];
 class App extends React.Component {
-  state = {appIsReady: false};
+
+  state = {
+    appIsReady: false,
+  };
+
   componentWillMount() {
-    this.downloadAssets();
+    this._loadAssetsAsync();
   }
 
-   downloadAssets = async () => {
-console.log("FROG: Start Loading fonts");
-    const fontAssets = cacheFonts([
-      {"EarlyGameBoy": require('./assets/fonts/EarlyGameBoy.ttf')},
-    ]);
-
-    await Promise.all([
-      ...fontAssets,
-    ]);
-    console.log("FROG: Loaded fonts");
-    this.setState({appIsReady: true});
-
+  async _loadAssetsAsync() {
+    try {
+      await cacheAssetsAsync({
+        images: arrayFromObject(Images),
+        fonts: [
+          {"EarlyGameBoy": require('./assets/fonts/EarlyGameBoy.ttf')},
+        ],
+      });
+    } catch (e) {
+      console.warn(
+        'There was an error caching assets (see: main.js), perhaps due to a ' +
+          'network timeout, so we skipped caching. Reload the app to try again.'
+      );
+      console.log(e.message);
+    } finally {
+      this.setState({ appIsReady: true });
+    }
   }
+
   render() {
-    if (!this.state.appIsReady) {
+    if (this.state.appIsReady) {
+      return (
+        <CharacterSelect />
+      );
+    } else {
       return <AppLoading />
     }
-    return (
-      <Game style={styles.container}/>
-    );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
 
 Expo.registerRootComponent(App);

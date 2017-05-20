@@ -1,8 +1,7 @@
 import React, {Component} from 'react';
-import GenericNode from './GenericNode';
-import ModelLoader from '../utils/ModelLoader';
+import Generic from './Generic';
 
-export default class Hero extends GenericNode {
+export default class Hero extends Generic {
   setup = async () => {
     const model = await this._download(`railroad`);
     this.models[`${0}`] = model;

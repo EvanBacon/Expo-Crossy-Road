@@ -1,45 +1,56 @@
 import React, { Component } from 'react';
-import { Text, View, StyleSheet } from 'react-native';
+import { Text, View, LayoutAnimation, Image, StyleSheet } from 'react-native';
 import { Constants } from 'expo';
 import TouchableBounce from 'react-native/Libraries/Components/Touchable/TouchableBounce'
 
-
-export class Button extends Component {
-  render() {
-    return (
-      <TouchableBounce onPress={this.props.onPress}>
-      <View style={[styles.button, this.props.style]}>
-        {this.props.children}
-      </View>
-    </TouchableBounce>
-    );
-  }
-}
+import Button from './Button'
+import Images from '../Images'
 
 export default class Footer extends Component {
+
+  state = {
+    menuOpen: false
+  }
   render() {
+    LayoutAnimation.easeInEaseOut()
+    const imageStyle={width: 60, height: 48};
     return (
-      <View style={styles.container}>
+      <View style={[styles.container, this.props.style]}>
         <Button onPress={_=> {
 
-        }} style={{flex: 1}}>
-        <Text style={styles.text}>Settings</Text>
-        </Button>
+        }} style={[{backgroundColor: 'orange'}]} imageStyle={imageStyle} source={Images.button.character}/>
+
+      <View style={{flex: 1}}/>
+
+
+    <View style={{flexDirection: 'column-reverse', }}>
+        <Button onPress={_=> {
+            this.setState({menuOpen: !this.state.menuOpen});
+
+          }} style={[{ opacity: this.state.menuOpen ? 0.8 : 1.0, }, imageStyle]} imageStyle={imageStyle} source={Images.button.menu}
+        />
+
+      {
+        this.state.menuOpen &&
+
         <Button onPress={_=> {
 
-        }} style={{flex: 2}}>
-        <Text style={styles.text}>Share</Text>
-        </Button>
+        }} style={[{marginBottom: 8}, imageStyle]} imageStyle={imageStyle} source={Images.button.shop}
+        />
+
+      }
+
+      {
+        this.state.menuOpen &&
+
         <Button onPress={_=> {
 
-        }} style={{flex: 2}}>
-        <Text style={styles.text}>Play</Text>
-        </Button>
-        <Button onPress={_=> {
+        }} style={[{marginBottom: 8}, imageStyle]} imageStyle={imageStyle} source={Images.button.controller}
+        />
 
-        }} style={{flex: 1}}>
-        <Text style={styles.text}>Trophy</Text>
-        </Button>
+      }
+
+    </View>
       </View>
     );
   }
@@ -47,12 +58,11 @@ export default class Footer extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     alignItems: 'stretch',
     justifyContent: 'center',
     flexDirection: 'row',
     maxHeight: 48,
-    backgroundColor: '#ecf0f1',
+    backgroundColor: 'blue'
   },
   paragraph: {
     margin: 24,
@@ -62,12 +72,9 @@ const styles = StyleSheet.create({
     color: '#34495e',
   },
   button: {
-    backgroundColor: 'cyan',
-    borderWidth: 2,
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 8,
-    marginHorizontal: 2,
-    borderColor: 'white'
+
   }
 });

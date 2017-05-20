@@ -7,13 +7,14 @@ import GestureRecognizer, {swipeDirections} from './GestureView';
 import Water from './Particles/Water';
 import Feathers from './Particles/Feathers';
 import {TweenMax, Power2, TimelineLite} from "gsap";
+import Hand from './Hand';
+import Footer from './Footer'
+// const {THREE} = global;
+import * as THREE from 'three'
+import createTHREEViewClass from './createTHREEViewClass';
+const THREEView = createTHREEViewClass(THREE);
 
-const {THREE} = global;
-
-// import createTHREEViewClass from './createTHREEViewClass';
-const THREEView = Expo.createTHREEViewClass(THREE);
-
-import Map from './Map';
+// import Map from './Map';
 // Setup THREE//
 const {width, height} = Dimensions.get('window');
 
@@ -23,45 +24,35 @@ const AnimatedGestureRecognizer = Animated.createAnimatedComponent(GestureRecogn
 let scoreAnimation = new Animated.Value(0);
 
 import RetroText from './RetroText'
-import Hero from './Hero'
-import Car from './Car'
-import Log from './Log'
-import Road from './Road'
-import Grass from './Grass'
-import River from './River'
-import Tree from './Tree'
-import Train from './Train'
-import RailRoad from './RailRoad'
+
+import Node from './Node';
+const {
+  Hero,
+  Car,
+  Log,
+  Road,
+  Grass,
+  River,
+  Tree,
+  Train,
+  RailRoad
+} = Node;
 
 // import Hero from './Hero'
 
 const groundLevel = 0.5;
 const sceneColor = 0x6dceea;
 
-function material(color) {
-
-  return new THREE.MeshPhongMaterial({
-    color: color,
-    shading: THREE.FlatShading,
-  });
-
-}
-
-
 export default class App extends React.Component {
-  maxRows = 10;
+  maxRows = 20;
   sineCount = 0;
   sineInc = Math.PI / 50;
-  state = { ready: false, score: 0, pause: false };
+  state = { ready: false, score: 0, pause: true };
   currentLog = -1;
-
-  levelWidth = 19
-  // levelHeight = 50 /// Crossy is infinite.
-  levelHeight = 19 /// Crossy is infinite.
 
   componentWillMount() {
     this.scene = new THREE.Scene();
-    this.scene.fog = new THREE.Fog(sceneColor, 350, 500);
+    // this.scene.fog = new THREE.Fog(sceneColor, 350, 500);
 
     this.camera = new THREE.OrthographicCamera(-width, width, height, -height, -30, 30);
     this.camera.position.set(-1, 2.8, -2.9); // Change -1 to -.02
@@ -76,10 +67,8 @@ export default class App extends React.Component {
     this.doGame();
   }
 
-  createBonusParticles = () => {
-    this.bonusParticles = new BonusParticles();
-    this.bonusParticles.mesh.visible = false;
-    this.scene.add(this.bonusParticles.mesh);
+  createParticles = () => {
+
 
     this.waterParticles = new Water(THREE);
     this.scene.add(this.waterParticles.mesh);
@@ -98,11 +87,6 @@ export default class App extends React.Component {
       this.featherParticles.mesh.position.copy(model.position);
       this.featherParticles.mesh.visible = true;
       this.featherParticles.run(type, direction);
-
-    } else {
-      this.bonusParticles.mesh.position.copy(model.position);
-      this.bonusParticles.mesh.visible = true;
-      this.bonusParticles.explose(type);
     }
 
   }
@@ -111,7 +95,56 @@ export default class App extends React.Component {
     let globalLight = new THREE.AmbientLight(0xffffff, .9);
 
     let shadowLight = new THREE.DirectionalLight(0xffffff, 1);
-    shadowLight.position.set(-30, 40, 20);
+    shadowLight.position.set( 1, 1, 0 ); 			//default; light shining from top
+    shadowLight.lookAt( 0, 0, 0 ); 			//default; light shining from top
+//
+//     shadowLight.castShadow = true;            // default false
+//
+//     shadowLight.shadow.mapSize.width = 512;  // default
+// shadowLight.shadow.mapSize.height = 512; // default
+// shadowLight.shadow.camera.near = 0.5;       // default
+// shadowLight.shadow.camera.far = 500      // default
+// shadowLight.shadow.radius = 1;
+// var helper = new THREE.CameraHelper( shadowLight.shadow.camera );
+// this.scene.add( helper );
+
+
+//directional light
+//  var directionalLight = new THREE.DirectionalLight(0xffffff);
+//  directionalLight.position.set(5, 1, 5);
+//  directionalLight.target.position.set(0, 0, 0);
+//
+//  directionalLight.castShadow = true;
+//  directionalLight.shadow.darkness = 0.5;
+//  directionalLight.shadow.cameraVisible = true;
+//
+//  directionalLight.shadow.cameraNear = 0;
+//  directionalLight.shadow.cameraFar = 15;
+//
+//  directionalLight.shadow.cameraLeft = -5;
+//  directionalLight.shadow.cameraRight = 5;
+//  directionalLight.shadow.cameraTop = 5;
+//  directionalLight.shadow.cameraBottom = -5;
+//
+//  this.scene.add(directionalLight);
+//
+//
+// //spotlight
+// var spotLight = new THREE.SpotLight( 0xffffff,1 );
+// spotLight.position.set( 5,2,6 );
+//
+// spotLight.castShadow = true;
+//
+// spotLight.target.position.set(-1, 0, 1 );
+// spotLight.shadow.darkness = 0.5;
+//
+// spotLight.shadow.cameraNear = 6;
+// spotLight.shadow.cameraFar = 13;
+//
+// this.scene.add( spotLight );
+//
+// spotLight.shadow.cameraVisible = true;
+
     // shadowLight.shadowCameraVisible = true;
 
     // this.camera = new THREE.PerspectiveCamera(75, 1, 1, 10000);
@@ -124,17 +157,23 @@ export default class App extends React.Component {
     // shadowLight.shadow.camera.bottom = -50;
     // shadowLight.shadow.mapSize.width = shadowLight.shadow.mapSize.height = 2048;
 
-    shadowLight.shadow = new THREE.LightShadow( new THREE.PerspectiveCamera(-width, width, height, -height, -30, 30 ) );
-    shadowLight.shadow.mapSize.width = width;
-    shadowLight.shadow.mapSize.height = height;
-    shadowLight.castShadow = true;
+    // shadowLight.castShadow = true;
+    //
+    // shadowLight.shadow = new THREE.LightShadow( new THREE.OrthographicCamera(-width, width, height, -height, -30, 30) );
+    // shadowLight.shadow.mapSize.width = 1024;
+    // shadowLight.shadow.mapSize.height = 1024;
+    // light.shadowMapWidth = 1024; // default is 512
+// light.shadowMapHeight = 1024; // default is 512
 
-    shadowLight.shadowCameraHelper = new THREE.CameraHelper( shadowLight.shadow.camera );
+    // shadowLight.shadow.bias = 0.001;
+    //
+    // shadowLight.shadowCameraHelper = new THREE.CameraHelper( shadowLight.shadow.camera );
     // this.scene.add( shadowLight.shadowCameraHelper );
-
+    //
     // shadowLight.shadow.camera.near = 1;
     // shadowLight.shadow.camera.far = 2000;
     // shadowLight.shadow.mapSize.width = shadowLight.shadow.mapSize.height = 2048 * 3;
+
 
     this.scene.add(globalLight);
     this.scene.add(shadowLight);
@@ -180,6 +219,40 @@ export default class App extends React.Component {
     return Math.round(box3.max.z - box3.min.z);
   }
 
+
+  loadModels = async () => {
+    this._grass = new Grass();
+    this._road = new Road();
+    this._river = new River();
+    this._tree = new Tree();
+    this._car = new Car();
+    this._railroad = new RailRoad();
+    this._train = new Train();
+    this._log = new Log();
+    this._hero = new Hero();
+
+    try {
+      await Promise.all([
+        this._road.setup(),
+        this._grass.setup(),
+        this._river.setup(),
+        this._log.setup(),
+
+        this._tree.setup(),
+        this._car.setup(),
+        this._railroad.setup(),
+        this._train.setup(),
+        this._hero.setup()
+      ]);
+      console.log("Done Loading 3D Models!");
+    } catch(error) {
+      console.warn(`:( We had a problem loading the 3D Models: ${error}`);
+    } finally {
+      //TODO: Add some complicated code so people think that I'm a really good programmer...
+    }
+
+  }
+
   doGame = async () => {
     this.setState({score: 0, pause: false})
 
@@ -211,92 +284,10 @@ export default class App extends React.Component {
     this.camSpeed = .02;
     this.heroWidth = .7;
 
-
-    this._road = new Road();
-    this._grass = new Grass();
-    this._river = new River();
-    this._tree = new Tree();
-    this._car = new Car();
-    this._railroad = new RailRoad();
-    this._train = new Train();
-    this._log = new Log();
-
-    await Promise.all([
-      this._road.setup(),
-      this._grass.setup(),
-      this._river.setup(),
-      this._log.setup(),
-
-      this._tree.setup(),
-      this._car.setup(),
-      this._railroad.setup(),
-      this._train.setup()
-    ])
-
-    this.shadeGeo = new THREE.PlaneGeometry(5, 500);
-    this.shadeMat = new THREE.MeshBasicMaterial({
-      color: 0x000000,
-      transparent: true,
-      opacity: .3
-    });
-    this.blindMat = material(0xADD8E6);
+    await this.loadModels()
 
 
-
-    let bonusParticles;
-
-    BonusParticles = function() {
-      this.waterMat = material(0x71d7ff);
-      this.mesh = new THREE.Group();
-      var bigParticleGeom = new THREE.CubeGeometry(10, 10, 10, 1);
-      var smallParticleGeom = new THREE.CubeGeometry(0.1, 0.1, 0.1, 1);
-      this.parts = [];
-      for (var i = 0; i < 10; i++) {
-        var partPink = new THREE.Mesh(bigParticleGeom, this.waterMat);
-        var partGreen = new THREE.Mesh(smallParticleGeom, this.waterMat);
-        // partGreen.scale.set(.005, .005, .005);
-        // this.parts.push(partPink);
-        this.parts.push(partGreen);
-        // this.mesh.add(partPink);
-        this.mesh.add(partGreen);
-      }
-    }
-
-    BonusParticles.prototype.explose = function() {
-      var explosionSpeed = 0.5;
-
-      const removeParticle = (p) => {
-        p.visible = false;
-      }
-      for (var i = 0; i < this.parts.length; i++) {
-
-        var tx = -1.0 + Math.random() * 2.0;
-        var ty = -1.0 + Math.random() * 2.0;
-        var tz = -1.0 + Math.random() * 2.0;
-        var p = this.parts[i];
-
-        p.position.set(0, 0, 0);
-        p.scale.set(1, 1, 1);
-        p.visible = true;
-        var s = explosionSpeed + Math.random() * .5;
-        TweenMax.to(p.position, s, {
-          x: tx,
-          y: ty,
-          z: tz,
-          ease: Power4.easeOut
-        });
-        TweenMax.to(p.scale, s * 3, {
-          x: .01,
-          y: .01,
-          z: .01,
-          ease: Power4.easeOut,
-          onComplete: removeParticle,
-          onCompleteParams: [p]
-        });
-      }
-    }
-
-    this.createBonusParticles();
+    this.createParticles();
     this.createLights();
 
     // Mesh
@@ -306,19 +297,7 @@ export default class App extends React.Component {
     // this.hero.position.y = .25;
     this.scene.add(this.hero);
 
-
-    const _hero = new Hero();
-    await _hero.setup();
-
-    // const s = 0.05;
-    // _heroMesh.scale.set(s, s, s);
-    // _heroMesh.position.y = -0.25
-    this.hero.add(_hero.getNode());
-
-    this.leftShade = new THREE.Mesh(this.shadeGeo, this.shadeMat);
-    this.rightShade = new THREE.Mesh(this.shadeGeo, this.shadeMat);
-    this.leftBlind = new THREE.Mesh(this.shadeGeo, this.blindMat);
-    this.rightBlind = new THREE.Mesh(this.shadeGeo, this.blindMat);
+    this.hero.add(this._hero.getNode());
 
 
     this.railRoad[0] = this._railroad.getRandom();
@@ -336,18 +315,18 @@ export default class App extends React.Component {
 
 
     // Mesh orientation
-    this.leftShade.rotation.x = 270 * Math.PI / 180;
-    this.leftShade.position.set(6.65, 1, 248.47);
-    this.rightShade.rotation.x = 270 * Math.PI / 180;
-    this.rightShade.position.set(-7.35, 1, 248.47);
-    this.leftBlind.rotation.x = 270 * Math.PI / 180;
-    this.leftBlind.position.set(11.8, .6, 248.9);
-    this.rightBlind.rotation.x = 270 * Math.PI / 180;
-    this.rightBlind.position.set(-12.2, .6, 248.9);
-    this.scene.add(this.leftShade);
-    this.scene.add(this.rightShade);
-    this.scene.add(this.leftBlind);
-    this.scene.add(this.rightBlind);
+    // this.leftShade.rotation.x = 270 * Math.PI / 180;
+    // this.leftShade.position.set(6.65, 1, 248.47);
+    // this.rightShade.rotation.x = 270 * Math.PI / 180;
+    // this.rightShade.position.set(-7.35, 1, 248.47);
+    // this.leftBlind.rotation.x = 270 * Math.PI / 180;
+    // this.leftBlind.position.set(11.8, .6, 248.9);
+    // this.rightBlind.rotation.x = 270 * Math.PI / 180;
+    // this.rightBlind.position.set(-12.2, .6, 248.9);
+    // this.scene.add(this.leftShade);
+    // this.scene.add(this.rightShade);
+    // this.scene.add(this.leftBlind);
+    // this.scene.add(this.rightBlind);
 
 
     this.trees[0].position.set(0, .5, -30);
@@ -361,9 +340,14 @@ export default class App extends React.Component {
     for (i = 0; i < this.maxRows; i++) {
       this.grass[i] = this._grass.getNode(`${i % 2}`);
       this.grass[i].receiveShadow = true;
+      this.grass[i].castShadow = false;
 
       this.water[i] = this._river.getNode();
       this.road[i] = this._road.getRandom();
+      this.road[i].receiveShadow = true;
+      this.road[i].castShadow = false;
+
+
       this.railRoad[i] = this._railroad.getRandom();
       this.scene.add(this.grass[i]);
       this.scene.add(this.water[i]);
@@ -660,8 +644,8 @@ export default class App extends React.Component {
     }
 
     for (x = 0; x < this.trees.length; x++) {
-      if (this.hero.position.z + zPos == this.trees[x].position.z) {
-        if (this.hero.position.x + xPos == this.trees[x].position.x) {
+      if (Math.round(this.hero.position.z + zPos) == this.trees[x].position.z) {
+        if (Math.round(this.hero.position.x + xPos) == this.trees[x].position.x) {
           return true;
         }
       }
@@ -867,7 +851,7 @@ export default class App extends React.Component {
 
   moveWithDirection = direction => {
     if (this.state.pause ) {
-      this.newScore();
+      // this.newScore();
       return;
     }
 
@@ -1036,7 +1020,7 @@ export default class App extends React.Component {
               <THREEView
                 backgroundColor={sceneColor}
                 shadowMapEnabled={true}
-                shadowMapRenderSingleSided={false}
+                shadowMapRenderSingleSided={true}
                 style={{ flex: 1 }}
                 scene={this.scene}
                 camera={this.camera}
@@ -1045,8 +1029,13 @@ export default class App extends React.Component {
             </TouchableWithoutFeedback>
           </AnimatedGestureRecognizer>
           { this.state.pause && (
-            <View pointerEvents="none" style={{position: 'absolute', left: 0, top: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0,0,0,0.2)', justifyContent: 'center', alignItems: 'center'}}>
+            <View pointerEvents="auto" style={{position: 'absolute', left: 0, top: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0,0,0,0.2)', justifyContent: 'center', alignItems: 'center'}}>
+              <RetroText style={{position: 'absolute', top: 8, right: 8, color: '#f8e84d', fontSize: 36, backgroundColor: 'transparent',  textAlign: 'right', shadowColor: 'black', shadowOpacity: 1, shadowRadius: 0, shadowOffset: {width: 0, height: 0}}}>94</RetroText>
               <RetroText style={{color: 'white', fontSize: 48, backgroundColor: 'transparent',  textAlign: 'center'}}>Tap To Play!</RetroText>
+
+            <View style={{justifyContent: 'center',alignItems: 'center', position: 'absolute', bottom: 8, left: 8, right: 8,}}><Hand style={{width: 36}}/>
+            <Footer style={{ height: 48}}/>
+          </View>
           </View>
         )}
         <AnimatedText pointerEvents={'none'} style={[{color: 'white', fontSize: 48, backgroundColor: 'transparent', position: 'absolute', top: 32, left: 16}, {transform: [

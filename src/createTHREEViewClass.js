@@ -25,7 +25,7 @@ export default THREE => class THREEView extends React.Component {
 
     //Defines shadow map type (unfiltered, percentage close filtering, percentage close filtering with bilinear filtering in shader).
     //Default Value: THREE.PCFShadowMap
-    shadowMapType: PropTypes.oneOf([THREE.BasicShadowMap, THREE.PCFShadowMap, THREE.PCFSoftShadowMap]),
+    // shadowMapType: PropTypes.oneOf([THREE.BasicShadowMap, THREE.PCFShadowMap, THREE.PCFSoftShadowMap]),
 
     //Whether to render the opposite side as specified by the material into the shadow map. When disabled, an appropriate shadow.bias must be set on the light source for surfaces that can both cast and receive shadows at the same time to render correctly.
     //Default Value: true
@@ -46,8 +46,8 @@ export default THREE => class THREEView extends React.Component {
     autoAspect: true,
     backgroundColor: 0x000000,
     backgroundColorAlpha: 1,
-    shadowMapEnabled: false,
-    shadowMapType: THREE.PCFShadowMap,
+    shadowMapEnabled: true,
+    // shadowMapType: THREE.PCFShadowMap,
     shadowMapRenderReverseSided: true,
     shadowMapRenderSingleSided: true
   };
@@ -72,7 +72,19 @@ export default THREE => class THREEView extends React.Component {
   }
 
   _onContextCreate = gl => {
-    const renderer = new THREE.WebGLRenderer({
+
+    gl.createFramebuffer = () => {
+      return null;
+    };
+    gl.createRenderbuffer = () => {
+      return null;
+    };
+    gl.bindRenderbuffer = (target, renderbuffer) => {};
+    gl.renderbufferStorage = (target, internalFormat, width, height) => {};
+    gl.framebufferTexture2D = (target, attachment, textarget, texture, level) => {};
+    gl.framebufferRenderbuffer = (target, attachmebt, renderbuffertarget, renderbuffer) => {};
+
+    let threeRendererOptions = {
       canvas: {
         width: gl.drawingBufferWidth,
         height: gl.drawingBufferHeight,
@@ -82,7 +94,25 @@ export default THREE => class THREEView extends React.Component {
         clientHeight: gl.drawingBufferHeight,
       },
       context: gl,
-    });
+      antialias: true,
+    };
+
+
+    const renderer = new THREE.WebGLRenderer(threeRendererOptions);
+
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFShadowMap; // default THREE.PCFShadowMap
+    renderer.shadowMap.cascade = true;
+
+    renderer.gammaInput = true;
+    renderer.gammaOutput = true;
+
+    let effect = new THREE.OutlineEffect( renderer,{
+	defaultThickNess: 0.1,
+  	defaultColor: new THREE.Color( 0x888888 ),
+ 	defaultAlpha: 1,
+  	defaultKeepAlive: true // keeps outline material in cache even if material is removed from scene
+ } );
 
     renderer.setSize(gl.drawingBufferWidth, gl.drawingBufferHeight);
     renderer.setClearColor(
@@ -90,10 +120,14 @@ export default THREE => class THREEView extends React.Component {
       this.props.backgroundColorAlpha
     );
 
-    renderer.shadowMap.enabled = this.props.shadowMapEnabled;
-    renderer.shadowMap.type = this.props.shadowMapType;
-    renderer.shadowMap.renderReverseSided = this.props.shadowMapRenderReverseSided;
-    renderer.shadowMap.renderSingleSided = this.props.shadowMapRenderSingleSided;
+    // renderer.shadowMap.enabled = this.props.shadowMapEnabled;
+    // // renderer.shadowMap.type = this.props.shadowMapType;
+    // renderer.shadowMap.type = THREE.BasicShadowMap;
+    // renderer.shadowMap.renderReverseSided = this.props.shadowMapRenderReverseSided;
+    // renderer.shadowMap.renderSingleSided = this.props.shadowMapRenderSingleSided;
+    // renderer.shadowMap.cascade = true;
+
+
 
     let lastFrameTime;
     const animate = () => {
@@ -117,7 +151,9 @@ export default THREE => class THREEView extends React.Component {
             camera.updateProjectionMatrix();
           }
         }
-        renderer.render(this.props.scene, camera);
+        effect.render( this.props.scene, camera );
+
+        // renderer.render(this.props.scene, camera);
       }
       gl.flush();
       gl.endFrameEXP();

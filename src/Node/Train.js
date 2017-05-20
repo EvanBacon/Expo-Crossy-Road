@@ -1,9 +1,8 @@
 import React, {Component} from 'react';
-import GenericNode from './GenericNode';
-import ModelLoader from '../utils/ModelLoader';
+import Generic from './Generic';
 const {THREE} = global;
 
-export default class Train extends GenericNode {
+export default class Train extends Generic {
 
   withSize = (size = 1) => {
     // const train = THREE.Mesh();

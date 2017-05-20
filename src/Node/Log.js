@@ -1,8 +1,7 @@
 import React, {Component} from 'react';
-import GenericNode from './GenericNode';
-import ModelLoader from '../utils/ModelLoader';
+import Generic from './Generic';
 
-export default class Log extends GenericNode {
+export default class Log extends Generic {
   setup = async () => {
     for (let i = 0; i < 4; i++) {
       const model = await this._download(`log_${i}`);

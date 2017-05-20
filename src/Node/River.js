@@ -1,9 +1,8 @@
 import Expo from 'expo'
 import React, {Component} from 'react';
-import GenericNode from './GenericNode';
-import ModelLoader from '../utils/ModelLoader';
+import Generic from './Generic';
 
-export default class River extends GenericNode {
+export default class River extends Generic {
   setup = async () => {
     const model = await this._download(`river`);
     this.models[`${0}`] = model;

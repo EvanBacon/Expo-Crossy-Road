@@ -1,14 +1,15 @@
 import Expo from 'expo'
 import React, {Component} from 'react';
 
-import ModelLoader from '../utils/ModelLoader';
 import {TweenMax, Power2, TimelineLite} from "gsap";
-const {THREE} = global;
+import * as THREE from 'three';
 
-import Models from '../Models';
-const THREEView = Expo.createTHREEViewClass(THREE);
+import Models from '../../Models';
+import createTHREEViewClass from '../createTHREEViewClass';
 
-export default class GenericNode {
+const THREEView = createTHREEViewClass(THREE);
+
+export default class Generic {
   models = {};
 
 
@@ -38,10 +39,24 @@ export default class GenericNode {
     const texture = THREEView.textureFromAsset(textureAsset);
     texture.magFilter = THREE.LinearFilter;
     texture.minFilter = THREE.LinearFilter;
+
+    // var material = new THREE.MeshToonMaterial( {
+		// 						map: texture,
+		// 						// bumpMap: imgTexture,
+		// 						// bumpScale: bumpScale,
+		// 						// color: diffuseColor,
+		// 						// specular: specularColor,
+		// 						reflectivity: 0.1,
+		// 						shininess: 0.5,
+		// 						shading: THREE.SmoothShading,
+		// 						// envMap: alphaIndex % 2 === 0 ? null : reflectionCube
+		// 					} );
+
     model.traverse(child => {
       if (child instanceof THREE.Mesh) {
         // child.material.color = 0x00ff00;
         child.material.map = texture;
+        // child.material = material;
       }
     });
 
@@ -68,9 +83,16 @@ export default class GenericNode {
       const model = await this._downloadAssets(name);
 
       //Shadows ain't working D:
-      model.receiveShadow = true;
-      model.castShadow = true;
-      model.traverse( function( node ) { if ( node instanceof THREE.Mesh ) { node.castShadow = true; } } );
+      // if (name == "chicken") {
+        // model.receiveShadow = true;
+        model.castShadow = true;
+
+        model.traverse( function( node ) { if ( node instanceof THREE.Mesh ) {
+          node.castShadow = true;
+          // node.receiveShadow = true;
+        } } );
+      // }
+
 
       return model;
     } catch (error) {
