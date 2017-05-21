@@ -1,5 +1,5 @@
 {
-  "name": "frogger",
+  "name": "Crossy-Road",
   "version": "0.0.0",
   "description": "Hello Expo!",
   "author": null,
@@ -10,7 +10,7 @@
     "gsap": "^1.19.1",
     "ndarray": "^1.0.18",
     "react": "16.0.0-alpha.6",
-    "react-native": "https://github.com/expo/react-native/archive/sdk-16.0.0.tar.gz",
+    "react-native": "https://github.com/expo/react-native/archive/sdk-17.0.0.tar.gz",
     "react-native-swipe-gestures": "^1.0.2",
     "three": "^0.85.2"
   }

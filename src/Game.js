@@ -7,8 +7,8 @@ import GestureRecognizer, {swipeDirections} from './GestureView';
 import Water from './Particles/Water';
 import Feathers from './Particles/Feathers';
 import {TweenMax, Power2, TimelineLite} from "gsap";
-import Hand from './Hand';
-import Footer from './Footer'
+// import Hand from './Hand';
+// import Footer from './Footer'
 // const {THREE} = global;
 import * as THREE from 'three'
 import createTHREEViewClass from './createTHREEViewClass';
@@ -1030,11 +1030,11 @@ export default class App extends React.Component {
           </AnimatedGestureRecognizer>
           { this.state.pause && (
             <View pointerEvents="auto" style={{position: 'absolute', left: 0, top: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0,0,0,0.2)', justifyContent: 'center', alignItems: 'center'}}>
-              <RetroText style={{position: 'absolute', top: 8, right: 8, color: '#f8e84d', fontSize: 36, backgroundColor: 'transparent',  textAlign: 'right', shadowColor: 'black', shadowOpacity: 1, shadowRadius: 0, shadowOffset: {width: 0, height: 0}}}>94</RetroText>
+              <RetroText style={{position: 'absolute', top: 8, right: 8, color: '#f8e84d', fontSize: 36,letterSpacing: 0.9, backgroundColor: 'transparent',  textAlign: 'right', shadowColor: 'black', shadowOpacity: 1, shadowRadius: 0, shadowOffset: {width: 0, height: 0}}}>94</RetroText>
               <RetroText style={{color: 'white', fontSize: 48, backgroundColor: 'transparent',  textAlign: 'center'}}>Tap To Play!</RetroText>
 
-            <View style={{justifyContent: 'center',alignItems: 'center', position: 'absolute', bottom: 8, left: 8, right: 8,}}><Hand style={{width: 36}}/>
-            <Footer style={{ height: 48}}/>
+            <View style={{justifyContent: 'center',alignItems: 'center', position: 'absolute', bottom: 8, left: 8, right: 8,}}>
+
           </View>
           </View>
         )}
