@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, View, FlatList,Animated, StyleSheet } from 'react-native';
+import { Text, View,Dimensions, FlatList,Animated, StyleSheet } from 'react-native';
 import { Constants } from 'expo';
 
 import Button from '../Button';
@@ -10,6 +10,7 @@ import Characters from '../../Characters';
 
 AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 
+const width = 200;
 
 
 export default class Carousel extends Component {
@@ -22,7 +23,6 @@ export default class Carousel extends Component {
   );
 
   renderItem = ({item, index}) => {
-    const width = 200;
 
     return (
       <Animated.View
@@ -31,7 +31,7 @@ export default class Carousel extends Component {
             {
               scale: this.scroll.interpolate({
                 inputRange: [(index * width) -  width,(index * width),(index * width) + width],
-                outputRange: [0.9, 1, 0.9],
+                outputRange: [0.5, 1, 0.5],
                 extrapolate: 'clamp'
               })
             }
@@ -46,7 +46,27 @@ export default class Carousel extends Component {
 render() {
 
   const keys = Object.keys(Characters);
-  return (<AnimatedFlatList style={styles.container} horizontal={true} showsHorizontalScrollIndicator={false} horizontal={true} directionalLockEnabled={true} pagingEnabled={true} onScroll={this._scrollSink} renderItem={this.renderItem} keyExtractor={(item: ItemT, index: number) => `tuner-card-${index}`} data={keys}/>)
+  return (<AnimatedFlatList
+    style={styles.container}
+    horizontal={true}
+    showsHorizontalScrollIndicator={false}
+    horizontal={true}
+    contentContainerStyle={{
+      paddingHorizontal: (Dimensions.get('window').width - width) / 2,
+      alignItems: 'center',
+
+     }}
+    directionalLockEnabled={true}
+    pagingEnabled={false}
+    onScroll={this._scrollSink}
+    renderItem={this.renderItem}
+    keyExtractor={(item: ItemT, index: number) => `tuner-card-${index}`}
+    decelerationRate={0}
+    scrollEventThrottle={1}
+    snapToInterval={width}
+
+    data={keys}/>
+)
 }
 }
 
@@ -56,7 +76,7 @@ const styles = StyleSheet.create({
     // alignItems: 'center',
     // justifyContent: 'center',
     // paddingTop: Constants.status BarHeight,
-    backgroundColor: 'red',
+    backgroundColor: 'blue',
   },
   paragraph: {
     margin: 24,

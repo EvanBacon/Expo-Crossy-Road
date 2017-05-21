@@ -88,7 +88,6 @@ export default class CharacterCard extends Component {
       <View style={styles.container}>
         <View style={{backgroundColor: 'transparent', flex: 1}}>
         <RetroText style={{backgroundColor: 'transparent', textAlign: 'center', color: 'white', fontSize: 24}}>{this.props.name}</RetroText>
-
         <THREEView
           backgroundColorAlpha={0}
           style={{ flex: 1, backgroundColor: 'transparent'}}
@@ -109,20 +108,13 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 10,
-    width: size + 20,
-    height: size + 20,
-    maxWidth: size + 20,
-    maxHeight: size + 20,
-    minWidth: size + 20,
-    minHeight: size + 20,
+    width: size,
+    height: size,
+    maxWidth: size,
+    maxHeight: size,
+    minWidth: size,
+    minHeight: size,
     justifyContent: 'center',
-    backgroundColor: 'transparent',
-  },
-  paragraph: {
-    margin: 24,
-    fontSize: 18,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    color: '#34495e',
+    backgroundColor: 'green',
   },
 });

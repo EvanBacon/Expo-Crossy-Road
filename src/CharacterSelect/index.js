@@ -19,7 +19,18 @@ export default class CharacterSelect extends Component {
       <Carousel>
       </Carousel>
 
+      <View style={{flexDirection: 'row'}}>
+        <Button source={Images.button.back} style={{}} onPress={_=> {
 
+          }}/>
+        <Button source={Images.button.long_play} style={{}} onPress={_=> {
+
+            }}/>
+            <Button source={Images.button.back} style={{}} onPress={_=> {
+
+              }}/>
+
+      </View>
 
       </View>
     );
