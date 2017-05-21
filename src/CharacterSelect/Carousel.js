@@ -27,6 +27,9 @@ export default class Carousel extends Component {
     return (
       <Animated.View
         style={{
+          // flex: 1,
+          backgroundColor: 'transparent',
+          justifyContent: 'center',
           transform: [
             {
               scale: this.scroll.interpolate({
@@ -37,7 +40,11 @@ export default class Carousel extends Component {
             }
           ]
         }}>
-        <CharacterCard {...Characters[item]}/>
+        <CharacterCard opacity={this.scroll.interpolate({
+          inputRange: [(index * width) -  width,(index * width),(index * width) + width],
+          outputRange: [0, 1, 0],
+          extrapolate: 'clamp'
+        })} {...Characters[item]}/>
 
     </Animated.View>
   );
@@ -54,7 +61,7 @@ render() {
     contentContainerStyle={{
       paddingHorizontal: (Dimensions.get('window').width - width) / 2,
       alignItems: 'center',
-
+      justifyContent: 'center'
      }}
     directionalLockEnabled={true}
     pagingEnabled={false}
@@ -72,11 +79,11 @@ render() {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    // flex: 1,
     // alignItems: 'center',
     // justifyContent: 'center',
     // paddingTop: Constants.status BarHeight,
-    backgroundColor: 'blue',
+    backgroundColor: 'transparent',
   },
   paragraph: {
     margin: 24,

@@ -10,6 +10,9 @@ export default {
     shop: require('./assets/images/buttons/shop.png'),
     menu: require('./assets/images/buttons/menu.png'),
 
+    social: require('./assets/images/buttons/social.png'),
+    random: require('./assets/images/buttons/random.png'),
+
   },
   hand: {
     '0': require('./assets/images/hand/0.png'),

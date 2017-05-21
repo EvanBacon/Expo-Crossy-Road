@@ -8,29 +8,36 @@ import RetroText from '../RetroText';
 import Carousel from './Carousel';
 export default class CharacterSelect extends Component {
   render() {
+    const imageStyle={width: 60, height: 48};
+
     return (
       <View style={styles.container}>
-        <Button source={Images.button.back} style={{position: 'absolute', top: 8, left: 8}} onPress={_=> {
 
-          }}/>
+        <View style={{flexDirection: 'row', marginTop: 8, paddingHorizontal: 4}}>
+          <Button source={Images.button.back} imageStyle={imageStyle} onPress={_=> {
 
-        <RetroText style={{position: 'absolute', top: 8, right: 8}}>{this.props.coins}</RetroText>
+            }}/>
+
+
+
+        </View>
 
       <Carousel>
       </Carousel>
 
-      <View style={{flexDirection: 'row'}}>
-        <Button source={Images.button.back} style={{}} onPress={_=> {
+      <View style={{flexDirection: 'row', justifyContent: 'center', marginBottom: 8}}>
+        <Button source={Images.button.random} imageStyle={imageStyle} onPress={_=> {
 
           }}/>
-        <Button source={Images.button.long_play} style={{}} onPress={_=> {
+        <Button source={Images.button.long_play} imageStyle={{width: 90, height: 48}} onPress={_=> {
 
             }}/>
-            <Button source={Images.button.back} style={{}} onPress={_=> {
+          <Button source={Images.button.social} imageStyle={imageStyle} onPress={_=> {
 
               }}/>
 
       </View>
+      <RetroText style={{position: 'absolute',fontSize: 24, color: 'white', bottom: 4, left: 8}}>4/ 8</RetroText>
 
       </View>
     );
@@ -46,7 +53,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     paddingTop: Constants.statusBarHeight,
-    backgroundColor: 'green',
+    backgroundColor: 'rgba(105, 201, 230, 0.8)',
   },
   paragraph: {
     margin: 24,

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, View, StyleSheet } from 'react-native';
+import { Text, View,Animated, StyleSheet } from 'react-native';
 import { Constants } from 'expo';
 
 import Button from '../Button';
@@ -12,7 +12,7 @@ import {TweenMax, Power2, TimelineLite} from "gsap";
 import * as THREE from 'three'
 // import createTHREEViewClass from '../createTHREEViewClass';
 const THREEView = Expo.createTHREEViewClass(THREE);
-
+const AnimatedText = Animated.createAnimatedComponent(RetroText)
 const size = 200;
 import Node from '../Node';
 const {
@@ -87,7 +87,7 @@ export default class CharacterCard extends Component {
     return (
       <View style={styles.container}>
         <View style={{backgroundColor: 'transparent', flex: 1}}>
-        <RetroText style={{backgroundColor: 'transparent', textAlign: 'center', color: 'white', fontSize: 24}}>{this.props.name}</RetroText>
+        <AnimatedText style={{opacity: this.props.opacity, backgroundColor: 'transparent', textAlign: 'center', color: 'white', fontSize: 24}}>{this.props.name}</AnimatedText>
         <THREEView
           backgroundColorAlpha={0}
           style={{ flex: 1, backgroundColor: 'transparent'}}
@@ -107,7 +107,7 @@ export default class CharacterCard extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 10,
+    padding: 0,
     width: size,
     height: size,
     maxWidth: size,
@@ -115,6 +115,6 @@ const styles = StyleSheet.create({
     minWidth: size,
     minHeight: size,
     justifyContent: 'center',
-    backgroundColor: 'green',
+    backgroundColor: 'transparent',
   },
 });

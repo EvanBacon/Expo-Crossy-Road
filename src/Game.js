@@ -7,8 +7,8 @@ import GestureRecognizer, {swipeDirections} from './GestureView';
 import Water from './Particles/Water';
 import Feathers from './Particles/Feathers';
 import {TweenMax, Power2, TimelineLite} from "gsap";
-// import Hand from './Hand';
-// import Footer from './Footer'
+import Hand from './Hand';
+import Footer from './Footer'
 // const {THREE} = global;
 import * as THREE from 'three'
 import createTHREEViewClass from './createTHREEViewClass';
@@ -1034,7 +1034,8 @@ export default class App extends React.Component {
               <RetroText style={{color: 'white', fontSize: 48, backgroundColor: 'transparent',  textAlign: 'center'}}>Tap To Play!</RetroText>
 
             <View style={{justifyContent: 'center',alignItems: 'center', position: 'absolute', bottom: 8, left: 8, right: 8,}}>
-
+              <Hand style={{width: 36}}/>
+            <Footer style={{ height: 48}}/>
           </View>
           </View>
         )}
