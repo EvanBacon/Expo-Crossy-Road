@@ -85,7 +85,7 @@ export default class Generic {
       //Shadows ain't working D:
       // if (name == "chicken") {
         // model.receiveShadow = true;
-        model.castShadow = true;
+        // model.castShadow = true;
 
         model.traverse( function( node ) { if ( node instanceof THREE.Mesh ) {
           node.castShadow = true;

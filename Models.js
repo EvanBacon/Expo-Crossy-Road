@@ -3,6 +3,18 @@ export default {
     model: require('./assets/models/android_robot/model.obj'),
     texture: require('./assets/models/android_robot/texture.png'),
   },
+  big_fat_pig: {
+    model: require('./assets/models/big_fat_pig/model.obj'),
+    texture: require('./assets/models/big_fat_pig/texture.png'),
+  },
+  poopy_pigeon: {
+    model: require('./assets/models/poopy_pigeon/model.obj'),
+    texture: require('./assets/models/poopy_pigeon/texture.png'),
+  },
+  tree_frog: {
+    model: require('./assets/models/tree_frog/model.obj'),
+    texture: require('./assets/models/tree_frog/texture.png'),
+  },
   chicken: {
     model: require('./assets/models/chicken/model.obj'),
     texture: require('./assets/models/chicken/texture.png'),
