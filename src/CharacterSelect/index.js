@@ -6,7 +6,8 @@ import Button from '../Button';
 import Images from '../../Images';
 import RetroText from '../RetroText';
 import Carousel from './Carousel';
-import Colors '../Colors';
+import Colors from '../../Colors';
+import Characters from '../../Characters';
 class CharacterSelect extends Component {
   state = {
     currentIndex: 0,
@@ -100,7 +101,8 @@ class CharacterSelect extends Component {
 
 
 import {setCharacter} from '../../actions/game';
-export default connect(state => ({character}), {setCharacter})(CharacterSelect)
+import {connect} from 'react-redux';
+export default connect(state => ({character: state.game.character}), {setCharacter})(CharacterSelect)
 
       CharacterSelect.defaultProps = {
         coins: 0

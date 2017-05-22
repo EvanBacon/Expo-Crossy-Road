@@ -23,12 +23,12 @@ export default class Carousel extends Component {
   );
 
   componentWillMount() {
-    scroll.addListener(this.onAnimationUpdate);
+    this.scroll.addListener(this.onAnimationUpdate);
   }
   componentWillUnmount() {
-    scroll.removeListener(this.onAnimationUpdate);
+    this.scroll.removeListener(this.onAnimationUpdate);
   }
-  
+
 
   onAnimationUpdate = ({value}) => this.scrollOffset = value;
 
