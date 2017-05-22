@@ -14,6 +14,7 @@ import * as THREE from 'three'
 const THREEView = Expo.createTHREEViewClass(THREE);
 const AnimatedText = Animated.createAnimatedComponent(RetroText)
 const size = 200;
+import {modelLoader} from '../../main';
 import Node from '../Node';
 const {
   Hero,
@@ -44,11 +45,6 @@ export default class CharacterCard extends Component {
   }
 
   init = async () => {
-    this.geometry = new THREE.BoxGeometry(200, 200, 200);
-    this.material = new THREE.MeshBasicMaterial({
-      color: 0xff0000,
-    });
-
     let globalLight = new THREE.AmbientLight(0xffffff, .9);
     this.scene.add(globalLight);
 
@@ -57,21 +53,12 @@ export default class CharacterCard extends Component {
     shadowLight.lookAt( 0, 0, 0 ); 			//default; light shining from top
     this.scene.add(shadowLight);
 
-    this.mesh = new THREE.Mesh(this.geometry, this.material);
-    // this.scene.add(this.mesh);
-
-
-    this._hero = new Hero();
-
-    await this._hero.setup(this.props.id);
-
-    this.hero = this._hero.getNode();
+    console.log("Adding model to line", this.props.id);
+    this.hero = modelLoader._hero.getNode(this.props.id);
     this.scene.add(this.hero);
     this.hero.scale.set(1,1,1);
 
     this.setState({setup: true})
-
-    // this.hero.position.set(0,0,0);
 
   }
 

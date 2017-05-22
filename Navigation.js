@@ -18,7 +18,7 @@ class AppWithNavigationState extends React.Component {
     LayoutAnimation.easeInEaseOut();
     return (
       <View style={{flex: 1}}>
-    {/* <Game style={StyleSheet.absoluteFill} /> */}
+    <Game style={StyleSheet.absoluteFill} />
       {gameState != State.Game.playing &&
         <App navigation={addNavigationHelpers({
             dispatch: dispatch,

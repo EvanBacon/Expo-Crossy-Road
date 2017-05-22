@@ -17,8 +17,6 @@ export default class CrossFade extends Component {
         // A timing function, default: Animated.timing.
         timing: Animated.spring,
         // Some parameters relevant to Animated.spring
-        // friction: 1,
-        // tension: 0.5,
       }
     }
 

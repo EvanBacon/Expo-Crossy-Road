@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, View,Dimensions, FlatList,Animated, StyleSheet } from 'react-native';
+import { Text, View,Dimensions,InteractionManager, FlatList,Animated, StyleSheet } from 'react-native';
 import { Constants } from 'expo';
 
 import Button from '../Button';
@@ -8,7 +8,7 @@ import RetroText from '../RetroText';
 import CharacterCard from './CharacterCard';
 import Characters from '../../Characters';
 
-AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
+const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 
 const width = 200;
 
@@ -21,7 +21,9 @@ export default class Carousel extends Component {
     [{nativeEvent: { contentOffset: { x: this.scroll } }}],
     {useNativeDriver: true},
   );
-
+  state = {
+    keys: []
+  }
   componentWillMount() {
     this.scroll.addListener(this.onAnimationUpdate);
   }
@@ -29,6 +31,12 @@ export default class Carousel extends Component {
     this.scroll.removeListener(this.onAnimationUpdate);
   }
 
+  componentDidMount() {
+    InteractionManager.runAfterInteractions(_=> {
+      const keys = Object.keys(Characters);
+      this.setState({keys})
+    });
+  }
 
   onAnimationUpdate = ({value}) => this.scrollOffset = value;
 
@@ -73,8 +81,7 @@ momentumScrollEnd = () => {
 
 
 render() {
-
-  const keys = Object.keys(Characters);
+  const {keys} = this.state
   return (<AnimatedFlatList
     style={styles.container}
     horizontal={true}

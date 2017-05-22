@@ -58,7 +58,7 @@ const {
 const startingRow = 8;
 
 // import Hero from './Hero'
-
+import {modelLoader} from '../main';
 const groundLevel = 0.5;
 const sceneColor = 0x6dceea;
 
@@ -80,8 +80,7 @@ class Game extends Component {
       (async () => {
 
         this.scene.remove(this._hero);
-        await this.hero.setup(nextProps.character.id);
-        this._hero = this.hero.getNode();
+        this._hero = this.hero.getNode(nextProps.character.id);
         this.scene.add(this._hero);
         this._hero.position.set(0, groundLevel, startingRow);
         this._hero.scale.set(1,1,1);
@@ -282,35 +281,50 @@ class Game extends Component {
 
 
   loadModels = async () => {
-    this._grass = new Grass();
-    this._road = new Road();
-    this._river = new River();
-    this._tree = new Tree();
-    this._car = new Car();
-    this._railroad = new RailRoad();
-    this._train = new Train();
-    this._log = new Log();
-    this.hero = new Hero();
+    await console.log("Some Extracting 3D Models! ", _grass, _road);
 
-    try {
-      await Promise.all([
-        this._road.setup(),
-        this._grass.setup(),
-        this._river.setup(),
-        this._log.setup(),
+    const {_grass, _road, _river, _tree, _car, _railroad, _train, _log, _hero} = modelLoader;
+    this._grass = _grass;
+    this._road = _road;
+    this._river = _river;
+    this._tree = _tree;
+    this._car = _car;
+    this._railroad = _railroad;
+    this._train = _train;
+    this._log = _log;
+    this.hero = _hero;
 
-        this._tree.setup(),
-        this._car.setup(),
-        this._railroad.setup(),
-        this._train.setup(),
-        this.hero.setup(this.props.character.id)
-      ]);
-      console.log("Done Loading 3D Models!");
-    } catch(error) {
-      console.warn(`:( We had a problem loading the 3D Models: ${error}`);
-    } finally {
-      //TODO: Add some complicated code so people think that I'm a really good programmer...
-    }
+    await console.log("Done Extracting 3D Models! ", _grass, _road);
+
+    // this._grass = new Grass();
+    // this._road = new Road();
+    // this._river = new River();
+    // this._tree = new Tree();
+    // this._car = new Car();
+    // this._railroad = new RailRoad();
+    // this._train = new Train();
+    // this._log = new Log();
+    // this.hero = new Hero();
+    //
+    // try {
+    //   await Promise.all([
+    //     this._road.setup(),
+    //     this._grass.setup(),
+    //     this._river.setup(),
+    //     this._log.setup(),
+    //
+    //     this._tree.setup(),
+    //     this._car.setup(),
+    //     this._railroad.setup(),
+    //     this._train.setup(),
+    //     this.hero.setup(this.props.character.id)
+    //   ]);
+    //   console.log("Done Loading 3D Models!");
+    // } catch(error) {
+    //   console.warn(`:( We had a problem loading the 3D Models: ${error}`);
+    // } finally {
+    //   //TODO: Add some complicated code so people think that I'm a really good programmer...
+    // }
 
   }
 
@@ -353,7 +367,7 @@ class Game extends Component {
     this.createLights();
 
     // Mesh
-    this._hero = this.hero.getNode();
+    this._hero = this.hero.getNode(this.props.character.id);
     this.scene.add(this._hero);
 
 

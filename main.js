@@ -16,7 +16,8 @@ import AppWithNavigationState from './Navigation'
 
 export const store = configureStore()
 
-
+import ModelLoader from './ModelLoader';
+export const modelLoader = new ModelLoader();
 class Root extends React.Component {
 
   state = {
@@ -35,6 +36,9 @@ class Root extends React.Component {
           {"EarlyGameBoy": require('./assets/fonts/EarlyGameBoy.ttf')},
         ],
       });
+
+      await modelLoader.loadModels();
+
     } catch (e) {
       console.warn(
         'There was an error caching assets (see: main.js), perhaps due to a ' +

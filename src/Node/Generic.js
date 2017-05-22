@@ -74,6 +74,8 @@ export default class Generic {
   getNode = (key = '0') => {
     if (this.models.hasOwnProperty(key)) {
       return this.models[key].clone();
+    } else {
+      console.error(`Node with Key ${key} does not exist in ${this}! Node/Generic`);
     }
   }
 
