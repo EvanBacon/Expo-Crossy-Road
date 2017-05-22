@@ -61,6 +61,7 @@ render() {
     contentContainerStyle={{
       paddingHorizontal: (Dimensions.get('window').width - width) / 2,
       alignItems: 'center',
+      backgroundColor: 'purple',
       justifyContent: 'center'
      }}
     directionalLockEnabled={true}
@@ -83,7 +84,7 @@ const styles = StyleSheet.create({
     // alignItems: 'center',
     // justifyContent: 'center',
     // paddingTop: Constants.status BarHeight,
-    backgroundColor: 'transparent',
+    backgroundColor: 'green',
   },
   paragraph: {
     margin: 24,

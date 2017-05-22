@@ -1,7 +1,7 @@
 import Expo, {AppLoading} from 'expo';
 import React from 'react';
 import Game from './src/Game'
-
+import {View, StyleSheet} from 'react-native';
 import Images from './Images'
 import CharacterSelect from './src/CharacterSelect'
 import cacheAssetsAsync from './utils/cacheAssetsAsync';
@@ -41,7 +41,10 @@ class App extends React.Component {
   render() {
     if (this.state.appIsReady) {
       return (
-        <CharacterSelect />
+        <View style={{flex: 1}}>
+          <Game/>
+          {this.props.isCharacterSelectEnabled && <CharacterSelect style={StyleSheet.absoluteFill} />}
+        </View>
       );
     } else {
       return <AppLoading />

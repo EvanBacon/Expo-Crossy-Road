@@ -1,16 +1,33 @@
-import Expo from 'expo'
+import Expo from 'expo';
 
 import React, {Component} from 'react';
-import {TouchableWithoutFeedback,Vibration, Animated, Dimensions,Text,View} from 'react-native'
+import {
+  TouchableWithoutFeedback,
+  Vibration,
+  Animated,
+  Dimensions,
+  Text,
+  View,
+  AppLoading
+} from 'react-native';
 
-import GestureRecognizer, {swipeDirections} from './GestureView';
+import GestureRecognizer, {
+  swipeDirections
+} from './GestureView';
+
 import Water from './Particles/Water';
 import Feathers from './Particles/Feathers';
-import {TweenMax, Power2, TimelineLite} from "gsap";
+import {
+  TweenMax,
+  Power2,
+  TimelineLite
+} from "gsap";
+
 import Hand from './Hand';
-import Footer from './Footer'
+import Footer from './Footer';
 // const {THREE} = global;
-import * as THREE from 'three'
+
+import * as THREE from 'three';
 import createTHREEViewClass from './createTHREEViewClass';
 const THREEView = createTHREEViewClass(THREE);
 
@@ -23,7 +40,7 @@ const AnimatedGestureRecognizer = Animated.createAnimatedComponent(GestureRecogn
 
 let scoreAnimation = new Animated.Value(0);
 
-import RetroText from './RetroText'
+import RetroText from './RetroText';
 
 import Node from './Node';
 const {
@@ -88,7 +105,6 @@ export default class App extends React.Component {
       this.featherParticles.mesh.visible = true;
       this.featherParticles.run(type, direction);
     }
-
   }
 
   createLights = () => {
@@ -107,7 +123,6 @@ export default class App extends React.Component {
 // shadowLight.shadow.radius = 1;
 // var helper = new THREE.CameraHelper( shadowLight.shadow.camera );
 // this.scene.add( helper );
-
 
 //directional light
 //  var directionalLight = new THREE.DirectionalLight(0xffffff);
@@ -992,7 +1007,7 @@ export default class App extends React.Component {
     };
 
     if (!this.state.ready) {
-      return null;
+      return (<AppLoading />);
     }
 
     return (

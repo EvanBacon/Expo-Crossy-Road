@@ -11,7 +11,7 @@ export default class CharacterSelect extends Component {
     const imageStyle={width: 60, height: 48};
 
     return (
-      <View style={styles.container}>
+      <View style={[styles.container, this.props.style]}>
 
         <View style={{flexDirection: 'row', marginTop: 8, paddingHorizontal: 4}}>
           <Button source={Images.button.back} imageStyle={imageStyle} onPress={_=> {
@@ -25,7 +25,7 @@ export default class CharacterSelect extends Component {
       <Carousel>
       </Carousel>
 
-      <View style={{flexDirection: 'row', justifyContent: 'center', marginBottom: 8}}>
+      <View style={{flexDirection: 'row', justifyContent: 'center', backgroundColor: 'red', marginBottom: 8}}>
         <Button source={Images.button.random} imageStyle={imageStyle} onPress={_=> {
 
           }}/>
