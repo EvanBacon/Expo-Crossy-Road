@@ -13,8 +13,11 @@ import {AppNavigator} from './reducers/navigation';
 
 import {THREE} from './utils/THREEglobal'
 
-import store from './store';
+import configureStore from './store';
 import AppWithNavigationState from './Navigation'
+
+export const store = configureStore()
+
 
 class Root extends React.Component {
 
@@ -46,10 +49,11 @@ class Root extends React.Component {
   }
 
   render() {
+    console.log("HOME", this.props, store);
     if (this.state.appIsReady) {
       return (
         <Provider store={store}>
-          <AppWithNavigationState />
+          <AppWithNavigationState dispatch={store.dispatch}/>
       </Provider>
     );
   }

@@ -21,7 +21,7 @@ export const AppNavigator = StackNavigator(AppRouteConfigs, {
 
 const initialState = AppNavigator.router.getStateForAction(AppNavigator.router.getActionForPathAndParams('Home'));
 
-const navReducer = (state = initialState, action) => {
+export default (state = initialState, action) => {
   const nextState = AppNavigator.router.getStateForAction(action, state);
 
   // Simply return the original `state` if `nextState` is null or undefined.

@@ -1,7 +1,7 @@
-import navigation from './navigation'
+import nav from './navigation'
 import game from './game'
 
 export default {
-  navigation,
+  nav,
   game
 }
