@@ -33,19 +33,25 @@ export default class Carousel extends Component {
   onAnimationUpdate = ({value}) => this.scrollOffset = value;
 
   renderItem = ({item, index}) => {
-
+    const inset = width*0.66;
+    const inputRange = [(index * width) -  width,(index * width),(index * width) + width];
     return (
       <Animated.View
         style={{
-          // flex: 1,
-          backgroundColor: 'transparent',
+          flex: 1,
           justifyContent: 'center',
           transform: [
             {
               scale: this.scroll.interpolate({
-                inputRange: [(index * width) -  width,(index * width),(index * width) + width],
+                inputRange,
                 outputRange: [0.5, 1, 0.5],
                 extrapolate: 'clamp'
+              })
+            },
+            {
+              translateX: this.scroll.interpolate({
+                inputRange,
+                outputRange: [-inset, 0, inset],
               })
             }
           ]
@@ -77,7 +83,6 @@ render() {
     contentContainerStyle={{
       paddingHorizontal: (Dimensions.get('window').width - width) / 2,
       alignItems: 'center',
-      backgroundColor: 'purple',
       justifyContent: 'center'
      }}
     directionalLockEnabled={true}
@@ -102,7 +107,6 @@ const styles = StyleSheet.create({
     // alignItems: 'center',
     // justifyContent: 'center',
     // paddingTop: Constants.status BarHeight,
-    backgroundColor: 'green',
   },
   paragraph: {
     margin: 24,

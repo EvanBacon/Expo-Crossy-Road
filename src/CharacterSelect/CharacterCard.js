@@ -40,6 +40,7 @@ export default class CharacterCard extends Component {
     this.camera.position.y = 0.5;
 
     this.init();
+
   }
 
   init = async () => {
@@ -67,22 +68,22 @@ export default class CharacterCard extends Component {
     this.hero = this._hero.getNode();
     this.scene.add(this.hero);
     this.hero.scale.set(1,1,1);
-    // this.hero.position.set(0,0,0);
 
     this.setState({setup: true})
+
+    // this.hero.position.set(0,0,0);
+
   }
 
   tick = dt => {
     if (!this.state.setup) {
       return;
     }
-    // this.hero.rotation.x += 1 * dt;
     this.hero.rotation.y += 1 * dt;
   };
 
   render() {
     if (this.state.setup) {
-
 
     return (
       <View pointerEvents={'none'}  style={styles.container}>
@@ -90,9 +91,8 @@ export default class CharacterCard extends Component {
 
         <AnimatedText style={{opacity: this.props.opacity, backgroundColor: 'transparent', textAlign: 'center', color: 'white', fontSize: 24}}>{this.props.name}</AnimatedText>
         <THREEView
-          pointerEvents={'none'}
-          backgroundColorAlpha={1}
-          style={{ flex: 1, backgroundColor: 'yellow'}}
+          backgroundColorAlpha={0}
+          style={{ flex: 1}}
           scene={this.scene}
           camera={this.camera}
           tick={this.tick}
@@ -108,7 +108,6 @@ export default class CharacterCard extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     padding: 0,
     width: size,
     height: size,
@@ -117,6 +116,5 @@ const styles = StyleSheet.create({
     minWidth: size,
     minHeight: size,
     justifyContent: 'center',
-    backgroundColor: 'transparent',
   },
 });

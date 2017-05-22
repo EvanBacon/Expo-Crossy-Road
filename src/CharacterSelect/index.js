@@ -14,10 +14,17 @@ class CharacterSelect extends Component {
     characters: Object.keys(Characters).map(val => Characters[val])
   }
   dismiss = () => {
-    this.props.navigation.toBack();
+    this.props.navigation.goBack();
 
   }
   pickRandom = () => {
+    const {characters, currentIndex} = this.state;
+
+    const randomIndex = Math.floor(Math.random() * (characters.length - 1));
+    const randomCharacter = characters[randomIndex];
+    this.props.setCharacter(randomCharacter);
+    this.dismiss();
+
 
   }
   share = () => {
@@ -57,6 +64,7 @@ class CharacterSelect extends Component {
     const {characters, currentIndex} = this.state;
 
     this.props.setCharacter(characters[currentIndex]);
+    this.dismiss();
   }
 
 
@@ -80,7 +88,7 @@ class CharacterSelect extends Component {
             }}>
           </Carousel>
 
-          <View style={{flexDirection: 'row', justifyContent: 'center', backgroundColor: 'red', marginBottom: 8}}>
+          <View style={{flexDirection: 'row', justifyContent: 'center', marginBottom: 8}}>
             <Button source={Images.button.random} imageStyle={imageStyle} onPress={_=> {
                 this.pickRandom();
               }}/>

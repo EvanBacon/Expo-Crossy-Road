@@ -1,18 +1,22 @@
 import {
-  UPDATE_GAME_STATE,
-  SET_CHARACTER
+  SET_GAME_STATE,
+  SET_CHARACTER,
+  SET_COIN_COUNT,
 } from '../actions/game'
 
 import State from '../state'
 import Characters from '../Characters'
 const initialState = {
   gameState: State.Game.none,
-  character: Characters.chicken
+  character: Characters.chicken,
+  coins: 0
 }
 
 export default function reducer(state = initialState, action) {
   switch (action.type) {
-    case UPDATE_GAME_STATE:
+    case SET_COIN_COUNT:
+    return {...state, coins: action.coins};
+    case SET_GAME_STATE:
     if (!State.Game.hasOwnProperty(action.gameState)) {
         console.error(`State ${action.gameState} does not exist! Check: reducers/game.js`);
     }

@@ -16,7 +16,7 @@ export default class Sprite extends Component {
   }
 
   componentWillUnmount() {
-    clearInterval(this.updateSprite, this.interval);
+    clearInterval(this.timer);
   }
 
   updateSprite = () => {
@@ -24,7 +24,7 @@ export default class Sprite extends Component {
   }
 
   render = () => (
-    
+
         <Image source={this.state.image} style={[styles.image, this.props.style]}/>
     );
 }

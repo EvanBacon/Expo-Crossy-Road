@@ -16,9 +16,7 @@ export default class Footer extends Component {
     const imageStyle={width: 60, height: 48};
     return (
       <View style={[styles.container, this.props.style]}>
-        <Button onPress={_=> {
-
-        }} style={[{backgroundColor: 'orange'}]} imageStyle={imageStyle} source={Images.button.character}/>
+        <Button onPress={this.props.onCharacterSelect} imageStyle={imageStyle} source={Images.button.character}/>
 
       <View style={{flex: 1}}/>
 
@@ -33,9 +31,7 @@ export default class Footer extends Component {
       {
         this.state.menuOpen &&
 
-        <Button onPress={_=> {
-
-        }} style={[{marginBottom: 8}, imageStyle]} imageStyle={imageStyle} source={Images.button.shop}
+        <Button onPress={this.props.onShop} style={[{marginBottom: 8}, imageStyle]} imageStyle={imageStyle} source={Images.button.shop}
         />
 
       }
@@ -43,9 +39,7 @@ export default class Footer extends Component {
       {
         this.state.menuOpen &&
 
-        <Button onPress={_=> {
-
-        }} style={[{marginBottom: 8}, imageStyle]} imageStyle={imageStyle} source={Images.button.controller}
+        <Button onPress={this.props.onMultiplayer} style={[{marginBottom: 8}, imageStyle]} imageStyle={imageStyle} source={Images.button.controller}
         />
 
       }

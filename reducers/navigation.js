@@ -6,13 +6,17 @@ const AppRouteConfigs = {
   Home: {
     screen: Home,
     navigationOptions: ({navigation}) => ({
-     header: null
+     header: null,
+     gesturesEnabled: false
+
     }),
   },
   CharacterSelect: {
     screen: CharacterSelect,
     navigationOptions: ({navigation}) => ({
-     header: null
+     header: null,
+     gesturesEnabled: false
+
     }),
   },
 
