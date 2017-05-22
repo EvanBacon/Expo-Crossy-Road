@@ -69,6 +69,36 @@ class Game extends Component {
   currentLog = -1;
 
 
+  componentWillReceiveProps(nextProps) {
+    const {props} = this;
+
+    if (nextProps.gameState !== props.gameState) {
+        this.updateWithGameState(nextProps.gameState, props.gameState);
+    }
+
+  }
+  updateWithGameState = (gameState, previousGameState) => {
+    const {playing, gameOver, paused, none} = State.Game;
+    switch (gameState) {
+      case playing:
+        this.newScore();
+        break;
+        case gameOver:
+
+          break;
+
+          case paused:
+
+            break;
+
+            case none:
+
+              break;
+
+      default:
+        break;
+    }
+  }
 
   componentWillMount() {
     this.scene = new THREE.Scene();
@@ -215,7 +245,7 @@ class Game extends Component {
       useNativeDriver: true
     }).start();
 
-    this.props.setGameState(State.Game.playing);
+    // this.props.setGameState(State.Game.playing);
     this.setState({score: 0})
     this.init();
   }
@@ -818,7 +848,7 @@ class Game extends Component {
   gameOver = () => {
     // this.trees.map(val => this.scene.remove(val) );
 
-    this.props.setGameState( State.Game.gameOver)
+    this.props.setGameState(State.Game.gameOver)
     this.endScore();
   }
 
