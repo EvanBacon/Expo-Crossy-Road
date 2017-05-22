@@ -49,7 +49,6 @@ class Root extends React.Component {
   }
 
   render() {
-    console.log("HOME", this.props, store);
     if (this.state.appIsReady) {
       return (
         <Provider store={store}>

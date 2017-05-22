@@ -9,7 +9,12 @@ const AppRouteConfigs = {
      header: null
     }),
   },
-  CharacterSelect: { screen: CharacterSelect },
+  CharacterSelect: {
+    screen: CharacterSelect,
+    navigationOptions: ({navigation}) => ({
+     header: null
+    }),
+  },
 
 }
 

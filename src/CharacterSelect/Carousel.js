@@ -14,13 +14,23 @@ const width = 200;
 
 
 export default class Carousel extends Component {
-
+  scrollOffset = 0;
   scroll = new Animated.Value(0);
 
   _scrollSink = Animated.event(
     [{nativeEvent: { contentOffset: { x: this.scroll } }}],
     {useNativeDriver: true},
   );
+
+  componentWillMount() {
+    scroll.addListener(this.onAnimationUpdate);
+  }
+  componentWillUnmount() {
+    scroll.removeListener(this.onAnimationUpdate);
+  }
+  
+
+  onAnimationUpdate = ({value}) => this.scrollOffset = value;
 
   renderItem = ({item, index}) => {
 
@@ -50,6 +60,12 @@ export default class Carousel extends Component {
   );
 }
 
+momentumScrollEnd = () => {
+  this.props.onCurrentIndexChange(Math.floor(this.scrollOffset/width))
+}
+
+
+
 render() {
 
   const keys = Object.keys(Characters);
@@ -66,6 +82,8 @@ render() {
      }}
     directionalLockEnabled={true}
     pagingEnabled={false}
+    onMomentumScrollEnd={this.momentumScrollEnd}
+
     onScroll={this._scrollSink}
     renderItem={this.renderItem}
     keyExtractor={(item: ItemT, index: number) => `tuner-card-${index}`}
