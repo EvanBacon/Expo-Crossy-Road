@@ -3,13 +3,20 @@ import React from 'react';
 import Game from './src/Game'
 import {View, StyleSheet} from 'react-native';
 import Images from './Images'
-import CharacterSelect from './src/CharacterSelect'
 import cacheAssetsAsync from './utils/cacheAssetsAsync';
 import arrayFromObject from './utils/arrayFromObject';
 
+import {connect} from 'react-redux';
+import {Provider} from 'react-redux';
+import {addNavigationHelpers} from 'react-navigation';
+import {AppNavigator} from './reducers/navigation';
+
 import {THREE} from './utils/THREEglobal'
 
-class App extends React.Component {
+import store from './store';
+import AppWithNavigationState from './Navigation'
+
+class Root extends React.Component {
 
   state = {
     appIsReady: false,
@@ -30,7 +37,7 @@ class App extends React.Component {
     } catch (e) {
       console.warn(
         'There was an error caching assets (see: main.js), perhaps due to a ' +
-          'network timeout, so we skipped caching. Reload the app to try again.'
+        'network timeout, so we skipped caching. Reload the app to try again.'
       );
       console.log(e.message);
     } finally {
@@ -41,15 +48,14 @@ class App extends React.Component {
   render() {
     if (this.state.appIsReady) {
       return (
-        <View style={{flex: 1}}>
-          <Game/>
-          {this.props.isCharacterSelectEnabled && <CharacterSelect style={StyleSheet.absoluteFill} />}
-        </View>
-      );
-    } else {
-      return <AppLoading />
-    }
+        <Provider store={store}>
+          <AppWithNavigationState />
+      </Provider>
+    );
   }
+  return (<AppLoading />);
+}
 }
 
-Expo.registerRootComponent(App);
+
+Expo.registerRootComponent(Root);

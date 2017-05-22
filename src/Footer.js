@@ -62,7 +62,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     flexDirection: 'row',
     maxHeight: 48,
-    backgroundColor: 'blue'
   },
   paragraph: {
     margin: 24,

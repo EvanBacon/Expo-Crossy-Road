@@ -1,4 +1,4 @@
-import Expo from 'expo';
+import Expo, {AppLoading} from 'expo';
 
 import React, {Component} from 'react';
 import {
@@ -8,7 +8,7 @@ import {
   Dimensions,
   Text,
   View,
-  AppLoading
+
 } from 'react-native';
 
 import GestureRecognizer, {
@@ -23,8 +23,6 @@ import {
   TimelineLite
 } from "gsap";
 
-import Hand from './Hand';
-import Footer from './Footer';
 // const {THREE} = global;
 
 import * as THREE from 'three';
@@ -60,7 +58,7 @@ const {
 const groundLevel = 0.5;
 const sceneColor = 0x6dceea;
 
-export default class App extends React.Component {
+export default class Game extends React.Component {
   maxRows = 20;
   sineCount = 0;
   sineInc = Math.PI / 50;
@@ -212,7 +210,7 @@ export default class App extends React.Component {
       useNativeDriver: true
     }).start();
 
-    this.setState({pause: false});
+    this.setState({score: 0, pause: false})
     this.init();
   }
 
@@ -268,8 +266,9 @@ export default class App extends React.Component {
 
   }
 
+
+
   doGame = async () => {
-    this.setState({score: 0, pause: false})
 
     this.moving = false;
     this.timing = 0.10;
@@ -1011,7 +1010,7 @@ export default class App extends React.Component {
     }
 
     return (
-      <View style={{flex: 1, backgroundColor: '#6dceea'}}>
+      <View style={[{flex: 1, backgroundColor: '#6dceea'}, this.props.style]}>
         <AnimatedGestureRecognizer
           onResponderGrant={_=> {
             this.beginMoveWithDirection();
@@ -1045,15 +1044,8 @@ export default class App extends React.Component {
           </AnimatedGestureRecognizer>
           { this.state.pause && (
             <View pointerEvents="auto" style={{position: 'absolute', left: 0, top: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0,0,0,0.2)', justifyContent: 'center', alignItems: 'center'}}>
-              <RetroText style={{position: 'absolute', top: 8, right: 8, color: '#f8e84d', fontSize: 36,letterSpacing: 0.9, backgroundColor: 'transparent',  textAlign: 'right', shadowColor: 'black', shadowOpacity: 1, shadowRadius: 0, shadowOffset: {width: 0, height: 0}}}>94</RetroText>
-              <RetroText style={{color: 'white', fontSize: 48, backgroundColor: 'transparent',  textAlign: 'center'}}>Tap To Play!</RetroText>
-
-            <View style={{justifyContent: 'center',alignItems: 'center', position: 'absolute', bottom: 8, left: 8, right: 8,}}>
-              <Hand style={{width: 36}}/>
-            <Footer style={{ height: 48}}/>
-          </View>
-          </View>
-        )}
+            </View>
+          )}
         <AnimatedText pointerEvents={'none'} style={[{color: 'white', fontSize: 48, backgroundColor: 'transparent', position: 'absolute', top: 32, left: 16}, {transform: [
             {translateX: scoreAnimation.interpolate({
               inputRange: [0, 1],
