@@ -13,6 +13,7 @@
     "react-native": "https://github.com/expo/react-native/archive/sdk-17.0.0.tar.gz",
     "react-native-swipe-gestures": "^1.0.2",
     "react-navigation": "^1.0.0-beta.9",
+    "redux-persist": "^4.8.0",
     "three": "^0.85.2"
   }
 }

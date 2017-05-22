@@ -1,7 +1,7 @@
 import Expo, {AppLoading} from 'expo';
 import React from 'react';
 import Game from './src/Game'
-import {View, StyleSheet} from 'react-native';
+import {View, StyleSheet, AsyncStorage} from 'react-native';
 import Images from './Images'
 import cacheAssetsAsync from './utils/cacheAssetsAsync';
 import arrayFromObject from './utils/arrayFromObject';
@@ -13,19 +13,27 @@ import {THREE} from './utils/THREEglobal'
 
 import configureStore from './store';
 import AppWithNavigationState from './Navigation'
-
+import {persistStore} from 'redux-persist'
 export const store = configureStore()
 
 import ModelLoader from './ModelLoader';
 export const modelLoader = new ModelLoader();
+
+export const persister = persistStore(store, {storage: AsyncStorage})
 class Root extends React.Component {
 
   state = {
     appIsReady: false,
+    rehydrated: false,
   };
 
   componentWillMount() {
     this._loadAssetsAsync();
+
+    persistStore(store, { storage: AsyncStorage}, () => {
+      console.log("Rehydrated");
+       this.setState({ rehydrated: true })
+    });
   }
 
   async _loadAssetsAsync() {
@@ -51,9 +59,9 @@ class Root extends React.Component {
   }
 
   render() {
-    if (this.state.appIsReady) {
+    if (this.state.appIsReady && this.state.rehydrated) {
       return (
-        <Provider store={store}>
+        <Provider store={store} persister={persister}>
           <AppWithNavigationState dispatch={store.dispatch}/>
       </Provider>
     );

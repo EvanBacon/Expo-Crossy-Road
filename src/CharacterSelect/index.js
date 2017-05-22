@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, View, StyleSheet, Share } from 'react-native';
+import { Text, View, StyleSheet, Share, AsyncStorage } from 'react-native';
 import { Constants } from 'expo';
 
 import Button from '../Button';
@@ -17,8 +17,8 @@ class CharacterSelect extends Component {
   }
   dismiss = () => {
     this.props.navigation.goBack();
-
   }
+
   pickRandom = () => {
     const {characters, currentIndex} = this.state;
 
@@ -109,9 +109,10 @@ class CharacterSelect extends Component {
         }
       }
 
-
 import {setCharacter} from '../../actions/game';
 import {connect} from 'react-redux';
+
+
 export default connect(state => ({character: state.game.character}), {setCharacter})(CharacterSelect)
 
       CharacterSelect.defaultProps = {
