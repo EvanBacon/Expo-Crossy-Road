@@ -14,12 +14,13 @@ class AppWithNavigationState extends React.Component {
   render() {
     const { dispatch, nav, gameState } = this.props;
 
+    const App = AppNavigator.getNavigator()
     LayoutAnimation.easeInEaseOut();
     return (
       <View style={{flex: 1}}>
-        <Game style={StyleSheet.absoluteFill} />
+    {/* <Game style={StyleSheet.absoluteFill} /> */}
       {gameState != State.Game.playing &&
-        <AppNavigator navigation={addNavigationHelpers({
+        <App navigation={addNavigationHelpers({
             dispatch: dispatch,
             state: nav,
           })}

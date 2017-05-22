@@ -8,8 +8,6 @@ import arrayFromObject from './utils/arrayFromObject';
 
 import {connect} from 'react-redux';
 import {Provider} from 'react-redux';
-import {addNavigationHelpers} from 'react-navigation';
-import {AppNavigator} from './reducers/navigation';
 
 import {THREE} from './utils/THREEglobal'
 

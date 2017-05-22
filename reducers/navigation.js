@@ -1,6 +1,8 @@
-
 import Home from '../src/Home'
 import CharacterSelect from '../src/CharacterSelect'
+
+import { StackNavigator, createNavigationContainer, createNavigator } from 'react-navigation';
+import CrossFade from '../transitioners/CrossFade';
 
 const AppRouteConfigs = {
   Home: {
@@ -19,19 +21,36 @@ const AppRouteConfigs = {
 
     }),
   },
-
 }
 
-import { StackNavigator } from 'react-navigation';
 
-export const AppNavigator = StackNavigator(AppRouteConfigs, {
-  cardStyle: {backgroundColor: 'transparent'}
+
+const router = StackNavigator(AppRouteConfigs, {
+  cardStyle: {backgroundColor: 'transparent'},
+  headerMode: 'none',
+
 });
 
-const initialState = AppNavigator.router.getStateForAction(AppNavigator.router.getActionForPathAndParams('Home'));
+const navigator = createNavigator(router)(CrossFade);
+const NavigationContainer = createNavigationContainer(navigator);
+
+
+
+export class AppNavigator {
+    static getNavigator() {
+        return NavigationContainer;
+    }
+}
+
+// const NavigationContainer = createNavigationContainer(createNavigator(Navigator)(CrossFade));
+// export const AppNavigator = Navigator;
+
+console.log(navigator);
+
+const initialState = router.router.getStateForAction(router.router.getActionForPathAndParams('Home'));
 
 export default (state = initialState, action) => {
-  const nextState = AppNavigator.router.getStateForAction(action, state);
+  const nextState = router.router.getStateForAction(action, state);
 
   // Simply return the original `state` if `nextState` is null or undefined.
   return nextState || state;

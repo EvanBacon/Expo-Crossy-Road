@@ -55,6 +55,7 @@ const {
   Train,
   RailRoad
 } = Node;
+const startingRow = 8;
 
 // import Hero from './Hero'
 
@@ -75,7 +76,18 @@ class Game extends Component {
     if (nextProps.gameState !== props.gameState) {
         this.updateWithGameState(nextProps.gameState, props.gameState);
     }
+    if (nextProps.character.id !== props.character.id) {
+      (async () => {
 
+        this.scene.remove(this._hero);
+        await this.hero.setup(nextProps.character.id);
+        this._hero = this.hero.getNode();
+        this.scene.add(this._hero);
+        this._hero.position.set(0, groundLevel, startingRow);
+        this._hero.scale.set(1,1,1);
+
+      })()
+    }
   }
   updateWithGameState = (gameState, previousGameState) => {
     const {playing, gameOver, paused, none} = State.Game;
@@ -252,7 +264,7 @@ class Game extends Component {
 
   doneMoving = () => {
     this.moving = false;
-    // this.hero.position.set(Math.round(this.hero.position.x), this.hero.position.y, Math.round(this.hero.position.z))
+    // this._hero.position.set(Math.round(this._hero.position.x), this._hero.position.y, Math.round(this._hero.position.z))
   }
 
   getWidth = (mesh) => {
@@ -278,7 +290,7 @@ class Game extends Component {
     this._railroad = new RailRoad();
     this._train = new Train();
     this._log = new Log();
-    this._hero = new Hero();
+    this.hero = new Hero();
 
     try {
       await Promise.all([
@@ -291,7 +303,7 @@ class Game extends Component {
         this._car.setup(),
         this._railroad.setup(),
         this._train.setup(),
-        this._hero.setup()
+        this.hero.setup(this.props.character.id)
       ]);
       console.log("Done Loading 3D Models!");
     } catch(error) {
@@ -341,13 +353,8 @@ class Game extends Component {
     this.createLights();
 
     // Mesh
-    this.hero = new THREE.Object3D();
-    // this.hero.receiveShadow = true;
-    // this.hero.castShadow = true;
-    // this.hero.position.y = .25;
-    this.scene.add(this.hero);
-
-    this.hero.add(this._hero.getNode());
+    this._hero = this.hero.getNode();
+    this.scene.add(this._hero);
 
 
     this.railRoad[0] = this._railroad.getRandom();
@@ -433,11 +440,10 @@ class Game extends Component {
   // Setup initial scene
   init = () => {
     const offset = -30;
-    const startingRow = 8;
     this.setState({score: 0})
     this.camera.position.z = startingRow;
-    this.hero.position.set(0, groundLevel, startingRow);
-    this.hero.scale.set(1,1,1);
+    this._hero.position.set(0, groundLevel, startingRow);
+    this._hero.scale.set(1,1,1);
 
     this.initialPosition = null;
     this.targetPosition = null;
@@ -694,8 +700,8 @@ class Game extends Component {
     }
 
     for (x = 0; x < this.trees.length; x++) {
-      if (Math.round(this.hero.position.z + zPos) == this.trees[x].position.z) {
-        if (Math.round(this.hero.position.x + xPos) == this.trees[x].position.x) {
+      if (Math.round(this._hero.position.z + zPos) == this.trees[x].position.z) {
+        if (Math.round(this._hero.position.x + xPos) == this.trees[x].position.x) {
           return true;
         }
       }
@@ -708,17 +714,17 @@ class Game extends Component {
     }
     for (let c = 0; c < this.cars.length; c++) {
       let car = this.cars[c];
-      if (this.hero.position.z == car.mesh.position.z) {
+      if (this._hero.position.z == car.mesh.position.z) {
 
         const {collisionBox} = car;
 
-        if (this.hero.position.x < this.cars[c].mesh.position.x + collisionBox && this.hero.position.x > this.cars[c].mesh.position.x - collisionBox) {
+        if (this._hero.position.x < this.cars[c].mesh.position.x + collisionBox && this._hero.position.x > this.cars[c].mesh.position.x - collisionBox) {
 
           ///Run Over Hero. ///TODO: Add a side collide
-          this.hero.scale.y = 0.1;
-          this.hero.position.y = groundLevel;
+          this._hero.scale.y = 0.1;
+          this._hero.position.y = groundLevel;
 
-          this.useParticle(this.hero, 'feathers', this.carSpeed[c]);
+          this.useParticle(this._hero, 'feathers', this.carSpeed[c]);
           this.rumbleScreen()
 
           this.gameOver();
@@ -739,11 +745,11 @@ class Game extends Component {
       delay: timing
     });
 
-    TweenMax.to(this.hero.position, timing * 0.9, {
+    TweenMax.to(this._hero.position, timing * 0.9, {
       y: groundLevel + -0.1,
     });
 
-    TweenMax.to(this.hero.position, timing, {
+    TweenMax.to(this._hero.position, timing, {
       y: groundLevel,
       delay: timing
     });
@@ -756,7 +762,7 @@ class Game extends Component {
 
     const log = this.logs[this.currentLog];
     let target = log.mesh.position.x + this.currentLogSubIndex;
-    this.hero.position.x = target;
+    this._hero.position.x = target;
     this.initialPosition.x = target;
   }
 
@@ -766,10 +772,10 @@ class Game extends Component {
     }
     for (let l = 0; l < this.logs.length; l++) {
       let log = this.logs[l];
-      if (this.hero.position.z == log.mesh.position.z) {
+      if (this._hero.position.z == log.mesh.position.z) {
         const {collisionBox, mesh} = log;
         const logX = mesh.position.x;
-        const heroX = this.hero.position.x;
+        const heroX = this._hero.position.x;
 
         if (heroX < logX + collisionBox && heroX > logX - collisionBox) {
           this.onLog = true;
@@ -787,21 +793,21 @@ class Game extends Component {
 
     if (this.onLog === false) {
       for (w = 0; w < this.water.length; w++) {
-        if (this.hero.position.z == this.water[w].position.z) {
+        if (this._hero.position.z == this.water[w].position.z) {
 
           if (this.props.gameState == State.Game.playing) {
-            this.useParticle(this.hero, 'water');
+            this.useParticle(this._hero, 'water');
             this.rumbleScreen()
             this.gameOver();
           } else {
 
             let y = Math.sin(this.sineCount) * .08 - .2;
             this.sineCount += this.sineInc;
-            this.hero.position.y = y;
+            this._hero.position.y = y;
 
             for (w = 0; w < this.logSpeed.length; w++) {
-              if (this.hero.position.z == this.logs[w].mesh.position.z) {
-                this.hero.position.x += this.logSpeed[w] / 3;
+              if (this._hero.position.z == this.logs[w].mesh.position.z) {
+                this._hero.position.x += this.logSpeed[w] / 3;
               }
             }
           }
@@ -818,7 +824,7 @@ class Game extends Component {
   // Move scene forward
   forwardScene = () => {
     if (this.props.gameState === State.Game.playing) {
-      if (Math.floor(this.camera.position.z) < this.hero.position.z - 4) {
+      if (Math.floor(this.camera.position.z) < this._hero.position.z - 4) {
         // speed up camera to follow player
         this.camera.position.z += .033;
         if (this.camCount > 1.8) {
@@ -874,7 +880,7 @@ class Game extends Component {
     if (this.props.gameState !== State.Game.playing) {
       return
     }
-    if (this.hero.position.z < this.camera.position.z - 8) {
+    if (this._hero.position.z < this.camera.position.z - 8) {
 
       ///TODO: rumble
       this.rumbleScreen()
@@ -883,7 +889,7 @@ class Game extends Component {
     }
 
     /// Check if offscreen
-    if (this.hero.position.x < -5 || this.hero.position.x > 5) {
+    if (this._hero.position.x < -5 || this._hero.position.x > 5) {
 
       ///TODO: Rumble death
       this.rumbleScreen()
@@ -893,7 +899,7 @@ class Game extends Component {
   }
 
   updateScore = () => {
-    const position = Math.floor(this.hero.position.z) - 8;
+    const position = Math.floor(this._hero.position.z) - 8;
     if (this.state.score < position) {
       this.setState({score: position})
     }
@@ -909,18 +915,18 @@ class Game extends Component {
 
 
     if (!this.initialPosition) {
-      this.initialPosition = this.hero.position;
+      this.initialPosition = this._hero.position;
       this.targetPosition = this.initialPosition;
     }
 
     if (this.moving) {
-      this.hero.position = this.targetPosition;
+      this._hero.position = this.targetPosition;
       // return
     };
 
     switch (direction) {
       case SWIPE_LEFT:
-      this.hero.rotation.y = Math.PI/2
+      this._hero.rotation.y = Math.PI/2
       if (!this.treeCollision("left")) {
         this.targetPosition = {x: this.initialPosition.x + 1, y: this.initialPosition.y, z: this.initialPosition.z};
         this.moving = true
@@ -928,7 +934,7 @@ class Game extends Component {
       }
       break;
       case SWIPE_RIGHT:
-      this.hero.rotation.y = -Math.PI/2
+      this._hero.rotation.y = -Math.PI/2
       if (!this.treeCollision("right")) {
         this.targetPosition = {x: this.initialPosition.x - 1, y: this.initialPosition.y, z: this.initialPosition.z};
         this.moving = true
@@ -936,7 +942,7 @@ class Game extends Component {
       }
       break;
       case SWIPE_UP:
-      this.hero.rotation.y = 0;
+      this._hero.rotation.y = 0;
       if (!this.treeCollision("up")) {
         this.targetPosition = {x: this.initialPosition.x, y: this.initialPosition.y, z: this.initialPosition.z + 1};
         this.moving = true
@@ -944,7 +950,7 @@ class Game extends Component {
       }
       break;
       case SWIPE_DOWN:
-      this.hero.rotation.y = Math.PI
+      this._hero.rotation.y = Math.PI
       if (!this.treeCollision("down")) {
         this.targetPosition = {x: this.initialPosition.x, y: this.initialPosition.y, z: this.initialPosition.z - 1};
         this.moving = true
@@ -976,24 +982,24 @@ class Game extends Component {
     let timing = 0.5;
 
 
-    TweenMax.to(this.hero.position, this.timing, {
+    TweenMax.to(this._hero.position, this.timing, {
       x: this.initialPosition.x + (delta.x * 0.75),
       y: groundLevel + 0.5,
       z: this.initialPosition.z + (delta.z * 0.75),
     });
 
-    TweenMax.to(this.hero.scale, this.timing, {
+    TweenMax.to(this._hero.scale, this.timing, {
       x: 1,
       y: 1.2,
       z: 1,
     });
-    TweenMax.to(this.hero.scale, this.timing, {
+    TweenMax.to(this._hero.scale, this.timing, {
       x: 1.0,
       y: 0.8,
       z: 1,
       delay: this.timing
     });
-    TweenMax.to(this.hero.scale, this.timing, {
+    TweenMax.to(this._hero.scale, this.timing, {
       x: 1,
       y: 1,
       z: 1,
@@ -1001,7 +1007,7 @@ class Game extends Component {
       delay: this.timing * 2
     });
 
-    TweenMax.to(this.hero.position, this.timing, {
+    TweenMax.to(this._hero.position, this.timing, {
       x: this.targetPosition.x,
       y: this.targetPosition.y,
       z: this.targetPosition.z,
@@ -1023,7 +1029,7 @@ class Game extends Component {
 
     let timing = 0.3;
 
-    TweenMax.to(this.hero.scale, timing, {
+    TweenMax.to(this._hero.scale, timing, {
       x: 1.2,
       y: 0.8,
       z: 1,
@@ -1104,7 +1110,8 @@ import {connect} from 'react-redux';
 import {setGameState} from '../actions/game';
 export default connect(
   state => ({
-    gameState: state.game.gameState
+    gameState: state.game.gameState,
+    character: state.game.character,
 
   }),
   {setGameState}
