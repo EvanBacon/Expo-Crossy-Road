@@ -8,6 +8,8 @@ import RetroText from '../RetroText';
 import Carousel from './Carousel';
 import Colors from '../../Colors';
 import Characters from '../../Characters';
+
+
 class CharacterSelect extends Component {
   state = {
     currentIndex: 0,

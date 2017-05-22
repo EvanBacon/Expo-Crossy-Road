@@ -25,6 +25,9 @@ import {
 
 // const {THREE} = global;
 
+import State from '../state';
+
+
 import * as THREE from 'three';
 import createTHREEViewClass from './createTHREEViewClass';
 const THREEView = createTHREEViewClass(THREE);
@@ -58,12 +61,14 @@ const {
 const groundLevel = 0.5;
 const sceneColor = 0x6dceea;
 
-export default class Game extends React.Component {
+class Game extends Component {
   maxRows = 20;
   sineCount = 0;
   sineInc = Math.PI / 50;
-  state = { ready: false, score: 0, pause: true };
+  state = { ready: false, score: 0,};
   currentLog = -1;
+
+
 
   componentWillMount() {
     this.scene = new THREE.Scene();
@@ -210,7 +215,8 @@ export default class Game extends React.Component {
       useNativeDriver: true
     }).start();
 
-    this.setState({score: 0, pause: false})
+    this.props.setGameState(State.Game.playing);
+    this.setState({score: 0})
     this.init();
   }
 
@@ -667,7 +673,7 @@ export default class Game extends React.Component {
   }
 
   carCollision = () => {
-    if (this.state.pause) {
+    if (this.props.gameState != State.Game.playing) {
       return
     }
     for (let c = 0; c < this.cars.length; c++) {
@@ -725,7 +731,7 @@ export default class Game extends React.Component {
   }
 
   logCollision = () => {
-    if (this.state.pause) {
+    if (this.props.gameState != State.Game.playing) {
       return
     }
     for (let l = 0; l < this.logs.length; l++) {
@@ -753,7 +759,7 @@ export default class Game extends React.Component {
       for (w = 0; w < this.water.length; w++) {
         if (this.hero.position.z == this.water[w].position.z) {
 
-          if (!this.state.pause) {
+          if (this.props.gameState == State.Game.playing) {
             this.useParticle(this.hero, 'water');
             this.rumbleScreen()
             this.gameOver();
@@ -781,7 +787,7 @@ export default class Game extends React.Component {
 
   // Move scene forward
   forwardScene = () => {
-    if (!this.state.pause) {
+    if (this.props.gameState === State.Game.playing) {
       if (Math.floor(this.camera.position.z) < this.hero.position.z - 4) {
         // speed up camera to follow player
         this.camera.position.z += .033;
@@ -811,8 +817,8 @@ export default class Game extends React.Component {
   // Reset variables, restart game
   gameOver = () => {
     // this.trees.map(val => this.scene.remove(val) );
-    this.setState({pause: true});
 
+    this.props.setGameState( State.Game.gameOver)
     this.endScore();
   }
 
@@ -835,7 +841,7 @@ export default class Game extends React.Component {
 
 
   checkIfUserHasFallenOutOfFrame = () => {
-    if (this.state.pause) {
+    if (this.props.gameState !== State.Game.playing) {
       return
     }
     if (this.hero.position.z < this.camera.position.z - 8) {
@@ -864,7 +870,7 @@ export default class Game extends React.Component {
   }
 
   moveWithDirection = direction => {
-    if (this.state.pause ) {
+    if (this.props.gameState != State.Game.playing ) {
       // this.newScore();
       return;
     }
@@ -981,7 +987,7 @@ export default class Game extends React.Component {
   }
 
   beginMoveWithDirection = direction => {
-    if (this.state.pause) {
+    if (this.props.gameState != State.Game.playing) {
       return;
     }
 
@@ -1042,10 +1048,7 @@ export default class Game extends React.Component {
               />
             </TouchableWithoutFeedback>
           </AnimatedGestureRecognizer>
-          { this.state.pause && (
-            <View pointerEvents="auto" style={{position: 'absolute', left: 0, top: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0,0,0,0.2)', justifyContent: 'center', alignItems: 'center'}}>
-            </View>
-          )}
+
         <AnimatedText pointerEvents={'none'} style={[{color: 'white', fontSize: 48, backgroundColor: 'transparent', position: 'absolute', top: 32, left: 16}, {transform: [
             {translateX: scoreAnimation.interpolate({
               inputRange: [0, 1],
@@ -1066,3 +1069,13 @@ export default class Game extends React.Component {
     );
   }
 }
+
+import {connect} from 'react-redux';
+import {setGameState} from '../actions/game';
+export default connect(
+  state => ({
+    gameState: state.game.gameState
+
+  }),
+  {setGameState}
+)(Game);
