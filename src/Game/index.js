@@ -6,6 +6,7 @@ import {
   Animated,
   Dimensions,
   Text,
+  InteractionManager,
   View,
 } from 'react-native';
 import GestureRecognizer, {swipeDirections} from '../GestureView';
@@ -124,7 +125,6 @@ class Game extends Component {
 
     this.scene.add(globalLight);
     this.scene.add(shadowLight);
-
   }
 
   endScore = () => {
@@ -245,7 +245,7 @@ class Game extends Component {
 
     this.railRoad[0] = this._railroad.getRandom();
     this.road[0] = this._road.getRandom();
-    this.trees[0] = this._tree.getRandom();
+    // this.trees[0] = this._tree.getRandom();
 
     let _carMesh = this._car.getRandom();
     let _carWidth = this.getDepth(_carMesh);
@@ -256,7 +256,7 @@ class Game extends Component {
     let _logWidth = this.getWidth(_logMesh);
     this.logs[0] = {mesh: _logMesh, width: _logWidth, collisionBox: (this.heroWidth / 2 + _logWidth / 2 - .1) };
 
-    this.trees[0].position.set(0, .5, -30);
+    // this.trees[0].position.set(0, .5, -30);
     this.cars[0].mesh.position.set(0, .25, -30);
     this.cars[0].mesh.rotation.set(0, 0,0);
 
@@ -314,7 +314,8 @@ class Game extends Component {
     this.camera.position.z = startingRow;
     this._hero.position.set(0, groundLevel, startingRow);
     this._hero.scale.set(1,1,1);
-
+    this.map = {};
+    this.map[`${0},${groundLevel|0},${startingRow|0}`] = 'player'
     this.initialPosition = null;
     this.targetPosition = null;
     this.grassCount = 0;
@@ -325,7 +326,7 @@ class Game extends Component {
     this.rowCount = 0;
     this.hitByCar = null;
     this.lastHeroZ = 8;
-
+    this.floorMap = {};
     for (i = 0; i < this.maxRows; i++) {
       this.grass[i].position.z = offset;
       this.water[i].position.z = offset;
@@ -352,13 +353,13 @@ class Game extends Component {
     this.grassCount++;
     this.rowCount++;
 
-    for (i = 0; i < 25; i++) {
+    for (i = 0; i < 23; i++) {
       this.newRow();
     }
 
     this.setState({ ready: true });
   }
-
+  floorMap = {};
   // Scene generators
   newRow = rowKind => {
     if (this.grassCount == this.maxRows) {
@@ -374,25 +375,48 @@ class Game extends Component {
       this.railRoadCount = 0;
     }
 
+    if (this.rowCount <= 9) {
+      rowKind = 1;
+
+      if (this.rowCount <= 5) {
+        rowKind = -1;
+      }
+
+    }
+
 
     /// Special layers
-    if (this.rowCount <= 0) {
-      this.grass[this.grassCount].position.z = this.rowCount;
-      this.grassCount++;
-
-    } else if (this.rowCount > 0 && this.rowCount <= 4) {
-      this.treeGen(true);
-      this.grass[this.grassCount].position.z = this.rowCount;
-      this.grassCount++;
-    } else if (this.rowCount > 4 && this.rowCount <= 10) {
-      this.treeGen();
-      this.grass[this.grassCount].position.z = this.rowCount;
-      this.grassCount++;
-    } else {
+    // if (this.rowCount <= 0) {
+    //   this.grass[this.grassCount].position.z = this.rowCount;
+    //   this.floorMap[`${this.rowCount}`] = 'grass';
+    //   this.grassCount++;
+    //
+    // } else if (this.rowCount > 0 && this.rowCount <= 4) {
+    //   this.grass[this.grassCount].position.z = this.rowCount;
+    //   this.floorMap[`${this.rowCount}`] = 'grass';
+    //   this.treeGen(true);
+    //
+    //   this.grassCount++;
+    // } else if (this.rowCount > 4 && this.rowCount <= 10) {
+    //   this.grass[this.grassCount].position.z = this.rowCount;
+    //   this.floorMap[`${this.rowCount}`] = 'grass';
+    //   this.treeGen();
+    //
+    //   this.grassCount++;
+    // } else {
       switch (rowKind || Math.floor(Math.random() * 3) + 1) {
-        case 1:
-        this.treeGen();
+        case -1:
         this.grass[this.grassCount].position.z = this.rowCount;
+        this.floorMap[`${this.rowCount}`] = 'grass';
+        this.treeGen(true);
+        this.grassCount++;
+        break;
+
+        case 1:
+        this.grass[this.grassCount].position.z = this.rowCount;
+        this.floorMap[`${this.rowCount}`] = 'grass';
+        this.treeGen();
+
         this.grassCount++;
         break;
 
@@ -406,6 +430,8 @@ class Game extends Component {
 
         // let road = this._road.getNode(!isMultiLane ? "0" : "1");
         this.road[this.roadCount].position.z = this.rowCount;
+        this.floorMap[`${this.rowCount}`] = 'road';
+
         // this.scene.add(road);
         this.roadCount++;
         break;
@@ -413,45 +439,51 @@ class Game extends Component {
         case 3:
         this.logGen();
         this.water[this.waterCount].position.z = this.rowCount;
+        this.floorMap[`${this.rowCount}`] = 'water';
         this.waterCount++;
         break;
         case 4:
         this.railRoad[this.railRoadCount].position.z = this.rowCount;
+        this.floorMap[`${this.rowCount}`] = 'railRoad';
         this.railRoadCount++;
         break;
       }
-    }
+    // }
     this.rowCount++;
 
   }
 
   treeGen = (isFull = false) => {
     // 0 - 8
-    for (x = -3; x < 12; x++) {
-      if (x == 9 || x == -1 || isFull) {
-        if (this.treeCount < 54) {
-          this.treeCount++;
-        } else {
-          this.treeCount = 0;
-        }
-        const tree = this._tree.getRandom();
-        tree.position.set(x - 4, .4, this.rowCount);
-        this.scene.add(tree);
-        this.trees.push(tree);
-        this.treeCount ++;
+    if (this.floorMap[`${this.rowCount}`] !== 'grass') {
+      return;
+    }
+
+    let _rowCount = 0;
+    for (let x = -3; x < 12; x++) {
+      if (x >= 9 || x <= -1 || isFull) {
+
+        this.addTree({x: x - 4, y: 0.4, z: this.rowCount});
+        // const tree = this._tree.getRandom();
+        // tree.position.set(x - 4, .4, this.rowCount);
+        // this.scene.add(tree);
+        // this.trees.push(tree);
+        // this.treeCount ++;
         // this.trees[this.treeCount].position.set(x - 4, .4, this.rowCount);
-      } else {
+      } else if (_rowCount < 2) {
         if ((x !== 4 && Math.random() > .6) || isFull) {
-          if (this.treeCount < 54) {
-            this.treeCount++;
-          } else {
-            this.treeCount = 0;
-          }
-          this.trees[this.treeCount].position.set(x - 4, .4, this.rowCount);
+          this.addTree({x: x - 4, y: 0.4, z: this.rowCount});
+          _rowCount++;
         }
       }
-
     }
+  }
+  addTree = ({x,y,z}) => {
+    this.treeCount++;
+    const treeIndex = this.treeCount % this.trees.length;
+    this.map[`${x|0},${0},${z|0}`] = {type:`tree`, index: treeIndex};
+
+    this.trees[treeIndex].position.set(x, y, z);
   }
 
   trainGen = () => {
@@ -576,14 +608,18 @@ class Game extends Component {
     } else if (dir == "right") {
       xPos = -1;
     }
-
-    for (x = 0; x < this.trees.length; x++) {
-      if (Math.round(this._hero.position.z + zPos) == this.trees[x].position.z) {
-        if (Math.round(this._hero.position.x + xPos) == this.trees[x].position.x) {
-          return true;
-        }
-      }
+    const key = `${(this._hero.position.x + xPos)|0},${0},${(this._hero.position.z + zPos)|0}`;
+    if (this.map.hasOwnProperty(key) && this.map[key].type === 'tree') {
+      return true;
     }
+    return false;
+    // for (x = 0; x < this.trees.length; x++) {
+    //   if (Math.round(this._hero.position.z + zPos) == this.trees[x].position.z) {
+    //     if (Math.round(this._hero.position.x + xPos) == this.trees[x].position.x) {
+    //       return true;
+    //     }
+    //   }
+    // }
   }
 
   carCollision = () => {
@@ -591,8 +627,8 @@ class Game extends Component {
       return
     }
     for (let c = 0; c < this.cars.length; c++) {
-      let car = this.cars[c];
-      if (this._hero.position.z == car.mesh.position.z) {
+      if (Math.round(this._hero.position.z) == this.cars[c].mesh.position.z) {
+        let car = this.cars[c];
 
         const {collisionBox} = car;
 
@@ -740,8 +776,9 @@ class Game extends Component {
       //   }
       //
       // } else {
-        this.camera.position.z += (((this._hero.position.z + 1) - this.camera.position.z) * 0.999);
-        this.camera.position.x =  Math.min(2, Math.max(-2, this.camera.position.x + (((this._hero.position.x + 1) - this.camera.position.x) * 0.999)));
+        const easing = 0.03;
+        this.camera.position.z += (((this._hero.position.z + 1) - this.camera.position.z) * easing);
+        this.camera.position.x =  Math.min(2, Math.max(-2, this.camera.position.x + (((this._hero.position.x + 1) - this.camera.position.x) * easing)));
 
         // normal camera speed
         if (this.camera.position.z - this.camCount > 1.0) {
@@ -758,10 +795,14 @@ class Game extends Component {
   gameOver = () => {
     // this.trees.map(val => this.scene.remove(val) );
 
+    InteractionManager.runAfterInteractions(_=> {
+
+
     this.props.setGameState(State.Game.gameOver)
     this.endScore();
     console.log("Navigation", this.props.nav)
     NavigationActions.navigate({ routeName: 'GameOver' })
+    });
     // this.props.nav.navigation.navigate('GameOver', {})
   }
 
