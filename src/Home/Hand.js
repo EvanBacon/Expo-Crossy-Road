@@ -5,7 +5,7 @@ import Images from '../../Images'
 
 const sprite = [Images.hand['0'], Images.hand['1']];
 export default class Sprite extends Component {
-  interval = 500;
+  interval = 400;
   index = 0;
   state = {
     image: sprite[0]

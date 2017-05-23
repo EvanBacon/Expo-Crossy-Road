@@ -481,7 +481,7 @@ class Game extends Component {
   carGen = () => {
     // Speeds: .01 through .08
     // Number of cars: 1 through 3
-    this.speed = (Math.floor(Math.random() * (5 - 1)) + 1) / 80;
+    this.speed = (Math.floor(Math.random() * (7 - 3)) + 3) / 80;
     this.numCars = Math.floor(Math.random() * (4 - 2)) + 2;
     xDir = 1;
 
@@ -511,7 +511,7 @@ class Game extends Component {
   logGen = () => {
     // Speeds: .01 through .08
     // Number of cars: 1 through 3
-    this.speed = (Math.floor(Math.random() * (3 - 1)) + 1) / 70;
+    this.speed = (Math.floor(Math.random() * (7 - 3)) + 3) / 80;
     this.numLogs = Math.floor(Math.random() * (4 - 3)) + 3;
     xDir = 1;
 
@@ -727,28 +727,30 @@ class Game extends Component {
   // Move scene forward
   forwardScene = () => {
     if (this.props.gameState === State.Game.playing) {
-      if (Math.floor(this.camera.position.z) < this._hero.position.z - 4) {
-        // speed up camera to follow player
-        this.camera.position.z += .033;
-        if (this.camCount > 1.8) {
-          this.camCount = 0;
-          this.newRow();
-          this.newRow();
-          this.newRow();
-        } else {
-          this.camCount += this.camSpeed;
-        }
+      // if (Math.floor(this.camera.position.z) < this._hero.position.z - 4) {
+      //   // speed up camera to follow player
+      //   this.camera.position.z += .033;
+      //   if (this.camCount > 1.8) {
+      //     this.camCount = 0;
+      //     this.newRow();
+      //     this.newRow();
+      //     this.newRow();
+      //   } else {
+      //     this.camCount += this.camSpeed;
+      //   }
+      //
+      // } else {
+        this.camera.position.z += (((this._hero.position.z + 1) - this.camera.position.z) * 0.999);
+        this.camera.position.x =  Math.min(2, Math.max(-2, this.camera.position.x + (((this._hero.position.x + 1) - this.camera.position.x) * 0.999)));
 
-      } else {
-        this.camera.position.z += .011;
         // normal camera speed
-        if (this.camCount > 1.8) {
-          this.camCount = 0;
+        if (this.camera.position.z - this.camCount > 1.0) {
+          this.camCount = this.camera.position.z;
           this.newRow();
         } else {
-          this.camCount += this.camSpeed;
+          // this.camCount += this.camSpeed;
         }
-      }
+      // }
     }
   }
 
