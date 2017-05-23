@@ -2,9 +2,9 @@ import React, { Component, PropTypes } from "react";
 import hoistNonReactStatic from "hoist-non-react-statics";
 import {connect} from 'react-redux';
 
-import {setGameState} from '../actions/game';
+import {setCharacter} from '../actions/character';
 export default (WrappedComponent) => {
-  class ConnectedGameStateComponent extends Component {
+  class ConnectedCharacterComponent extends Component {
     render() {
       return (
         <WrappedComponent {...props} />
@@ -14,10 +14,12 @@ export default (WrappedComponent) => {
 
   return connect(
     state => ({
-      gameState: state.game.gameState
+      characterName: state.character.name,
+      characterId: state.character.id,
+      characterIndex: state.character.index,
     }),
     {
-      setGameState
+      setCharacter
     }
-  )(hoistNonReactStatic(ConnectedGameStateComponent, WrappedComponent));
+  )(hoistNonReactStatic(ConnectedCharacterComponent, WrappedComponent));
 }

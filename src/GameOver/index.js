@@ -9,6 +9,7 @@ import Carousel from './Carousel';
 import Colors from '../../Colors';
 import Characters from '../../Characters';
 
+import Footer from './Footer';
 
 class GameOver extends Component {
   state = {
@@ -80,57 +81,38 @@ class GameOver extends Component {
           <Button source={Images.button.back} imageStyle={imageStyle} onPress={_=> {
               this.dismiss();
             }}/>
+          </View>
 
-
+          <View key='content' style={{flex: 1}}>
 
           </View>
 
-          <Carousel onCurrentIndexChange={index => {
-              this.setState({currentIndex: index})
-            }}>
-          </Carousel>
+          <Footer />
+      </View>
+    );
+  }
+}
 
-          <View style={{flexDirection: 'row', justifyContent: 'center', marginBottom: 8}}>
-            <Button source={Images.button.random} imageStyle={imageStyle} onPress={_=> {
-                this.pickRandom();
-              }}/>
-              <Button source={Images.button.long_play} imageStyle={{width: 90, height: 48}} onPress={_=> {
-                  this.select();
-                }}/>
-                <Button source={Images.button.social} imageStyle={imageStyle} onPress={_=> {
-                    this.share();
-                  }}/>
-
-                </View>
-                <RetroText style={{position: 'absolute',fontSize: 24, color: 'white', bottom: 4, left: 8}}>4/ 8</RetroText>
-
-            </View>
-          );
-        }
-      }
-
-import {setCharacter} from '../../actions/game';
 import {connect} from 'react-redux';
 
+export default connect(state => ({}), {})(GameOver)
 
-export default connect(state => ({character: state.game.character}), {setCharacter})(GameOver)
+GameOver.defaultProps = {
+  coins: 0
+}
 
-      GameOver.defaultProps = {
-        coins: 0
-      }
-
-      const styles = StyleSheet.create({
-        container: {
-          flex: 1,
-          justifyContent: 'center',
-          paddingTop: Constants.statusBarHeight,
-          backgroundColor: 'rgba(105, 201, 230, 0.8)',
-        },
-        paragraph: {
-          margin: 24,
-          fontSize: 18,
-          fontWeight: 'bold',
-          textAlign: 'center',
-          color: '#34495e',
-        },
-      });
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    paddingTop: Constants.statusBarHeight,
+    backgroundColor: 'rgba(105, 201, 230, 0.8)',
+  },
+  paragraph: {
+    margin: 24,
+    fontSize: 18,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    color: '#34495e',
+  },
+});

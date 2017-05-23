@@ -8,8 +8,9 @@ import RetroText from '../RetroText';
 import Carousel from './Carousel';
 import Colors from '../../Colors';
 import Characters from '../../Characters';
+import connectCharacter from '../../utils/connectCharacter'
 
-
+@connectCharacter
 class CharacterSelect extends Component {
   state = {
     currentIndex: 0,
@@ -81,8 +82,6 @@ class CharacterSelect extends Component {
               this.dismiss();
             }}/>
 
-
-
           </View>
 
           <Carousel onCurrentIndexChange={index => {
@@ -109,11 +108,9 @@ class CharacterSelect extends Component {
         }
       }
 
-import {setCharacter} from '../../actions/game';
 import {connect} from 'react-redux';
 
-
-export default connect(state => ({character: state.game.character}), {setCharacter})(CharacterSelect)
+export default connect(state => ({}), {})(CharacterSelect)
 
       CharacterSelect.defaultProps = {
         coins: 0
