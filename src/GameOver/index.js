@@ -5,7 +5,6 @@ import { Constants } from 'expo';
 import Button from '../Button';
 import Images from '../../Images';
 import RetroText from '../RetroText';
-import Carousel from './Carousel';
 import Colors from '../../Colors';
 import Characters from '../../Characters';
 

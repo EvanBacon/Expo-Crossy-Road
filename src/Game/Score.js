@@ -46,4 +46,4 @@ export default connect(
     highScore: state.game.highScore
   }),
   {setHighScore}
-)(Game);
+)(Score);

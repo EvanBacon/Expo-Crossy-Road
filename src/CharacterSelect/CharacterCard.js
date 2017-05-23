@@ -77,13 +77,13 @@ export default class CharacterCard extends Component {
         <View style={{backgroundColor: 'transparent', flex: 1}}>
 
         <AnimatedText style={{opacity: this.props.opacity, backgroundColor: 'transparent', textAlign: 'center', color: 'white', fontSize: 24}}>{this.props.name}</AnimatedText>
-        <THREEView
+      {Expo.Constants.isDevice && <THREEView
           backgroundColorAlpha={0}
           style={{ flex: 1}}
           scene={this.scene}
           camera={this.camera}
           tick={this.tick}
-        />
+        />}
         </View>
       </View>
     );

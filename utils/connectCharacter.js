@@ -7,7 +7,7 @@ export default (WrappedComponent) => {
   class ConnectedCharacterComponent extends Component {
     render() {
       return (
-        <WrappedComponent {...props} />
+        <WrappedComponent {...this.props} />
       );
     }
   }

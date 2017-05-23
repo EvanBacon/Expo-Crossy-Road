@@ -1,6 +1,5 @@
 import Expo, {AppLoading} from 'expo';
 import React from 'react';
-import Game from './src/Game'
 import {View, StyleSheet, AsyncStorage} from 'react-native';
 import Images from './Images'
 import cacheAssetsAsync from './utils/cacheAssetsAsync';

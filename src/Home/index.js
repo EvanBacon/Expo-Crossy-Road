@@ -33,7 +33,7 @@ class Screen extends Component {
         }
       ]
     };
-    console.log(this.props);
+    // console.log(this.props);
     return (
       <View style={styles.container}>
         <TouchableOpacity activeOpacity={0.9} style={[StyleSheet.absoluteFill, {justifyContent: 'center', alignItems: 'center'}]} onPress={_=> {

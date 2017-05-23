@@ -1,5 +1,4 @@
 import Expo, {AppLoading} from 'expo';
-
 import React, {Component} from 'react';
 import {
   TouchableWithoutFeedback,
@@ -8,77 +7,46 @@ import {
   Dimensions,
   Text,
   View,
-
 } from 'react-native';
-
-import GestureRecognizer, {
-  swipeDirections
-} from '../GestureView';
-
+import GestureRecognizer, {swipeDirections} from '../GestureView';
 import Water from '../Particles/Water';
 import Feathers from '../Particles/Feathers';
-import {
-  TweenMax,
-  Power2,
-  TimelineLite
-} from "gsap";
-
-// const {THREE} = global;
-
+import {TweenMax} from "gsap";
 import State from '../../state';
-
-
 import * as THREE from 'three';
 import createTHREEViewClass from '../../utils/createTHREEViewClass';
-const THREEView = createTHREEViewClass(THREE);
 
-// import Map from './Map';
-// Setup THREE//
+const THREEView = createTHREEViewClass(THREE);
 const {width, height} = Dimensions.get('window');
 
-const AnimatedText = Animated.createAnimatedComponent(RetroText);
-const AnimatedGestureRecognizer = Animated.createAnimatedComponent(GestureRecognizer);
-
-import connectCharacter from '../../utils/connectCharacter'
-let scoreAnimation = new Animated.Value(0);
-
+import connectGameState from '../../utils/connectGameState';
+import connectCharacter from '../../utils/connectCharacter';
 import RetroText from '../RetroText';
-
-import Node from '../Node';
-const {
-  Hero,
-  Car,
-  Log,
-  Road,
-  Grass,
-  River,
-  Tree,
-  Train,
-  RailRoad
-} = Node;
-const startingRow = 8;
-
-// import Hero from './Hero'
 import {modelLoader} from '../../main';
 const groundLevel = 0.5;
 const sceneColor = 0x6dceea;
+const startingRow = 8;
 
+const AnimatedGestureRecognizer = Animated.createAnimatedComponent(GestureRecognizer);
+
+@connectGameState
 @connectCharacter
 class Game extends Component {
+  /// Reserve State for UI related updates...
+  state = { ready: false, score: 0,};
+
   maxRows = 20;
   sineCount = 0;
   sineInc = Math.PI / 50;
-  state = { ready: false, score: 0,};
+
   currentLog = -1;
 
-
   componentWillReceiveProps(nextProps) {
-    const {props} = this;
 
-    if (nextProps.gameState !== props.gameState) {
-      this.updateWithGameState(nextProps.gameState, props.gameState);
+    if (nextProps.gameState !== this.props.gameState) {
+      this.updateWithGameState(nextProps.gameState, this.props.gameState);
     }
-    if (nextProps.characterId !== props.characterId) {
+    if (nextProps.characterId !== this.props.characterId) {
       (async () => {
 
         this.scene.remove(this._hero);
@@ -158,21 +126,12 @@ class Game extends Component {
   }
 
   endScore = () => {
-    Animated.timing(scoreAnimation, {
-      toValue: 2,
-      duration: 200,
-      useNativeDriver: true,
-      delay: 800
-    }).start();
+
   }
 
   newScore = () => {
     Vibration.cancel();
-    Animated.timing(scoreAnimation, {
-      toValue: 0,
-      duration: 500,
-      useNativeDriver: true
-    }).start();
+
 
     // this.props.setGameState(State.Game.playing);
     this.setState({score: 0})
@@ -768,9 +727,6 @@ class Game extends Component {
 
     this.props.setGameState(State.Game.gameOver)
     this.endScore();
-    if (this.state.score > this.props.highScore) {
-      this.props.setHighScore(this.state.score)
-    }
     this.props.navigation.navigate('GameOver', {})
   }
 
@@ -977,10 +933,6 @@ class Game extends Component {
           config={config}
           style={{
             flex: 1,
-            // opacity: scoreAnimation.interpolate({
-            //   inputRange: [0, 1],
-            //   outputRange: [1, 0],
-            // })
           }}
           >
             <TouchableWithoutFeedback onPressIn={_=> {
@@ -989,7 +941,7 @@ class Game extends Component {
               }} style={{flex: 1}} onPress={_=> {
                 this.onSwipe(swipeDirections.SWIPE_UP, {});
               }}>
-              <THREEView
+              {Expo.Constants.isDevice && <THREEView
                 backgroundColor={sceneColor}
                 shadowMapEnabled={true}
                 shadowMapRenderSingleSided={true}
@@ -997,7 +949,7 @@ class Game extends Component {
                 scene={this.scene}
                 camera={this.camera}
                 tick={this.tick}
-              />
+              />}
             </TouchableWithoutFeedback>
           </AnimatedGestureRecognizer>
 
@@ -1006,14 +958,11 @@ class Game extends Component {
       );
     }
   }
-  import Score from './Score';
 
+  import Score from './Score';
   import {connect} from 'react-redux';
-  import {setGameState, setHighScore} from '../../actions/game';
   export default connect(
     state => ({
-      gameState: state.game.gameState,
-      highScore: state.game.highScore
     }),
-    {setGameState, setHighScore}
+    {}
   )(Game);

@@ -27,7 +27,7 @@ const AppRouteConfigs = {
     navigationOptions: ({navigation}) => ({
      header: null,
      gesturesEnabled: false
-
+  
     }),
   }
 }
