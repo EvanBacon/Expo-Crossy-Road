@@ -13,10 +13,10 @@ import {
 
 import GestureRecognizer, {
   swipeDirections
-} from './GestureView';
+} from '../GestureView';
 
-import Water from './Particles/Water';
-import Feathers from './Particles/Feathers';
+import Water from '../Particles/Water';
+import Feathers from '../Particles/Feathers';
 import {
   TweenMax,
   Power2,
@@ -25,11 +25,11 @@ import {
 
 // const {THREE} = global;
 
-import State from '../state';
+import State from '../../state';
 
 
 import * as THREE from 'three';
-import createTHREEViewClass from './createTHREEViewClass';
+import createTHREEViewClass from '../../utils/createTHREEViewClass';
 const THREEView = createTHREEViewClass(THREE);
 
 // import Map from './Map';
@@ -39,12 +39,12 @@ const {width, height} = Dimensions.get('window');
 const AnimatedText = Animated.createAnimatedComponent(RetroText);
 const AnimatedGestureRecognizer = Animated.createAnimatedComponent(GestureRecognizer);
 
-import connectCharacter from '../utils/connectCharacter'
+import connectCharacter from '../../utils/connectCharacter'
 let scoreAnimation = new Animated.Value(0);
 
-import RetroText from './RetroText';
+import RetroText from '../RetroText';
 
-import Node from './Node';
+import Node from '../Node';
 const {
   Hero,
   Car,
@@ -59,7 +59,7 @@ const {
 const startingRow = 8;
 
 // import Hero from './Hero'
-import {modelLoader} from '../main';
+import {modelLoader} from '../../main';
 const groundLevel = 0.5;
 const sceneColor = 0x6dceea;
 
@@ -97,7 +97,7 @@ class Game extends Component {
       this.newScore();
       break;
       case gameOver:
-      
+
       break;
       case paused:
 
@@ -1001,29 +1001,15 @@ class Game extends Component {
             </TouchableWithoutFeedback>
           </AnimatedGestureRecognizer>
 
-          <AnimatedText pointerEvents={'none'} style={[{color: 'white', fontSize: 48, backgroundColor: 'transparent', position: 'absolute', top: 32, left: 16}, {transform: [
-              {translateX: scoreAnimation.interpolate({
-                inputRange: [0, 1],
-                outputRange: [0, 50]
-              })},
-              {translateY: scoreAnimation.interpolate({
-                inputRange: [0, 1],
-                outputRange: [0, 50]
-              })},
-              {scale: scoreAnimation.interpolate({
-                inputRange: [0, 1],
-                outputRange: [1, 2.5]
-              })},
-            ]}]}>
-            {this.state.score}
-          </AnimatedText>
+          <Score score={this.state.score} gameOver={this.props.gameState === State.Game.gameOver}/>
         </View>
       );
     }
   }
+  import Score from './Score';
 
   import {connect} from 'react-redux';
-  import {setGameState, setHighScore} from '../actions/game';
+  import {setGameState, setHighScore} from '../../actions/game';
   export default connect(
     state => ({
       gameState: state.game.gameState,

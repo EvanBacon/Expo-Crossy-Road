@@ -1,5 +1,6 @@
 import Home from '../src/Home'
 import CharacterSelect from '../src/CharacterSelect'
+import GameOver from '../src/GameOver'
 
 import { StackNavigator, createNavigationContainer, createNavigator } from 'react-navigation';
 import CrossFade from '../transitioners/CrossFade';
@@ -21,6 +22,14 @@ const AppRouteConfigs = {
 
     }),
   },
+  GameOver: {
+    screen: GameOver,
+    navigationOptions: ({navigation}) => ({
+     header: null,
+     gesturesEnabled: false
+
+    }),
+  }
 }
 
 

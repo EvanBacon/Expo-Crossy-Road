@@ -5,7 +5,7 @@ import {TweenMax, Power2, TimelineLite} from "gsap";
 import * as THREE from 'three';
 
 import Models from '../../Models';
-import createTHREEViewClass from '../createTHREEViewClass';
+import createTHREEViewClass from '../../utils/createTHREEViewClass';
 
 const THREEView = createTHREEViewClass(THREE);
 

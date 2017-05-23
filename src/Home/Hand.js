@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Image, StyleSheet } from 'react-native';
 import { Constants } from 'expo';
-import Images from '../Images'
+import Images from '../../Images'
 
 const sprite = [Images.hand['0'], Images.hand['1']];
 export default class Sprite extends Component {

@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { Text, View,Easing, InteractionManager,Dimensions, Animated, TouchableOpacity, StyleSheet } from 'react-native';
 import { Constants } from 'expo';
 import RetroText from '../RetroText'
-import Footer from '../Footer'
-import Hand from '../Hand'
+import Footer from './Footer'
+import Hand from './Hand'
 import State from '../../state';
 const {width, height} = Dimensions.get('window');
 const AniamtedRetroText = Animated.createAnimatedComponent(RetroText);

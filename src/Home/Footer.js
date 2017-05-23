@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
 import { Text, View, LayoutAnimation, Image, StyleSheet } from 'react-native';
 import { Constants } from 'expo';
-import TouchableBounce from 'react-native/Libraries/Components/Touchable/TouchableBounce'
 
-import Button from './Button'
-import Images from '../Images'
+import Button from '../Button'
+import Images from '../../Images'
 
 export default class Footer extends Component {
 
