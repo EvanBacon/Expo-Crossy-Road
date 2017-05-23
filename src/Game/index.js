@@ -15,10 +15,12 @@ import {TweenMax} from "gsap";
 import State from '../../state';
 import * as THREE from 'three';
 import createTHREEViewClass from '../../utils/createTHREEViewClass';
+import { NavigationActions } from 'react-navigation';
 
 const THREEView = createTHREEViewClass(THREE);
 const {width, height} = Dimensions.get('window');
 
+import TextMesh from '../TextMesh';
 import connectGameState from '../../utils/connectGameState';
 import connectCharacter from '../../utils/connectCharacter';
 import RetroText from '../RetroText';
@@ -172,6 +174,26 @@ class Game extends Component {
     this.hero = _hero;
 
     console.log("Done Extracting 3D Models! ", _grass, _road);
+
+
+
+    // let textMesh = new TextMesh('Harambe', {
+    //   size: 50,
+    //   height: 10,
+    //   curveSegments: 12,
+    //   bevelThickness: 1,
+    //   bevelSize: 1,
+    //   bevelEnabled: true
+    // });
+    //
+    // console.warn("Load Text");
+    // textMesh._updateMesh('../../assets/fonts/retro.ttf').then(mesh => {
+    //   console.warn("Text Loaded");
+    //
+    //   mesh.position.set(5, 1, 9);
+    //   this.scene.add(mesh);
+    // }).catch(console.error);
+
   }
 
 
@@ -212,6 +234,9 @@ class Game extends Component {
 
     this.createParticles();
     this.createLights();
+
+
+
 
     // Mesh
     this._hero = this.hero.getNode(this.props.characterId);
@@ -570,10 +595,12 @@ class Game extends Component {
         const {collisionBox} = car;
 
         if (this._hero.position.x < this.cars[c].mesh.position.x + collisionBox && this._hero.position.x > this.cars[c].mesh.position.x - collisionBox) {
-
+          console.log(this._hero.position.z, this.lastHeroZ);
           if (this._hero.position.z != this.lastHeroZ) {
+
             const forward = this._hero.position.z < this.lastHeroZ;
             this._hero.scale.z = 0.2;
+            this._hero.position.z = this.cars[c].mesh.position.z + (forward ? 0.52 : -0.52);
             this.hitByCar = this.cars[c];
           } else {
 
@@ -590,8 +617,9 @@ class Game extends Component {
           this.gameOver();
         }
       }
-      this.lastHeroZ = this._hero.position.z;
     }
+    this.lastHeroZ = this._hero.position.z;
+
   }
 
 
@@ -634,6 +662,7 @@ class Game extends Component {
 
     let target = this.hitByCar.mesh.position.x;
     this._hero.position.x = target;
+    if (this.initialPosition)
     this.initialPosition.x = target;
   }
 
@@ -727,14 +756,16 @@ class Game extends Component {
 
     this.props.setGameState(State.Game.gameOver)
     this.endScore();
-    this.props.navigation.navigate('GameOver', {})
+    console.log("Navigation", this.props.nav)
+    NavigationActions.navigate({ routeName: 'GameOver' })
+    // this.props.nav.navigation.navigate('GameOver', {})
   }
 
   tick = dt => {
     this.drive();
     if (!this.moving) {
       this.moveUserOnLog();
-
+      this.moveUserOnCar();
       this.carCollision();
       this.logCollision();
       this.waterCollision();
@@ -954,15 +985,17 @@ class Game extends Component {
           </AnimatedGestureRecognizer>
 
           <Score score={this.state.score} gameOver={this.props.gameState === State.Game.gameOver}/>
-        </View>
-      );
-    }
+      </View>
+    );
   }
+}
 
-  import Score from './Score';
-  import {connect} from 'react-redux';
-  export default connect(
-    state => ({
-    }),
-    {}
-  )(Game);
+import Score from './Score';
+import {connect} from 'react-redux';
+export default connect(
+  state => ({
+    nav: state.nav
+  }),
+  {
+  }
+)(Game);

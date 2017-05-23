@@ -40,7 +40,7 @@ class Root extends React.Component {
       await cacheAssetsAsync({
         images: arrayFromObject(Images),
         fonts: [
-          {"EarlyGameBoy": require('./assets/fonts/EarlyGameBoy.ttf')},
+          {"retro": require('./assets/fonts/retro.ttf')},
         ],
       });
 

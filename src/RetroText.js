@@ -7,7 +7,7 @@ export default class RetroText extends Component {
   render() {
     const {style, ...props} = this.props
     return (
-      <Text style={[{ fontFamily: 'EarlyGameBoy' }, style]} {...props}/>
+      <Text style={[{ fontFamily: 'retro' }, style]} {...props}/>
     )
   }
 }

@@ -24,13 +24,13 @@ class Score extends Component {
 
   render = () => (
 
-    <View style={{position: 'absolute', top: 32, left: 16}}>
+    <View style={{position: 'absolute', top: 15, left: 8}}>
       <RetroText pointerEvents={'none'} style={{color: 'white', fontSize: 48, backgroundColor: 'transparent', }}>
         {this.props.score}
       </RetroText>
 
       { this.props.highScore &&
-        <RetroText pointerEvents={'none'} style={{color: 'white', fontSize: 24, backgroundColor: 'transparent'}}>
+        <RetroText pointerEvents={'none'} style={{color: 'white', fontSize: 14, letterSpacing: -0.1, backgroundColor: 'transparent'}}>
           TOP {this.props.highScore}
         </RetroText>
       }
