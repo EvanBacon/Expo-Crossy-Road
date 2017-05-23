@@ -1,6 +1,6 @@
 import {
   SET_CHARACTER,
-} from '../actions/game'
+} from '../actions/character'
 
 import Characters from '../Characters'
 const initialState = {
@@ -12,6 +12,7 @@ const initialState = {
 export default function reducer(state = initialState, action) {
   switch (action.type) {
     case SET_CHARACTER:
+    console.warn(action.character);
     if (!Characters.hasOwnProperty(action.character.id)) {
         console.error(`Character ${action.character.id} does not exist! Check: reducers/game.js`);
     }

@@ -14,9 +14,7 @@ export default (WrappedComponent) => {
 
   return connect(
     state => ({
-      characterName: state.character.name,
-      characterId: state.character.id,
-      characterIndex: state.character.index,
+      character: state.character,
     }),
     {
       setCharacter

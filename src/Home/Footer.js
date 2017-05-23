@@ -5,6 +5,8 @@ import { Constants } from 'expo';
 import Button from '../Button'
 import Images from '../../Images'
 
+const imageStyle={width: 60, height: 48};
+
 export default class Footer extends Component {
 
   state = {
@@ -27,7 +29,6 @@ export default class Footer extends Component {
 
   render() {
     LayoutAnimation.easeInEaseOut()
-    const imageStyle={width: 60, height: 48};
     return (
       <View style={[styles.container, this.props.style]}>
         <Button onPress={this.props.onCharacterSelect} imageStyle={imageStyle} source={Images.button.character}/>

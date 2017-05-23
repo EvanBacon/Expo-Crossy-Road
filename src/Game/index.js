@@ -48,11 +48,11 @@ class Game extends Component {
     if (nextProps.gameState !== this.props.gameState) {
       this.updateWithGameState(nextProps.gameState, this.props.gameState);
     }
-    if (nextProps.characterId !== this.props.characterId) {
+    if (nextProps.character.id !== this.props.character.id) {
       (async () => {
 
         this.scene.remove(this._hero);
-        this._hero = this.hero.getNode(nextProps.characterId);
+        this._hero = this.hero.getNode(nextProps.character.id);
         this.scene.add(this._hero);
         this._hero.position.set(0, groundLevel, startingRow);
         this._hero.scale.set(1,1,1);
@@ -239,7 +239,7 @@ class Game extends Component {
 
 
     // Mesh
-    this._hero = this.hero.getNode(this.props.characterId);
+    this._hero = this.hero.getNode(this.props.character.id);
     this.scene.add(this._hero);
 
 
