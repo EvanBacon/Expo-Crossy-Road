@@ -39,6 +39,7 @@ const {width, height} = Dimensions.get('window');
 const AnimatedText = Animated.createAnimatedComponent(RetroText);
 const AnimatedGestureRecognizer = Animated.createAnimatedComponent(GestureRecognizer);
 
+import connectCharacter from '../utils/connectCharacter'
 let scoreAnimation = new Animated.Value(0);
 
 import RetroText from './RetroText';
@@ -62,6 +63,7 @@ import {modelLoader} from '../main';
 const groundLevel = 0.5;
 const sceneColor = 0x6dceea;
 
+@connectCharacter
 class Game extends Component {
   maxRows = 20;
   sineCount = 0;
@@ -74,13 +76,13 @@ class Game extends Component {
     const {props} = this;
 
     if (nextProps.gameState !== props.gameState) {
-        this.updateWithGameState(nextProps.gameState, props.gameState);
+      this.updateWithGameState(nextProps.gameState, props.gameState);
     }
-    if (nextProps.character.id !== props.character.id) {
+    if (nextProps.characterId !== props.characterId) {
       (async () => {
 
         this.scene.remove(this._hero);
-        this._hero = this.hero.getNode(nextProps.character.id);
+        this._hero = this.hero.getNode(nextProps.characterId);
         this.scene.add(this._hero);
         this._hero.position.set(0, groundLevel, startingRow);
         this._hero.scale.set(1,1,1);
@@ -92,38 +94,30 @@ class Game extends Component {
     const {playing, gameOver, paused, none} = State.Game;
     switch (gameState) {
       case playing:
-        this.newScore();
-        break;
-        case gameOver:
+      this.newScore();
+      break;
+      case gameOver:
+      
+      break;
+      case paused:
 
-          break;
+      break;
+      case none:
 
-          case paused:
-
-            break;
-
-            case none:
-
-              break;
-
+      break;
       default:
-        break;
+      break;
     }
   }
 
   componentWillMount() {
     this.scene = new THREE.Scene();
-    // this.scene.fog = new THREE.Fog(sceneColor, 350, 500);
 
     this.camera = new THREE.OrthographicCamera(-width, width, height, -height, -30, 30);
     this.camera.position.set(-1, 2.8, -2.9); // Change -1 to -.02
     this.camera.zoom = 110; // for birds eye view
     this.camera.updateProjectionMatrix();
     this.camera.lookAt(this.scene.position);
-
-    // this.map = new Map({width: this.levelWidth, height: this.levelHeight});
-    // const position = new THREE.Vector3( 0, 0, 0 );
-    // this.map.buildLevel({position, parentNode: this.scene});
 
     this.doGame();
   }
@@ -157,82 +151,6 @@ class Game extends Component {
     let shadowLight = new THREE.DirectionalLight(0xffffff, 1);
     shadowLight.position.set( 1, 1, 0 ); 			//default; light shining from top
     shadowLight.lookAt( 0, 0, 0 ); 			//default; light shining from top
-//
-//     shadowLight.castShadow = true;            // default false
-//
-//     shadowLight.shadow.mapSize.width = 512;  // default
-// shadowLight.shadow.mapSize.height = 512; // default
-// shadowLight.shadow.camera.near = 0.5;       // default
-// shadowLight.shadow.camera.far = 500      // default
-// shadowLight.shadow.radius = 1;
-// var helper = new THREE.CameraHelper( shadowLight.shadow.camera );
-// this.scene.add( helper );
-
-//directional light
-//  var directionalLight = new THREE.DirectionalLight(0xffffff);
-//  directionalLight.position.set(5, 1, 5);
-//  directionalLight.target.position.set(0, 0, 0);
-//
-//  directionalLight.castShadow = true;
-//  directionalLight.shadow.darkness = 0.5;
-//  directionalLight.shadow.cameraVisible = true;
-//
-//  directionalLight.shadow.cameraNear = 0;
-//  directionalLight.shadow.cameraFar = 15;
-//
-//  directionalLight.shadow.cameraLeft = -5;
-//  directionalLight.shadow.cameraRight = 5;
-//  directionalLight.shadow.cameraTop = 5;
-//  directionalLight.shadow.cameraBottom = -5;
-//
-//  this.scene.add(directionalLight);
-//
-//
-// //spotlight
-// var spotLight = new THREE.SpotLight( 0xffffff,1 );
-// spotLight.position.set( 5,2,6 );
-//
-// spotLight.castShadow = true;
-//
-// spotLight.target.position.set(-1, 0, 1 );
-// spotLight.shadow.darkness = 0.5;
-//
-// spotLight.shadow.cameraNear = 6;
-// spotLight.shadow.cameraFar = 13;
-//
-// this.scene.add( spotLight );
-//
-// spotLight.shadow.cameraVisible = true;
-
-    // shadowLight.shadowCameraVisible = true;
-
-    // this.camera = new THREE.PerspectiveCamera(75, 1, 1, 10000);
-    // this.camera.position.z = 1000;
-
-    // shadowLight.position.set(-1, 22.8, -2.9); // Change -1 to -.02
-    // shadowLight.shadow.camera.left = -5;
-    // shadowLight.shadow.camera.right = 5;
-    // shadowLight.shadow.camera.top = 50;
-    // shadowLight.shadow.camera.bottom = -50;
-    // shadowLight.shadow.mapSize.width = shadowLight.shadow.mapSize.height = 2048;
-
-    // shadowLight.castShadow = true;
-    //
-    // shadowLight.shadow = new THREE.LightShadow( new THREE.OrthographicCamera(-width, width, height, -height, -30, 30) );
-    // shadowLight.shadow.mapSize.width = 1024;
-    // shadowLight.shadow.mapSize.height = 1024;
-    // light.shadowMapWidth = 1024; // default is 512
-// light.shadowMapHeight = 1024; // default is 512
-
-    // shadowLight.shadow.bias = 0.001;
-    //
-    // shadowLight.shadowCameraHelper = new THREE.CameraHelper( shadowLight.shadow.camera );
-    // this.scene.add( shadowLight.shadowCameraHelper );
-    //
-    // shadowLight.shadow.camera.near = 1;
-    // shadowLight.shadow.camera.far = 2000;
-    // shadowLight.shadow.mapSize.width = shadowLight.shadow.mapSize.height = 2048 * 3;
-
 
     this.scene.add(globalLight);
     this.scene.add(shadowLight);
@@ -281,7 +199,7 @@ class Game extends Component {
 
 
   loadModels = async () => {
-    await console.log("Some Extracting 3D Models! ", _grass, _road);
+    console.log("Some Extracting 3D Models! ", _grass, _road);
 
     const {_grass, _road, _river, _tree, _car, _railroad, _train, _log, _hero} = modelLoader;
     this._grass = _grass;
@@ -294,38 +212,7 @@ class Game extends Component {
     this._log = _log;
     this.hero = _hero;
 
-    await console.log("Done Extracting 3D Models! ", _grass, _road);
-
-    // this._grass = new Grass();
-    // this._road = new Road();
-    // this._river = new River();
-    // this._tree = new Tree();
-    // this._car = new Car();
-    // this._railroad = new RailRoad();
-    // this._train = new Train();
-    // this._log = new Log();
-    // this.hero = new Hero();
-    //
-    // try {
-    //   await Promise.all([
-    //     this._road.setup(),
-    //     this._grass.setup(),
-    //     this._river.setup(),
-    //     this._log.setup(),
-    //
-    //     this._tree.setup(),
-    //     this._car.setup(),
-    //     this._railroad.setup(),
-    //     this._train.setup(),
-    //     this.hero.setup(this.props.character.id)
-    //   ]);
-    //   console.log("Done Loading 3D Models!");
-    // } catch(error) {
-    //   console.warn(`:( We had a problem loading the 3D Models: ${error}`);
-    // } finally {
-    //   //TODO: Add some complicated code so people think that I'm a really good programmer...
-    // }
-
+    console.log("Done Extracting 3D Models! ", _grass, _road);
   }
 
 
@@ -353,7 +240,8 @@ class Game extends Component {
     this.logSpeed = [],
     this.carSpeed = []; //
     this.onLog = true;
-
+    this.hitByCar = null;
+    this.lastHeroZ = 8;
 
     this.rowCount = 0;
     this.camCount = 0,
@@ -367,7 +255,7 @@ class Game extends Component {
     this.createLights();
 
     // Mesh
-    this._hero = this.hero.getNode(this.props.character.id);
+    this._hero = this.hero.getNode(this.props.characterId);
     this.scene.add(this._hero);
 
 
@@ -383,22 +271,6 @@ class Game extends Component {
     let _logMesh = this._log.getRandom();
     let _logWidth = this.getWidth(_logMesh);
     this.logs[0] = {mesh: _logMesh, width: _logWidth, collisionBox: (this.heroWidth / 2 + _logWidth / 2 - .1) };
-
-
-    // Mesh orientation
-    // this.leftShade.rotation.x = 270 * Math.PI / 180;
-    // this.leftShade.position.set(6.65, 1, 248.47);
-    // this.rightShade.rotation.x = 270 * Math.PI / 180;
-    // this.rightShade.position.set(-7.35, 1, 248.47);
-    // this.leftBlind.rotation.x = 270 * Math.PI / 180;
-    // this.leftBlind.position.set(11.8, .6, 248.9);
-    // this.rightBlind.rotation.x = 270 * Math.PI / 180;
-    // this.rightBlind.position.set(-12.2, .6, 248.9);
-    // this.scene.add(this.leftShade);
-    // this.scene.add(this.rightShade);
-    // this.scene.add(this.leftBlind);
-    // this.scene.add(this.rightBlind);
-
 
     this.trees[0].position.set(0, .5, -30);
     this.cars[0].mesh.position.set(0, .25, -30);
@@ -688,8 +560,14 @@ class Game extends Component {
 
       if (this.cars[d].mesh.position.x > 11 && this.carSpeed[d] > 0) {
         this.cars[d].mesh.position.x = -11;
+        if (this.cars[d] === this.hitByCar) {
+          this.hitByCar = null;
+        }
       } else if (this.cars[d].mesh.position.x < -11 && this.carSpeed[d] < 0) {
         this.cars[d].mesh.position.x = 11;
+        if (this.cars[d] === this.hitByCar) {
+          this.hitByCar = null;
+        }
       }
       if (this.logs[d].mesh.position.x > 11 && this.logSpeed[d] > 0) {
         this.logs[d].mesh.position.x = -10;
@@ -734,9 +612,18 @@ class Game extends Component {
 
         if (this._hero.position.x < this.cars[c].mesh.position.x + collisionBox && this._hero.position.x > this.cars[c].mesh.position.x - collisionBox) {
 
-          ///Run Over Hero. ///TODO: Add a side collide
-          this._hero.scale.y = 0.1;
-          this._hero.position.y = groundLevel;
+          if (this._hero.position.z != this.lastHeroZ) {
+            const forward = this._hero.position.z < this.lastHeroZ;
+            this._hero.scale.z = 0.2;
+            this.hitByCar = this.cars[c];
+          } else {
+
+            ///Run Over Hero. ///TODO: Add a side collide
+            this._hero.scale.y = 0.2;
+            this._hero.position.y = groundLevel;
+
+          }
+
 
           this.useParticle(this._hero, 'feathers', this.carSpeed[c]);
           this.rumbleScreen()
@@ -744,6 +631,7 @@ class Game extends Component {
           this.gameOver();
         }
       }
+      this.lastHeroZ = this._hero.position.z;
     }
   }
 
@@ -779,6 +667,17 @@ class Game extends Component {
     this._hero.position.x = target;
     this.initialPosition.x = target;
   }
+
+  moveUserOnCar = () => {
+    if (!this.hitByCar) {
+      return;
+    }
+
+    let target = this.hitByCar.mesh.position.x;
+    this._hero.position.x = target;
+    this.initialPosition.x = target;
+  }
+
 
   logCollision = () => {
     if (this.props.gameState != State.Game.playing) {
@@ -860,7 +759,6 @@ class Game extends Component {
           this.camCount += this.camSpeed;
         }
       }
-
     }
   }
 
@@ -870,6 +768,10 @@ class Game extends Component {
 
     this.props.setGameState(State.Game.gameOver)
     this.endScore();
+    if (this.state.score > this.props.highScore) {
+      this.props.setHighScore(this.state.score)
+    }
+    this.props.navigation.navigate('GameOver', {})
   }
 
   tick = dt => {
@@ -1099,34 +1001,33 @@ class Game extends Component {
             </TouchableWithoutFeedback>
           </AnimatedGestureRecognizer>
 
-        <AnimatedText pointerEvents={'none'} style={[{color: 'white', fontSize: 48, backgroundColor: 'transparent', position: 'absolute', top: 32, left: 16}, {transform: [
-            {translateX: scoreAnimation.interpolate({
-              inputRange: [0, 1],
-              outputRange: [0, 50]
-            })},
-            {translateY: scoreAnimation.interpolate({
-              inputRange: [0, 1],
-              outputRange: [0, 50]
-            })},
-            {scale: scoreAnimation.interpolate({
-              inputRange: [0, 1],
-              outputRange: [1, 2.5]
-            })},
-          ]}]}>
-          {this.state.score}
-        </AnimatedText>
-      </View>
-    );
+          <AnimatedText pointerEvents={'none'} style={[{color: 'white', fontSize: 48, backgroundColor: 'transparent', position: 'absolute', top: 32, left: 16}, {transform: [
+              {translateX: scoreAnimation.interpolate({
+                inputRange: [0, 1],
+                outputRange: [0, 50]
+              })},
+              {translateY: scoreAnimation.interpolate({
+                inputRange: [0, 1],
+                outputRange: [0, 50]
+              })},
+              {scale: scoreAnimation.interpolate({
+                inputRange: [0, 1],
+                outputRange: [1, 2.5]
+              })},
+            ]}]}>
+            {this.state.score}
+          </AnimatedText>
+        </View>
+      );
+    }
   }
-}
 
-import {connect} from 'react-redux';
-import {setGameState} from '../actions/game';
-export default connect(
-  state => ({
-    gameState: state.game.gameState,
-    character: state.game.character,
-
-  }),
-  {setGameState}
-)(Game);
+  import {connect} from 'react-redux';
+  import {setGameState, setHighScore} from '../actions/game';
+  export default connect(
+    state => ({
+      gameState: state.game.gameState,
+      highScore: state.game.highScore
+    }),
+    {setGameState, setHighScore}
+  )(Game);

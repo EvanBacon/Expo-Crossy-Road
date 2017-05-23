@@ -1,19 +1,20 @@
 import {
   SET_GAME_STATE,
-  SET_CHARACTER,
   SET_COIN_COUNT,
+  SET_HIGH_SCORE
 } from '../actions/game'
 
 import State from '../state'
-import Characters from '../Characters'
 const initialState = {
   gameState: State.Game.none,
-  character: Characters.chicken,
-  coins: 0
+  coins: 0,
+  highScore: null
 }
 
 export default function reducer(state = initialState, action) {
   switch (action.type) {
+    case SET_HIGH_SCORE:
+    return {...state, highScore: action.score};
     case SET_COIN_COUNT:
     return {...state, coins: action.coins};
     case SET_GAME_STATE:
@@ -21,12 +22,6 @@ export default function reducer(state = initialState, action) {
         console.error(`State ${action.gameState} does not exist! Check: reducers/game.js`);
     }
     return {...state, gameState: action.gameState};
-    case SET_CHARACTER:
-    if (!Characters.hasOwnProperty(action.character.id)) {
-        console.error(`Character ${action.character.id} does not exist! Check: reducers/game.js`);
-    }
-    return {...state, character: action.character};
-
     default:
     return state
   }
