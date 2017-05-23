@@ -100,19 +100,19 @@ export default THREE => class THREEView extends React.Component {
 
     const renderer = new THREE.WebGLRenderer(threeRendererOptions);
 
-    renderer.shadowMap.enabled = true;
-    renderer.shadowMap.type = THREE.PCFShadowMap; // default THREE.PCFShadowMap
-    renderer.shadowMap.cascade = true;
+    // renderer.shadowMap.enabled = true;
+    // renderer.shadowMap.type = THREE.PCFShadowMap; // default THREE.PCFShadowMap
+    // renderer.shadowMap.cascade = true;
+    //
+    // renderer.gammaInput = true;
+    // renderer.gammaOutput = true;
 
-    renderer.gammaInput = true;
-    renderer.gammaOutput = true;
-
-    let effect = new THREE.OutlineEffect( renderer,{
-	defaultThickNess: 0.1,
-  	defaultColor: new THREE.Color( 0x888888 ),
- 	defaultAlpha: 1,
-  	defaultKeepAlive: true // keeps outline material in cache even if material is removed from scene
- } );
+ //    let effect = new THREE.OutlineEffect( renderer,{
+ // defaultThickNess: 0.1,
+ //  	defaultColor: new THREE.Color( 0x888888 ),
+ // 	defaultAlpha: 1,
+ //  	defaultKeepAlive: true // keeps outline material in cache even if material is removed from scene
+ // } );
 
     renderer.setSize(gl.drawingBufferWidth, gl.drawingBufferHeight);
     renderer.setClearColor(
@@ -151,9 +151,9 @@ export default THREE => class THREEView extends React.Component {
             camera.updateProjectionMatrix();
           }
         }
-        effect.render( this.props.scene, camera );
+        // effect.render( this.props.scene, camera );
 
-        // renderer.render(this.props.scene, camera);
+        renderer.render(this.props.scene, camera);
       }
       gl.flush();
       gl.endFrameEXP();

@@ -145,7 +145,7 @@ class Game extends Component {
 
     this.logCollision();
     this.waterCollision();
-
+    this.updateScore();
 
     // this._hero.position.set(Math.round(this._hero.position.x), this._hero.position.y, Math.round(this._hero.position.z))
   }
@@ -575,11 +575,42 @@ class Game extends Component {
     }
   }
 
+  carShouldCheckCollision = (car, speed) => {
+    if (Math.round(this._hero.position.z) == car.mesh.position.z) {
+
+      const {collisionBox} = car;
+
+      if (this._hero.position.x < car.mesh.position.x + collisionBox && this._hero.position.x > car.mesh.position.x - collisionBox) {
+        // console.log(this._hero.position.z, this.lastHeroZ);
+        if (this._hero.position.z != this.lastHeroZ) {
+
+          const forward = this._hero.position.z < this.lastHeroZ;
+          this._hero.scale.z = 0.2;
+          this._hero.position.z = car.mesh.position.z + (forward ? 0.52 : -0.52);
+          this.hitByCar = car;
+        } else {
+
+          ///Run Over Hero. ///TODO: Add a side collide
+          this._hero.scale.y = 0.2;
+          this._hero.position.y = groundLevel;
+
+        }
+        this.useParticle(this._hero, 'feathers', speed);
+        this.rumbleScreen()
+
+        this.gameOver();
+      }
+    }
+
+  }
+
   // Animate cars/logs
   drive = () => {
     for (d = 0; d < this.cars.length; d++) {
+
+      if (this.floorMap[`${this.cars[d].mesh.position.z|0}`] === 'road') {
+
       this.cars[d].mesh.position.x += this.carSpeed[d];
-      this.logs[d].mesh.position.x += this.logSpeed[d];
 
       if (this.cars[d].mesh.position.x > 11 && this.carSpeed[d] > 0) {
         this.cars[d].mesh.position.x = -11;
@@ -591,12 +622,23 @@ class Game extends Component {
         if (this.cars[d] === this.hitByCar) {
           this.hitByCar = null;
         }
+      } else if (!this.moving && this.props.gameState == State.Game.playing) {
+        this.carShouldCheckCollision(this.cars[d], this.carSpeed[d])
       }
-      if (this.logs[d].mesh.position.x > 11 && this.logSpeed[d] > 0) {
-        this.logs[d].mesh.position.x = -10;
-      } else if (this.logs[d].mesh.position.x < -11 && this.logSpeed[d] < 0) {
-        this.logs[d].mesh.position.x = 10;
+    }
+
+      //Move Logs
+      if (this.floorMap[`${this.logs[d].mesh.position.z|0}`] === 'water') {
+
+        this.logs[d].mesh.position.x += this.logSpeed[d];
+
+        if (this.logs[d].mesh.position.x > 11 && this.logSpeed[d] > 0) {
+          this.logs[d].mesh.position.x = -10;
+        } else if (this.logs[d].mesh.position.x < -11 && this.logSpeed[d] < 0) {
+          this.logs[d].mesh.position.x = 10;
+        }
       }
+
     }
   }
 
@@ -818,10 +860,9 @@ class Game extends Component {
     if (!this.moving) {
       this.moveUserOnLog();
       this.moveUserOnCar();
-      this.carCollision();
-
-      this.updateScore();
+      // this.carCollision();
       // this.checkIfUserHasFallenOutOfFrame();
+      this.lastHeroZ = this._hero.position.z;
     }
 
     this.forwardScene();
