@@ -144,7 +144,6 @@ class Game extends Component {
     this.moving = false;
 
     this.logCollision();
-    this.waterCollision();
     this.updateScore();
 
     // this._hero.position.set(Math.round(this._hero.position.x), this._hero.position.y, Math.round(this._hero.position.z))
@@ -518,7 +517,7 @@ class Game extends Component {
   carGen = () => {
     // Speeds: .01 through .08
     // Number of cars: 1 through 3
-    this.speed = (Math.floor(Math.random() * (7 - 3)) + 3) / 80;
+    this.speed = (Math.floor(Math.random() * (6 - 2)) + 2) / 80;
     this.numCars = Math.floor(Math.random() * (4 - 2)) + 2;
     xDir = 1;
 
@@ -548,7 +547,7 @@ class Game extends Component {
   logGen = () => {
     // Speeds: .01 through .08
     // Number of cars: 1 through 3
-    this.speed = (Math.floor(Math.random() * (7 - 3)) + 3) / 80;
+    this.speed = (Math.floor(Math.random() * (6 - 2)) + 2) / 80;
     this.numLogs = Math.floor(Math.random() * (4 - 3)) + 3;
     xDir = 1;
 
@@ -860,6 +859,8 @@ class Game extends Component {
     if (!this.moving) {
       this.moveUserOnLog();
       this.moveUserOnCar();
+      this.waterCollision();
+
       // this.carCollision();
       // this.checkIfUserHasFallenOutOfFrame();
       this.lastHeroZ = this._hero.position.z;
