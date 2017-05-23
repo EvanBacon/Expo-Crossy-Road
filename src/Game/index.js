@@ -323,6 +323,8 @@ class Game extends Component {
     this.railRoadCount = 0;
     this.treeCount = 0;
     this.rowCount = 0;
+    this.hitByCar = null;
+    this.lastHeroZ = 8;
 
     for (i = 0; i < this.maxRows; i++) {
       this.grass[i].position.z = offset;
@@ -802,7 +804,7 @@ class Game extends Component {
   }
 
   updateScore = () => {
-    const position = Math.floor(this._hero.position.z) - 8;
+    const position = Math.max(Math.floor(this._hero.position.z) - 8, 0);
     if (this.state.score < position) {
       this.setState({score: position})
     }

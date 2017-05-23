@@ -52,6 +52,8 @@ class Screen extends Component {
 
       }} onMultiplayer={_=> {
 
+      }} onCamera={_=> {
+        
       }}/>
   </View>
 </TouchableOpacity>

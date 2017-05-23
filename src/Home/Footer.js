@@ -17,11 +17,11 @@ export default class Footer extends Component {
 
     return (
       <View style={{flexDirection: 'column', }}>
-        <Button onPress={this.props.onShop} style={[{marginBottom: 8}, imageStyle]} imageStyle={imageStyle} source={Images.button.shop}
-        />
-        <Button onPress={this.props.onShop} style={[{marginBottom: 8}, imageStyle]} imageStyle={imageStyle} source={Images.button.shop}
-        />
         <Button onPress={this.props.onMultiplayer} style={[{marginBottom: 8}, imageStyle]} imageStyle={imageStyle} source={Images.button.controller}
+        />
+        <Button onPress={this.props.onShop} style={[{marginBottom: 8}, imageStyle]} imageStyle={imageStyle} source={Images.button.shop}
+        />
+      <Button onPress={this.props.onCamera} style={[{marginBottom: 8}, imageStyle]} imageStyle={imageStyle} source={Images.button.camera}
         />
       </View>
     )
