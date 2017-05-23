@@ -42,7 +42,7 @@ class Game extends Component {
   sineCount = 0;
   sineInc = Math.PI / 50;
 
-  currentLog = -1;
+  currentLog = null;
 
   componentWillReceiveProps(nextProps) {
 
@@ -142,6 +142,11 @@ class Game extends Component {
 
   doneMoving = () => {
     this.moving = false;
+
+    this.logCollision();
+    this.waterCollision();
+
+
     // this._hero.position.set(Math.round(this._hero.position.x), this._hero.position.y, Math.round(this._hero.position.z))
   }
 
@@ -683,12 +688,11 @@ class Game extends Component {
   }
 
   moveUserOnLog = () => {
-    if (!this.currentLog || this.currentLog < 0 || this.currentLog >= this.logs.length) {
+    if (!this.currentLog) {
       return;
     }
 
-    const log = this.logs[this.currentLog];
-    let target = log.mesh.position.x + this.currentLogSubIndex;
+    let target = this.logs[this.currentLog].mesh.position.x + this.currentLogSubIndex;
     this._hero.position.x = target;
     this.initialPosition.x = target;
   }
@@ -701,12 +705,14 @@ class Game extends Component {
     let target = this.hitByCar.mesh.position.x;
     this._hero.position.x = target;
     if (this.initialPosition)
-    this.initialPosition.x = target;
+      this.initialPosition.x = target;
   }
 
 
   logCollision = () => {
     if (this.props.gameState != State.Game.playing) {
+      this.onLog = false;
+      this.currentLog = null;
       return
     }
     for (let l = 0; l < this.logs.length; l++) {
@@ -723,6 +729,7 @@ class Game extends Component {
             this.currentLogSubIndex = (heroX - logX);
             this.bounceLog(mesh);
           }
+          return;
         }
       }
     }
@@ -750,7 +757,7 @@ class Game extends Component {
               }
             }
           }
-
+          return;
         }
       }
     }
@@ -812,12 +819,9 @@ class Game extends Component {
       this.moveUserOnLog();
       this.moveUserOnCar();
       this.carCollision();
-      this.logCollision();
-      this.waterCollision();
-
 
       this.updateScore();
-      this.checkIfUserHasFallenOutOfFrame();
+      // this.checkIfUserHasFallenOutOfFrame();
     }
 
     this.forwardScene();
