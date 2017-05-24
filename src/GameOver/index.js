@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, View, StyleSheet, Share, AsyncStorage } from 'react-native';
+import { Text,Alert, View, StyleSheet, Share, AsyncStorage } from 'react-native';
 import { Constants } from 'expo';
 
 import Button from '../Button';
@@ -9,7 +9,7 @@ import Colors from '../../Colors';
 import Characters from '../../Characters';
 
 import Footer from './Footer';
-
+import Banner from './Banner'
 class GameOver extends Component {
   state = {
     currentIndex: 0,
@@ -29,25 +29,7 @@ class GameOver extends Component {
 
 
   }
-  share = () => {
-    const {characters, currentIndex} = this.state;
-    const character = characters[currentIndex].name;
-    Share.share({
-      message: `${character}! #expoCrossyroad @expo_io`,
-      url: 'https://exp.host/@evanbacon/crossy-road',
-      title: 'Expo Crossy Road'
-    }, {
-      dialogTitle: 'Share Expo Crossy Road',
-      excludedActivityTypes: [
-        'com.apple.UIKit.activity.AirDrop', // This speeds up showing the share sheet by a lot
-        'com.apple.UIKit.activity.AddToReadingList' // This is just lame :)
-      ],
-      tintColor: Colors.blue
-    })
-    .then(this._showResult)
-    .catch((error) => this.setState({result: 'error: ' + error.message}));
 
-  }
 
   _showResult = result => {
     // if (result.action === Share.sharedAction) {
@@ -76,25 +58,35 @@ class GameOver extends Component {
     return (
       <View style={[styles.container, this.props.style]}>
 
-        <View style={{flexDirection: 'row', marginTop: 8, paddingHorizontal: 4}}>
-          <Button source={Images.button.back} imageStyle={imageStyle} onPress={_=> {
-              this.dismiss();
-            }}/>
+          <View key='content' style={{flex: 1, justifyContent: 'center'}}>
+
+            <Banner style={{backgroundColor: '#f6c62b'}} title={"Get Updates Subscribe Now"} button={{onPress: _=> {
+              Alert.alert(
+           'Subscribe to our mailing list',
+           'Join our mailing list and discover the latest news from Hipster Whale and Crossy Road.\n\n Read our privacy policy on crossyroad.com/privacy',
+           [
+             {text: 'Cancel', onPress: () => console.log('Cancel Pressed!')},
+             {text: 'OK', onPress: () => console.log('OK Pressed!')},
+           ],
+           {
+             cancelable: false
+           }
+         )
+
+            }, source: Images.button.mail, style: {aspectRatio: 1.85, height: 40} }}/>
+          <Banner style={{backgroundColor: '#f8602c'}} title={"Free Gift in 2h 51m"}/>
+        <Banner style={{backgroundColor: '#d73a32'}} title={"44 * To Go"} />
           </View>
 
-          <View key='content' style={{flex: 1}}>
-
-          </View>
-
-          <Footer />
+          <Footer navigation={this.props.navigation}/>
       </View>
     );
   }
 }
 
 import {connect} from 'react-redux';
-
-export default connect(state => ({}), {})(GameOver)
+import {setGameState} from '../../actions/game';
+export default connect(state => ({}), {setGameState})(GameOver)
 
 GameOver.defaultProps = {
   coins: 0
@@ -105,7 +97,8 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     paddingTop: Constants.statusBarHeight,
-    backgroundColor: 'rgba(105, 201, 230, 0.8)',
+    paddingBottom: 8,
+    backgroundColor: 'rgba(105, 201, 230, 0.0)',
   },
   paragraph: {
     margin: 24,

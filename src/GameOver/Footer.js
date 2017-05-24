@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
-import { Text, View, LayoutAnimation, Image, StyleSheet } from 'react-native';
+import { Text, View, Share, Dimensions, LayoutAnimation, Image, StyleSheet } from 'react-native';
 import { Constants } from 'expo';
-
+import Colors from '../../Colors'
+const {width} = Dimensions.get('window')
 import Button from '../Button'
 import Images from '../../Images'
-
+import State from '../../state'
 export default class Footer extends Component {
   renderButton = ({onPress, source, style}, key) => (
     <Button key={key} onPress={onPress} imageStyle={[styles.button, style]} source={source}/>
@@ -12,12 +13,18 @@ export default class Footer extends Component {
 
   render() {
     LayoutAnimation.easeInEaseOut()
-    const imageStyle={width: 60, height: 48};
     const buttons = [
-      {onPress:(_=>{}), source: Images.button.character, style: {flex: 1} },
-      {onPress:(_=>{}), source: Images.button.character, style: {flex: 2} },
-      {onPress:(_=>{}), source: Images.button.character, style: {flex: 2} },
-      {onPress:(_=>{}), source: Images.button.character, style: {flex: 1} },
+      {onPress:(_=>{
+        this.props.navigation.navigate('Settings', {})
+      }), source: Images.button.settings, style: {aspectRatio: 1.25} },
+      {onPress:this.share, source: Images.button.share, style: {aspectRatio: 1.9} },
+      {onPress:(_=>{
+        this.props.navigation.goBack('Home')
+        this.props.setGameState(State.Game.none)
+      }), source: Images.button.long_play, style: {aspectRatio: 1.9} },
+      {onPress:(_=>{
+        console.log("Game Center") //TODO: Add GC
+      }), source: Images.button.rank, style: {aspectRatio: 1.25} },
     ]
     return (
       <View style={[styles.container, this.props.style]}>
@@ -27,15 +34,43 @@ export default class Footer extends Component {
       </View>
     );
   }
+
+  share = () => {
+    // const {characters, currentIndex} = this.state;
+    // const character = characters[currentIndex].name;
+
+    //TODO: Add Screen shot of player death
+    Share.share({
+      message: `#expoCrossyroad @expo_io`,
+      url: 'https://exp.host/@evanbacon/crossy-road',
+      title: 'Expo Crossy Road'
+    }, {
+      dialogTitle: 'Share Expo Crossy Road',
+      excludedActivityTypes: [
+        'com.apple.UIKit.activity.AirDrop', // This speeds up showing the share sheet by a lot
+        'com.apple.UIKit.activity.AddToReadingList' // This is just lame :)
+      ],
+      tintColor: Colors.blue
+    })
+    .then(this._showResult)
+    .catch((error) => this.setState({result: 'error: ' + error.message}));
+
+  }
 }
 
 const styles = StyleSheet.create({
   container: {
     alignItems: 'stretch',
-    justifyContent: 'center',
+    justifyContent: 'space-around',
     flexDirection: 'row',
-    maxHeight: 48,
-    
+    maxHeight: 56,
+    paddingHorizontal: 4,
+    height: 56,
+    width,
+    maxWidth: width,
+    flex: 1,
   },
-  button: {width: 60, height: 48}
+  button: {
+    height: 56,
+  }
 });

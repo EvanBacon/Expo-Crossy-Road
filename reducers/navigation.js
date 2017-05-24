@@ -1,7 +1,7 @@
 import Home from '../src/Home'
 import CharacterSelect from '../src/CharacterSelect'
 import GameOver from '../src/GameOver'
-
+import Settings from '../src/Settings'
 import { StackNavigator, createNavigationContainer, createNavigator } from 'react-navigation';
 import CrossFade from '../transitioners/CrossFade';
 
@@ -27,7 +27,15 @@ const AppRouteConfigs = {
     navigationOptions: ({navigation}) => ({
      header: null,
      gesturesEnabled: false
-  
+
+    }),
+  },
+  Settings: {
+    screen: Settings,
+    navigationOptions: ({navigation}) => ({
+     header: null,
+     gesturesEnabled: false
+
     }),
   }
 }
@@ -56,7 +64,7 @@ export class AppNavigator {
 
 console.log(navigator);
 
-const initialState = router.router.getStateForAction(router.router.getActionForPathAndParams('Home'));
+const initialState = router.router.getStateForAction(router.router.getActionForPathAndParams('GameOver'));
 
 export default (state = initialState, action) => {
   const nextState = router.router.getStateForAction(action, state);

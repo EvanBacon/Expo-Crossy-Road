@@ -9,9 +9,11 @@ export default {
     controller: require('./assets/images/buttons/controller.png'),
     shop: require('./assets/images/buttons/shop.png'),
     menu: require('./assets/images/buttons/menu.png'),
-
+    settings: require('./assets/images/buttons/settings.png'),
+    rank: require('./assets/images/buttons/rank.png'),
     social: require('./assets/images/buttons/social.png'),
     random: require('./assets/images/buttons/random.png'),
+    mail: require('./assets/images/buttons/mail.png'),
 
   },
   hand: {

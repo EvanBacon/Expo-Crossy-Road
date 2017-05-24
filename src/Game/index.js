@@ -128,10 +128,6 @@ class Game extends Component {
     this.scene.add(shadowLight);
   }
 
-  endScore = () => {
-
-  }
-
   newScore = () => {
     Vibration.cancel();
 
@@ -144,7 +140,6 @@ class Game extends Component {
   doneMoving = () => {
     this.moving = false;
 
-    this.logCollision();
     this.updateScore();
 
     // this._hero.position.set(Math.round(this._hero.position.x), this._hero.position.y, Math.round(this._hero.position.z))
@@ -319,6 +314,7 @@ class Game extends Component {
     this.camera.position.z = startingRow;
     this._hero.position.set(0, groundLevel, startingRow);
     this._hero.scale.set(1,1,1);
+    this._hero.rotation.set(0, Math.PI, 0);
     this.map = {};
     this.map[`${0},${groundLevel|0},${startingRow|0}`] = 'player'
     this.initialPosition = null;
@@ -591,14 +587,37 @@ class Game extends Component {
         if (this._hero.position.z != this.lastHeroZ) {
 
           const forward = this._hero.position.z < this.lastHeroZ;
-          this._hero.scale.z = 0.2;
+          // this._hero.scale.z = 0.2;
+          // this._hero.scale.y = 1.5;
+          // this._hero.rotation.z = (Math.random() * Math.PI) - Math.PI/2;
           this._hero.position.z = car.mesh.position.z + (forward ? 0.52 : -0.52);
           this.hitByCar = car;
+
+
+                    TweenMax.to(this._hero.scale, 0.3, {
+                      y: 1.5,
+                      z: 0.2,
+                    });
+                    TweenMax.to(this._hero.rotation, 0.3, {
+                      z: (Math.random() * Math.PI) - Math.PI/2,
+                    });
+                    this.playerCarOffset = this._hero.position.x -  car.mesh.position.x;
         } else {
 
           ///Run Over Hero. ///TODO: Add a side collide
-          this._hero.scale.y = 0.2;
+          // this._hero.scale.y = 0.2;
+          // this._hero.scale.x = 1.5;
+          // this._hero.rotation.y = (Math.random() * Math.PI) - Math.PI/2;
           this._hero.position.y = groundLevel;
+
+
+          TweenMax.to(this._hero.scale, 0.3, {
+            y: 0.2,
+            x: 1.5,
+          });
+          TweenMax.to(this._hero.rotation, 0.3, {
+            y: (Math.random() * Math.PI) - Math.PI/2,
+          });
 
         }
         this.useParticle(this._hero, 'feathers', speed);
@@ -751,7 +770,7 @@ class Game extends Component {
     }
 
     let target = this.hitByCar.mesh.position.x;
-    this._hero.position.x = target;
+    this._hero.position.x = target + this.playerCarOffset;
     if (this.initialPosition)
       this.initialPosition.x = target;
   }
@@ -850,13 +869,10 @@ class Game extends Component {
   gameOver = () => {
     // this.trees.map(val => this.scene.remove(val) );
 
-    InteractionManager.runAfterInteractions(_=> {
-
-
     this.props.setGameState(State.Game.gameOver)
-    this.endScore();
-    console.log("Navigation", this.props.nav)
-    NavigationActions.navigate({ routeName: 'GameOver' })
+
+    InteractionManager.runAfterInteractions(_=> {
+      this.props.navigation.dispatch(NavigationActions.navigate({ routeName: 'GameOver' }))
     });
     // this.props.nav.navigation.navigate('GameOver', {})
   }
@@ -866,6 +882,7 @@ class Game extends Component {
     if (!this.moving) {
       this.moveUserOnLog();
       this.moveUserOnCar();
+      this.logCollision();
       this.waterCollision();
 
       // this.carCollision();
@@ -945,7 +962,11 @@ class Game extends Component {
       case SWIPE_UP:
       this._hero.rotation.y = 0;
       if (!this.treeCollision("up")) {
+        let shouldRound = this.floorMap[`${this.targetPosition.z + 1}`] !== "water"
         this.targetPosition = {x: this.initialPosition.x, y: this.initialPosition.y, z: this.initialPosition.z + 1};
+        if (shouldRound) {
+          // this.targetPosition.x = Math.floor(this.targetPosition.x);
+        }
         this.moving = true
 
       }
@@ -953,7 +974,11 @@ class Game extends Component {
       case SWIPE_DOWN:
       this._hero.rotation.y = Math.PI
       if (!this.treeCollision("down")) {
+        let shouldRound = this.floorMap[`${this.targetPosition.z - 1}`] !== "water"
         this.targetPosition = {x: this.initialPosition.x, y: this.initialPosition.y, z: this.initialPosition.z - 1};
+        if (shouldRound) {
+          // this.targetPosition.x = Math.floor(this.targetPosition.x);
+        }
         this.moving = true
 
       }
@@ -1028,13 +1053,13 @@ class Game extends Component {
       return;
     }
 
-    let timing = 0.3;
+    let timing = 0.2;
 
     TweenMax.to(this._hero.scale, timing, {
       x: 1.2,
-      y: 0.8,
+      y: 0.75,
       z: 1,
-      ease: Bounce.easeOut,
+      // ease: Bounce.easeOut,
     });
   }
 
