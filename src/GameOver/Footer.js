@@ -19,7 +19,7 @@ export default class Footer extends Component {
       }), source: Images.button.settings, style: {aspectRatio: 1.25} },
       {onPress:this.share, source: Images.button.share, style: {aspectRatio: 1.9} },
       {onPress:(_=>{
-        this.props.navigation.goBack('Home')
+        this.props.navigation.goBack()
         this.props.setGameState(State.Game.none)
       }), source: Images.button.long_play, style: {aspectRatio: 1.9} },
       {onPress:(_=>{
