@@ -78,7 +78,7 @@ class GameOver extends Component {
         <Banner style={{backgroundColor: '#d73a32'}} title={"44 * To Go"} />
           </View>
 
-          <Footer navigation={this.props.navigation}/>
+          <Footer setGameState={this.props.setGameState} navigation={this.props.navigation}/>
       </View>
     );
   }

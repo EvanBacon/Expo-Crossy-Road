@@ -11,7 +11,7 @@ import Characters from '../../Characters';
 // import Footer from './Footer';
 
 const TitleButton = ({text,imageStyle,source,onPress}) => (
-  <View style={{justifyContent: 'center', alignItems: 'center', marginHorizontal: 4}}>
+  <View style={{justifyContent: 'center', width: 115, height: 100, alignItems: 'center', marginHorizontal: 4}}>
     <Button imageStyle={imageStyle} source={source} onPress={onPress} />
   <RetroText style={{textAlign: 'center', color: 'white', fontSize: 12, marginTop: 8}}>{text.toUpperCase()}</RetroText>
   </View>
@@ -85,56 +85,56 @@ class Settings extends Component {
     const buttons = [
       {
         text: "Language",
-        source: Images.button.back,
+        source: Images.button.language,
         imageStyle: imageStyle,
         onPress: (_=> {})
       },
       {
         text: "Restore\nPurchases",
-        source: Images.button.shop,
+        source: Images.button.purchase,
         imageStyle: imageStyle,
         onPress: (_=> {})
       },
       {
         text: "Credits",
-        source: Images.button.back,
+        source: Images.button.credits,
         imageStyle: imageStyle,
         onPress: (_=> {})
       },
       {
         text: "Conserve\nBattery",
-        source: Images.button.back,
+        source: Images.button.conserve_battery,
         imageStyle: imageStyle,
         onPress: (_=> {})
       },
       {
         text: "Mute",
-        source: Images.button.back,
+        source: Images.button.mute,
         imageStyle: imageStyle,
         onPress: (_=> {})
       },
       {
         text: "No Shadows",
-        source: Images.button.back,
+        source: Images.button.shadows,
         imageStyle: imageStyle,
         onPress: (_=> {})
       },
       {
         text: "Reminders",
-        source: Images.button.back,
+        source: Images.button.alerts,
         imageStyle: imageStyle,
         onPress: (_=> {})
       },
       {
         text: "Disable\nVideo\nAds",
-        source: Images.button.back,
+        source: Images.button.video_ads,
         imageStyle: imageStyle,
         onPress: (_=> {})
       },
       {
         text: "Save Your Figurines",
-        source: Images.button.back,
-        imageStyle: imageStyle,
+        source: Images.button.facebook,
+        imageStyle: {width: 120, height: 48},
         onPress: (_=> {})
       },
     ]
@@ -148,8 +148,8 @@ class Settings extends Component {
             }}/>
           </View>
 
-          <View key='content' style={{flex: 1, flexDirection: 'row', flexWrap: 'wrap', backgroundColor: 'red', justifyContent: 'center', alignItems: 'center'}}>
-            <View key='content' style={{flexDirection: 'row', flexWrap: 'wrap', backgroundColor: 'blue', justifyContent: 'center', alignItems: 'center'}}>
+          <View key='content' style={{flex: 1, flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', alignItems: 'center'}}>
+            <View key='content' style={{flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', alignItems: 'center'}}>
 
             {
               buttons.map((val, index) => <TitleButton key={index} source={val.source} text={val.text} imageStyle={val.imageStyle} onPress={val.onPress}/>)

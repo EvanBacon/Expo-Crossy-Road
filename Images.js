@@ -15,6 +15,17 @@ export default {
     random: require('./assets/images/buttons/random.png'),
     mail: require('./assets/images/buttons/mail.png'),
 
+    alerts: require('./assets/images/buttons/alerts.png'),
+    conserve_battery: require('./assets/images/buttons/conserve_battery.png'),
+    credits: require('./assets/images/buttons/credits.png'),
+    facebook: require('./assets/images/buttons/facebook.png'),
+    language: require('./assets/images/buttons/language.png'),
+    mute: require('./assets/images/buttons/mute.png'),
+
+    purchase: require('./assets/images/buttons/purchase.png'),
+    shadows: require('./assets/images/buttons/shadows.png'),
+    video_ads: require('./assets/images/buttons/video_ads.png'),
+
   },
   hand: {
     '0': require('./assets/images/hand/0.png'),
