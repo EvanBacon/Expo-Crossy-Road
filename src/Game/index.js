@@ -9,6 +9,7 @@ import {
   InteractionManager,
   View,
 } from 'react-native';
+
 import GestureRecognizer, {swipeDirections} from '../GestureView';
 import Water from '../Particles/Water';
 import Feathers from '../Particles/Feathers';
@@ -288,7 +289,7 @@ class Game extends Component {
     }
 
     // Repeat above for terrain objects
-    for (i = 0; i < 55; i++) {
+    for (i = 0; i < 100; i++) {
       this.trees[i] = this._tree.getRandom();
       this.scene.add(this.trees[i]);
     }
@@ -339,7 +340,7 @@ class Game extends Component {
 
     }
 
-    for (i = 0; i < 55; i++) {
+    for (i = 0; i < 100; i++) {
       this.trees[i].position.z = offset;
     }
 
@@ -379,10 +380,10 @@ class Game extends Component {
       this.railRoadCount = 0;
     }
 
-    if (this.rowCount <= 9) {
-      rowKind = 1;
+    if (this.rowCount < 10) {
+      rowKind = 5;
 
-      if (this.rowCount <= 5) {
+      if (this.rowCount < 5) {
         rowKind = -1;
       }
 
@@ -413,6 +414,12 @@ class Game extends Component {
         this.grass[this.grassCount].position.z = this.rowCount;
         this.floorMap[`${this.rowCount}`] = 'grass';
         this.treeGen(true);
+        this.grassCount++;
+        break;
+        case 5:
+        this.grass[this.grassCount].position.z = this.rowCount;
+        this.floorMap[`${this.rowCount}`] = 'grass';
+        this.treeGen(false, true);
         this.grassCount++;
         break;
 
@@ -457,7 +464,7 @@ class Game extends Component {
 
   }
 
-  treeGen = (isFull = false) => {
+  treeGen = (isFull = false, isEmpty = false) => {
     // 0 - 8
     if (this.floorMap[`${this.rowCount}`] !== 'grass') {
       return;
@@ -475,7 +482,7 @@ class Game extends Component {
         // this.treeCount ++;
         // this.trees[this.treeCount].position.set(x - 4, .4, this.rowCount);
       } else if (_rowCount < 2) {
-        if ((x !== 4 && Math.random() > .6) || isFull) {
+        if (!isEmpty && (x !== 4 && Math.random() > .6) || isFull  ) {
           this.addTree({x: x - 4, y: 0.4, z: this.rowCount});
           _rowCount++;
         }

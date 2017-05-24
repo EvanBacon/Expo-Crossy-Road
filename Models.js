@@ -1,4 +1,8 @@
 export default {
+  chicken: {
+    model: require('./assets/models/chicken/model.obj'),
+    texture: require('./assets/models/chicken/texture.png'),
+  },
   android_robot: {
     model: require('./assets/models/android_robot/model.obj'),
     texture: require('./assets/models/android_robot/texture.png'),
@@ -15,10 +19,7 @@ export default {
     model: require('./assets/models/tree_frog/model.obj'),
     texture: require('./assets/models/tree_frog/texture.png'),
   },
-  chicken: {
-    model: require('./assets/models/chicken/model.obj'),
-    texture: require('./assets/models/chicken/texture.png'),
-  },
+
   grass_0: {
     model: require('./assets/models/grass_0/model.obj'),
     texture: require('./assets/models/grass_0/texture.png'),
