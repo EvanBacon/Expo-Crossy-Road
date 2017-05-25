@@ -343,7 +343,7 @@ this.idleAnimation
   init = () => {
     const offset = -30;
     this.setState({score: 0})
-    this.camera.position.z = startingRow;
+    this.camera.position.z = startingRow + 1;
     this._hero.position.set(0, groundLevel, startingRow);
     this._hero.scale.set(1,1,1);
     this._hero.rotation.set(0, Math.PI, 0);
@@ -884,7 +884,7 @@ this.idleAnimation
 
   // Move scene forward
   forwardScene = () => {
-    if (this.gameState === State.Game.playing) {
+    // if (this.gameState === State.Game.playing) {
       // if (Math.floor(this.camera.position.z) < this._hero.position.z - 4) {
       //   // speed up camera to follow player
       //   this.camera.position.z += .033;
@@ -900,7 +900,7 @@ this.idleAnimation
       // } else {
         const easing = 0.03;
         this.camera.position.z += (((this._hero.position.z + 1) - this.camera.position.z) * easing);
-        this.camera.position.x =  Math.min(2, Math.max(-2, this.camera.position.x + (((this._hero.position.x + 1) - this.camera.position.x) * easing)));
+        this.camera.position.x =  Math.min(2, Math.max(-2, this.camera.position.x + (((this._hero.position.x) - this.camera.position.x) * easing)));
 
         // normal camera speed
         if (this.camera.position.z - this.camCount > 1.0) {
@@ -910,7 +910,7 @@ this.idleAnimation
           // this.camCount += this.camSpeed;
         }
       // }
-    }
+    // }
   }
 
   // Reset variables, restart game
