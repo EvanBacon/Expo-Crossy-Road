@@ -18,7 +18,13 @@ export const store = configureStore()
 import ModelLoader from './ModelLoader';
 export const modelLoader = new ModelLoader();
 
-export const persister = persistStore(store, {storage: AsyncStorage, blacklist: ['nav'] })
+const storeSettings = {
+  storage: AsyncStorage,
+  // blacklist: ['nav'],
+  whitelist: [`nav`]
+}
+
+export const persister = persistStore(store, storeSettings)
 class Root extends React.Component {
 
   state = {
@@ -29,7 +35,7 @@ class Root extends React.Component {
   componentWillMount() {
     this._loadAssetsAsync();
 
-    persistStore(store, { storage: AsyncStorage, blacklist: ['nav']}, () => {
+    persistStore(store, storeSettings, () => {
       console.log("Rehydrated");
        this.setState({ rehydrated: true })
     });
@@ -60,7 +66,10 @@ class Root extends React.Component {
   render() {
     if (this.state.appIsReady && this.state.rehydrated) {
       return (
-        <Provider store={store} persister={persister}>
+        <Provider
+          store={store}
+          persister={persister}
+          >
           <AppWithNavigationState dispatch={store.dispatch}/>
         </Provider>
     );

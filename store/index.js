@@ -3,7 +3,7 @@ import {AsyncStorage} from 'react-native';
 import thunk from 'redux-thunk'
 import reducer from '../reducers'
 import {createLogger} from 'redux-logger';
-import {persistStore, autoRehydrate} from 'redux-persist'
+import {autoRehydrate} from 'redux-persist'
 
 
 const logger = createLogger({
@@ -21,8 +21,6 @@ export default function configureStore(initialState) {
       autoRehydrate()
     )
   );
-  persistStore(store, {storage: AsyncStorage});
-
   return store
 }
 

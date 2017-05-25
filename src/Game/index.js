@@ -72,7 +72,7 @@ class Game extends Component {
     const {playing, gameOver, paused, none} = State.Game;
     switch (gameState) {
       case playing:
-      this.newScore();
+      this.stopIdle();
       break;
       case gameOver:
 
@@ -81,6 +81,7 @@ class Game extends Component {
 
       break;
       case none:
+      this.newScore();
 
       break;
       default:
@@ -98,7 +99,7 @@ class Game extends Component {
     this.camera.lookAt(this.scene.position);
 
     this.doGame();
-    this.props.setGameState(State.Game.none)
+    // this.props.setGameState(State.Game.none)
   }
 
   createParticles = () => {
@@ -225,7 +226,6 @@ class Game extends Component {
     this.logCount = 0; // Terrain objects
     this.cars = [],
     this.carCount = 0; //
-    this.logSpeed = [],
 
     this.onLog = true;
     this.hitByCar = null;
@@ -319,10 +319,28 @@ class Game extends Component {
     this.init();
   }
 
+  stopIdle = () => {
+    if (this.idleAnimation) {
+      this.idleAnimation.pause();
+      this.idleAnimation = null;
+      this._hero.scale.set(1,1,1);
+    }
+  }
+
+  idle = () => {
+    this.stopIdle();
+
+    const s = 0.8;
+        this.idleAnimation = new TimelineMax({repeat: -1});
+this.idleAnimation
+  .to(this._hero.scale, 0.3, {x:1,y:s,z:0.9, ease:Power1.easeIn})
+  .to(this._hero.scale, 0.6, {x:1,y:1,z:1, ease:Power1.easeOut})
+
+
+  }
 
   // Setup initial scene
   init = () => {
-    this.playerCarOffset = null;
     const offset = -30;
     this.setState({score: 0})
     this.camera.position.z = startingRow;
@@ -342,6 +360,9 @@ class Game extends Component {
     this.hitByCar = null;
     this.lastHeroZ = 8;
     this.floorMap = {};
+
+    this.idle();
+
     for (i = 0; i < this.maxRows; i++) {
       this.grass[i].position.z = offset;
 
@@ -362,7 +383,7 @@ class Game extends Component {
       this.cars[i].speed = 0;
 
       this.logs[i].mesh.position.z = offset;
-      this.logSpeed[i] = 0;
+      this.logs[i].speed = 0;
     }
 
     this.treeGen();
@@ -572,7 +593,7 @@ class Game extends Component {
     if (Math.random() > .5) {
       xDir = -1;
     }
-    if (this.logSpeed[this.logCount] == this.speed * xDir) {
+    if (this.logs[this.logCount].speed == this.speed * xDir) {
       this.speed /= 1.5;
     }
 
@@ -586,7 +607,7 @@ class Game extends Component {
       }
 
       this.logs[this.logCount].mesh.position.set(xPos, -0.1, this.rowCount);
-      this.logSpeed[this.logCount] = this.speed * xDir;
+      this.logs[this.logCount].speed = this.speed * xDir;
 
       xPos -= 5 * xDir;
     }
@@ -606,7 +627,7 @@ class Game extends Component {
           // this._hero.scale.y = 1.5;
           // this._hero.rotation.z = (Math.random() * Math.PI) - Math.PI/2;
           this._hero.position.z = car.mesh.position.z + (forward ? 0.52 : -0.52);
-          // this.playerCarOffset =  car.mesh.position.x - this._hero.position.x;
+
           this.hitByCar = car;
 
 
@@ -671,11 +692,11 @@ class Game extends Component {
       //Move Logs
       if (this.floorMap[`${this.logs[d].mesh.position.z|0}`] === 'water') {
 
-        this.logs[d].mesh.position.x += this.logSpeed[d];
+        this.logs[d].mesh.position.x += this.logs[d].speed;
 
-        if (this.logs[d].mesh.position.x > 11 && this.logSpeed[d] > 0) {
+        if (this.logs[d].mesh.position.x > 11 && this.logs[d].speed > 0) {
           this.logs[d].mesh.position.x = -10;
-        } else if (this.logs[d].mesh.position.x < -11 && this.logSpeed[d] < 0) {
+        } else if (this.logs[d].mesh.position.x < -11 && this.logs[d].speed < 0) {
           this.logs[d].mesh.position.x = 10;
         }
       }
@@ -833,9 +854,9 @@ class Game extends Component {
             this.sineCount += this.sineInc;
             this._hero.position.y = y;
 
-            for (w = 0; w < this.logSpeed.length; w++) {
+            for (w = 0; w < this.logs.length; w++) {
               if (this._hero.position.z == this.logs[w].mesh.position.z) {
-                this._hero.position.x += this.logSpeed[w] / 3;
+                this._hero.position.x += this.logs[w].speed / 3;
               }
             }
           }
@@ -847,6 +868,18 @@ class Game extends Component {
 
   rumbleScreen = () => {
     Vibration.vibrate();
+
+    TweenMax.to(this.scene.position, 0.2, {
+      x: 0,
+      y: 0,
+      z: 1,
+    })
+    TweenMax.to(this.scene.position, 0.2, {
+      x: 0,
+      y: 0,
+      z: 0,
+      delay: 0.2,
+    })
   }
 
   // Move scene forward
@@ -1011,7 +1044,7 @@ class Game extends Component {
 
 
     // if (Math.abs(targetPosition.x - initialPosition.x) > 0 && this.onLog && this.currentLog && this.currentLog >= 0) {
-    //   const {speed} = this.logSpeed[this.currentLog];
+    //   const {speed} = this.logs[this.currentLog];
     //   // delta.x = (targetPosition.x - Math.round(initialPosition.x))
     //   // delta.z += (speed < 0) ? -1 : 1;
     //   if (speed > 0) {
@@ -1088,45 +1121,55 @@ class Game extends Component {
     this.moveWithDirection(gestureName);
   }
 
-  render() {
+
+  renderGame = () => {
+
+    if (!this.state.ready) {
+      return;
+    }
+
     const config = {
       velocityThreshold: 0.3,
       directionalOffsetThreshold: 80
     };
 
-    if (!this.state.ready) {
-      return (<AppLoading />);
-    }
+    return (
+      <AnimatedGestureRecognizer
+        onResponderGrant={_=> {
+          this.beginMoveWithDirection();
+        }}
+        onSwipe={(direction, state) => this.onSwipe(direction, state)}
+        config={config}
+        style={{
+          flex: 1,
+        }}
+        >
+          <TouchableWithoutFeedback onPressIn={_=> {
+              this.beginMoveWithDirection();
+
+            }} style={{flex: 1}} onPress={_=> {
+              this.onSwipe(swipeDirections.SWIPE_UP, {});
+            }}>
+            {Expo.Constants.isDevice && <THREEView
+              backgroundColor={sceneColor}
+              shadowMapEnabled={true}
+              shadowMapRenderSingleSided={true}
+              style={{ flex: 1 }}
+              scene={this.scene}
+              camera={this.camera}
+              tick={this.tick}
+            />}
+          </TouchableWithoutFeedback>
+        </AnimatedGestureRecognizer>
+    );
+  }
+
+  render() {
 
     return (
       <View style={[{flex: 1, backgroundColor: '#6dceea'}, this.props.style]}>
-        <AnimatedGestureRecognizer
-          onResponderGrant={_=> {
-            this.beginMoveWithDirection();
-          }}
-          onSwipe={(direction, state) => this.onSwipe(direction, state)}
-          config={config}
-          style={{
-            flex: 1,
-          }}
-          >
-            <TouchableWithoutFeedback onPressIn={_=> {
-                this.beginMoveWithDirection();
 
-              }} style={{flex: 1}} onPress={_=> {
-                this.onSwipe(swipeDirections.SWIPE_UP, {});
-              }}>
-              {Expo.Constants.isDevice && <THREEView
-                backgroundColor={sceneColor}
-                shadowMapEnabled={true}
-                shadowMapRenderSingleSided={true}
-                style={{ flex: 1 }}
-                scene={this.scene}
-                camera={this.camera}
-                tick={this.tick}
-              />}
-            </TouchableWithoutFeedback>
-          </AnimatedGestureRecognizer>
+          {this.renderGame()}
 
           <Score score={this.state.score} gameOver={this.props.gameState === State.Game.gameOver}/>
       </View>
