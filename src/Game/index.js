@@ -13,6 +13,8 @@ import {
 import GestureRecognizer, {swipeDirections} from '../GestureView';
 import Water from '../Particles/Water';
 import Feathers from '../Particles/Feathers';
+import Foam from '../Particles/Foam';
+
 import {TweenMax} from "gsap";
 import State from '../../state';
 import * as THREE from 'three';
@@ -270,6 +272,12 @@ class Game extends Component {
       this.grass[i].castShadow = false;
 
       this.water[i] = this._river.getNode();
+      let foam = new Foam(THREE, 1);
+      foam.mesh.position.set(4.5,0.2,-0.5);
+      foam.mesh.visible = true;
+      foam.run();
+      this.water[i].add(foam.mesh);
+
       this.road[i] = this._road.getRandom();
       this.road[i].receiveShadow = true;
       this.road[i].castShadow = false;
@@ -330,6 +338,8 @@ class Game extends Component {
     this.floorMap = {};
     for (i = 0; i < this.maxRows; i++) {
       this.grass[i].position.z = offset;
+
+
       this.water[i].position.z = offset;
       this.road[i].position.z = offset;
       this.railRoad[i].position.z = offset;
