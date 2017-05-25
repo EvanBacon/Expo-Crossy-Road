@@ -21,7 +21,7 @@ export default class Feathers  {
     var bigParticleGeom = new THREE.CubeGeometry(size, size, 0.01, 1);
     // var smallParticleGeom = new THREE.CubeGeometry(0.1, 0.1, 0.1, 1);
     this.parts = [];
-    for (var i = 0; i < 10; i++) {
+    for (var i = 0; i < 20; i++) {
       var partPink = new THREE.Mesh(bigParticleGeom, this.waterMat);
       // var partGreen = new THREE.Mesh(smallParticleGeom, this.waterMat);
       this.parts.push(partPink);
@@ -43,9 +43,9 @@ export default class Feathers  {
 
       let m = direction < 0 ? -1 : 1;
 
-      var tx = ((Math.random() * 1.0) + 3) * m;
-      var ty = ((Math.random() * 1.0) + 1);
-      var tz = (Math.random() * 2.0);
+      var tx = ((Math.random() * 5.0) + 2) * m;
+      var ty = ((Math.random() * 2.0) + 1);
+      var tz = (Math.random() * 2.0) + 1;
       var p = this.parts[i];
 
 
@@ -75,7 +75,9 @@ export default class Feathers  {
 
 
         TweenMax.to(p.rotation, s * 5, {
-          z: Math.random() * .5,
+          z: Math.random() * (Math.PI * 2) + 0.2,
+          x: Math.random() * (Math.PI * 2) + 0.2,
+          y: Math.random() * (Math.PI * 2) + 0.2,
           delay: s
 
         });
