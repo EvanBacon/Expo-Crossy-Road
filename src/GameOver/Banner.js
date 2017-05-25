@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, View, Share, Dimensions, LayoutAnimation, Image, StyleSheet } from 'react-native';
+import { Text, View, Share, Animated, Dimensions, LayoutAnimation, Image, StyleSheet } from 'react-native';
 import { Constants } from 'expo';
 
 const {width} = Dimensions.get('window')
@@ -13,11 +13,15 @@ export default class Banner extends Component {
   )
 
   render() {
-    LayoutAnimation.easeInEaseOut()
+    // LayoutAnimation.easeInEaseOut()
+    const {animatedValue, style} = this.props;
+
     return (
-      <View style={[styles.container, this.props.style]}>
+      <View style={[styles.container, style]}>
+        <Animated.View style={{flex: 1, flexDirection: 'row', justifyContent: 'center', alignItems: 'center', transform: [{translateX: animatedValue}] }}>
         <RetroText style={styles.text} numberOfLines={2}>{this.props.title}</RetroText>
       {this.props.button && this.renderButton(this.props.button, 0)}
+        </Animated.View>
       </View>
     );
   }
