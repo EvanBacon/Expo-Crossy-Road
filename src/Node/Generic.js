@@ -37,8 +37,9 @@ export default class Generic {
 
     await textureAsset.downloadAsync();
     const texture = THREEView.textureFromAsset(textureAsset);
-    texture.magFilter = THREE.LinearFilter;
-    texture.minFilter = THREE.LinearFilter;
+
+    texture.magFilter = THREE.NearestFilter;
+    texture.minFilter = THREE.NearestFilter;
 
     // var material = new THREE.MeshToonMaterial( {
 		// 						map: texture,
