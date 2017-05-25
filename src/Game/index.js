@@ -29,7 +29,7 @@ import connectGameState from '../../utils/connectGameState';
 import connectCharacter from '../../utils/connectCharacter';
 import RetroText from '../RetroText';
 import {modelLoader} from '../../main';
-const groundLevel = 0.5;
+const groundLevel = 0.4;
 const sceneColor = 0x6dceea;
 const startingRow = 8;
 
@@ -65,6 +65,10 @@ class Game extends Component {
     }
   }
   updateWithGameState = (gameState, previousGameState) => {
+    if (gameState == this.gameState) {
+      return;
+    }
+    this.gameState = gameState;
     const {playing, gameOver, paused, none} = State.Game;
     switch (gameState) {
       case playing:
@@ -94,6 +98,7 @@ class Game extends Component {
     this.camera.lookAt(this.scene.position);
 
     this.doGame();
+    this.props.setGameState(State.Game.none)
   }
 
   createParticles = () => {
@@ -114,7 +119,7 @@ class Game extends Component {
       this.waterParticles.run(type);
     } else if (type == 'feathers') {
       this.featherParticles.mesh.position.copy(model.position);
-      this.featherParticles.mesh.visible = true;
+      // this.featherParticles.mesh.visible = true;
       this.featherParticles.run(type, direction);
     }
   }
@@ -221,7 +226,7 @@ class Game extends Component {
     this.cars = [],
     this.carCount = 0; //
     this.logSpeed = [],
-    this.carSpeed = []; //
+
     this.onLog = true;
     this.hitByCar = null;
     this.lastHeroZ = 8;
@@ -317,6 +322,7 @@ class Game extends Component {
 
   // Setup initial scene
   init = () => {
+    this.playerCarOffset = null;
     const offset = -30;
     this.setState({score: 0})
     this.camera.position.z = startingRow;
@@ -353,7 +359,7 @@ class Game extends Component {
     for (i = 0; i < 40; i++) {
 
       this.cars[i].mesh.position.z = offset;
-      this.carSpeed[i] = 0;
+      this.cars[i].speed = 0;
 
       this.logs[i].mesh.position.z = offset;
       this.logSpeed[i] = 0;
@@ -548,8 +554,7 @@ class Game extends Component {
       }
 
       this.cars[this.carCount].mesh.position.set(xPos, .25, this.rowCount);
-      this.carSpeed[this.carCount] = this.speed * xDir;
-
+      this.cars[this.carCount].speed = this.speed * xDir;
       this.cars[this.carCount].mesh.rotation.y = (Math.PI / 2) * xDir;
 
 
@@ -601,6 +606,7 @@ class Game extends Component {
           // this._hero.scale.y = 1.5;
           // this._hero.rotation.z = (Math.random() * Math.PI) - Math.PI/2;
           this._hero.position.z = car.mesh.position.z + (forward ? 0.52 : -0.52);
+          // this.playerCarOffset =  car.mesh.position.x - this._hero.position.x;
           this.hitByCar = car;
 
 
@@ -611,7 +617,7 @@ class Game extends Component {
                     TweenMax.to(this._hero.rotation, 0.3, {
                       z: (Math.random() * Math.PI) - Math.PI/2,
                     });
-                    this.playerCarOffset = this._hero.position.x -  car.mesh.position.x;
+
         } else {
 
           ///Run Over Hero. ///TODO: Add a side collide
@@ -645,20 +651,20 @@ class Game extends Component {
 
       if (this.floorMap[`${this.cars[d].mesh.position.z|0}`] === 'road') {
 
-      this.cars[d].mesh.position.x += this.carSpeed[d];
+      this.cars[d].mesh.position.x += this.cars[d].speed;
 
-      if (this.cars[d].mesh.position.x > 11 && this.carSpeed[d] > 0) {
+      if (this.cars[d].mesh.position.x > 11 && this.cars[d].speed > 0) {
         this.cars[d].mesh.position.x = -11;
         if (this.cars[d] === this.hitByCar) {
           this.hitByCar = null;
         }
-      } else if (this.cars[d].mesh.position.x < -11 && this.carSpeed[d] < 0) {
+      } else if (this.cars[d].mesh.position.x < -11 && this.cars[d].speed < 0) {
         this.cars[d].mesh.position.x = 11;
         if (this.cars[d] === this.hitByCar) {
           this.hitByCar = null;
         }
-      } else if (!this.moving && this.props.gameState == State.Game.playing) {
-        this.carShouldCheckCollision(this.cars[d], this.carSpeed[d])
+      } else if (!this.moving && this.gameState == State.Game.playing) {
+        this.carShouldCheckCollision(this.cars[d], this.cars[d].speed)
       }
     }
 
@@ -705,7 +711,7 @@ class Game extends Component {
   }
 
   carCollision = () => {
-    if (this.props.gameState != State.Game.playing) {
+    if (this.gameState != State.Game.playing || this.hitByCar) {
       return
     }
     for (let c = 0; c < this.cars.length; c++) {
@@ -715,7 +721,7 @@ class Game extends Component {
         const {collisionBox} = car;
 
         if (this._hero.position.x < this.cars[c].mesh.position.x + collisionBox && this._hero.position.x > this.cars[c].mesh.position.x - collisionBox) {
-          console.log(this._hero.position.z, this.lastHeroZ);
+          // console.log(this._hero.position.z, this.lastHeroZ);
           if (this._hero.position.z != this.lastHeroZ) {
 
             const forward = this._hero.position.z < this.lastHeroZ;
@@ -730,11 +736,11 @@ class Game extends Component {
 
           }
 
-
-          this.useParticle(this._hero, 'feathers', this.carSpeed[c]);
+          this.gameOver();
+          this.useParticle(this._hero, 'feathers', this.cars[c].speed);
           this.rumbleScreen()
 
-          this.gameOver();
+
         }
       }
     }
@@ -778,16 +784,15 @@ class Game extends Component {
     if (!this.hitByCar) {
       return;
     }
-
     let target = this.hitByCar.mesh.position.x;
-    this._hero.position.x = target + this.playerCarOffset;
+    this._hero.position.x += this.hitByCar.speed;
     if (this.initialPosition)
       this.initialPosition.x = target;
   }
 
 
   logCollision = () => {
-    if (this.props.gameState != State.Game.playing) {
+    if (this.gameState != State.Game.playing) {
       this.onLog = false;
       this.currentLog = null;
       return
@@ -818,7 +823,7 @@ class Game extends Component {
       for (w = 0; w < this.water.length; w++) {
         if (this._hero.position.z == this.water[w].position.z) {
 
-          if (this.props.gameState == State.Game.playing) {
+          if (this.gameState == State.Game.playing) {
             this.useParticle(this._hero, 'water');
             this.rumbleScreen()
             this.gameOver();
@@ -846,7 +851,7 @@ class Game extends Component {
 
   // Move scene forward
   forwardScene = () => {
-    if (this.props.gameState === State.Game.playing) {
+    if (this.gameState === State.Game.playing) {
       // if (Math.floor(this.camera.position.z) < this._hero.position.z - 4) {
       //   // speed up camera to follow player
       //   this.camera.position.z += .033;
@@ -878,8 +883,13 @@ class Game extends Component {
   // Reset variables, restart game
   gameOver = () => {
     // this.trees.map(val => this.scene.remove(val) );
+    this.moving = false;
 
-    this.props.setGameState(State.Game.gameOver)
+    /// Stop player from finishing a movement
+    this.heroAnimations.map(val => {val.pause(); val = null;} );
+    this.heroAnimations = [];
+    this.gameState = State.Game.gameOver;
+    this.props.setGameState(this.gameState)
 
     InteractionManager.runAfterInteractions(_=> {
       this.props.navigation.dispatch(NavigationActions.navigate({ routeName: 'GameOver' }))
@@ -895,17 +905,18 @@ class Game extends Component {
       this.logCollision();
       this.waterCollision();
 
-      // this.carCollision();
       // this.checkIfUserHasFallenOutOfFrame();
       this.lastHeroZ = this._hero.position.z;
     }
+
+    this.carCollision();
 
     this.forwardScene();
   }
 
 
   checkIfUserHasFallenOutOfFrame = () => {
-    if (this.props.gameState !== State.Game.playing) {
+    if (this.gameState !== State.Game.playing) {
       return
     }
     if (this._hero.position.z < this.camera.position.z - 8) {
@@ -934,8 +945,7 @@ class Game extends Component {
   }
 
   moveWithDirection = direction => {
-    if (this.props.gameState != State.Game.playing ) {
-      // this.newScore();
+    if (this.gameState != State.Game.playing ) {
       return;
     }
 
@@ -1017,33 +1027,34 @@ class Game extends Component {
     this.currentLog = null;
     let timing = 0.5;
 
+    this.heroAnimations = [];
 
-    TweenMax.to(this._hero.position, this.timing, {
+    this.heroAnimations.push(TweenMax.to(this._hero.position, this.timing, {
       x: this.initialPosition.x + (delta.x * 0.75),
       y: groundLevel + 0.5,
       z: this.initialPosition.z + (delta.z * 0.75),
-    });
+    }));
 
-    TweenMax.to(this._hero.scale, this.timing, {
+    this.heroAnimations.push(TweenMax.to(this._hero.scale, this.timing, {
       x: 1,
       y: 1.2,
       z: 1,
-    });
-    TweenMax.to(this._hero.scale, this.timing, {
+    }));
+    this.heroAnimations.push(TweenMax.to(this._hero.scale, this.timing, {
       x: 1.0,
       y: 0.8,
       z: 1,
       delay: this.timing
-    });
-    TweenMax.to(this._hero.scale, this.timing, {
+    }));
+    this.heroAnimations.push(TweenMax.to(this._hero.scale, this.timing, {
       x: 1,
       y: 1,
       z: 1,
       ease: Bounce.easeOut,
       delay: this.timing * 2
-    });
+    }));
 
-    TweenMax.to(this._hero.position, this.timing, {
+    this.heroAnimations.push(TweenMax.to(this._hero.position, this.timing, {
       x: this.targetPosition.x,
       y: this.targetPosition.y,
       z: this.targetPosition.z,
@@ -1051,7 +1062,7 @@ class Game extends Component {
       delay: 0.151,
       onComplete: this.doneMoving,
       onCompleteParams: []
-    });
+    }));
 
 
     this.initialPosition = this.targetPosition;
@@ -1059,7 +1070,7 @@ class Game extends Component {
   }
 
   beginMoveWithDirection = direction => {
-    if (this.props.gameState != State.Game.playing) {
+    if (this.gameState != State.Game.playing) {
       return;
     }
 
