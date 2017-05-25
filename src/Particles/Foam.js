@@ -16,13 +16,15 @@ export default class Foam  {
     this.waterMat =  new THREE.MeshPhongMaterial({
       color: 0xffffff,
       shading: THREE.FlatShading,
+      side: THREE.DoubleSide
     });
     this.mesh = new THREE.Group();
     const size = 0.6;
-    var bigParticleGeom = new THREE.CubeGeometry(size, 0.01, size, 1);
+    var bigParticleGeom = new THREE.PlaneGeometry(size, size, 1);
     this.parts = [];
     for (var i = 0; i < 6; i++) {
       var particle = new THREE.Mesh(bigParticleGeom, this.waterMat);
+      particle.rotation.x = Math.PI/2
       this.parts.push(particle);
       this.mesh.add(particle);
     }
@@ -48,23 +50,27 @@ export default class Foam  {
       n.position.set(
         rand({min: -0.1, max: 0.1}),
         0,
-        ((0.8/this.parts.length) * i) + 0.1
+        ((0.6/this.parts.length) * i) + 0.2
       );
       n.visible = true;
 
       const minScale = 0.01;
-      n.scale.set(minScale, minScale, minScale);
-      n.rotation.z = (Math.random() * 0.6) - 0.3;
+      n.scale.set(
+        minScale,
+        minScale,
+        minScale
+      );
+      n.rotation.y = (Math.random() * 0.6) - 0.3;
     }
 
     const animate = (n, i) => {
       const mScale = 1;
-      const mDuration = 0.3;
-      const lDuration = 1.5;
+      const mDuration = 0.4;
+      const lDuration = 1.2;
       const totalDuration = (mDuration + lDuration);
 
       /// Every other particle starts mid way through the first particles animation.
-      const startDelay = (totalDuration * 0.5) * i;
+      const startDelay = (totalDuration * 0.2) * i;
       TweenMax.to(n.scale, mDuration, {
         x: mScale,
         y: mScale,
@@ -82,101 +88,22 @@ export default class Foam  {
 
           TweenMax.to(n.position, lDuration, {
             x: n.position.x + (rand({min: 0.2, max: 1.0}) * this.direction),
-            // y: lScale,
-            // z: lScale,
-            // ease: Bounce.easeOut,
             onComplete: (_=> runAnimation(n, i) )
-
           })
         })
-
       })
-
-
-
-
-
-      // TweenMax.to(p.position, duration, {
-      //   // x: (Math.random() * 1.0) - 0.2,
-      //   x: 1,
-      //   y: 0,
-      //   // z: (Math.random() * 0.2) - 0.1,
-      //   ease: Linear.easeIn,
-      //   delay: scaleDuration,
-      //   onRepeat:onRepeat
-      //   // repeat: -1
-      //   // ease: Bounce.easeOut,
-      // });
-      //
-      // let scaleTimeline = new TimelineLite({repeat:-1, onComplete: (_=> runAnimation(n)) });
-      // scaleTimeline.from(p, 0.3, {x: 1,y: 1,z: 1})
-      // .from(p, 1, {x: 0.01,y: 0.01,z: 0.01}, `+=${0.3}`)
-
-
-      // runAnimation(n);
     }
 
     const runAnimation = (n,i) => {
       setup(n,i);
       animate(n,i);
     }
+
     for (var i = 0; i < this.parts.length; i++) {
 
       let m = direction < 0 ? -1 : 1;
       var p = this.parts[i];
-
       runAnimation(p, i);
-
-      // Scale 0 - 1 fast
-      // x: -0.1 - 0
-      // x: 0.6 - 1 = ease in
-      // scale: 0 = ease in
-
-
-
-      // setup(p);
-
-      // let scaleTimeline = new TimelineLite({repeat:-1 });
-      // scaleTimeline.from(p, 0.3, {x: 1,y: 1,z: 1})
-      // .from(p, 1, {x: 0.01,y: 0.01,z: 0.01}, `+=${0.3}`)
-      // .start();
-
-
-      // var s = (Math.random() * 0.5) + 0.3 + (i * 0.1);
-
-
-
-      // const onRepeat = () => {
-      //   p.position.set(
-      //     (Math.random() * 0.2) - 0.1,
-      //     0,
-      //     (1/this.parts.length) * i
-      //   );
-      //
-      //   p.scale.set(0.01, 0.01, 0.01);
-      //   p.rotation.z = (Math.random() * 0.6) - 0.3;
-      //
-      //   let duration = 1;
-      //   let scaleDuration = 0.3;
-      //   scale(1.0, p, scaleDuration);
-      //   scale(0.01, p, duration, scaleDuration);
-      //
-      //
-      //   TweenMax.to(p.position, duration, {
-      //     // x: (Math.random() * 1.0) - 0.2,
-      //     x: 1,
-      //     y: 0,
-      //     // z: (Math.random() * 0.2) - 0.1,
-      //     ease: Linear.easeIn,
-      //     delay: scaleDuration,
-      //     onRepeat:onRepeat
-      //     // repeat: -1
-      //     // ease: Bounce.easeOut,
-      //   });
-      // }
-      //
-      // onRepeat();
-
     }
   }
 
