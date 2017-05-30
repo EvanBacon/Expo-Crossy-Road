@@ -29,7 +29,7 @@ import connectGameState from '../../utils/connectGameState';
 import connectCharacter from '../../utils/connectCharacter';
 import RetroText from '../RetroText';
 import {modelLoader} from '../../main';
-const groundLevel = 0.4;
+export const groundLevel = 0.4;
 const sceneColor = 0x6dceea;
 const startingRow = 8;
 
@@ -152,7 +152,7 @@ class Game extends Component {
 
   doneMoving = () => {
     this.moving = false;
-
+this._hero.moving = false;
     this.updateScore();
 
     // this._hero.position.set(Math.round(this._hero.position.x), this._hero.position.y, Math.round(this._hero.position.z))
@@ -221,7 +221,7 @@ class Game extends Component {
     this.waterCount = 0; // Terrain tiles
     this.road = [],
     this.roadCount = 0; //
-    this.railRoad = [],
+    this.railRoads = [],
     this.railRoadCount = 0; //
     this.trees = [],
     this.treeCount = 0; //
@@ -239,7 +239,7 @@ class Game extends Component {
     this.onLily = null;
     this.onLog = true;
     this.hitByCar = null;
-    this.hitByTrain = null;
+
     this.lastHeroZ = 8;
 
     this.rowCount = 0;
@@ -259,11 +259,16 @@ class Game extends Component {
     // Mesh
     // console.warn(this.props.character.id)
     this._hero = this.hero.getNode(this.props.character.id);
+
+    //Custom Params
+    this._hero.moving = false;
+    this._hero.hitByTrain = null;
+
     this.scene.add(this._hero);
 
 
-    this.railRoad[0] = this._railroad.getRandom();
-    this.road[0] = this._road.getRandom();
+    // this.railRoad[0] = this._railroad.getRandom();
+    // this.road[0] = this._road.getRandom();
 
     let _carMesh = this._car.getRandom();
     let _carWidth = this.getDepth(_carMesh);
@@ -299,11 +304,11 @@ class Game extends Component {
       this.road[i].castShadow = false;
 
 
-      this.railRoad[i] = this._railroad.getRandom();
+      this.railRoads[i] = new Rows.RailRoad(this.heroWidth, this.onCollide); // this._railroad.getRandom();
       this.scene.add(this.grass[i]);
       this.scene.add(this.water[i]);
       this.scene.add(this.road[i]);
-      this.scene.add(this.railRoad[i]);
+      this.scene.add(this.railRoads[i]);
 
     }
 
@@ -357,6 +362,15 @@ class Game extends Component {
     this.init();
   }
 
+  onCollide = (obstacle) => {
+    if (this.gameState != State.Game.playing) {
+      return;
+    }
+    this.useParticle(this._hero, 'feathers', (obstacle || {}).speed || 0);
+    this.rumbleScreen()
+    this.gameOver();
+  }
+
   stopIdle = () => {
     if (this.idleAnimation) {
       this.idleAnimation.pause();
@@ -397,7 +411,7 @@ class Game extends Component {
     this.treeCount = 0;
     this.rowCount = 0;
     this.hitByCar = null;
-    this.hitByTrain = null;
+    this._hero.hitByTrain = null;
     this.lastHeroZ = 8;
     this.floorMap = {};
 
@@ -409,7 +423,8 @@ class Game extends Component {
 
       this.water[i].position.z = offset;
       this.road[i].position.z = offset;
-      this.railRoad[i].position.z = offset;
+      this.railRoads[i].position.z = offset;
+      this.railRoads[i].active = false;
 
     }
 
@@ -548,8 +563,9 @@ class Game extends Component {
 
       break;
       case 4:
-      this.trainGen();
-      this.railRoad[this.railRoadCount].position.z = this.rowCount;
+      // this.trainGen();
+      this.railRoads[this.railRoadCount].position.z = this.rowCount;
+      this.railRoads[this.railRoadCount].active = true;
       this.floorMap[`${this.rowCount}`] = 'railRoad';
       this.railRoadCount++;
       this.lastRk = rk;
@@ -745,7 +761,7 @@ lilyGen = () => {
           // this._hero.rotation.z = (Math.random() * Math.PI) - Math.PI/2;
           this._hero.position.z = train.mesh.position.z + (forward ? 0.52 : -0.52);
 
-          this.hitByTrain = train;
+          this._hero.hitByTrain = train;
 
 
           TweenMax.to(this._hero.scale, 0.3, {
@@ -841,27 +857,27 @@ lilyGen = () => {
   // Animate cars/logs
   drive = () => {
 
-    for (let train of this.trains) {
-      const offset = 11 * 5;
-            if (this.floorMap[`${train.mesh.position.z|0}`] === 'railRoad') {
-
-              train.mesh.position.x += train.speed;
-
-              if (train.mesh.position.x > offset && train.speed > 0) {
-                train.mesh.position.x = -offset;
-                if (train === this.hitByTrain) {
-                  this.hitByTrain = null;
-                }
-              } else if (train.mesh.position.x < -offset && train.speed < 0) {
-                train.mesh.position.x = offset;
-                if (train === this.hitByTrain) {
-                  this.hitByTrain = null;
-                }
-              } else if (!this.moving && this.gameState == State.Game.playing) {
-                this.trainShouldCheckCollision(train, train.speed)
-              }
-            }
-    }
+    // for (let train of this.trains) {
+    //   const offset = 11 * 5;
+    //         if (this.floorMap[`${train.mesh.position.z|0}`] === 'railRoad') {
+    //
+    //           train.mesh.position.x += train.speed;
+    //
+    //           if (train.mesh.position.x > offset && train.speed > 0) {
+    //             train.mesh.position.x = -offset;
+    //             if (train === this._hero.hitByTrain) {
+    //               this._hero.hitByTrain = null;
+    //             }
+    //           } else if (train.mesh.position.x < -offset && train.speed < 0) {
+    //             train.mesh.position.x = offset;
+    //             if (train === this._hero.hitByTrain) {
+    //               this._hero.hitByTrain = null;
+    //             }
+    //           } else if (!this.moving && this.gameState == State.Game.playing) {
+    //             this.trainShouldCheckCollision(train, train.speed)
+    //           }
+    //         }
+    // }
 
 
     for (d = 0; d < this.cars.length; d++) {
@@ -969,7 +985,7 @@ lilyGen = () => {
   }
 
   trainCollision = () => {
-    if (this.gameState != State.Game.playing || this.hitByTrain) {
+    if (this.gameState != State.Game.playing || this._hero.hitByTrain) {
       return
     }
     for (let c = 0; c < this.trains.length; c++) {
@@ -985,7 +1001,7 @@ lilyGen = () => {
             const forward = this._hero.position.z < this.lastHeroZ;
             this._hero.scale.z = 0.2;
             this._hero.position.z = this.trains[c].mesh.position.z + (forward ? 0.52 : -0.52);
-            this.hitByTrain = this.trains[c];
+            this._hero.hitByTrain = this.trains[c];
           } else {
 
             ///Run Over Hero. ///TODO: Add a side collide
@@ -1191,6 +1207,7 @@ lilyCollision = () => {
   gameOver = () => {
     // this.trees.map(val => this.scene.remove(val) );
     this.moving = false;
+    this._hero.moving = false;
 
     /// Stop player from finishing a movement
     this.heroAnimations.map(val => {val.pause(); val = null;} );
@@ -1206,6 +1223,11 @@ lilyCollision = () => {
 
   tick = dt => {
     this.drive();
+
+    for (let railRoad of this.railRoads) {
+      railRoad.update(dt, this._hero)
+    }
+
     if (!this.moving) {
       this.moveUserOnLog();
       this.moveUserOnCar();
@@ -1216,10 +1238,12 @@ lilyCollision = () => {
 
       // this.checkIfUserHasFallenOutOfFrame();
       this.lastHeroZ = this._hero.position.z;
+      this._hero.lastPosition = this._hero.position;
+
     }
 
     this.carCollision();
-    this.trainCollision();
+    // this.trainCollision();
     this.forwardScene();
   }
 
@@ -1277,7 +1301,7 @@ lilyCollision = () => {
       if (!this.treeCollision("left")) {
         this.targetPosition = {x: this.initialPosition.x + 1, y: this.initialPosition.y, z: this.initialPosition.z};
         this.moving = true
-
+        this._hero.moving = true;
       }
       break;
       case SWIPE_RIGHT:
@@ -1285,6 +1309,7 @@ lilyCollision = () => {
       if (!this.treeCollision("right")) {
         this.targetPosition = {x: this.initialPosition.x - 1, y: this.initialPosition.y, z: this.initialPosition.z};
         this.moving = true
+        this._hero.moving = true;
 
       }
       break;
@@ -1298,6 +1323,7 @@ lilyCollision = () => {
           // this.targetPosition.x = Math.floor(this.targetPosition.x);
         }
         this.moving = true
+        this._hero.moving = true;
 
       }
       break;
@@ -1311,6 +1337,7 @@ lilyCollision = () => {
           // this.targetPosition.x = Math.floor(this.targetPosition.x);
         }
         this.moving = true
+        this._hero.moving = true;
 
       }
       break;
