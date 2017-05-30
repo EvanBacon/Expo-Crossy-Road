@@ -88,7 +88,7 @@ momentumScrollEnd = () => {
 render() {
   const {keys,selected} = this.state
   return (<View style={{flex: 1}}>
-    <AnimatedText style={{opacity: 1, backgroundColor: 'transparent', textAlign: 'center', color: 'white', fontSize: 24}}>{Characters[keys[selected]].name}</AnimatedText>
+    {/* <AnimatedText style={{opacity: 1, backgroundColor: 'transparent', textAlign: 'center', color: 'white', fontSize: 24}}>{Characters[keys[selected]].name}</AnimatedText> */}
     <AnimatedFlatList
     style={styles.container}
     horizontal={true}
