@@ -655,13 +655,14 @@ class Game extends Component {
 lilyGen = () => {
   // Speeds: .01 through .08
   // Number of cars: 1 through 3
-  this.numLilys = Math.floor(Math.random() * (2 - 1)) + 1;
+  this.numLilys = Math.floor(Math.random() * (3 - 1)) + 1;
 
   /// Screen Range = -4:4
   /// Item Range = -3:3
-  let xPos = ((Math.random() * 6) + -3); /// 1 - 7;
 
   for (x = 0; x < this.numLilys; x++) {
+    let xPos = ((Math.random() * (6 - x)) + (-3 + x)); /// 1 - 7;
+
     if (this.lilyCount < 19) {
       this.lilyCount++;
     } else {
