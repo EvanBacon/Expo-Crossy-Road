@@ -8,9 +8,10 @@ import River from './River'
 import Road from './Road'
 import Train from './Train'
 import Tree from './Tree'
-
+import LilyPad from './LilyPad'
 export default {
   Car,
+  LilyPad,
   Grass,
   Hero,
   Log,

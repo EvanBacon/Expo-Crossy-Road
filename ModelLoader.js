@@ -10,7 +10,8 @@ const {
   Tree,
   Train,
   Boulder,
-  RailRoad
+  RailRoad,
+  LilyPad
 } = Node;
 
 class ModelLoader {
@@ -21,6 +22,7 @@ class ModelLoader {
   }
 
   loadModels = async () => {
+    this._lilyPad = new LilyPad();
     this._grass = new Grass();
     this._road = new Road();
     this._river = new River();
@@ -34,6 +36,7 @@ class ModelLoader {
 
     try {
       await Promise.all([
+        this._lilyPad.setup(),
         this._road.setup(),
         this._grass.setup(),
         this._river.setup(),

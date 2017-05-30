@@ -168,12 +168,11 @@ class Game extends Component {
 
 
   loadModels = async () => {
-    console.log("Some Extracting 3D Models! ", _grass, _road);
-
-    const {_grass, _road, _river,_boulder, _tree, _car, _railroad, _train, _log, _hero} = modelLoader;
+    const {_grass, _road, _river,_lilyPad, _boulder, _tree, _car, _railroad, _train, _log, _hero} = modelLoader;
     this._grass = _grass;
     this._road = _road;
     this._river = _river;
+    this._lilyPad = _lilyPad;
     this._boulder = _boulder;
     this._tree = _tree;
     this._car = _car;
@@ -182,9 +181,7 @@ class Game extends Component {
     this._log = _log;
     this.hero = _hero;
 
-    console.log("Done Extracting 3D Models! ", _grass, _road);
-
-
+    console.log("Done Extracting 3D Models! ");
 
     // let textMesh = new TextMesh('Harambe', {
     //   size: 50,
@@ -225,9 +222,13 @@ class Game extends Component {
     this.treeCount = 0; //
     this.logs = [],
     this.logCount = 0; // Terrain objects
+    this.lilys = [],
+    this.lilyCount = 0; // Terrain objects
+
     this.cars = [],
     this.carCount = 0; //
 
+    this.onLily = null;
     this.onLog = true;
     this.hitByCar = null;
     this.lastHeroZ = 8;
@@ -303,6 +304,25 @@ class Game extends Component {
       this.scene.add(this.trees[i]);
     }
 
+    // Repeat above for terrain objects
+    for (i = 0; i < 20; i++) {
+      const mesh = this._lilyPad.getRandom();
+
+      TweenMax.to(mesh.rotation, (Math.random() * 2) + 2, {
+        y: (Math.random() * 1.5) + 0.5,
+        yoyo: true,
+        repeat: -1,
+        ease: Power1.easeInOut
+      });
+
+      const width = this.getWidth(mesh);
+      this.lilys[i] = {mesh, width, collisionBox: (this.heroWidth / 2 + width / 2 - .1) };
+      this.scene.add(mesh);
+
+
+    }
+
+
     for (i = 0; i < 40; i++) {
       let _carMesh = this._car.getRandom();
       let _carWidth = this.getDepth(_carMesh);
@@ -349,6 +369,7 @@ class Game extends Component {
     this._hero.scale.set(1,1,1);
     this._hero.rotation.set(0, Math.PI, 0);
     this.map = {};
+    this.camCount = 0;
     this.map[`${0},${groundLevel|0},${startingRow|0}`] = 'player'
     this.initialPosition = null;
     this.targetPosition = null;
@@ -374,15 +395,17 @@ class Game extends Component {
 
     }
 
-    for (i = 0; i < 100; i++) {
-      this.trees[i].position.z = offset;
+    for (let lily of this.lilys) {
+      lily.mesh.position.z = offset;
+    }
+    for (let tree of this.trees) {
+      tree.position.z = offset;
     }
 
-    for (i = 0; i < 40; i++) {
 
+    for (i = 0; i < 40; i++) {
       this.cars[i].mesh.position.z = offset;
       this.cars[i].speed = 0;
-
       this.logs[i].mesh.position.z = offset;
       this.logs[i].speed = 0;
     }
@@ -415,7 +438,7 @@ class Game extends Component {
     }
 
     if (this.rowCount < 10) {
-      rowKind = 5;
+      rowKind = -2;
 
       if (this.rowCount < 5) {
         rowKind = -1;
@@ -443,19 +466,31 @@ class Game extends Component {
     //
     //   this.grassCount++;
     // } else {
-    switch (rowKind || Math.floor(Math.random() * 3) + 1) {
+
+
+    let rk = rowKind || Math.floor(Math.random() * 5) + 1;
+
+
+
+    switch (rk) {
+
+      case -2:
+      this.grass[this.grassCount].position.z = this.rowCount;
+      this.floorMap[`${this.rowCount}`] = 'grass';
+      this.treeGen(false, true);
+      this.grassCount++;
+      this.lastRk = rk;
+
+      break;
       case -1:
       this.grass[this.grassCount].position.z = this.rowCount;
       this.floorMap[`${this.rowCount}`] = 'grass';
       this.treeGen(true);
       this.grassCount++;
+      this.lastRk = rk;
+
       break;
-      case 5:
-      this.grass[this.grassCount].position.z = this.rowCount;
-      this.floorMap[`${this.rowCount}`] = 'grass';
-      this.treeGen(false, true);
-      this.grassCount++;
-      break;
+
 
       case 1:
       this.grass[this.grassCount].position.z = this.rowCount;
@@ -463,6 +498,8 @@ class Game extends Component {
       this.treeGen();
 
       this.grassCount++;
+      this.lastRk = rk;
+
       break;
 
       case 2:
@@ -479,24 +516,55 @@ class Game extends Component {
 
       // this.scene.add(road);
       this.roadCount++;
+      this.lastRk = rk;
+
       break;
 
       case 3:
-      this.logGen();
-      this.water[this.waterCount].position.z = this.rowCount;
-      this.floorMap[`${this.rowCount}`] = 'water';
-      this.waterCount++;
+      this.generateLogRow();
+      this.lastRk = rk;
+
       break;
       case 4:
       this.railRoad[this.railRoadCount].position.z = this.rowCount;
       this.floorMap[`${this.rowCount}`] = 'railRoad';
       this.railRoadCount++;
+      this.lastRk = rk;
+
+      break;
+
+      case 5:
+      if (this.lastRk === 5) {
+          this.generateLogRow();
+          this.lastRk = 3;
+      } else {
+        this.generateLilyRow();
+        this.lastRk = rk;
+
+      }
+
       break;
     }
     // }
     this.rowCount++;
 
   }
+
+  generateLogRow = () => {
+    this.logGen();
+    this.water[this.waterCount].position.z = this.rowCount;
+    this.floorMap[`${this.rowCount}`] = 'log';
+    this.waterCount++;
+  }
+
+  generateLilyRow = () => {
+    this.lilyGen();
+    this.water[this.waterCount].position.z = this.rowCount;
+    this.floorMap[`${this.rowCount}`] = 'lily';
+    this.waterCount++;
+
+  }
+
 
   treeGen = (isFull = false, isEmpty = false) => {
     // 0 - 8
@@ -583,6 +651,25 @@ class Game extends Component {
       xPos -= 5 * xDir;
     }
   }
+
+lilyGen = () => {
+  // Speeds: .01 through .08
+  // Number of cars: 1 through 3
+  this.numLilys = Math.floor(Math.random() * (2 - 1)) + 1;
+
+  /// Screen Range = -4:4
+  /// Item Range = -3:3
+  let xPos = ((Math.random() * 6) + -3); /// 1 - 7;
+
+  for (x = 0; x < this.numLilys; x++) {
+    if (this.lilyCount < 19) {
+      this.lilyCount++;
+    } else {
+      this.lilyCount = 0;
+    }
+    this.lilys[this.lilyCount].mesh.position.set(xPos, 0.125, this.rowCount);
+  }
+}
 
   logGen = () => {
     // Speeds: .01 through .08
@@ -691,7 +778,7 @@ class Game extends Component {
       }
 
       //Move Logs
-      if (this.floorMap[`${this.logs[d].mesh.position.z|0}`] === 'water') {
+      if (this.floorMap[`${this.logs[d].mesh.position.z|0}`] === 'log') {
 
         this.logs[d].mesh.position.x += this.logs[d].speed;
 
@@ -770,6 +857,26 @@ class Game extends Component {
 
   }
 
+  bounceLily = mesh => {
+    let timing = 0.2;
+    TweenMax.to(mesh.position, timing * 0.9, {
+      y: 0.01,
+    });
+
+    TweenMax.to(mesh.position, timing, {
+      y: 0.125,
+      delay: timing
+    });
+
+    TweenMax.to(this._hero.position, timing * 0.9, {
+      y: groundLevel + -0.125,
+    });
+
+    TweenMax.to(this._hero.position, timing, {
+      y: groundLevel,
+      delay: timing
+    });
+  }
 
   bounceLog = mesh => {
     let timing = 0.2;
@@ -812,6 +919,26 @@ class Game extends Component {
     this.initialPosition.x = target;
   }
 
+lilyCollision = () => {
+  if (this.gameState != State.Game.playing) {
+    this.onLily = null;
+    return
+  }
+  for (let l = 0; l < this.lilys.length; l++) {
+    let lily = this.lilys[l];
+    if (this._hero.position.z == lily.mesh.position.z) {
+      const {collisionBox, mesh} = lily;
+      const lilyX = mesh.position.x;
+      const heroX = this._hero.position.x;
+
+      if (heroX < lilyX + collisionBox && heroX > lilyX - collisionBox) {
+        this.onLily = lily;
+        this.bounceLily(mesh);
+        return;
+      }
+    }
+  }
+}
 
   logCollision = () => {
     if (this.gameState != State.Game.playing) {
@@ -840,31 +967,46 @@ class Game extends Component {
   }
 
   waterCollision = () => {
+    let currentRow = this.floorMap[`${this._hero.position.z|0}`];
+    if (currentRow === 'log' && this.onLog === false) {
+      if (this.gameState == State.Game.playing) {
+        this.useParticle(this._hero, 'water');
+        this.rumbleScreen()
+        this.gameOver();
+      } else {
+        let y = Math.sin(this.sineCount) * .08 - .2;
+        this.sineCount += this.sineInc;
+        this._hero.position.y = y;
 
-    if (this.onLog === false) {
-      for (w = 0; w < this.water.length; w++) {
-        if (this._hero.position.z == this.water[w].position.z) {
-
-          if (this.gameState == State.Game.playing) {
-            this.useParticle(this._hero, 'water');
-            this.rumbleScreen()
-            this.gameOver();
-          } else {
-
-            let y = Math.sin(this.sineCount) * .08 - .2;
-            this.sineCount += this.sineInc;
-            this._hero.position.y = y;
-
-            for (w = 0; w < this.logs.length; w++) {
-              if (this._hero.position.z == this.logs[w].mesh.position.z) {
-                this._hero.position.x += this.logs[w].speed / 3;
-              }
-            }
+        for (w = 0; w < this.logs.length; w++) {
+          if (this._hero.position.z == this.logs[w].mesh.position.z) {
+            this._hero.position.x += this.logs[w].speed / 3;
           }
-          return;
         }
       }
     }
+    if (currentRow === 'lily' && !this.onLily) {
+
+      if (this.gameState == State.Game.playing) {
+        this.useParticle(this._hero, 'water');
+        this.rumbleScreen()
+        this.gameOver();
+      } else {
+
+        // let y = Math.sin(this.sineCount) * .08 - .2;
+        // this.sineCount += this.sineInc;
+        this._hero.position.y -= 0.001;
+
+        // for (w = 0; w < this.logs.length; w++) {
+        //   if (this._hero.position.z == this.logs[w].mesh.position.z) {
+        //     this._hero.position.x += this.logs[w].speed / 3;
+        //   }
+        // }
+      }
+
+    }
+
+
   }
 
   rumbleScreen = () => {
@@ -919,6 +1061,8 @@ class Game extends Component {
       this.moveUserOnLog();
       this.moveUserOnCar();
       this.logCollision();
+      this.lilyCollision();
+
       this.waterCollision();
 
       // this.checkIfUserHasFallenOutOfFrame();
@@ -998,7 +1142,8 @@ class Game extends Component {
       case SWIPE_UP:
       this._hero.rotation.y = 0;
       if (!this.treeCollision("up")) {
-        let shouldRound = this.floorMap[`${this.targetPosition.z + 1}`] !== "water"
+        const row = this.floorMap[`${this.targetPosition.z + 1}`]
+        let shouldRound = row !== "log" || row !== "lily"
         this.targetPosition = {x: this.initialPosition.x, y: this.initialPosition.y, z: this.initialPosition.z + 1};
         if (shouldRound) {
           // this.targetPosition.x = Math.floor(this.targetPosition.x);
@@ -1010,7 +1155,8 @@ class Game extends Component {
       case SWIPE_DOWN:
       this._hero.rotation.y = Math.PI
       if (!this.treeCollision("down")) {
-        let shouldRound = this.floorMap[`${this.targetPosition.z - 1}`] !== "water"
+        const row = this.floorMap[`${this.targetPosition.z - 1}`]
+        let shouldRound = row !== "log" || row !== "lily"
         this.targetPosition = {x: this.initialPosition.x, y: this.initialPosition.y, z: this.initialPosition.z - 1};
         if (shouldRound) {
           // this.targetPosition.x = Math.floor(this.targetPosition.x);
@@ -1038,6 +1184,8 @@ class Game extends Component {
     //
     // }
     let delta = {x: (targetPosition.x - initialPosition.x), y: targetPosition.y - initialPosition.y, z: targetPosition.z - initialPosition.z}
+
+    this.onLily = null;
 
     this.onLog = false;
     this.currentLog = null;
