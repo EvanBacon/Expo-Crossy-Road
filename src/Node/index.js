@@ -7,6 +7,8 @@ import RailRoad from './RailRoad'
 import River from './River'
 import Road from './Road'
 import Train from './Train'
+import TrainLight from './TrainLight'
+
 import Tree from './Tree'
 import LilyPad from './LilyPad'
 export default {
@@ -15,6 +17,7 @@ export default {
   Grass,
   Hero,
   Log,
+  TrainLight,
   RailRoad,
   River,
   Road,

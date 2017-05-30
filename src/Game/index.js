@@ -33,6 +33,9 @@ const groundLevel = 0.4;
 const sceneColor = 0x6dceea;
 const startingRow = 8;
 
+import Rows from '../Row';
+
+
 const AnimatedGestureRecognizer = Animated.createAnimatedComponent(GestureRecognizer);
 
 @connectGameState
@@ -419,7 +422,7 @@ class Game extends Component {
 
     this.trains.map(val => {
       val.mesh.position.z = offset;
-      val.speed = 0.6;
+      val.speed = 0.1;
     })
 
     for (i = 0; i < 40; i++) {

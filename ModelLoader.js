@@ -1,5 +1,6 @@
 
 import Node from './src/Node';
+//a
 const {
   Hero,
   Car,
@@ -11,6 +12,7 @@ const {
   Train,
   Boulder,
   RailRoad,
+  TrainLight,
   LilyPad
 } = Node;
 
@@ -22,6 +24,7 @@ class ModelLoader {
   }
 
   loadModels = async () => {
+    //b
     this._lilyPad = new LilyPad();
     this._grass = new Grass();
     this._road = new Road();
@@ -31,10 +34,12 @@ class ModelLoader {
     this._car = new Car();
     this._railroad = new RailRoad();
     this._train = new Train();
+    this._trainLight = new TrainLight();
     this._log = new Log();
     this._hero = new Hero();
 
     try {
+      //c
       await Promise.all([
         this._lilyPad.setup(),
         this._road.setup(),
@@ -46,7 +51,8 @@ class ModelLoader {
         this._car.setup(),
         this._railroad.setup(),
         this._train.setup(),
-        this._hero.setup()
+        this._hero.setup(),
+        this._trainLight.setup(),
       ]);
       console.log("Done Loading 3D Models!");
     } catch(error) {
