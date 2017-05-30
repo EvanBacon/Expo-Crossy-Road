@@ -170,10 +170,11 @@ class Game extends Component {
   loadModels = async () => {
     console.log("Some Extracting 3D Models! ", _grass, _road);
 
-    const {_grass, _road, _river, _tree, _car, _railroad, _train, _log, _hero} = modelLoader;
+    const {_grass, _road, _river,_boulder, _tree, _car, _railroad, _train, _log, _hero} = modelLoader;
     this._grass = _grass;
     this._road = _road;
     this._river = _river;
+    this._boulder = _boulder;
     this._tree = _tree;
     this._car = _car;
     this._railroad = _railroad;
@@ -246,6 +247,7 @@ class Game extends Component {
 
 
     // Mesh
+    console.warn(this.props.character.id)
     this._hero = this.hero.getNode(this.props.character.id);
     this.scene.add(this._hero);
 
@@ -331,10 +333,10 @@ class Game extends Component {
     this.stopIdle();
 
     const s = 0.8;
-        this.idleAnimation = new TimelineMax({repeat: -1});
-this.idleAnimation
-  .to(this._hero.scale, 0.3, {x:1,y:s,z:0.9, ease:Power1.easeIn})
-  .to(this._hero.scale, 0.6, {x:1,y:1,z:1, ease:Power1.easeOut})
+    this.idleAnimation = new TimelineMax({repeat: -1});
+    this.idleAnimation
+    .to(this._hero.scale, 0.3, {x:1,y:s,z:0.9, ease:Power1.easeIn})
+    .to(this._hero.scale, 0.6, {x:1,y:1,z:1, ease:Power1.easeOut})
 
 
   }
@@ -442,56 +444,56 @@ this.idleAnimation
     //
     //   this.grassCount++;
     // } else {
-      switch (rowKind || Math.floor(Math.random() * 3) + 1) {
-        case -1:
-        this.grass[this.grassCount].position.z = this.rowCount;
-        this.floorMap[`${this.rowCount}`] = 'grass';
-        this.treeGen(true);
-        this.grassCount++;
-        break;
-        case 5:
-        this.grass[this.grassCount].position.z = this.rowCount;
-        this.floorMap[`${this.rowCount}`] = 'grass';
-        this.treeGen(false, true);
-        this.grassCount++;
-        break;
+    switch (rowKind || Math.floor(Math.random() * 3) + 1) {
+      case -1:
+      this.grass[this.grassCount].position.z = this.rowCount;
+      this.floorMap[`${this.rowCount}`] = 'grass';
+      this.treeGen(true);
+      this.grassCount++;
+      break;
+      case 5:
+      this.grass[this.grassCount].position.z = this.rowCount;
+      this.floorMap[`${this.rowCount}`] = 'grass';
+      this.treeGen(false, true);
+      this.grassCount++;
+      break;
 
-        case 1:
-        this.grass[this.grassCount].position.z = this.rowCount;
-        this.floorMap[`${this.rowCount}`] = 'grass';
-        this.treeGen();
+      case 1:
+      this.grass[this.grassCount].position.z = this.rowCount;
+      this.floorMap[`${this.rowCount}`] = 'grass';
+      this.treeGen();
 
-        this.grassCount++;
-        break;
+      this.grassCount++;
+      break;
 
-        case 2:
-        this.carGen();
+      case 2:
+      this.carGen();
 
-        let isMultiLane = rowKind ? true : false;
-        // if (Math.floor(Math.random() * (2 - 1)) == 1) {
-        //   this.newRow(2);
-        // }
+      let isMultiLane = rowKind ? true : false;
+      // if (Math.floor(Math.random() * (2 - 1)) == 1) {
+      //   this.newRow(2);
+      // }
 
-        // let road = this._road.getNode(!isMultiLane ? "0" : "1");
-        this.road[this.roadCount].position.z = this.rowCount;
-        this.floorMap[`${this.rowCount}`] = 'road';
+      // let road = this._road.getNode(!isMultiLane ? "0" : "1");
+      this.road[this.roadCount].position.z = this.rowCount;
+      this.floorMap[`${this.rowCount}`] = 'road';
 
-        // this.scene.add(road);
-        this.roadCount++;
-        break;
+      // this.scene.add(road);
+      this.roadCount++;
+      break;
 
-        case 3:
-        this.logGen();
-        this.water[this.waterCount].position.z = this.rowCount;
-        this.floorMap[`${this.rowCount}`] = 'water';
-        this.waterCount++;
-        break;
-        case 4:
-        this.railRoad[this.railRoadCount].position.z = this.rowCount;
-        this.floorMap[`${this.rowCount}`] = 'railRoad';
-        this.railRoadCount++;
-        break;
-      }
+      case 3:
+      this.logGen();
+      this.water[this.waterCount].position.z = this.rowCount;
+      this.floorMap[`${this.rowCount}`] = 'water';
+      this.waterCount++;
+      break;
+      case 4:
+      this.railRoad[this.railRoadCount].position.z = this.rowCount;
+      this.floorMap[`${this.rowCount}`] = 'railRoad';
+      this.railRoadCount++;
+      break;
+    }
     // }
     this.rowCount++;
 
@@ -631,13 +633,13 @@ this.idleAnimation
           this.hitByCar = car;
 
 
-                    TweenMax.to(this._hero.scale, 0.3, {
-                      y: 1.5,
-                      z: 0.2,
-                    });
-                    TweenMax.to(this._hero.rotation, 0.3, {
-                      z: (Math.random() * Math.PI) - Math.PI/2,
-                    });
+          TweenMax.to(this._hero.scale, 0.3, {
+            y: 1.5,
+            z: 0.2,
+          });
+          TweenMax.to(this._hero.rotation, 0.3, {
+            z: (Math.random() * Math.PI) - Math.PI/2,
+          });
 
         } else {
 
@@ -672,22 +674,22 @@ this.idleAnimation
 
       if (this.floorMap[`${this.cars[d].mesh.position.z|0}`] === 'road') {
 
-      this.cars[d].mesh.position.x += this.cars[d].speed;
+        this.cars[d].mesh.position.x += this.cars[d].speed;
 
-      if (this.cars[d].mesh.position.x > 11 && this.cars[d].speed > 0) {
-        this.cars[d].mesh.position.x = -11;
-        if (this.cars[d] === this.hitByCar) {
-          this.hitByCar = null;
+        if (this.cars[d].mesh.position.x > 11 && this.cars[d].speed > 0) {
+          this.cars[d].mesh.position.x = -11;
+          if (this.cars[d] === this.hitByCar) {
+            this.hitByCar = null;
+          }
+        } else if (this.cars[d].mesh.position.x < -11 && this.cars[d].speed < 0) {
+          this.cars[d].mesh.position.x = 11;
+          if (this.cars[d] === this.hitByCar) {
+            this.hitByCar = null;
+          }
+        } else if (!this.moving && this.gameState == State.Game.playing) {
+          this.carShouldCheckCollision(this.cars[d], this.cars[d].speed)
         }
-      } else if (this.cars[d].mesh.position.x < -11 && this.cars[d].speed < 0) {
-        this.cars[d].mesh.position.x = 11;
-        if (this.cars[d] === this.hitByCar) {
-          this.hitByCar = null;
-        }
-      } else if (!this.moving && this.gameState == State.Game.playing) {
-        this.carShouldCheckCollision(this.cars[d], this.cars[d].speed)
       }
-    }
 
       //Move Logs
       if (this.floorMap[`${this.logs[d].mesh.position.z|0}`] === 'water') {
@@ -808,7 +810,7 @@ this.idleAnimation
     let target = this.hitByCar.mesh.position.x;
     this._hero.position.x += this.hitByCar.speed;
     if (this.initialPosition)
-      this.initialPosition.x = target;
+    this.initialPosition.x = target;
   }
 
 
@@ -884,33 +886,15 @@ this.idleAnimation
 
   // Move scene forward
   forwardScene = () => {
-    // if (this.gameState === State.Game.playing) {
-      // if (Math.floor(this.camera.position.z) < this._hero.position.z - 4) {
-      //   // speed up camera to follow player
-      //   this.camera.position.z += .033;
-      //   if (this.camCount > 1.8) {
-      //     this.camCount = 0;
-      //     this.newRow();
-      //     this.newRow();
-      //     this.newRow();
-      //   } else {
-      //     this.camCount += this.camSpeed;
-      //   }
-      //
-      // } else {
-        const easing = 0.03;
-        this.camera.position.z += (((this._hero.position.z + 1) - this.camera.position.z) * easing);
-        this.camera.position.x =  Math.min(2, Math.max(-2, this.camera.position.x + (((this._hero.position.x) - this.camera.position.x) * easing)));
+    const easing = 0.03;
+    this.camera.position.z += (((this._hero.position.z + 1) - this.camera.position.z) * easing);
+    this.camera.position.x =  Math.min(2, Math.max(-2, this.camera.position.x + (((this._hero.position.x) - this.camera.position.x) * easing)));
 
-        // normal camera speed
-        if (this.camera.position.z - this.camCount > 1.0) {
-          this.camCount = this.camera.position.z;
-          this.newRow();
-        } else {
-          // this.camCount += this.camSpeed;
-        }
-      // }
-    // }
+    // normal camera speed
+    if (this.camera.position.z - this.camCount > 1.0) {
+      this.camCount = this.camera.position.z;
+      this.newRow();
+    }
   }
 
   // Reset variables, restart game
@@ -1161,13 +1145,13 @@ this.idleAnimation
             />}
           </TouchableWithoutFeedback>
         </AnimatedGestureRecognizer>
-    );
-  }
+      );
+    }
 
-  render() {
+    render() {
 
-    return (
-      <View style={[{flex: 1, backgroundColor: '#6dceea'}, this.props.style]}>
+      return (
+        <View style={[{flex: 1, backgroundColor: '#6dceea'}, this.props.style]}>
 
           {this.renderGame()}
 

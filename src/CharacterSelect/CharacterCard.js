@@ -4,7 +4,6 @@ import { Constants } from 'expo';
 
 import Button from '../Button';
 import Images from '../../Images';
-import RetroText from '../RetroText';
 import Carousel from './Carousel';
 
 import Expo from 'expo'
@@ -12,8 +11,7 @@ import {TweenMax, Power2, TimelineLite} from "gsap";
 import * as THREE from 'three'
 // import createTHREEViewClass from '../createTHREEViewClass';
 const THREEView = Expo.createTHREEViewClass(THREE);
-const AnimatedText = Animated.createAnimatedComponent(RetroText)
-const size = 200;
+const size = 150;
 import {modelLoader} from '../../main';
 import Node from '../Node';
 const {
@@ -76,7 +74,6 @@ export default class CharacterCard extends Component {
       <View pointerEvents={'none'}  style={styles.container}>
         <View style={{backgroundColor: 'transparent', flex: 1}}>
 
-        <AnimatedText style={{opacity: this.props.opacity, backgroundColor: 'transparent', textAlign: 'center', color: 'white', fontSize: 24}}>{this.props.name}</AnimatedText>
       {Expo.Constants.isDevice && <THREEView
           backgroundColorAlpha={0}
           style={{ flex: 1}}

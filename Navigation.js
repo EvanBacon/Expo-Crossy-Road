@@ -69,10 +69,7 @@ class AppWithNavigationState extends React.Component {
           outputRange: [0, 1]
         })
       }]} />
-      {gameState != State.Game.playing &&
-        <App navigation={navigation}
-        />
-      }
+
       {gameState == State.Game.none &&
         <View pointerEvents="none" style={[StyleSheet.absoluteFill, {justifyContent: 'center', alignItems: 'center'}]}>
         <Animated.Image source={Images.title} style={{width: 322, height: 186, resizeMode: 'contain', transform: [
@@ -91,6 +88,12 @@ class AppWithNavigationState extends React.Component {
         ]}}/>
         </View>
       }
+
+      {gameState != State.Game.playing &&
+        <App navigation={navigation}
+        />
+      }
+      
       </View>
     )
   }

@@ -23,6 +23,7 @@ class ModelLoader {
     this._grass = new Grass();
     this._road = new Road();
     this._river = new River();
+    this._boulder = new Boulder();
     this._tree = new Tree();
     this._car = new Car();
     this._railroad = new RailRoad();
@@ -36,7 +37,7 @@ class ModelLoader {
         this._grass.setup(),
         this._river.setup(),
         this._log.setup(),
-
+        this._boulder.setup(),
         this._tree.setup(),
         this._car.setup(),
         this._railroad.setup(),

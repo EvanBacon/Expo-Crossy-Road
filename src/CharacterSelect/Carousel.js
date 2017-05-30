@@ -10,7 +10,8 @@ import Characters from '../../Characters';
 
 const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 
-const width = 200;
+const width = 150;
+const AnimatedText = Animated.createAnimatedComponent(RetroText)
 
 
 export default class Carousel extends Component {
@@ -22,7 +23,8 @@ export default class Carousel extends Component {
     {useNativeDriver: true},
   );
   state = {
-    keys: []
+    keys: [],
+    selected: 0
   }
   componentWillMount() {
     this.scroll.addListener(this.onAnimationUpdate);
@@ -41,8 +43,9 @@ export default class Carousel extends Component {
   onAnimationUpdate = ({value}) => this.scrollOffset = value;
 
   renderItem = ({item, index}) => {
-    const inset = width*0.66;
-    const inputRange = [(index * width) -  width,(index * width),(index * width) + width];
+    const inset = width*0.75;
+    const offset = (index * width);
+    const inputRange = [offset -  width,offset,offset + width];
     return (
       <Animated.View
         style={{
@@ -52,14 +55,14 @@ export default class Carousel extends Component {
             {
               scale: this.scroll.interpolate({
                 inputRange,
-                outputRange: [0.5, 1, 0.5],
+                outputRange: [0.3, 1, 0.3],
                 extrapolate: 'clamp'
               })
             },
             {
               translateX: this.scroll.interpolate({
-                inputRange,
-                outputRange: [-inset, 0, inset],
+                inputRange: [offset - (width * 2), offset - width, offset, offset + width, offset + (width * 2)],
+                outputRange: [-inset * 3,-inset, 0, inset, inset * 3],
               })
             }
           ]
@@ -75,14 +78,18 @@ export default class Carousel extends Component {
 }
 
 momentumScrollEnd = () => {
-  this.props.onCurrentIndexChange(Math.floor(this.scrollOffset/width))
+  const selected = Math.floor(this.scrollOffset/width);
+  this.setState({selected})
+  this.props.onCurrentIndexChange(selected)
 }
 
 
 
 render() {
-  const {keys} = this.state
-  return (<AnimatedFlatList
+  const {keys,selected} = this.state
+  return (<View style={{flex: 1}}>
+    <AnimatedText style={{opacity: 1, backgroundColor: 'transparent', textAlign: 'center', color: 'white', fontSize: 24}}>{Characters[keys[selected]].name}</AnimatedText>
+    <AnimatedFlatList
     style={styles.container}
     horizontal={true}
     showsHorizontalScrollIndicator={false}
@@ -104,6 +111,7 @@ render() {
     snapToInterval={width}
 
     data={keys}/>
+</View>
 )
 }
 }
