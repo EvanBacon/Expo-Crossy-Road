@@ -64,7 +64,7 @@ export class AppNavigator {
 
 console.log(navigator);
 
-const initialState = router.router.getStateForAction(router.router.getActionForPathAndParams('GameOver'));
+const initialState = router.router.getStateForAction(router.router.getActionForPathAndParams('Home'));
 
 export default (state = initialState, action) => {
   const nextState = router.router.getStateForAction(action, state);

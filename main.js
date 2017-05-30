@@ -12,21 +12,39 @@ import {THREE} from './utils/THREEglobal'
 
 import configureStore from './store';
 import AppWithNavigationState from './Navigation'
-import {persistStore} from 'redux-persist'
+import {persistStore, createTransform} from 'redux-persist'
 export const store = configureStore()
 
 import ModelLoader from './ModelLoader';
 export const modelLoader = new ModelLoader();
 
+import State from './state'
+const gameTransform = createTransform(
+  (inboundState, key) => {
+    return {
+      ...inboundState,
+      gameState: State.Game.none
+    }
+  },
+  (outboundState, key) => {
+    return outboundState
+  },
+  { whitelist: [`game`] }
+)
+
+
 const storeSettings = {
   storage: AsyncStorage,
-  // blacklist: ['nav'],
-  whitelist: [`nav`]
+  blacklist: [ `nav`],
+  transforms: [
+    gameTransform
+  ]
+  // whitelist: [ `game`, `character`]
 }
 
-export const persister = persistStore(store, storeSettings)
+// export const persister = persistStore(store, storeSettings)
 class Root extends React.Component {
-
+  persister;
   state = {
     appIsReady: false,
     rehydrated: false,
@@ -35,10 +53,12 @@ class Root extends React.Component {
   componentWillMount() {
     this._loadAssetsAsync();
 
-    persistStore(store, storeSettings, () => {
+    this.persister = persistStore(store, storeSettings, () => {
       console.log("Rehydrated");
-       this.setState({ rehydrated: true })
-    });
+      console.warn(JSON.stringify(store.getState()))
+      this.setState({ rehydrated: true })
+
+    }).purge(['nav']);
   }
 
   async _loadAssetsAsync() {
@@ -68,7 +88,7 @@ class Root extends React.Component {
       return (
         <Provider
           store={store}
-          persister={persister}
+          persister={this.persister}
           >
           <AppWithNavigationState dispatch={store.dispatch}/>
         </Provider>

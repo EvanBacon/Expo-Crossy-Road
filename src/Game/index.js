@@ -247,14 +247,13 @@ class Game extends Component {
 
 
     // Mesh
-    console.warn(this.props.character.id)
+    // console.warn(this.props.character.id)
     this._hero = this.hero.getNode(this.props.character.id);
     this.scene.add(this._hero);
 
 
     this.railRoad[0] = this._railroad.getRandom();
     this.road[0] = this._road.getRandom();
-    // this.trees[0] = this._tree.getRandom();
 
     let _carMesh = this._car.getRandom();
     let _carWidth = this.getDepth(_carMesh);
@@ -265,7 +264,7 @@ class Game extends Component {
     let _logWidth = this.getWidth(_logMesh);
     this.logs[0] = {mesh: _logMesh, width: _logWidth, collisionBox: (this.heroWidth / 2 + _logWidth / 2 - .1) };
 
-    // this.trees[0].position.set(0, .5, -30);
+
     this.cars[0].mesh.position.set(0, .25, -30);
     this.cars[0].mesh.rotation.set(0, 0,0);
 
@@ -300,7 +299,7 @@ class Game extends Component {
 
     // Repeat above for terrain objects
     for (i = 0; i < 100; i++) {
-      this.trees[i] = this._tree.getRandom();
+      this.trees[i] = ((Math.random() * 3)|0) == 0 ? this._boulder.getRandom() : this._tree.getRandom();
       this.scene.add(this.trees[i]);
     }
 
