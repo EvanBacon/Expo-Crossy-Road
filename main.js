@@ -55,10 +55,9 @@ class Root extends React.Component {
 
     this.persister = persistStore(store, storeSettings, () => {
       console.log("Rehydrated");
-      console.warn(JSON.stringify(store.getState()))
+      // console.warn(JSON.stringify(store.getState()))
       this.setState({ rehydrated: true })
-
-    }).purge(['nav']);
+    }).purge(['nav']); /// Just in case ;)
   }
 
   async _loadAssetsAsync() {

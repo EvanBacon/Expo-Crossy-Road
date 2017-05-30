@@ -136,4 +136,17 @@ export default {
     texture: require('./assets/models/boulder_1/texture.png'),
   },
 
+
+  train_light_active_0: {
+    model: require('./assets/models/train_light_active_0/model.obj'),
+    texture: require('./assets/models/train_light_active_0/texture.png'),
+  },
+  train_light_active_1: {
+    model: require('./assets/models/train_light_active_1/model.obj'),
+    texture: require('./assets/models/train_light_active_1/texture.png'),
+  },
+  train_light_inactive: {
+    model: require('./assets/models/train_light_inactive/model.obj'),
+    texture: require('./assets/models/train_light_inactive/texture.png'),
+  },
 }

@@ -73,6 +73,8 @@ class Game extends Component {
     switch (gameState) {
       case playing:
       this.stopIdle();
+      this.onSwipe(swipeDirections.SWIPE_UP, {});
+
       break;
       case gameOver:
 
@@ -225,12 +227,16 @@ class Game extends Component {
     this.lilys = [],
     this.lilyCount = 0; // Terrain objects
 
+    this.trains = [],
+    this.trainsCount = 0; //
+
     this.cars = [],
     this.carCount = 0; //
 
     this.onLily = null;
     this.onLog = true;
     this.hitByCar = null;
+    this.hitByTrain = null;
     this.lastHeroZ = 8;
 
     this.rowCount = 0;
@@ -322,6 +328,14 @@ class Game extends Component {
 
     }
 
+    for (let i = 0; i < 10; i++) {
+      let mesh = this._train.withSize(3);
+      let width = this.getDepth(mesh);
+      this.trains[i] = {mesh, width, collisionBox: (this.heroWidth / 2 + width / 2 - .1) };
+      this.scene.add(mesh);
+
+    }
+
 
     for (i = 0; i < 40; i++) {
       let _carMesh = this._car.getRandom();
@@ -380,6 +394,7 @@ class Game extends Component {
     this.treeCount = 0;
     this.rowCount = 0;
     this.hitByCar = null;
+    this.hitByTrain = null;
     this.lastHeroZ = 8;
     this.floorMap = {};
 
@@ -402,6 +417,10 @@ class Game extends Component {
       tree.position.z = offset;
     }
 
+    this.trains.map(val => {
+      val.mesh.position.z = offset;
+      val.speed = 0.6;
+    })
 
     for (i = 0; i < 40; i++) {
       this.cars[i].mesh.position.z = offset;
@@ -526,6 +545,7 @@ class Game extends Component {
 
       break;
       case 4:
+      this.trainGen();
       this.railRoad[this.railRoadCount].position.z = this.rowCount;
       this.floorMap[`${this.rowCount}`] = 'railRoad';
       this.railRoadCount++;
@@ -599,11 +619,11 @@ class Game extends Component {
     this.trees[treeIndex].position.set(x, y, z);
   }
 
+
   trainGen = () => {
     // Speeds: .01 through .08
     // Number of cars: 1 through 3
-    this.speed = .08
-    this.numCars = Math.floor(Math.random() * (4 - 2)) + 2;
+    this.numTrains = Math.floor(Math.random() * (4 - 2)) + 2;
     xDir = 1;
 
     if (Math.random() > .5) {
@@ -612,15 +632,19 @@ class Game extends Component {
 
     xPos = -6 * xDir;
 
+    for (x = 0; x < this.numTrains; x++) {
+      if (this.trainCount < 39) {
+        this.trainCount++;
+      } else {
+        this.trainCount = 0;
+      }
 
-    let train = this._train.withSize(this.numCars);
-    this.scene.add(train);
-    train.position.set(xPos, .25, this.rowCount);
-    // this.trainSpeed[this.carCount] = this.speed * xDir;
+      this.trains[this.trainCount].mesh.position.set(xPos, .25, this.rowCount);
+      this.trains[this.trainCount].speed *= xDir;
+      this.trains[this.trainCount].mesh.rotation.y = (Math.PI) * xDir;
 
-    this.train.rotation.y = (Math.PI / 2) * xDir;
-
-    xPos -= 5 * xDir;
+      xPos -= 5 * xDir;
+    }
   }
 
   carGen = () => {
@@ -702,6 +726,62 @@ lilyGen = () => {
     }
   }
 
+
+  trainShouldCheckCollision = (train, speed) => {
+    if (Math.round(this._hero.position.z) == train.mesh.position.z) {
+
+      const {collisionBox} = train;
+
+      if (this._hero.position.x < train.mesh.position.x + collisionBox && this._hero.position.x > train.mesh.position.x - collisionBox) {
+        // console.log(this._hero.position.z, this.lastHeroZ);
+        if (this._hero.position.z != this.lastHeroZ) {
+
+          const forward = this._hero.position.z < this.lastHeroZ;
+          // this._hero.scale.z = 0.2;
+          // this._hero.scale.y = 1.5;
+          // this._hero.rotation.z = (Math.random() * Math.PI) - Math.PI/2;
+          this._hero.position.z = train.mesh.position.z + (forward ? 0.52 : -0.52);
+
+          this.hitByTrain = train;
+
+
+          TweenMax.to(this._hero.scale, 0.3, {
+            y: 1.5,
+            z: 0.2,
+          });
+          TweenMax.to(this._hero.rotation, 0.3, {
+            z: (Math.random() * Math.PI) - Math.PI/2,
+          });
+
+        } else {
+
+          ///Run Over Hero. ///TODO: Add a side collide
+          // this._hero.scale.y = 0.2;
+          // this._hero.scale.x = 1.5;
+          // this._hero.rotation.y = (Math.random() * Math.PI) - Math.PI/2;
+          this._hero.position.y = groundLevel;
+
+
+          TweenMax.to(this._hero.scale, 0.3, {
+            y: 0.2,
+            x: 1.5,
+          });
+          TweenMax.to(this._hero.rotation, 0.3, {
+            y: (Math.random() * Math.PI) - Math.PI/2,
+          });
+
+        }
+        this.useParticle(this._hero, 'feathers', speed);
+        this.rumbleScreen()
+
+        this.gameOver();
+      }
+    }
+
+  }
+
+
+
   carShouldCheckCollision = (car, speed) => {
     if (Math.round(this._hero.position.z) == car.mesh.position.z) {
 
@@ -757,6 +837,30 @@ lilyGen = () => {
 
   // Animate cars/logs
   drive = () => {
+
+    for (let train of this.trains) {
+      const offset = 11 * 5;
+            if (this.floorMap[`${train.mesh.position.z|0}`] === 'railRoad') {
+
+              train.mesh.position.x += train.speed;
+
+              if (train.mesh.position.x > offset && train.speed > 0) {
+                train.mesh.position.x = -offset;
+                if (train === this.hitByTrain) {
+                  this.hitByTrain = null;
+                }
+              } else if (train.mesh.position.x < -offset && train.speed < 0) {
+                train.mesh.position.x = offset;
+                if (train === this.hitByTrain) {
+                  this.hitByTrain = null;
+                }
+              } else if (!this.moving && this.gameState == State.Game.playing) {
+                this.trainShouldCheckCollision(train, train.speed)
+              }
+            }
+    }
+
+
     for (d = 0; d < this.cars.length; d++) {
 
       if (this.floorMap[`${this.cars[d].mesh.position.z|0}`] === 'road') {
@@ -792,6 +896,9 @@ lilyGen = () => {
 
     }
   }
+
+
+
 
   // Detect collisions with trees/cars
   treeCollision = (dir) => {
@@ -848,6 +955,44 @@ lilyGen = () => {
 
           this.gameOver();
           this.useParticle(this._hero, 'feathers', this.cars[c].speed);
+          this.rumbleScreen()
+
+
+        }
+      }
+    }
+    this.lastHeroZ = this._hero.position.z;
+
+  }
+
+  trainCollision = () => {
+    if (this.gameState != State.Game.playing || this.hitByTrain) {
+      return
+    }
+    for (let c = 0; c < this.trains.length; c++) {
+      if (Math.round(this._hero.position.z) == this.trains[c].mesh.position.z) {
+        let train = this.trains[c];
+
+        const {collisionBox} = train;
+
+        if (this._hero.position.x < this.trains[c].mesh.position.x + collisionBox && this._hero.position.x > this.trains[c].mesh.position.x - collisionBox) {
+          // console.log(this._hero.position.z, this.lastHeroZ);
+          if (this._hero.position.z != this.lastHeroZ) {
+
+            const forward = this._hero.position.z < this.lastHeroZ;
+            this._hero.scale.z = 0.2;
+            this._hero.position.z = this.trains[c].mesh.position.z + (forward ? 0.52 : -0.52);
+            this.hitByTrain = this.trains[c];
+          } else {
+
+            ///Run Over Hero. ///TODO: Add a side collide
+            this._hero.scale.y = 0.2;
+            this._hero.position.y = groundLevel;
+
+          }
+
+          this.gameOver();
+          this.useParticle(this._hero, 'feathers', this.trains[c].speed);
           this.rumbleScreen()
 
 
@@ -1071,7 +1216,7 @@ lilyCollision = () => {
     }
 
     this.carCollision();
-
+    this.trainCollision();
     this.forwardScene();
   }
 

@@ -84,6 +84,11 @@ export default THREE => class THREEView extends React.Component {
     gl.framebufferTexture2D = (target, attachment, textarget, texture, level) => {};
     gl.framebufferRenderbuffer = (target, attachmebt, renderbuffertarget, renderbuffer) => {};
 
+
+    var colorBuffer = gl.createRenderbuffer();
+    gl.bindRenderbuffer(gl.RENDERBUFFER, colorBuffer);
+
+
     let threeRendererOptions = {
       canvas: {
         width: gl.drawingBufferWidth,
