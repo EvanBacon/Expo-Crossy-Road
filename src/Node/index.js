@@ -1,3 +1,4 @@
+import Boulder from './Boulder'
 import Car from './Car'
 import Grass from './Grass'
 import Hero from './Hero'
@@ -17,5 +18,6 @@ export default {
   River,
   Road,
   Train,
-  Tree
+  Tree,
+  Boulder
 }

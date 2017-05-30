@@ -9,6 +9,7 @@ const {
   River,
   Tree,
   Train,
+  Boulder,
   RailRoad
 } = Node;
 
