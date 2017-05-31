@@ -48,7 +48,6 @@ class Game extends Component {
   sineCount = 0;
   sineInc = Math.PI / 50;
 
-  currentLog = null;
 
   componentWillReceiveProps(nextProps) {
 
@@ -234,9 +233,6 @@ class Game extends Component {
     this.trainsCount = 0; //
 
 
-    this.onLily = null;
-    this.onLog = true;
-
     this.lastHeroZ = 8;
 
     this.rowCount = 0;
@@ -260,13 +256,14 @@ class Game extends Component {
     //Custom Params
     this._hero.moving = false;
     this._hero.hitBy = null;
-
+    this._hero.ridingOn = null;
+    this._hero.ridingOnOffset = null;
     this.scene.add(this._hero);
 
     let _logMesh = this._log.getRandom();
     let _logWidth = this.getWidth(_logMesh);
-    this.logs[0] = {mesh: _logMesh, width: _logWidth, collisionBox: (this.heroWidth / 2 + _logWidth / 2 - .1) };
-    this.logs[0].mesh.position.set(0, -10.5, -30);
+    // this.logs[0] = {mesh: _logMesh, width: _logWidth, collisionBox: (this.heroWidth / 2 + _logWidth / 2 - .1) };
+    // this.logs[0].mesh.position.set(0, -10.5, -30);
 
     // Assign mesh to corresponding array
     // and add mesh to scene
@@ -275,12 +272,14 @@ class Game extends Component {
       this.grass[i].receiveShadow = true;
       this.grass[i].castShadow = false;
 
-      this.water[i] = this._river.getNode();
-      let foam = new Foam(THREE, 1);
-      foam.mesh.position.set(4.5,0.2,-0.5);
-      foam.mesh.visible = true;
-      foam.run();
-      this.water[i].add(foam.mesh);
+      // this.water[i] = this._river.getNode();
+      // let foam = new Foam(THREE, 1);
+      // foam.mesh.position.set(4.5,0.2,-0.5);
+      // foam.mesh.visible = true;
+      // foam.run();
+      // this.water[i].add(foam.mesh);
+
+      this.water[i] = new Rows.Water(this.heroWidth, this.onCollide); // this._railroad.getRandom();
 
       this.road[i] = new Rows.Road(this.heroWidth, this.onCollide); // this._railroad.getRandom();
       this.railRoads[i] = new Rows.RailRoad(this.heroWidth, this.onCollide); // this._railroad.getRandom();
@@ -323,23 +322,23 @@ class Game extends Component {
 
     }
 
-    for (i = 0; i < 40; i++) {
-      let _logMesh = this._log.getRandom();
-      let _logWidth = this.getWidth(_logMesh);
-      this.logs[i] = {mesh: _logMesh, width: _logWidth, collisionBox: (this.heroWidth / 2 + _logWidth / 2 - .1) };
-      this.scene.add(_logMesh);
-    }
+    // for (i = 0; i < 40; i++) {
+    //   let _logMesh = this._log.getRandom();
+    //   let _logWidth = this.getWidth(_logMesh);
+    //   this.logs[i] = {mesh: _logMesh, width: _logWidth, collisionBox: (this.heroWidth / 2 + _logWidth / 2 - .1) };
+    //   this.scene.add(_logMesh);
+    // }
 
 
     this.init();
   }
 
-  onCollide = (obstacle) => {
+  onCollide = (obstacle, type = 'feathers') => {
     if (this.gameState != State.Game.playing) {
       return;
     }
     this._hero.isAlive = false;
-    this.useParticle(this._hero, 'feathers', (obstacle || {}).speed || 0);
+    this.useParticle(this._hero, type, (obstacle || {}).speed || 0);
     this.rumbleScreen()
     this.gameOver();
   }
@@ -384,6 +383,8 @@ class Game extends Component {
     this.treeCount = 0;
     this.rowCount = 0;
     this._hero.hitBy = null;
+    this._hero.ridingOn = null;
+    this._hero.ridingOnOffset = null;
     this.lastHeroZ = 8;
     this.floorMap = {};
     this._hero.isAlive = true;
@@ -395,6 +396,8 @@ class Game extends Component {
 
 
       this.water[i].position.z = offset;
+      this.water[i].active = false;
+
       this.road[i].position.z = offset;
       this.road[i].active = false;
       this.railRoads[i].position.z = offset;
@@ -414,11 +417,11 @@ class Game extends Component {
       val.speed = 0.1;
     })
 
-    for (i = 0; i < 40; i++) {
-
-      this.logs[i].mesh.position.z = offset;
-      this.logs[i].speed = 0;
-    }
+    // for (i = 0; i < 40; i++) {
+    //
+    //   this.logs[i].mesh.position.z = offset;
+    //   this.logs[i].speed = 0;
+    // }
 
     this.treeGen();
     this.grass[this.grassCount].position.z = this.rowCount;
@@ -552,18 +555,23 @@ class Game extends Component {
   }
 
   generateLogRow = () => {
-    this.logGen();
+    // this.logGen();
+
     this.water[this.waterCount].position.z = this.rowCount;
+    this.water[this.waterCount].active = true;
     this.floorMap[`${this.rowCount}`] = 'log';
     this.waterCount++;
   }
 
   generateLilyRow = () => {
-    this.lilyGen();
+    // // this.lilyGen();
+    // this.water[this.waterCount].position.z = this.rowCount;
+    // this.floorMap[`${this.rowCount}`] = 'lily';
+    // this.waterCount++;
     this.water[this.waterCount].position.z = this.rowCount;
-    this.floorMap[`${this.rowCount}`] = 'lily';
+    this.water[this.waterCount].active = true;
+    this.floorMap[`${this.rowCount}`] = 'log';
     this.waterCount++;
-
   }
 
 
@@ -648,55 +656,55 @@ class Game extends Component {
     }
   }
 
-  logGen = () => {
-    // Speeds: .01 through .08
-    // Number of cars: 1 through 3
-    this.speed = (Math.floor(Math.random() * (6 - 2)) + 2) / 80;
-    this.numLogs = Math.floor(Math.random() * (4 - 3)) + 3;
-    xDir = 1;
-
-    if (Math.random() > .5) {
-      xDir = -1;
-    }
-    if (this.logs[this.logCount].speed == this.speed * xDir) {
-      this.speed /= 1.5;
-    }
-
-    xPos = -6 * xDir;
-
-    for (x = 0; x < this.numLogs; x++) {
-      if (this.logCount < 39) {
-        this.logCount++;
-      } else {
-        this.logCount = 0;
-      }
-
-      this.logs[this.logCount].mesh.position.set(xPos, -0.1, this.rowCount);
-      this.logs[this.logCount].speed = this.speed * xDir;
-
-      xPos -= 5 * xDir;
-    }
-  }
+  // logGen = () => {
+  //   // Speeds: .01 through .08
+  //   // Number of cars: 1 through 3
+  //   this.speed = (Math.floor(Math.random() * (6 - 2)) + 2) / 80;
+  //   this.numLogs = Math.floor(Math.random() * (4 - 3)) + 3;
+  //   xDir = 1;
+  //
+  //   if (Math.random() > .5) {
+  //     xDir = -1;
+  //   }
+  //   if (this.logs[this.logCount].speed == this.speed * xDir) {
+  //     this.speed /= 1.5;
+  //   }
+  //
+  //   xPos = -6 * xDir;
+  //
+  //   for (x = 0; x < this.numLogs; x++) {
+  //     if (this.logCount < 39) {
+  //       this.logCount++;
+  //     } else {
+  //       this.logCount = 0;
+  //     }
+  //
+  //     this.logs[this.logCount].mesh.position.set(xPos, -0.1, this.rowCount);
+  //     this.logs[this.logCount].speed = this.speed * xDir;
+  //
+  //     xPos -= 5 * xDir;
+  //   }
+  // }
 
   // Animate cars/logs
-  drive = () => {
-
-    for (d = 0; d < this.logs.length; d++) {
-
-    //Move Logs
-    if (this.floorMap[`${this.logs[d].mesh.position.z|0}`] === 'log') {
-
-      this.logs[d].mesh.position.x += this.logs[d].speed;
-
-      if (this.logs[d].mesh.position.x > 11 && this.logs[d].speed > 0) {
-        this.logs[d].mesh.position.x = -10;
-      } else if (this.logs[d].mesh.position.x < -11 && this.logs[d].speed < 0) {
-        this.logs[d].mesh.position.x = 10;
-      }
-    }
-
-  }
-}
+//   drive = () => {
+//
+//     for (d = 0; d < this.logs.length; d++) {
+//
+//     //Move Logs
+//     if (this.floorMap[`${this.logs[d].mesh.position.z|0}`] === 'log') {
+//
+//       this.logs[d].mesh.position.x += this.logs[d].speed;
+//
+//       if (this.logs[d].mesh.position.x > 11 && this.logs[d].speed > 0) {
+//         this.logs[d].mesh.position.x = -10;
+//       } else if (this.logs[d].mesh.position.x < -11 && this.logs[d].speed < 0) {
+//         this.logs[d].mesh.position.x = 10;
+//       }
+//     }
+//
+//   }
+// }
 
 
 
@@ -764,13 +772,13 @@ bounceLog = mesh => {
 }
 
 moveUserOnLog = () => {
-  if (!this.currentLog) {
+  if (!this._hero.ridingOn) {
     return;
   }
 
-  let target = this.logs[this.currentLog].mesh.position.x + this.currentLogSubIndex;
-  this._hero.position.x = target;
-  this.initialPosition.x = target;
+  // let target = this._hero.ridingOn.mesh.position.x + this._hero.ridingOnOffset;
+  this._hero.position.x += this._hero.ridingOn.speed;
+  this.initialPosition.x = this._hero.position.x;
 }
 
 moveUserOnCar = () => {
@@ -784,95 +792,50 @@ moveUserOnCar = () => {
     this.initialPosition.x = target;
 }
 
-lilyCollision = () => {
-  if (this.gameState != State.Game.playing) {
-    this.onLily = null;
-    return
-  }
-  for (let l = 0; l < this.lilys.length; l++) {
-    let lily = this.lilys[l];
-    if (this._hero.position.z == lily.mesh.position.z) {
-      const {collisionBox, mesh} = lily;
-      const lilyX = mesh.position.x;
-      const heroX = this._hero.position.x;
 
-      if (heroX < lilyX + collisionBox && heroX > lilyX - collisionBox) {
-        this.onLily = lily;
-        this.bounceLily(mesh);
-        return;
-      }
-    }
-  }
-}
-
-logCollision = () => {
-  if (this.gameState != State.Game.playing) {
-    this.onLog = false;
-    this.currentLog = null;
-    return
-  }
-  for (let l = 0; l < this.logs.length; l++) {
-    let log = this.logs[l];
-    if (this._hero.position.z == log.mesh.position.z) {
-      const {collisionBox, mesh} = log;
-      const logX = mesh.position.x;
-      const heroX = this._hero.position.x;
-
-      if (heroX < logX + collisionBox && heroX > logX - collisionBox) {
-        this.onLog = true;
-        if (this.currentLog != l) {
-          this.currentLog = l;
-          this.currentLogSubIndex = (heroX - logX);
-          this.bounceLog(mesh);
-        }
-        return;
-      }
-    }
-  }
-}
-
-waterCollision = () => {
-  let currentRow = this.floorMap[`${this._hero.position.z|0}`];
-  if (currentRow === 'log' && this.onLog === false) {
-    if (this.gameState == State.Game.playing) {
-      this.useParticle(this._hero, 'water');
-      this.rumbleScreen()
-      this.gameOver();
-    } else {
-      let y = Math.sin(this.sineCount) * .08 - .2;
-      this.sineCount += this.sineInc;
-      this._hero.position.y = y;
-
-      for (w = 0; w < this.logs.length; w++) {
-        if (this._hero.position.z == this.logs[w].mesh.position.z) {
-          this._hero.position.x += this.logs[w].speed / 3;
-        }
-      }
-    }
-  }
-  if (currentRow === 'lily' && !this.onLily) {
-
-    if (this.gameState == State.Game.playing) {
-      this.useParticle(this._hero, 'water');
-      this.rumbleScreen()
-      this.gameOver();
-    } else {
-
-      // let y = Math.sin(this.sineCount) * .08 - .2;
-      // this.sineCount += this.sineInc;
-      this._hero.position.y -= 0.001;
-
-      // for (w = 0; w < this.logs.length; w++) {
-      //   if (this._hero.position.z == this.logs[w].mesh.position.z) {
-      //     this._hero.position.x += this.logs[w].speed / 3;
-      //   }
-      // }
-    }
-
-  }
-
-
-}
+// waterCollision = () => {
+//   let currentRow = this.floorMap[`${this._hero.position.z|0}`];
+//
+//   if (currentRow === 'log' && !this.ridingOn) {
+//     if (this.gameState == State.Game.playing) {
+//       this.useParticle(this._hero, 'water');
+//       this.rumbleScreen()
+//       this.gameOver();
+//     } else {
+//       let y = Math.sin(this.sineCount) * .08 - .2;
+//       this.sineCount += this.sineInc;
+//       this._hero.position.y = y;
+//
+//       for (w = 0; w < this.logs.length; w++) {
+//         if (this._hero.position.z == this.logs[w].mesh.position.z) {
+//           this._hero.position.x += this.logs[w].speed / 3;
+//         }
+//       }
+//     }
+//   }
+//   if (currentRow === 'lily' && !this.ridingOn) {
+//
+//     if (this.gameState == State.Game.playing) {
+//       this.useParticle(this._hero, 'water');
+//       this.rumbleScreen()
+//       this.gameOver();
+//     } else {
+//
+//       // let y = Math.sin(this.sineCount) * .08 - .2;
+//       // this.sineCount += this.sineInc;
+//       this._hero.position.y -= 0.01;
+//
+//       // for (w = 0; w < this.logs.length; w++) {
+//       //   if (this._hero.position.z == this.logs[w].mesh.position.z) {
+//       //     this._hero.position.x += this.logs[w].speed / 3;
+//       //   }
+//       // }
+//     }
+//
+//   }
+//
+//
+// }
 
 rumbleScreen = () => {
   Vibration.vibrate();
@@ -922,7 +885,7 @@ gameOver = () => {
 }
 
 tick = dt => {
-  this.drive();
+  // this.drive();
 
   for (let railRoad of this.railRoads) {
     railRoad.update(dt, this._hero)
@@ -932,19 +895,17 @@ tick = dt => {
     road.update(dt, this._hero)
   }
 
+  for (let water of this.water) {
+    water.update(dt, this._hero)
+  }
 
 
   if (!this._hero.moving) {
     this.moveUserOnLog();
     this.moveUserOnCar();
-    this.logCollision();
-    this.lilyCollision();
 
-    this.waterCollision();
-
+    // this.waterCollision();
     // this.checkIfUserHasFallenOutOfFrame();
-
-
   }
 
   // this.carCollision();
@@ -993,6 +954,7 @@ moveWithDirection = direction => {
 
   const {SWIPE_UP, SWIPE_DOWN, SWIPE_LEFT, SWIPE_RIGHT} = swipeDirections;
 
+  this._hero.ridingOn = null;
 
   if (!this.initialPosition) {
     this.initialPosition = this._hero.position;
@@ -1066,10 +1028,6 @@ moveWithDirection = direction => {
   // }
   let delta = {x: (targetPosition.x - initialPosition.x), y: targetPosition.y - initialPosition.y, z: targetPosition.z - initialPosition.z}
 
-  this.onLily = null;
-
-  this.onLog = false;
-  this.currentLog = null;
   let timing = 0.5;
 
   this.heroAnimations = [];
