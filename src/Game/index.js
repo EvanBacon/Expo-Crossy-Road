@@ -151,9 +151,12 @@ class Game extends Component {
   }
 
   doneMoving = () => {
-    this.moving = false;
     this._hero.moving = false;
     this.updateScore();
+
+    this.lastHeroZ = this._hero.position.z;
+    this._hero.lastPosition = this._hero.position;
+
 
     // this._hero.position.set(Math.round(this._hero.position.x), this._hero.position.y, Math.round(this._hero.position.z))
   }
@@ -209,7 +212,6 @@ class Game extends Component {
 
   doGame = async () => {
 
-    this.moving = false;
     this.timing = 0.10;
 
     // Variables
@@ -234,7 +236,6 @@ class Game extends Component {
 
     this.onLily = null;
     this.onLog = true;
-    this.hitByCar = null;
 
     this.lastHeroZ = 8;
 
@@ -258,7 +259,7 @@ class Game extends Component {
 
     //Custom Params
     this._hero.moving = false;
-    this._hero.hitByTrain = null;
+    this._hero.hitBy = null;
 
     this.scene.add(this._hero);
 
@@ -337,6 +338,7 @@ class Game extends Component {
     if (this.gameState != State.Game.playing) {
       return;
     }
+    this._hero.isAlive = false;
     this.useParticle(this._hero, 'feathers', (obstacle || {}).speed || 0);
     this.rumbleScreen()
     this.gameOver();
@@ -381,10 +383,10 @@ class Game extends Component {
     this.railRoadCount = 0;
     this.treeCount = 0;
     this.rowCount = 0;
-    this.hitByCar = null;
-    this._hero.hitByTrain = null;
+    this._hero.hitBy = null;
     this.lastHeroZ = 8;
     this.floorMap = {};
+    this._hero.isAlive = true;
 
     this.idle();
 
@@ -511,9 +513,8 @@ class Game extends Component {
       break;
 
       case 2:
-
-
-      if (((Math.random() * 3)|0) == 0) {
+{
+      if (((Math.random() * 4)|0) == 0) {
               this.railRoads[this.railRoadCount].position.z = this.rowCount;
               this.railRoads[this.railRoadCount].active = true;
               this.floorMap[`${this.rowCount}`] = 'railRoad';
@@ -526,11 +527,7 @@ class Game extends Component {
         this.roadCount++;
         this.lastRk = rk;
       }
-
-
-
-
-
+}
       break;
 
       case 3:
@@ -681,60 +678,6 @@ class Game extends Component {
     }
   }
 
-
-  trainShouldCheckCollision = (train, speed) => {
-    if (Math.round(this._hero.position.z) == train.mesh.position.z) {
-
-      const {collisionBox} = train;
-
-      if (this._hero.position.x < train.mesh.position.x + collisionBox && this._hero.position.x > train.mesh.position.x - collisionBox) {
-        // console.log(this._hero.position.z, this.lastHeroZ);
-        if (this._hero.position.z != this.lastHeroZ) {
-
-          const forward = this._hero.position.z < this.lastHeroZ;
-          // this._hero.scale.z = 0.2;
-          // this._hero.scale.y = 1.5;
-          // this._hero.rotation.z = (Math.random() * Math.PI) - Math.PI/2;
-          this._hero.position.z = train.mesh.position.z + (forward ? 0.52 : -0.52);
-
-          this._hero.hitByTrain = train;
-
-
-          TweenMax.to(this._hero.scale, 0.3, {
-            y: 1.5,
-            z: 0.2,
-          });
-          TweenMax.to(this._hero.rotation, 0.3, {
-            z: (Math.random() * Math.PI) - Math.PI/2,
-          });
-
-        } else {
-
-          ///Run Over Hero. ///TODO: Add a side collide
-          // this._hero.scale.y = 0.2;
-          // this._hero.scale.x = 1.5;
-          // this._hero.rotation.y = (Math.random() * Math.PI) - Math.PI/2;
-          this._hero.position.y = groundLevel;
-
-
-          TweenMax.to(this._hero.scale, 0.3, {
-            y: 0.2,
-            x: 1.5,
-          });
-          TweenMax.to(this._hero.rotation, 0.3, {
-            y: (Math.random() * Math.PI) - Math.PI/2,
-          });
-
-        }
-        this.useParticle(this._hero, 'feathers', speed);
-        this.rumbleScreen()
-
-        this.gameOver();
-      }
-    }
-
-  }
-
   // Animate cars/logs
   drive = () => {
 
@@ -776,89 +719,6 @@ treeCollision = (dir) => {
     return true;
   }
   return false;
-  // for (x = 0; x < this.trees.length; x++) {
-  //   if (Math.round(this._hero.position.z + zPos) == this.trees[x].position.z) {
-  //     if (Math.round(this._hero.position.x + xPos) == this.trees[x].position.x) {
-  //       return true;
-  //     }
-  //   }
-  // }
-}
-
-// carCollision = () => {
-//   if (this.gameState != State.Game.playing || this.hitByCar) {
-//     return
-//   }
-//   for (let c = 0; c < this.cars.length; c++) {
-//     if (Math.round(this._hero.position.z) == this.cars[c].mesh.position.z) {
-//       let car = this.cars[c];
-//
-//       const {collisionBox} = car;
-//
-//       if (this._hero.position.x < this.cars[c].mesh.position.x + collisionBox && this._hero.position.x > this.cars[c].mesh.position.x - collisionBox) {
-//         // console.log(this._hero.position.z, this.lastHeroZ);
-//         if (this._hero.position.z != this.lastHeroZ) {
-//
-//           const forward = this._hero.position.z < this.lastHeroZ;
-//           this._hero.scale.z = 0.2;
-//           this._hero.position.z = this.cars[c].mesh.position.z + (forward ? 0.52 : -0.52);
-//           this.hitByCar = this.cars[c];
-//         } else {
-//
-//           ///Run Over Hero. ///TODO: Add a side collide
-//           this._hero.scale.y = 0.2;
-//           this._hero.position.y = groundLevel;
-//
-//         }
-//
-//         this.gameOver();
-//         this.useParticle(this._hero, 'feathers', this.cars[c].speed);
-//         this.rumbleScreen()
-//
-//
-//       }
-//     }
-//   }
-//   this.lastHeroZ = this._hero.position.z;
-//
-// }
-
-trainCollision = () => {
-  if (this.gameState != State.Game.playing || this._hero.hitByTrain) {
-    return
-  }
-  for (let c = 0; c < this.trains.length; c++) {
-    if (Math.round(this._hero.position.z) == this.trains[c].mesh.position.z) {
-      let train = this.trains[c];
-
-      const {collisionBox} = train;
-
-      if (this._hero.position.x < this.trains[c].mesh.position.x + collisionBox && this._hero.position.x > this.trains[c].mesh.position.x - collisionBox) {
-        // console.log(this._hero.position.z, this.lastHeroZ);
-        if (this._hero.position.z != this.lastHeroZ) {
-
-          const forward = this._hero.position.z < this.lastHeroZ;
-          this._hero.scale.z = 0.2;
-          this._hero.position.z = this.trains[c].mesh.position.z + (forward ? 0.52 : -0.52);
-          this._hero.hitByTrain = this.trains[c];
-        } else {
-
-          ///Run Over Hero. ///TODO: Add a side collide
-          this._hero.scale.y = 0.2;
-          this._hero.position.y = groundLevel;
-
-        }
-
-        this.gameOver();
-        this.useParticle(this._hero, 'feathers', this.trains[c].speed);
-        this.rumbleScreen()
-
-
-      }
-    }
-  }
-  this.lastHeroZ = this._hero.position.z;
-
 }
 
 bounceLily = mesh => {
@@ -917,10 +777,11 @@ moveUserOnCar = () => {
   if (!this._hero.hitBy) {
     return;
   }
+
   let target = this._hero.hitBy.mesh.position.x;
   this._hero.position.x += this._hero.hitBy.speed;
   if (this.initialPosition)
-  this.initialPosition.x = target;
+    this.initialPosition.x = target;
 }
 
 lilyCollision = () => {
@@ -1045,7 +906,7 @@ forwardScene = () => {
 // Reset variables, restart game
 gameOver = () => {
   // this.trees.map(val => this.scene.remove(val) );
-  this.moving = false;
+
   this._hero.moving = false;
 
   /// Stop player from finishing a movement
@@ -1072,7 +933,8 @@ tick = dt => {
   }
 
 
-  if (!this.moving) {
+
+  if (!this._hero.moving) {
     this.moveUserOnLog();
     this.moveUserOnCar();
     this.logCollision();
@@ -1081,14 +943,17 @@ tick = dt => {
     this.waterCollision();
 
     // this.checkIfUserHasFallenOutOfFrame();
-    this.lastHeroZ = this._hero.position.z;
-    this._hero.lastPosition = this._hero.position;
+
 
   }
 
   // this.carCollision();
   // this.trainCollision();
   this.forwardScene();
+
+
+
+
 }
 
 
@@ -1134,7 +999,7 @@ moveWithDirection = direction => {
     this.targetPosition = this.initialPosition;
   }
 
-  if (this.moving) {
+  if (this._hero.moving) {
     this._hero.position = this.targetPosition;
     // return
   };
@@ -1144,7 +1009,6 @@ moveWithDirection = direction => {
     this._hero.rotation.y = Math.PI/2
     if (!this.treeCollision("left")) {
       this.targetPosition = {x: this.initialPosition.x + 1, y: this.initialPosition.y, z: this.initialPosition.z};
-      this.moving = true
       this._hero.moving = true;
     }
     break;
@@ -1152,7 +1016,6 @@ moveWithDirection = direction => {
     this._hero.rotation.y = -Math.PI/2
     if (!this.treeCollision("right")) {
       this.targetPosition = {x: this.initialPosition.x - 1, y: this.initialPosition.y, z: this.initialPosition.z};
-      this.moving = true
       this._hero.moving = true;
 
     }
@@ -1166,7 +1029,6 @@ moveWithDirection = direction => {
       if (shouldRound) {
         // this.targetPosition.x = Math.floor(this.targetPosition.x);
       }
-      this.moving = true
       this._hero.moving = true;
 
     }
@@ -1180,7 +1042,6 @@ moveWithDirection = direction => {
       if (shouldRound) {
         // this.targetPosition.x = Math.floor(this.targetPosition.x);
       }
-      this.moving = true
       this._hero.moving = true;
 
     }

@@ -14,7 +14,7 @@ export default class Road extends THREE.Object3D {
     let box3 = new THREE.Box3();
     box3.setFromObject(mesh);
     // console.log( box.min, box.max, box.size() );
-    return Math.round(box3.max.x - box3.min.x);
+    return Math.round(box3.max.z - box3.min.z);
   }
 
   carGen = () => {
@@ -43,7 +43,7 @@ export default class Road extends THREE.Object3D {
         let mesh = modelLoader._car.getRandom();
         const width = this.getWidth(mesh);
 
-        this.cars.push({mesh: mesh, dir: xDir, width, collisionBox: (this.heroWidth / 2 + width / 2 - .1) });
+        this.cars.push({mesh: mesh, dir: xDir, width, collisionBox: (this.heroWidth / 2 + width / 2 - 0.1) });
 
         this.road.add(mesh)
       }
@@ -92,7 +92,7 @@ export default class Road extends THREE.Object3D {
           if (car === hitBy) {
             player.hitBy = null;
           }
-        } else if (!moving) {
+        } else {
           this.shouldCheckCollision({player, car})
         }
 
@@ -100,18 +100,16 @@ export default class Road extends THREE.Object3D {
 
 
   shouldCheckCollision = ({player, car}) => {
-    if (Math.round(player.position.z) == this.position.z) {
+    if (Math.round(player.position.z) == this.position.z && player.isAlive) {
 
       const {mesh, collisionBox} = car;
 
       if (player.position.x < mesh.position.x + collisionBox && player.position.x > mesh.position.x - collisionBox) {
-        // console.log(this._hero.position.z, this.lastHeroZ);
+        if (player.moving && Math.abs(player.position.z - Math.round(player.position.z)) > 0.1) {
 
-        if (player.position.z != player.lastPosition.z) {
-          const forward = player.position.z < player.lastPosition.z;
-          // this._hero.scale.z = 0.2;
-          // this._hero.scale.y = 1.5;
-          // this._hero.rotation.z = (Math.random() * Math.PI) - Math.PI/2;
+          player.hitBy = car;
+
+          const forward = player.position.z - Math.round(player.position.z) > 0;
           player.position.z = this.position.z + (forward ? 0.52 : -0.52);
 
           TweenMax.to(player.scale, 0.3, {
@@ -134,6 +132,7 @@ export default class Road extends THREE.Object3D {
           });
         }
         this.onCollide(car);
+        return;
       }
     }
   }

@@ -93,18 +93,13 @@ export default class RailRoad extends THREE.Object3D {
 
   trainShouldCheckCollision = ({player}) => {
     const {train} = this;
-    if (Math.round(player.position.z) == this.position.z) {
+    if (Math.round(player.position.z) == this.position.z && player.isAlive) {
 
       const {mesh, collisionBox} = train;
 
       if (player.position.x < mesh.position.x + collisionBox && player.position.x > mesh.position.x - collisionBox) {
-        // console.log(this._hero.position.z, this.lastHeroZ);
-
-        if (player.position.z != player.lastPosition.z) {
-          const forward = player.position.z < player.lastPosition.z;
-          // this._hero.scale.z = 0.2;
-          // this._hero.scale.y = 1.5;
-          // this._hero.rotation.z = (Math.random() * Math.PI) - Math.PI/2;
+        if (player.moving && Math.abs(player.position.z - Math.round(player.position.z)) > 0.1) {
+          const forward = player.position.z - Math.round(player.position.z) > 0;
           player.position.z = this.position.z + (forward ? 0.52 : -0.52);
 
           TweenMax.to(player.scale, 0.3, {
