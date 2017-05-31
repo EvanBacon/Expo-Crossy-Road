@@ -62,7 +62,7 @@ export default class Road extends THREE.Object3D {
     this.onCollide = onCollide;
     const {_road, _car} = modelLoader;
 
-    this.road = _road.getNode();
+    this.road = _road.getNode('0');
     this.add(this.road);
 
     this.carGen();
