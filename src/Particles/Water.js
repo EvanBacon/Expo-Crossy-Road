@@ -19,7 +19,7 @@ export default class Water  {
     var bigParticleGeom = new THREE.CubeGeometry(size, size + 0.1, size, 1);
     // var smallParticleGeom = new THREE.CubeGeometry(0.1, 0.1, 0.1, 1);
     this.parts = [];
-    for (var i = 0; i < 25; i++) {
+    for (var i = 0; i < 15; i++) {
       var partPink = new THREE.Mesh(bigParticleGeom, this.waterMat);
       // var partGreen = new THREE.Mesh(smallParticleGeom, this.waterMat);
       this.parts.push(partPink);
@@ -34,15 +34,12 @@ export default class Water  {
       p.visible = false;
     }
 
-
-
     for (var i = 0; i < this.parts.length; i++) {
 
       var tx = -1.0 + Math.random() * 1.0;
       var ty = (Math.random() * 2.0) + 1;
       var tz = -1.0 + Math.random() * 1.0;
       var p = this.parts[i];
-
 
       const bezier = {
         type: 'cubic',
@@ -57,8 +54,6 @@ export default class Water  {
         ],
         curviness: 0
       }
-
-
 
       p.position.set(0, 0, 0);
       p.scale.set(1, 1, 1);
@@ -80,23 +75,6 @@ export default class Water  {
           delay: s * 3
 
         });
-
-
-      // TweenMax.to(p.position, s, {
-      //   x: tx,
-      //   y: ty,
-      //   z: tz,
-      //   // ease: Power4.easeOut,
-      //   // yoyo:true, repeat:1
-      // });
-      // TweenMax.to(p.position, s * 2.5, {
-      //   x: tx * 1.5,
-      //   y: 0,
-      //   z: tz * 1.5,
-      //   ease: Bounce.easeOut,
-      //   delay: s
-      // });
-
     }
   }
 
