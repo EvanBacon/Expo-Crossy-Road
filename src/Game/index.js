@@ -31,7 +31,7 @@ const sceneColor = 0x6dceea;
 const startingRow = 8;
 
 import Rows from '../Row';
-
+import {Fill} from '../Row/Grass'
 const AnimatedGestureRecognizer = Animated.createAnimatedComponent(GestureRecognizer);
 
 @connectGameState
@@ -173,10 +173,8 @@ class Game extends Component {
   }
 
   loadModels = () => {
-    const {_grass, _boulder, _tree, _hero} = modelLoader;
-    this._grass = _grass;
-    this._boulder = _boulder;
-    this._tree = _tree;
+    const { _hero} = modelLoader;
+
     this.hero = _hero;
   }
 
@@ -195,11 +193,6 @@ class Game extends Component {
     this.roadCount = 0; //
     this.railRoads = [],
     this.railRoadCount = 0; //
-    this.trees = [],
-    this.treeCount = 0; //
-
-
-
 
     this.lastHeroZ = 8;
 
@@ -211,9 +204,6 @@ class Game extends Component {
     this.loadModels()
     this.createParticles();
     this.createLights();
-
-
-
 
     // Mesh
     // console.warn(this.props.character.id)
@@ -230,11 +220,8 @@ class Game extends Component {
     // Assign mesh to corresponding array
     // and add mesh to scene
     for (i = 0; i < this.maxRows; i++) {
-      this.grass[i] = this._grass.getNode(`${i % 2}`);
-      this.grass[i].receiveShadow = true;
-      this.grass[i].castShadow = false;
 
-
+      this.grass[i] = new Rows.Grass(this.heroWidth); // this._railroad.getRandom();
       this.water[i] = new Rows.Water(this.heroWidth, this.onCollide); // this._railroad.getRandom();
       this.road[i] = new Rows.Road(this.heroWidth, this.onCollide); // this._railroad.getRandom();
       this.railRoads[i] = new Rows.RailRoad(this.heroWidth, this.onCollide); // this._railroad.getRandom();
@@ -245,11 +232,6 @@ class Game extends Component {
 
     }
 
-    // Repeat above for terrain objects
-    for (i = 0; i < 100; i++) {
-      this.trees[i] = ((Math.random() * 3)|0) == 0 ? this._boulder.getRandom() : this._tree.getRandom();
-      this.scene.add(this.trees[i]);
-    }
 
     // // Repeat above for terrain objects
     // for (i = 0; i < 20; i++) {
@@ -318,7 +300,7 @@ class Game extends Component {
     this.waterCount = 0;
     this.roadCount = 0;
     this.railRoadCount = 0;
-    this.treeCount = 0;
+
     this.rowCount = 0;
     this._hero.hitBy = null;
     this._hero.ridingOn = null;
@@ -341,13 +323,8 @@ class Game extends Component {
 
     }
 
-    for (let tree of this.trees) {
-      tree.position.z = offset;
-    }
-
-
-    this.treeGen();
     this.grass[this.grassCount].position.z = this.rowCount;
+    this.grass[this.grassCount].generate(this.mapRowToObstacle(this.rowCount))
     this.grassCount++;
     this.rowCount++;
 
@@ -357,6 +334,17 @@ class Game extends Component {
 
     this.setState({ ready: true });
   }
+
+  mapRowToObstacle = (row) => {
+    if (this.rowCount < 5) {
+      return Fill.solid;
+    } else if (this.rowCount < 10) {
+      return Fill.empty;
+    } else {
+      return Fill.random;
+    }
+  }
+
   floorMap = {};
   // Scene generators
   newRow = rowKind => {
@@ -373,53 +361,30 @@ class Game extends Component {
       this.railRoadCount = 0;
     }
     if (this.rowCount < 10) {
-      rowKind = -2;
-      if (this.rowCount < 5) {
-        rowKind = -1;
-      }
+      rowKind = 1;
     }
 
     let rk = rowKind || Math.floor(Math.random() * 3) + 1;
     switch (rk) {
-
-      case -2:
-      this.grass[this.grassCount].position.z = this.rowCount;
-      this.floorMap[`${this.rowCount}`] = 'grass';
-      this.treeGen(false, true);
-      this.grassCount++;
-      this.lastRk = rk;
-
-      break;
-      case -1:
-      this.grass[this.grassCount].position.z = this.rowCount;
-      this.floorMap[`${this.rowCount}`] = 'grass';
-      this.treeGen(true);
-      this.grassCount++;
-      this.lastRk = rk;
-
-      break;
       case 1:
       this.grass[this.grassCount].position.z = this.rowCount;
-      this.floorMap[`${this.rowCount}`] = 'grass';
-      this.treeGen();
-
+      this.grass[this.grassCount].generate(this.mapRowToObstacle(this.rowCount))
+      this.floorMap[`${this.rowCount}`] = {type: 'grass', entity: this.grass[this.grassCount]};
       this.grassCount++;
       this.lastRk = rk;
-
       break;
-
       case 2:
       {
         if (((Math.random() * 4)|0) == 0) {
           this.railRoads[this.railRoadCount].position.z = this.rowCount;
           this.railRoads[this.railRoadCount].active = true;
-          this.floorMap[`${this.rowCount}`] = 'railRoad';
+          this.floorMap[`${this.rowCount}`] = {type: 'railRoad', entity: this.railRoads[this.railRoadCount]};
           this.railRoadCount++;
           this.lastRk = rk + 1000;
         } else {
           this.road[this.roadCount].position.z = this.rowCount;
           this.road[this.roadCount].active = true;
-          this.floorMap[`${this.rowCount}`] = 'road';
+          this.floorMap[`${this.rowCount}`] = {type: 'road', entity: this.road[this.roadCount]};
           this.roadCount++;
           this.lastRk = rk;
         }
@@ -430,7 +395,7 @@ class Game extends Component {
       this.water[this.waterCount].position.z = this.rowCount;
       this.water[this.waterCount].active = true;
       this.water[this.waterCount].generate();
-      this.floorMap[`${this.rowCount}`] = 'water';
+      this.floorMap[`${this.rowCount}`] = {type: 'water', entity: this.water[this.waterCount]};
       this.waterCount++;
 
       this.lastRk = rk;
@@ -440,31 +405,6 @@ class Game extends Component {
     this.rowCount++;
   }
 
-  treeGen = (isFull = false, isEmpty = false) => {
-    // 0 - 8
-    if (this.floorMap[`${this.rowCount}`] !== 'grass') {
-      return;
-    }
-    let _rowCount = 0;
-    for (let x = -3; x < 12; x++) {
-      if (x >= 9 || x <= -1 || isFull) {
-        this.addTree({x: x - 4, y: 0.4, z: this.rowCount});
-      } else if (_rowCount < 2) {
-        if (!isEmpty && (x !== 4 && Math.random() > .6) || isFull  ) {
-          this.addTree({x: x - 4, y: 0.4, z: this.rowCount});
-          _rowCount++;
-        }
-      }
-    }
-  }
-
-  addTree = ({x,y,z}) => {
-    this.treeCount++;
-    const treeIndex = this.treeCount % this.trees.length;
-    this.map[`${x|0},${0},${z|0}`] = {type:`tree`, index: treeIndex};
-
-    this.trees[treeIndex].position.set(x, y, z);
-  }
 
   // Detect collisions with trees/cars
   treeCollision = (dir) => {
@@ -479,10 +419,19 @@ class Game extends Component {
     } else if (dir == "right") {
       xPos = -1;
     }
-    const key = `${(this._hero.position.x + xPos)|0},${0},${(this._hero.position.z + zPos)|0}`;
-    if (this.map.hasOwnProperty(key) && this.map[key].type === 'tree') {
-      return true;
+
+    if (this.floorMap.hasOwnProperty(`${(this._hero.position.z + zPos)|0}`)) {
+
+      const {type, entity} = this.floorMap[`${(this._hero.position.z + zPos)|0}`];
+      if (type === "grass") {
+        console.warn("Grass")
+        const key = `${(this._hero.position.x + xPos)|0}`;
+        if (entity.obstacleMap.hasOwnProperty(key)) {
+          return true;
+        }
+      }
     }
+
     return false;
   }
 
@@ -538,8 +487,6 @@ class Game extends Component {
 
   // Reset variables, restart game
   gameOver = () => {
-    // this.trees.map(val => this.scene.remove(val) );
-
     this._hero.moving = false;
 
     /// Stop player from finishing a movement
@@ -638,7 +585,7 @@ class Game extends Component {
       case SWIPE_UP:
       this._hero.rotation.y = 0;
       if (!this.treeCollision("up")) {
-        const row = this.floorMap[`${this.initialPosition.z + 1}`]
+        const row = (this.floorMap[`${this.initialPosition.z + 1}`] || {}).type
         let shouldRound = row != "water"
         this.targetPosition = {x: this.initialPosition.x, y: this.initialPosition.y, z: this.initialPosition.z + 1};
         if (shouldRound) {
@@ -662,7 +609,7 @@ class Game extends Component {
       case SWIPE_DOWN:
       this._hero.rotation.y = Math.PI
       if (!this.treeCollision("down")) {
-        const row = this.floorMap[`${this.initialPosition.z - 1}`]
+        const row = (this.floorMap[`${this.initialPosition.z - 1}`] || {}).type
         let shouldRound = row != "water"
         this.targetPosition = {x: this.initialPosition.x, y: this.initialPosition.y, z: this.initialPosition.z - 1};
         if (shouldRound) {
