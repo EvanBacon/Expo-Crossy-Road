@@ -8,7 +8,7 @@ import {groundLevel} from '../Game';
 import {modelLoader} from '../../main';
 export default class RailRoad extends THREE.Object3D {
   active = false;
-  lightRinging = false;
+
   getWidth = (mesh) => {
     let box3 = new THREE.Box3();
     box3.setFromObject(mesh);
@@ -32,7 +32,7 @@ export default class RailRoad extends THREE.Object3D {
 
     this._trainMesh = _train.withSize((Math.random() * 2) + 1);
     const width = this.getWidth(this._trainMesh);
-    this.train = {mesh: this._trainMesh, speed: 0.5, width, collisionBox: (this.heroWidth / 2 + width / 2 - .1) };
+    this.train = {mesh: this._trainMesh, speed: 1, width, collisionBox: (this.heroWidth / 2 + width / 2 - .1) };
 
 
     this.setupLight(this.light);
@@ -48,6 +48,8 @@ export default class RailRoad extends THREE.Object3D {
 
 
     this.add(this.railRoad);
+
+
   }
   setupLight = (light) => {
     light.position.z = -0.5;
@@ -66,17 +68,19 @@ export default class RailRoad extends THREE.Object3D {
   drive = ({dt, player}) => {
     const {position, hitByTrain, moving} = player;
     const {train} = this;
-      const offset = 11 * 5;
+      const offset = 22 * 5;
 
         train.mesh.position.x += train.speed;
 
         if (train.mesh.position.x > offset && train.speed > 0) {
           train.mesh.position.x = -offset;
+          this.startRingingLight()
           if (train === hitByTrain) {
             player.hitByTrain = null;
           }
         } else if (train.mesh.position.x < -offset && train.speed < 0) {
           train.mesh.position.x = offset;
+          this.startRingingLight()
           if (train === hitByTrain) {
             player.hitByTrain = null;
           }
@@ -137,15 +141,26 @@ export default class RailRoad extends THREE.Object3D {
 
   }
 
+
+  startRingingLight = () => {
+    this.lightRinging = true;
+    this.ringCount = 0;
+    this.ringLight();
+
+  }
+
   ringLight = () => {
     clearTimeout(this.timer);
-    if (this.lightRinging) {
+    if (this.lightRinging && this.ringCount < 15) {
       this.light.visible = false;
+      this.ringCount += 1;
       this.active_light_b.visible = this.active_light_a.visible
       this.active_light_a.visible = !this.active_light_a.visible
 
-      this.timer = setTimeout(this.ringLight, 400);
+      this.timer = setTimeout(this.ringLight, 200);
     } else {
+      this.lightRinging = false;
+      this.ringCount = 0;
       this.light.visible = true;
       this.active_light_b.visible = this.active_light_a.visible = false;
     }
