@@ -491,7 +491,7 @@ class Game extends Component {
       this.water[this.waterCount].position.z = this.rowCount;
       this.water[this.waterCount].active = true;
       this.water[this.waterCount].generate();
-      this.floorMap[`${this.rowCount}`] = 'log';
+      this.floorMap[`${this.rowCount}`] = 'water';
       this.waterCount++;
 
       this.lastRk = rk;
@@ -537,28 +537,6 @@ class Game extends Component {
     this.trees[treeIndex].position.set(x, y, z);
   }
 
-
-
-  // lilyGen = () => {
-  //   // Speeds: .01 through .08
-  //   // Number of cars: 1 through 3
-  //   this.numLilys = Math.floor(Math.random() * (3 - 1)) + 1;
-  //
-  //   /// Screen Range = -4:4
-  //   /// Item Range = -3:3
-  //
-  //   for (x = 0; x < this.numLilys; x++) {
-  //     let xPos = ((Math.random() * (6 - x)) + (-3 + x)); /// 1 - 7;
-  //
-  //     if (this.lilyCount < 19) {
-  //       this.lilyCount++;
-  //     } else {
-  //       this.lilyCount = 0;
-  //     }
-  //     this.lilys[this.lilyCount].mesh.position.set(xPos, 0.125, this.rowCount);
-  //   }
-  // }
-
   // Detect collisions with trees/cars
   treeCollision = (dir) => {
     var zPos = 0;
@@ -578,27 +556,6 @@ class Game extends Component {
     }
     return false;
   }
-
-  // bounceLily = mesh => {
-  //   let timing = 0.2;
-  //   TweenMax.to(mesh.position, timing * 0.9, {
-  //     y: 0.01,
-  //   });
-  //
-  //   TweenMax.to(mesh.position, timing, {
-  //     y: 0.125,
-  //     delay: timing
-  //   });
-  //
-  //   TweenMax.to(this._hero.position, timing * 0.9, {
-  //     y: groundLevel + -0.125,
-  //   });
-  //
-  //   TweenMax.to(this._hero.position, timing, {
-  //     y: groundLevel,
-  //     delay: timing
-  //   });
-  // }
 
   moveUserOnEntity = () => {
     if (!this._hero.ridingOn) {
@@ -701,24 +658,20 @@ class Game extends Component {
   }
 
 
+///TODO: Fix
   checkIfUserHasFallenOutOfFrame = () => {
     if (this.gameState !== State.Game.playing) {
       return
     }
     if (this._hero.position.z < this.camera.position.z - 8) {
-
       ///TODO: rumble
       this.rumbleScreen()
-
       this.gameOver();
     }
-
     /// Check if offscreen
     if (this._hero.position.x < -5 || this._hero.position.x > 5) {
-
       ///TODO: Rumble death
       this.rumbleScreen()
-
       this.gameOver();
     }
   }
@@ -768,12 +721,23 @@ class Game extends Component {
       case SWIPE_UP:
       this._hero.rotation.y = 0;
       if (!this.treeCollision("up")) {
-        const row = this.floorMap[`${this.targetPosition.z + 1}`]
-        let shouldRound = row !== "log" || row !== "lily"
+        const row = this.floorMap[`${this.initialPosition.z + 1}`]
+        let shouldRound = row != "water"
         this.targetPosition = {x: this.initialPosition.x, y: this.initialPosition.y, z: this.initialPosition.z + 1};
         if (shouldRound) {
-          // this.targetPosition.x = Math.floor(this.targetPosition.x);
+          this.targetPosition.x = Math.round(this.targetPosition.x);
+          const {ridingOn} = this._hero
+          if (ridingOn && ridingOn.dir) {
+              if (ridingOn.dir < 0) {
+                this.targetPosition.x = Math.floor(this.targetPosition.x);
+              } else if (ridingOn.dir > 0) {
+                this.targetPosition.x = Math.ceil(this.targetPosition.x);
+              } else {
+                this.targetPosition.x = Math.round(this.targetPosition.x);
+              }
+          }
         }
+
         this._hero.moving = true;
 
       }
@@ -781,11 +745,22 @@ class Game extends Component {
       case SWIPE_DOWN:
       this._hero.rotation.y = Math.PI
       if (!this.treeCollision("down")) {
-        const row = this.floorMap[`${this.targetPosition.z - 1}`]
-        let shouldRound = row !== "log" || row !== "lily"
+        const row = this.floorMap[`${this.initialPosition.z - 1}`]
+        let shouldRound = row != "water"
         this.targetPosition = {x: this.initialPosition.x, y: this.initialPosition.y, z: this.initialPosition.z - 1};
         if (shouldRound) {
-          // this.targetPosition.x = Math.floor(this.targetPosition.x);
+          this.targetPosition.x = Math.round(this.targetPosition.x);
+          const {ridingOn} = this._hero
+          if (ridingOn && ridingOn.dir) {
+              if (ridingOn.dir < 0) {
+                this.targetPosition.x = Math.floor(this.targetPosition.x);
+              } else if (ridingOn.dir > 0) {
+                this.targetPosition.x = Math.ceil(this.targetPosition.x);
+              } else {
+                this.targetPosition.x = Math.round(this.targetPosition.x);
+              }
+          }
+
         }
         this._hero.moving = true;
 

@@ -48,7 +48,7 @@ export default class Road extends THREE.Object3D {
 
         let mesh = modelLoader._lilyPad.getRandom();
         const width = this.getWidth(mesh);
-        this.entities.push({mesh: mesh, min: 0, mid: 0.125, dir: 0, width, collisionBox: (this.heroWidth / 2 + width / 2 - 0.1) });
+        this.entities.push({mesh: mesh, min: 0.01, mid: 0.125, dir: 0, width, collisionBox: (this.heroWidth / 2 + width / 2 - 0.1) });
         this.floor.add(mesh)
       }
 
