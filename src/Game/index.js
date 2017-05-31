@@ -163,27 +163,22 @@ class Game extends Component {
   getWidth = (mesh) => {
     let box3 = new THREE.Box3();
     box3.setFromObject(mesh);
-    // console.log( box.min, box.max, box.size() );
     return Math.round(box3.max.x - box3.min.x);
   }
   getDepth = mesh => {
     let box3 = new THREE.Box3();
     box3.setFromObject(mesh);
-    // console.log( box.min, box.max, box.size() );
+
     return Math.round(box3.max.z - box3.min.z);
   }
 
 
   loadModels = async () => {
-    const {_grass, _river, _lilyPad, _boulder, _tree, _train, _log, _hero} = modelLoader;
+    const {_grass, _boulder, _tree, _hero} = modelLoader;
     this._grass = _grass;
-    this._river = _river;
-    this._lilyPad = _lilyPad;
     this._boulder = _boulder;
     this._tree = _tree;
 
-    this._train = _train;
-    this._log = _log;
     this.hero = _hero;
 
     console.log("Done Extracting 3D Models! ");
@@ -224,13 +219,8 @@ class Game extends Component {
     this.railRoadCount = 0; //
     this.trees = [],
     this.treeCount = 0; //
-    this.logs = [],
-    this.logCount = 0; // Terrain objects
-    this.lilys = [],
-    this.lilyCount = 0; // Terrain objects
 
-    this.trains = [],
-    this.trainsCount = 0; //
+
 
 
     this.lastHeroZ = 8;
@@ -260,10 +250,6 @@ class Game extends Component {
     this._hero.ridingOnOffset = null;
     this.scene.add(this._hero);
 
-    let _logMesh = this._log.getRandom();
-    let _logWidth = this.getWidth(_logMesh);
-    // this.logs[0] = {mesh: _logMesh, width: _logWidth, collisionBox: (this.heroWidth / 2 + _logWidth / 2 - .1) };
-    // this.logs[0].mesh.position.set(0, -10.5, -30);
 
     // Assign mesh to corresponding array
     // and add mesh to scene
@@ -272,15 +258,8 @@ class Game extends Component {
       this.grass[i].receiveShadow = true;
       this.grass[i].castShadow = false;
 
-      // this.water[i] = this._river.getNode();
-      // let foam = new Foam(THREE, 1);
-      // foam.mesh.position.set(4.5,0.2,-0.5);
-      // foam.mesh.visible = true;
-      // foam.run();
-      // this.water[i].add(foam.mesh);
 
       this.water[i] = new Rows.Water(this.heroWidth, this.onCollide); // this._railroad.getRandom();
-
       this.road[i] = new Rows.Road(this.heroWidth, this.onCollide); // this._railroad.getRandom();
       this.railRoads[i] = new Rows.RailRoad(this.heroWidth, this.onCollide); // this._railroad.getRandom();
       this.scene.add(this.grass[i]);
@@ -296,37 +275,22 @@ class Game extends Component {
       this.scene.add(this.trees[i]);
     }
 
-    // Repeat above for terrain objects
-    for (i = 0; i < 20; i++) {
-      const mesh = this._lilyPad.getRandom();
-
-      TweenMax.to(mesh.rotation, (Math.random() * 2) + 2, {
-        y: (Math.random() * 1.5) + 0.5,
-        yoyo: true,
-        repeat: -1,
-        ease: Power1.easeInOut
-      });
-
-      const width = this.getWidth(mesh);
-      this.lilys[i] = {mesh, width, collisionBox: (this.heroWidth / 2 + width / 2 - .1) };
-      this.scene.add(mesh);
-
-
-    }
-
-    for (let i = 0; i < 10; i++) {
-      let mesh = this._train.withSize(3);
-      let width = this.getDepth(mesh);
-      this.trains[i] = {mesh, width, collisionBox: (this.heroWidth / 2 + width / 2 - .1) };
-      this.scene.add(mesh);
-
-    }
-
-    // for (i = 0; i < 40; i++) {
-    //   let _logMesh = this._log.getRandom();
-    //   let _logWidth = this.getWidth(_logMesh);
-    //   this.logs[i] = {mesh: _logMesh, width: _logWidth, collisionBox: (this.heroWidth / 2 + _logWidth / 2 - .1) };
-    //   this.scene.add(_logMesh);
+    // // Repeat above for terrain objects
+    // for (i = 0; i < 20; i++) {
+    //   const mesh = this._lilyPad.getRandom();
+    //
+    //   TweenMax.to(mesh.rotation, (Math.random() * 2) + 2, {
+    //     y: (Math.random() * 1.5) + 0.5,
+    //     yoyo: true,
+    //     repeat: -1,
+    //     ease: Power1.easeInOut
+    //   });
+    //
+    //   const width = this.getWidth(mesh);
+    //   this.lilys[i] = {mesh, width, collisionBox: (this.heroWidth / 2 + width / 2 - .1) };
+    //   this.scene.add(mesh);
+    //
+    //
     // }
 
 
@@ -405,23 +369,13 @@ class Game extends Component {
 
     }
 
-    for (let lily of this.lilys) {
-      lily.mesh.position.z = offset;
-    }
+    // for (let lily of this.lilys) {
+    //   lily.mesh.position.z = offset;
+    // }
     for (let tree of this.trees) {
       tree.position.z = offset;
     }
 
-    this.trains.map(val => {
-      val.mesh.position.z = offset;
-      val.speed = 0.1;
-    })
-
-    // for (i = 0; i < 40; i++) {
-    //
-    //   this.logs[i].mesh.position.z = offset;
-    //   this.logs[i].speed = 0;
-    // }
 
     this.treeGen();
     this.grass[this.grassCount].position.z = this.rowCount;
@@ -481,7 +435,7 @@ class Game extends Component {
     // } else {
 
 
-    let rk = rowKind || Math.floor(Math.random() * 4) + 1;
+    let rk = rowKind || Math.floor(Math.random() * 3) + 1;
 
 
 
@@ -516,37 +470,31 @@ class Game extends Component {
       break;
 
       case 2:
-{
-      if (((Math.random() * 4)|0) == 0) {
-              this.railRoads[this.railRoadCount].position.z = this.rowCount;
-              this.railRoads[this.railRoadCount].active = true;
-              this.floorMap[`${this.rowCount}`] = 'railRoad';
-              this.railRoadCount++;
-              this.lastRk = rk + 1000;
-      } else {
-        this.road[this.roadCount].position.z = this.rowCount;
-        this.road[this.roadCount].active = true;
-        this.floorMap[`${this.rowCount}`] = 'road';
-        this.roadCount++;
-        this.lastRk = rk;
+      {
+        if (((Math.random() * 4)|0) == 0) {
+          this.railRoads[this.railRoadCount].position.z = this.rowCount;
+          this.railRoads[this.railRoadCount].active = true;
+          this.floorMap[`${this.rowCount}`] = 'railRoad';
+          this.railRoadCount++;
+          this.lastRk = rk + 1000;
+        } else {
+          this.road[this.roadCount].position.z = this.rowCount;
+          this.road[this.roadCount].active = true;
+          this.floorMap[`${this.rowCount}`] = 'road';
+          this.roadCount++;
+          this.lastRk = rk;
+        }
       }
-}
       break;
 
       case 3:
-      this.generateLogRow();
+      this.water[this.waterCount].position.z = this.rowCount;
+      this.water[this.waterCount].active = true;
+      this.water[this.waterCount].generate();
+      this.floorMap[`${this.rowCount}`] = 'log';
+      this.waterCount++;
+
       this.lastRk = rk;
-      break;
-      case 4:
-      if (this.lastRk === 5) {
-        this.generateLogRow();
-        this.lastRk = 3;
-      } else {
-        this.generateLilyRow();
-        this.lastRk = rk;
-
-      }
-
       break;
     }
     // }
@@ -554,25 +502,6 @@ class Game extends Component {
 
   }
 
-  generateLogRow = () => {
-    // this.logGen();
-
-    this.water[this.waterCount].position.z = this.rowCount;
-    this.water[this.waterCount].active = true;
-    this.floorMap[`${this.rowCount}`] = 'log';
-    this.waterCount++;
-  }
-
-  generateLilyRow = () => {
-    // // this.lilyGen();
-    // this.water[this.waterCount].position.z = this.rowCount;
-    // this.floorMap[`${this.rowCount}`] = 'lily';
-    // this.waterCount++;
-    this.water[this.waterCount].position.z = this.rowCount;
-    this.water[this.waterCount].active = true;
-    this.floorMap[`${this.rowCount}`] = 'log';
-    this.waterCount++;
-  }
 
 
   treeGen = (isFull = false, isEmpty = false) => {
@@ -609,553 +538,407 @@ class Game extends Component {
   }
 
 
-  trainGen = () => {
-    // Speeds: .01 through .08
-    // Number of cars: 1 through 3
-    this.numTrains = Math.floor(Math.random() * (4 - 2)) + 2;
-    xDir = 1;
 
-    if (Math.random() > .5) {
-      xDir = -1;
-    }
-
-    xPos = -6 * xDir;
-
-    for (x = 0; x < this.numTrains; x++) {
-      if (this.trainCount < 39) {
-        this.trainCount++;
-      } else {
-        this.trainCount = 0;
-      }
-
-      this.trains[this.trainCount].mesh.position.set(xPos, .25, this.rowCount);
-      this.trains[this.trainCount].speed *= xDir;
-      this.trains[this.trainCount].mesh.rotation.y = (Math.PI) * xDir;
-
-      xPos -= 5 * xDir;
-    }
-  }
-
-  lilyGen = () => {
-    // Speeds: .01 through .08
-    // Number of cars: 1 through 3
-    this.numLilys = Math.floor(Math.random() * (3 - 1)) + 1;
-
-    /// Screen Range = -4:4
-    /// Item Range = -3:3
-
-    for (x = 0; x < this.numLilys; x++) {
-      let xPos = ((Math.random() * (6 - x)) + (-3 + x)); /// 1 - 7;
-
-      if (this.lilyCount < 19) {
-        this.lilyCount++;
-      } else {
-        this.lilyCount = 0;
-      }
-      this.lilys[this.lilyCount].mesh.position.set(xPos, 0.125, this.rowCount);
-    }
-  }
-
-  // logGen = () => {
+  // lilyGen = () => {
   //   // Speeds: .01 through .08
   //   // Number of cars: 1 through 3
-  //   this.speed = (Math.floor(Math.random() * (6 - 2)) + 2) / 80;
-  //   this.numLogs = Math.floor(Math.random() * (4 - 3)) + 3;
-  //   xDir = 1;
+  //   this.numLilys = Math.floor(Math.random() * (3 - 1)) + 1;
   //
-  //   if (Math.random() > .5) {
-  //     xDir = -1;
-  //   }
-  //   if (this.logs[this.logCount].speed == this.speed * xDir) {
-  //     this.speed /= 1.5;
-  //   }
+  //   /// Screen Range = -4:4
+  //   /// Item Range = -3:3
   //
-  //   xPos = -6 * xDir;
+  //   for (x = 0; x < this.numLilys; x++) {
+  //     let xPos = ((Math.random() * (6 - x)) + (-3 + x)); /// 1 - 7;
   //
-  //   for (x = 0; x < this.numLogs; x++) {
-  //     if (this.logCount < 39) {
-  //       this.logCount++;
+  //     if (this.lilyCount < 19) {
+  //       this.lilyCount++;
   //     } else {
-  //       this.logCount = 0;
+  //       this.lilyCount = 0;
   //     }
-  //
-  //     this.logs[this.logCount].mesh.position.set(xPos, -0.1, this.rowCount);
-  //     this.logs[this.logCount].speed = this.speed * xDir;
-  //
-  //     xPos -= 5 * xDir;
+  //     this.lilys[this.lilyCount].mesh.position.set(xPos, 0.125, this.rowCount);
   //   }
   // }
 
-  // Animate cars/logs
-//   drive = () => {
-//
-//     for (d = 0; d < this.logs.length; d++) {
-//
-//     //Move Logs
-//     if (this.floorMap[`${this.logs[d].mesh.position.z|0}`] === 'log') {
-//
-//       this.logs[d].mesh.position.x += this.logs[d].speed;
-//
-//       if (this.logs[d].mesh.position.x > 11 && this.logs[d].speed > 0) {
-//         this.logs[d].mesh.position.x = -10;
-//       } else if (this.logs[d].mesh.position.x < -11 && this.logs[d].speed < 0) {
-//         this.logs[d].mesh.position.x = 10;
-//       }
-//     }
-//
-//   }
-// }
-
-
-
-
-// Detect collisions with trees/cars
-treeCollision = (dir) => {
-  var zPos = 0;
-  var xPos = 0;
-  if (dir == "up") {
-    zPos = 1;
-  } else if (dir == "down") {
-    zPos = -1;
-  } else if (dir == "left") {
-    xPos = 1;
-  } else if (dir == "right") {
-    xPos = -1;
-  }
-  const key = `${(this._hero.position.x + xPos)|0},${0},${(this._hero.position.z + zPos)|0}`;
-  if (this.map.hasOwnProperty(key) && this.map[key].type === 'tree') {
-    return true;
-  }
-  return false;
-}
-
-bounceLily = mesh => {
-  let timing = 0.2;
-  TweenMax.to(mesh.position, timing * 0.9, {
-    y: 0.01,
-  });
-
-  TweenMax.to(mesh.position, timing, {
-    y: 0.125,
-    delay: timing
-  });
-
-  TweenMax.to(this._hero.position, timing * 0.9, {
-    y: groundLevel + -0.125,
-  });
-
-  TweenMax.to(this._hero.position, timing, {
-    y: groundLevel,
-    delay: timing
-  });
-}
-
-bounceLog = mesh => {
-  let timing = 0.2;
-  TweenMax.to(mesh.position, timing * 0.9, {
-    y: -0.3,
-  });
-
-  TweenMax.to(mesh.position, timing, {
-    y: -0.1,
-    delay: timing
-  });
-
-  TweenMax.to(this._hero.position, timing * 0.9, {
-    y: groundLevel + -0.1,
-  });
-
-  TweenMax.to(this._hero.position, timing, {
-    y: groundLevel,
-    delay: timing
-  });
-}
-
-moveUserOnLog = () => {
-  if (!this._hero.ridingOn) {
-    return;
-  }
-
-  // let target = this._hero.ridingOn.mesh.position.x + this._hero.ridingOnOffset;
-  this._hero.position.x += this._hero.ridingOn.speed;
-  this.initialPosition.x = this._hero.position.x;
-}
-
-moveUserOnCar = () => {
-  if (!this._hero.hitBy) {
-    return;
-  }
-
-  let target = this._hero.hitBy.mesh.position.x;
-  this._hero.position.x += this._hero.hitBy.speed;
-  if (this.initialPosition)
-    this.initialPosition.x = target;
-}
-
-
-// waterCollision = () => {
-//   let currentRow = this.floorMap[`${this._hero.position.z|0}`];
-//
-//   if (currentRow === 'log' && !this.ridingOn) {
-//     if (this.gameState == State.Game.playing) {
-//       this.useParticle(this._hero, 'water');
-//       this.rumbleScreen()
-//       this.gameOver();
-//     } else {
-//       let y = Math.sin(this.sineCount) * .08 - .2;
-//       this.sineCount += this.sineInc;
-//       this._hero.position.y = y;
-//
-//       for (w = 0; w < this.logs.length; w++) {
-//         if (this._hero.position.z == this.logs[w].mesh.position.z) {
-//           this._hero.position.x += this.logs[w].speed / 3;
-//         }
-//       }
-//     }
-//   }
-//   if (currentRow === 'lily' && !this.ridingOn) {
-//
-//     if (this.gameState == State.Game.playing) {
-//       this.useParticle(this._hero, 'water');
-//       this.rumbleScreen()
-//       this.gameOver();
-//     } else {
-//
-//       // let y = Math.sin(this.sineCount) * .08 - .2;
-//       // this.sineCount += this.sineInc;
-//       this._hero.position.y -= 0.01;
-//
-//       // for (w = 0; w < this.logs.length; w++) {
-//       //   if (this._hero.position.z == this.logs[w].mesh.position.z) {
-//       //     this._hero.position.x += this.logs[w].speed / 3;
-//       //   }
-//       // }
-//     }
-//
-//   }
-//
-//
-// }
-
-rumbleScreen = () => {
-  Vibration.vibrate();
-
-  TweenMax.to(this.scene.position, 0.2, {
-    x: 0,
-    y: 0,
-    z: 1,
-  })
-  TweenMax.to(this.scene.position, 0.2, {
-    x: 0,
-    y: 0,
-    z: 0,
-    delay: 0.2,
-  })
-}
-
-// Move scene forward
-forwardScene = () => {
-  const easing = 0.03;
-  this.camera.position.z += (((this._hero.position.z + 1) - this.camera.position.z) * easing);
-  this.camera.position.x =  Math.min(2, Math.max(-2, this.camera.position.x + (((this._hero.position.x) - this.camera.position.x) * easing)));
-
-  // normal camera speed
-  if (this.camera.position.z - this.camCount > 1.0) {
-    this.camCount = this.camera.position.z;
-    this.newRow();
-  }
-}
-
-// Reset variables, restart game
-gameOver = () => {
-  // this.trees.map(val => this.scene.remove(val) );
-
-  this._hero.moving = false;
-
-  /// Stop player from finishing a movement
-  this.heroAnimations.map(val => {val.pause(); val = null;} );
-  this.heroAnimations = [];
-  this.gameState = State.Game.gameOver;
-  this.props.setGameState(this.gameState)
-
-  InteractionManager.runAfterInteractions(_=> {
-    this.props.navigation.dispatch(NavigationActions.navigate({ routeName: 'GameOver' }))
-  });
-  // this.props.nav.navigation.navigate('GameOver', {})
-}
-
-tick = dt => {
-  // this.drive();
-
-  for (let railRoad of this.railRoads) {
-    railRoad.update(dt, this._hero)
-  }
-
-  for (let road of this.road) {
-    road.update(dt, this._hero)
-  }
-
-  for (let water of this.water) {
-    water.update(dt, this._hero)
-  }
-
-
-  if (!this._hero.moving) {
-    this.moveUserOnLog();
-    this.moveUserOnCar();
-
-    // this.waterCollision();
-    // this.checkIfUserHasFallenOutOfFrame();
-  }
-
-  // this.carCollision();
-  // this.trainCollision();
-  this.forwardScene();
-
-
-
-
-}
-
-
-checkIfUserHasFallenOutOfFrame = () => {
-  if (this.gameState !== State.Game.playing) {
-    return
-  }
-  if (this._hero.position.z < this.camera.position.z - 8) {
-
-    ///TODO: rumble
-    this.rumbleScreen()
-
-    this.gameOver();
-  }
-
-  /// Check if offscreen
-  if (this._hero.position.x < -5 || this._hero.position.x > 5) {
-
-    ///TODO: Rumble death
-    this.rumbleScreen()
-
-    this.gameOver();
-  }
-}
-
-updateScore = () => {
-  const position = Math.max(Math.floor(this._hero.position.z) - 8, 0);
-  if (this.state.score < position) {
-    this.setState({score: position})
-  }
-}
-
-moveWithDirection = direction => {
-  if (this.gameState != State.Game.playing ) {
-    return;
-  }
-
-  const {SWIPE_UP, SWIPE_DOWN, SWIPE_LEFT, SWIPE_RIGHT} = swipeDirections;
-
-  this._hero.ridingOn = null;
-
-  if (!this.initialPosition) {
-    this.initialPosition = this._hero.position;
-    this.targetPosition = this.initialPosition;
-  }
-
-  if (this._hero.moving) {
-    this._hero.position = this.targetPosition;
-    // return
-  };
-
-  switch (direction) {
-    case SWIPE_LEFT:
-    this._hero.rotation.y = Math.PI/2
-    if (!this.treeCollision("left")) {
-      this.targetPosition = {x: this.initialPosition.x + 1, y: this.initialPosition.y, z: this.initialPosition.z};
-      this._hero.moving = true;
+  // Detect collisions with trees/cars
+  treeCollision = (dir) => {
+    var zPos = 0;
+    var xPos = 0;
+    if (dir == "up") {
+      zPos = 1;
+    } else if (dir == "down") {
+      zPos = -1;
+    } else if (dir == "left") {
+      xPos = 1;
+    } else if (dir == "right") {
+      xPos = -1;
     }
-    break;
-    case SWIPE_RIGHT:
-    this._hero.rotation.y = -Math.PI/2
-    if (!this.treeCollision("right")) {
-      this.targetPosition = {x: this.initialPosition.x - 1, y: this.initialPosition.y, z: this.initialPosition.z};
-      this._hero.moving = true;
-
+    const key = `${(this._hero.position.x + xPos)|0},${0},${(this._hero.position.z + zPos)|0}`;
+    if (this.map.hasOwnProperty(key) && this.map[key].type === 'tree') {
+      return true;
     }
-    break;
-    case SWIPE_UP:
-    this._hero.rotation.y = 0;
-    if (!this.treeCollision("up")) {
-      const row = this.floorMap[`${this.targetPosition.z + 1}`]
-      let shouldRound = row !== "log" || row !== "lily"
-      this.targetPosition = {x: this.initialPosition.x, y: this.initialPosition.y, z: this.initialPosition.z + 1};
-      if (shouldRound) {
-        // this.targetPosition.x = Math.floor(this.targetPosition.x);
-      }
-      this._hero.moving = true;
-
-    }
-    break;
-    case SWIPE_DOWN:
-    this._hero.rotation.y = Math.PI
-    if (!this.treeCollision("down")) {
-      const row = this.floorMap[`${this.targetPosition.z - 1}`]
-      let shouldRound = row !== "log" || row !== "lily"
-      this.targetPosition = {x: this.initialPosition.x, y: this.initialPosition.y, z: this.initialPosition.z - 1};
-      if (shouldRound) {
-        // this.targetPosition.x = Math.floor(this.targetPosition.x);
-      }
-      this._hero.moving = true;
-
-    }
-    break;
+    return false;
   }
 
-
-
-  let {targetPosition, initialPosition} = this;
-
-
-  // if (Math.abs(targetPosition.x - initialPosition.x) > 0 && this.onLog && this.currentLog && this.currentLog >= 0) {
-  //   const {speed} = this.logs[this.currentLog];
-  //   // delta.x = (targetPosition.x - Math.round(initialPosition.x))
-  //   // delta.z += (speed < 0) ? -1 : 1;
-  //   if (speed > 0) {
-  //   targetPosition.x = Math.ceil(targetPosition.x)
-  // } else {
-  //   targetPosition.x = Math.floor(targetPosition.x)
-  // }
+  // bounceLily = mesh => {
+  //   let timing = 0.2;
+  //   TweenMax.to(mesh.position, timing * 0.9, {
+  //     y: 0.01,
+  //   });
   //
+  //   TweenMax.to(mesh.position, timing, {
+  //     y: 0.125,
+  //     delay: timing
+  //   });
+  //
+  //   TweenMax.to(this._hero.position, timing * 0.9, {
+  //     y: groundLevel + -0.125,
+  //   });
+  //
+  //   TweenMax.to(this._hero.position, timing, {
+  //     y: groundLevel,
+  //     delay: timing
+  //   });
   // }
-  let delta = {x: (targetPosition.x - initialPosition.x), y: targetPosition.y - initialPosition.y, z: targetPosition.z - initialPosition.z}
 
-  let timing = 0.5;
+  moveUserOnEntity = () => {
+    if (!this._hero.ridingOn) {
+      return;
+    }
 
-  this.heroAnimations = [];
-
-  this.heroAnimations.push(TweenMax.to(this._hero.position, this.timing, {
-    x: this.initialPosition.x + (delta.x * 0.75),
-    y: groundLevel + 0.5,
-    z: this.initialPosition.z + (delta.z * 0.75),
-  }));
-
-  this.heroAnimations.push(TweenMax.to(this._hero.scale, this.timing, {
-    x: 1,
-    y: 1.2,
-    z: 1,
-  }));
-  this.heroAnimations.push(TweenMax.to(this._hero.scale, this.timing, {
-    x: 1.0,
-    y: 0.8,
-    z: 1,
-    delay: this.timing
-  }));
-  this.heroAnimations.push(TweenMax.to(this._hero.scale, this.timing, {
-    x: 1,
-    y: 1,
-    z: 1,
-    ease: Bounce.easeOut,
-    delay: this.timing * 2
-  }));
-
-  this.heroAnimations.push(TweenMax.to(this._hero.position, this.timing, {
-    x: this.targetPosition.x,
-    y: this.targetPosition.y,
-    z: this.targetPosition.z,
-    ease: Power4.easeOut,
-    delay: 0.151,
-    onComplete: this.doneMoving,
-    onCompleteParams: []
-  }));
-
-
-  this.initialPosition = this.targetPosition;
-
-}
-
-beginMoveWithDirection = direction => {
-  if (this.gameState != State.Game.playing) {
-    return;
+    // let target = this._hero.ridingOn.mesh.position.x + this._hero.ridingOnOffset;
+    this._hero.position.x += this._hero.ridingOn.speed;
+    this.initialPosition.x = this._hero.position.x;
   }
 
-  let timing = 0.2;
+  moveUserOnCar = () => {
+    if (!this._hero.hitBy) {
+      return;
+    }
 
-  TweenMax.to(this._hero.scale, timing, {
-    x: 1.2,
-    y: 0.75,
-    z: 1,
-    // ease: Bounce.easeOut,
-  });
-}
-
-onSwipe = (gestureName, gestureState) => {
-  this.moveWithDirection(gestureName);
-}
-
-
-renderGame = () => {
-
-  if (!this.state.ready) {
-    return;
+    let target = this._hero.hitBy.mesh.position.x;
+    this._hero.position.x += this._hero.hitBy.speed;
+    if (this.initialPosition)
+    this.initialPosition.x = target;
   }
 
-  const config = {
-    velocityThreshold: 0.3,
-    directionalOffsetThreshold: 80
-  };
+  rumbleScreen = () => {
+    Vibration.vibrate();
 
-  return (
-    <AnimatedGestureRecognizer
-      onResponderGrant={_=> {
-        this.beginMoveWithDirection();
-      }}
-      onSwipe={(direction, state) => this.onSwipe(direction, state)}
-      config={config}
-      style={{
-        flex: 1,
-      }}
-      >
-        <TouchableWithoutFeedback
-          onPressIn={_=> {
-            this.beginMoveWithDirection();
-          }}
-          style={{flex: 1}}
-          onPress={_=> {
-            this.onSwipe(swipeDirections.SWIPE_UP, {});
-          }}>
-          {Expo.Constants.isDevice && <THREEView
-            backgroundColor={sceneColor}
-            shadowMapEnabled={true}
-            shadowMapRenderSingleSided={true}
-            style={{ flex: 1 }}
-            scene={this.scene}
-            camera={this.camera}
-            tick={this.tick}
-          />}
-        </TouchableWithoutFeedback>
-      </AnimatedGestureRecognizer>
-    );
+    TweenMax.to(this.scene.position, 0.2, {
+      x: 0,
+      y: 0,
+      z: 1,
+    })
+    TweenMax.to(this.scene.position, 0.2, {
+      x: 0,
+      y: 0,
+      z: 0,
+      delay: 0.2,
+    })
   }
 
-  render() {
+  // Move scene forward
+  forwardScene = () => {
+    const easing = 0.03;
+    this.camera.position.z += (((this._hero.position.z + 1) - this.camera.position.z) * easing);
+    this.camera.position.x =  Math.min(2, Math.max(-2, this.camera.position.x + (((this._hero.position.x) - this.camera.position.x) * easing)));
+
+    // normal camera speed
+    if (this.camera.position.z - this.camCount > 1.0) {
+      this.camCount = this.camera.position.z;
+      this.newRow();
+    }
+  }
+
+  // Reset variables, restart game
+  gameOver = () => {
+    // this.trees.map(val => this.scene.remove(val) );
+
+    this._hero.moving = false;
+
+    /// Stop player from finishing a movement
+    this.heroAnimations.map(val => {val.pause(); val = null;} );
+    this.heroAnimations = [];
+    this.gameState = State.Game.gameOver;
+    this.props.setGameState(this.gameState)
+
+    InteractionManager.runAfterInteractions(_=> {
+      this.props.navigation.dispatch(NavigationActions.navigate({ routeName: 'GameOver' }))
+    });
+    // this.props.nav.navigation.navigate('GameOver', {})
+  }
+
+  tick = dt => {
+    // this.drive();
+
+    for (let railRoad of this.railRoads) {
+      railRoad.update(dt, this._hero)
+    }
+
+    for (let road of this.road) {
+      road.update(dt, this._hero)
+    }
+
+    for (let water of this.water) {
+      water.update(dt, this._hero)
+    }
+
+
+    if (!this._hero.moving) {
+      this.moveUserOnEntity();
+      this.moveUserOnCar();
+
+      // this.waterCollision();
+      // this.checkIfUserHasFallenOutOfFrame();
+    }
+
+    // this.carCollision();
+    this.forwardScene();
+
+
+
+
+  }
+
+
+  checkIfUserHasFallenOutOfFrame = () => {
+    if (this.gameState !== State.Game.playing) {
+      return
+    }
+    if (this._hero.position.z < this.camera.position.z - 8) {
+
+      ///TODO: rumble
+      this.rumbleScreen()
+
+      this.gameOver();
+    }
+
+    /// Check if offscreen
+    if (this._hero.position.x < -5 || this._hero.position.x > 5) {
+
+      ///TODO: Rumble death
+      this.rumbleScreen()
+
+      this.gameOver();
+    }
+  }
+
+  updateScore = () => {
+    const position = Math.max(Math.floor(this._hero.position.z) - 8, 0);
+    if (this.state.score < position) {
+      this.setState({score: position})
+    }
+  }
+
+  moveWithDirection = direction => {
+    if (this.gameState != State.Game.playing ) {
+      return;
+    }
+
+    const {SWIPE_UP, SWIPE_DOWN, SWIPE_LEFT, SWIPE_RIGHT} = swipeDirections;
+
+    this._hero.ridingOn = null;
+
+    if (!this.initialPosition) {
+      this.initialPosition = this._hero.position;
+      this.targetPosition = this.initialPosition;
+    }
+
+    if (this._hero.moving) {
+      this._hero.position = this.targetPosition;
+      // return
+    };
+
+    switch (direction) {
+      case SWIPE_LEFT:
+      this._hero.rotation.y = Math.PI/2
+      if (!this.treeCollision("left")) {
+        this.targetPosition = {x: this.initialPosition.x + 1, y: this.initialPosition.y, z: this.initialPosition.z};
+        this._hero.moving = true;
+      }
+      break;
+      case SWIPE_RIGHT:
+      this._hero.rotation.y = -Math.PI/2
+      if (!this.treeCollision("right")) {
+        this.targetPosition = {x: this.initialPosition.x - 1, y: this.initialPosition.y, z: this.initialPosition.z};
+        this._hero.moving = true;
+
+      }
+      break;
+      case SWIPE_UP:
+      this._hero.rotation.y = 0;
+      if (!this.treeCollision("up")) {
+        const row = this.floorMap[`${this.targetPosition.z + 1}`]
+        let shouldRound = row !== "log" || row !== "lily"
+        this.targetPosition = {x: this.initialPosition.x, y: this.initialPosition.y, z: this.initialPosition.z + 1};
+        if (shouldRound) {
+          // this.targetPosition.x = Math.floor(this.targetPosition.x);
+        }
+        this._hero.moving = true;
+
+      }
+      break;
+      case SWIPE_DOWN:
+      this._hero.rotation.y = Math.PI
+      if (!this.treeCollision("down")) {
+        const row = this.floorMap[`${this.targetPosition.z - 1}`]
+        let shouldRound = row !== "log" || row !== "lily"
+        this.targetPosition = {x: this.initialPosition.x, y: this.initialPosition.y, z: this.initialPosition.z - 1};
+        if (shouldRound) {
+          // this.targetPosition.x = Math.floor(this.targetPosition.x);
+        }
+        this._hero.moving = true;
+
+      }
+      break;
+    }
+
+
+
+    let {targetPosition, initialPosition} = this;
+
+
+    // if (Math.abs(targetPosition.x - initialPosition.x) > 0 && this.onLog && this.currentLog && this.currentLog >= 0) {
+    //   const {speed} = this.logs[this.currentLog];
+    //   // delta.x = (targetPosition.x - Math.round(initialPosition.x))
+    //   // delta.z += (speed < 0) ? -1 : 1;
+    //   if (speed > 0) {
+    //   targetPosition.x = Math.ceil(targetPosition.x)
+    // } else {
+    //   targetPosition.x = Math.floor(targetPosition.x)
+    // }
+    //
+    // }
+    let delta = {x: (targetPosition.x - initialPosition.x), y: targetPosition.y - initialPosition.y, z: targetPosition.z - initialPosition.z}
+
+    let timing = 0.5;
+
+    this.heroAnimations = [];
+
+    this.heroAnimations.push(TweenMax.to(this._hero.position, this.timing, {
+      x: this.initialPosition.x + (delta.x * 0.75),
+      y: groundLevel + 0.5,
+      z: this.initialPosition.z + (delta.z * 0.75),
+    }));
+
+    this.heroAnimations.push(TweenMax.to(this._hero.scale, this.timing, {
+      x: 1,
+      y: 1.2,
+      z: 1,
+    }));
+    this.heroAnimations.push(TweenMax.to(this._hero.scale, this.timing, {
+      x: 1.0,
+      y: 0.8,
+      z: 1,
+      delay: this.timing
+    }));
+    this.heroAnimations.push(TweenMax.to(this._hero.scale, this.timing, {
+      x: 1,
+      y: 1,
+      z: 1,
+      ease: Bounce.easeOut,
+      delay: this.timing * 2
+    }));
+
+    this.heroAnimations.push(TweenMax.to(this._hero.position, this.timing, {
+      x: this.targetPosition.x,
+      y: this.targetPosition.y,
+      z: this.targetPosition.z,
+      ease: Power4.easeOut,
+      delay: 0.151,
+      onComplete: this.doneMoving,
+      onCompleteParams: []
+    }));
+
+
+    this.initialPosition = this.targetPosition;
+
+  }
+
+  beginMoveWithDirection = direction => {
+    if (this.gameState != State.Game.playing) {
+      return;
+    }
+
+    let timing = 0.2;
+
+    TweenMax.to(this._hero.scale, timing, {
+      x: 1.2,
+      y: 0.75,
+      z: 1,
+      // ease: Bounce.easeOut,
+    });
+  }
+
+  onSwipe = (gestureName, gestureState) => {
+    this.moveWithDirection(gestureName);
+  }
+
+
+  renderGame = () => {
+
+    if (!this.state.ready) {
+      return;
+    }
+
+    const config = {
+      velocityThreshold: 0.3,
+      directionalOffsetThreshold: 80
+    };
 
     return (
-      <View style={[{flex: 1, backgroundColor: '#6dceea'}, this.props.style]}>
+      <AnimatedGestureRecognizer
+        onResponderGrant={_=> {
+          this.beginMoveWithDirection();
+        }}
+        onSwipe={(direction, state) => this.onSwipe(direction, state)}
+        config={config}
+        style={{
+          flex: 1,
+        }}
+        >
+          <TouchableWithoutFeedback
+            onPressIn={_=> {
+              this.beginMoveWithDirection();
+            }}
+            style={{flex: 1}}
+            onPress={_=> {
+              this.onSwipe(swipeDirections.SWIPE_UP, {});
+            }}>
+            {Expo.Constants.isDevice && <THREEView
+              backgroundColor={sceneColor}
+              shadowMapEnabled={true}
+              shadowMapRenderSingleSided={true}
+              style={{ flex: 1 }}
+              scene={this.scene}
+              camera={this.camera}
+              tick={this.tick}
+            />}
+          </TouchableWithoutFeedback>
+        </AnimatedGestureRecognizer>
+      );
+    }
 
-        {this.renderGame()}
+    render() {
 
-        <Score score={this.state.score} gameOver={this.props.gameState === State.Game.gameOver}
-        />
-      </View>
-    );
+      return (
+        <View style={[{flex: 1, backgroundColor: '#6dceea'}, this.props.style]}>
+
+          {this.renderGame()}
+
+          <Score score={this.state.score} gameOver={this.props.gameState === State.Game.gameOver}
+          />
+        </View>
+      );
+    }
   }
-}
 
-import Score from './Score';
-import {connect} from 'react-redux';
-export default connect(
-  state => ({
-    nav: state.nav
-  }),
-  {
-  }
-)(Game);
+  import Score from './Score';
+  import {connect} from 'react-redux';
+  export default connect(
+    state => ({
+      nav: state.nav
+    }),
+    {
+    }
+  )(Game);

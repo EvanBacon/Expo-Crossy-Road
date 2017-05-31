@@ -19,14 +19,14 @@ export default class Road extends THREE.Object3D {
 
   carGen = () => {
     this.cars.map(val => {
-      this.road.remove(val);
+      this.road.remove(val.mesh);
       val = null;
     })
     this.cars = [];
 
     // Speeds: .01 through .08
     // Number of cars: 1 through 3
-    let speed = (Math.floor(Math.random() * (4)) + 2) / 80;
+    let speed = (Math.random() * 0.07) + 0.01;
     let numCars = Math.floor(Math.random() * 2) + 1;
     let xDir = 1;
 

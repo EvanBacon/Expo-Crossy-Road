@@ -20,15 +20,62 @@ export default class Road extends THREE.Object3D {
 
   generate = () => {
     this.entities.map(val => {
-      this.floor.remove(val);
+      this.floor.remove(val.mesh);
       val = null;
     })
     this.entities = [];
 
+
+    if (this.isStaticRow(this.position.z|0)) {
+      this.generateStatic();
+    } else {
+      this.generateDynamic();
+    }
+
+
+  }
+
+  generateStatic = () => {
     // Speeds: .01 through .08
     // Number of cars: 1 through 3
-    let speed = (Math.floor(Math.random() * (4)) + 2) / 80;
-    let numItems = Math.floor(Math.random() * 2) + 1;
+    let numItems = Math.floor(Math.random() * 2) + 2;
+
+    let xPos = (Math.random() * 2) - 4;
+
+    for (let x = 0; x < numItems; x++) {
+
+      if (this.entities.length - 1 < x) {
+
+        let mesh = modelLoader._lilyPad.getRandom();
+        const width = this.getWidth(mesh);
+        this.entities.push({mesh: mesh, min: 0, mid: 0.125, dir: 0, width, collisionBox: (this.heroWidth / 2 + width / 2 - 0.1) });
+        this.floor.add(mesh)
+      }
+
+      this.entities[x].mesh.position.set(xPos + 0.4, 0.125, 0);
+      this.entities[x].speed = 0;
+      // this.entities[x].mesh.rotation.y = (Math.PI / 2) * xDir;
+
+
+
+      TweenMax.to(this.entities[x].mesh.rotation, (Math.random() * 2) + 2, {
+        y: (Math.random() * 1.5) + 0.5,
+        yoyo: true,
+        repeat: -1,
+        ease: Power2.easeInOut
+      });
+
+
+      xPos += ((Math.random() * 2) + 1);
+    }
+  }
+
+  generateDynamic = () => {
+
+    // Speeds: .01 through .08
+    // Number of cars: 1 through 3
+    let speed = (Math.random() * 0.07) + 0.01;
+    let numItems = Math.floor(Math.random() * 2) + 2;
     let xDir = 1;
 
     if (Math.random() > .5) {
@@ -44,7 +91,7 @@ export default class Road extends THREE.Object3D {
         let mesh = modelLoader._log.getRandom();
         const width = this.getWidth(mesh);
 
-        this.entities.push({mesh: mesh, dir: xDir, width, collisionBox: (this.heroWidth / 2 + width / 2 - 0.1) });
+        this.entities.push({mesh: mesh, min: -0.3, mid: -0.1, dir: xDir, width, collisionBox: (this.heroWidth / 2 + width / 2 - 0.1) });
 
         this.floor.add(mesh)
       }
@@ -55,27 +102,30 @@ export default class Road extends THREE.Object3D {
 
       xPos -= ((Math.random() * 3) + 5) * xDir;
     }
+
   }
 
+
   bounce = ({entity, player}) => {
-      let timing = 0.2;
-      TweenMax.to(entity.mesh.position, timing * 0.9, {
-        y: -0.3,
-      });
+    let timing = 0.2;
 
-      TweenMax.to(entity.mesh.position, timing, {
-        y: -0.1,
-        delay: timing
-      });
+    TweenMax.to(entity.mesh.position, timing * 0.9, {
+      y: entity.min,
+    });
 
-      TweenMax.to(player.position, timing * 0.9, {
-        y: groundLevel + -0.1,
-      });
+    TweenMax.to(entity.mesh.position, timing, {
+      y: entity.mid,
+      delay: timing
+    });
 
-      TweenMax.to(player.position, timing, {
-        y: groundLevel,
-        delay: timing
-      });
+    TweenMax.to(player.position, timing * 0.9, {
+      y: groundLevel + -0.1,
+    });
+
+    TweenMax.to(player.position, timing, {
+      y: groundLevel,
+      delay: timing
+    });
 
 
   }
@@ -96,8 +146,11 @@ export default class Road extends THREE.Object3D {
     foam.run();
     this.floor.add(foam.mesh);
 
+  }
 
-    this.generate();
+  ///Is Lily
+  isStaticRow = (index) => {
+    return (index % 2 == 0) //&& (Math.random() * 2 == 0)
   }
 
   update = (dt, player) => {
@@ -107,28 +160,25 @@ export default class Road extends THREE.Object3D {
     this.entities.map(entity => this.move({dt, player, entity}) )
 
     if (!player.moving && !player.ridingOn) {
-
-        this.entities.map(entity => this.shouldCheckCollision({dt, player, entity}) )
-        this.shouldCheckHazardCollision({player});
-
+      this.entities.map(entity => this.shouldCheckCollision({dt, player, entity}) )
+      this.shouldCheckHazardCollision({player});
     }
-
   }
 
   move = ({dt, player, entity}) => {
     const {position, ridingOn, moving} = player;
-      const offset = 11;
+    const offset = 11;
 
-        entity.mesh.position.x += entity.speed;
+    entity.mesh.position.x += entity.speed;
 
-        if (entity.mesh.position.x > offset && entity.speed > 0) {
-          entity.mesh.position.x = -offset;
-        } else if (entity.mesh.position.x < -offset && entity.speed < 0) {
-          entity.mesh.position.x = offset;
-        } else {
+    if (entity.mesh.position.x > offset && entity.speed > 0) {
+      entity.mesh.position.x = -offset;
+    } else if (entity.mesh.position.x < -offset && entity.speed < 0) {
+      entity.mesh.position.x = offset;
+    } else {
 
 
-        }
+    }
 
   }
 
