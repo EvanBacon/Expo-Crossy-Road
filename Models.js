@@ -10,143 +10,143 @@ export default {
       texture: require('./assets/models/collectables/coins/yellow/0.png'),
     },
   },
-  enviroment: {
+  environment: {
     bird: {
       idle: {
         '0':{
-          model: require('./assets/models/enviroment/bird/idle/0/0.obj'),
-          texture: require('./assets/models/enviroment/bird/idle/0/0.png'),
+          model: require('./assets/models/environment/bird/idle/0/0.obj'),
+          texture: require('./assets/models/environment/bird/idle/0/0.png'),
         },
         '1': {
-          model: require('./assets/models/enviroment/bird/idle/1/0.obj'),
-          texture: require('./assets/models/enviroment/bird/idle/1/0.png'),
+          model: require('./assets/models/environment/bird/idle/1/0.obj'),
+          texture: require('./assets/models/environment/bird/idle/1/0.png'),
         }
       },
       flying: {
         '0':{
-          model: require('./assets/models/enviroment/bird/flying/0/0.obj'),
-          texture: require('./assets/models/enviroment/bird/flying/0/0.png'),
+          model: require('./assets/models/environment/bird/flying/0/0.obj'),
+          texture: require('./assets/models/environment/bird/flying/0/0.png'),
         },
         '1': {
-          model: require('./assets/models/enviroment/bird/flying/1/0.obj'),
-          texture: require('./assets/models/enviroment/bird/flying/1/0.png'),
+          model: require('./assets/models/environment/bird/flying/1/0.obj'),
+          texture: require('./assets/models/environment/bird/flying/1/0.png'),
         },
         '2': {
-          model: require('./assets/models/enviroment/bird/flying/2/0.obj'),
-          texture: require('./assets/models/enviroment/bird/flying/2/0.png'),
+          model: require('./assets/models/environment/bird/flying/2/0.obj'),
+          texture: require('./assets/models/environment/bird/flying/2/0.png'),
         }
       }
 
     },
     eagle: {
       '0': {
-        model: require('./assets/models/enviroment/eagle/0/0.obj'),
-        texture: require('./assets/models/enviroment/eagle/0/0.png'),
+        model: require('./assets/models/environment/eagle/0/0.obj'),
+        texture: require('./assets/models/environment/eagle/0/0.png'),
       },
       '1': {
-        model: require('./assets/models/enviroment/eagle/1/0.obj'),
-        texture: require('./assets/models/enviroment/eagle/1/0.png'),
+        model: require('./assets/models/environment/eagle/1/0.obj'),
+        texture: require('./assets/models/environment/eagle/1/0.png'),
       },
       '2': {
-        model: require('./assets/models/enviroment/eagle/2/0.obj'),
-        texture: require('./assets/models/enviroment/eagle/2/0.png'),
+        model: require('./assets/models/environment/eagle/2/0.obj'),
+        texture: require('./assets/models/environment/eagle/2/0.png'),
       },
     },
 
     grass: {
       '0': {
-        model: require('./assets/models/enviroment/grass/0/0.obj'),
-        texture: require('./assets/models/enviroment/grass/0/0.png'),
+        model: require('./assets/models/environment/grass/0/0.obj'),
+        texture: require('./assets/models/environment/grass/0/0.png'),
       },
       '1': {
-        model: require('./assets/models/enviroment/grass/1/0.obj'),
-        texture: require('./assets/models/enviroment/grass/1/0.png'),
+        model: require('./assets/models/environment/grass/1/0.obj'),
+        texture: require('./assets/models/environment/grass/1/0.png'),
       }
     },
     road: {
       '0': {
-        model: require('./assets/models/enviroment/road/0/0.obj'),
-        texture: require('./assets/models/enviroment/road/0/0.png'),
+        model: require('./assets/models/environment/road/0/0.obj'),
+        texture: require('./assets/models/environment/road/0/0.png'),
       },
       '1': {
-        model: require('./assets/models/enviroment/road/1/0.obj'),
-        texture: require('./assets/models/enviroment/road/1/0.png'),
+        model: require('./assets/models/environment/road/1/0.obj'),
+        texture: require('./assets/models/environment/road/1/0.png'),
       }
     },
     log: {
       '0': {
-        model: require('./assets/models/enviroment/log/0/0.obj'),
-        texture: require('./assets/models/enviroment/log/0/0.png'),
+        model: require('./assets/models/environment/log/0/0.obj'),
+        texture: require('./assets/models/environment/log/0/0.png'),
       },
       '1': {
-        model: require('./assets/models/enviroment/log/1/0.obj'),
-        texture: require('./assets/models/enviroment/log/1/0.png'),
+        model: require('./assets/models/environment/log/1/0.obj'),
+        texture: require('./assets/models/environment/log/1/0.png'),
       },
       '2': {
-        model: require('./assets/models/enviroment/log/2/0.obj'),
-        texture: require('./assets/models/enviroment/log/2/0.png'),
+        model: require('./assets/models/environment/log/2/0.obj'),
+        texture: require('./assets/models/environment/log/2/0.png'),
       },
       '3': {
-        model: require('./assets/models/enviroment/log/3/0.obj'),
-        texture: require('./assets/models/enviroment/log/3/0.png'),
+        model: require('./assets/models/environment/log/3/0.obj'),
+        texture: require('./assets/models/environment/log/3/0.png'),
       }
     },
     tree: {
       '0': {
-        model: require('./assets/models/enviroment/tree/0/0.obj'),
-        texture: require('./assets/models/enviroment/tree/0/0.png'),
+        model: require('./assets/models/environment/tree/0/0.obj'),
+        texture: require('./assets/models/environment/tree/0/0.png'),
       },
       '1': {
-        model: require('./assets/models/enviroment/tree/1/0.obj'),
-        texture: require('./assets/models/enviroment/tree/1/0.png'),
+        model: require('./assets/models/environment/tree/1/0.obj'),
+        texture: require('./assets/models/environment/tree/1/0.png'),
       },
       '2': {
-        model: require('./assets/models/enviroment/tree/2/0.obj'),
-        texture: require('./assets/models/enviroment/tree/2/0.png'),
+        model: require('./assets/models/environment/tree/2/0.obj'),
+        texture: require('./assets/models/environment/tree/2/0.png'),
       },
       '3': {
-        model: require('./assets/models/enviroment/tree/3/0.obj'),
-        texture: require('./assets/models/enviroment/tree/3/0.png'),
+        model: require('./assets/models/environment/tree/3/0.obj'),
+        texture: require('./assets/models/environment/tree/3/0.png'),
       }
     },
     lily_pad: {
-      model: require('./assets/models/enviroment/lily_pad/0.obj'),
-      texture: require('./assets/models/enviroment/lily_pad/0.png'),
+      model: require('./assets/models/environment/lily_pad/0.obj'),
+      texture: require('./assets/models/environment/lily_pad/0.png'),
     },
 
     river: {
-      model: require('./assets/models/enviroment/river/0.obj'),
-      texture: require('./assets/models/enviroment/river/0.png'),
+      model: require('./assets/models/environment/river/0.obj'),
+      texture: require('./assets/models/environment/river/0.png'),
     },
     railroad: {
-      model: require('./assets/models/enviroment/railroad/0.obj'),
-      texture: require('./assets/models/enviroment/railroad/0.png'),
+      model: require('./assets/models/environment/railroad/0.obj'),
+      texture: require('./assets/models/environment/railroad/0.png'),
 
     },
     train_light: {
       active: {
         '0': {
-          model: require('./assets/models/enviroment/train_light/active/0/0.obj'),
-          texture: require('./assets/models/enviroment/train_light/active/0/0.png'),
+          model: require('./assets/models/environment/train_light/active/0/0.obj'),
+          texture: require('./assets/models/environment/train_light/active/0/0.png'),
         },
         '1': {
-          model: require('./assets/models/enviroment/train_light/active/1/0.obj'),
-          texture: require('./assets/models/enviroment/train_light/active/1/0.png'),
+          model: require('./assets/models/environment/train_light/active/1/0.obj'),
+          texture: require('./assets/models/environment/train_light/active/1/0.png'),
         },
       },
       inactive: {
-        model: require('./assets/models/enviroment/train_light/inactive/0.obj'),
-        texture: require('./assets/models/enviroment/train_light/inactive/0.png'),
+        model: require('./assets/models/environment/train_light/inactive/0.obj'),
+        texture: require('./assets/models/environment/train_light/inactive/0.png'),
       }
     },
     boulder: {
       '0': {
-        model: require('./assets/models/enviroment/boulder/0/0.obj'),
-        texture: require('./assets/models/enviroment/boulder/0/0.png'),
+        model: require('./assets/models/environment/boulder/0/0.obj'),
+        texture: require('./assets/models/environment/boulder/0/0.png'),
       },
       '1': {
-        model: require('./assets/models/enviroment/boulder/1/0.obj'),
-        texture: require('./assets/models/enviroment/boulder/1/0.png'),
+        model: require('./assets/models/environment/boulder/1/0.obj'),
+        texture: require('./assets/models/environment/boulder/1/0.png'),
       }
     },
 
