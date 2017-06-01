@@ -5,26 +5,33 @@ import * as THREE from 'three'
 
 export default class Train extends Generic {
 
-  withSize = (size = 1) => {
-    return this.getNode('front');
+  getDepth = mesh => {
+    let box3 = new THREE.Box3();
+    box3.setFromObject(mesh);
 
-    const _train = THREE.Mesh();
+    return Math.round(box3.max.x - box3.min.x);
+  }
+
+
+  withSize = (size = 2) => {
+
+
+    const _train = new THREE.Group();
 
     const front = this.getNode('front');
     _train.add(front);
 
     //
-    // var box = new THREE.Box3().setFromObject( front );
+
     // console.log( box.min, box.max, box.size() );
-    let offset = 2;
+    let offset = this.getDepth(front);
     //
     for (let i = 0; i < size; i++) {
       const middle = this.getNode('middle');
       middle.position.x = offset; //TODO: Measure.
 
       _train.add(middle);
-      offset += 2;
-      // offset += (new THREE.Box3().setFromObject( middle )).size().width;
+      offset += this.getDepth(middle);
     }
     const back = this.getNode('back');
     back.position.x = offset;

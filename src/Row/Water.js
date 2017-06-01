@@ -197,7 +197,7 @@ export default class Road extends THREE.Object3D {
           player.position.y = y;
           player.rotation.y += 0.01;
 
-          player.position.x += this.entities[0].speed / 3;
+          player.position.x += this.entities[0].speed;
         }
       }
     }
