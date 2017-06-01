@@ -35,7 +35,7 @@ const gameTransform = createTransform(
 
 const storeSettings = {
   storage: AsyncStorage,
-  blacklist: [ `nav`],
+  blacklist: [ `nav`, 'game', 'character'],
   transforms: [
     gameTransform
   ]
@@ -57,7 +57,7 @@ class Root extends React.Component {
       console.log("Rehydrated");
       // console.warn(JSON.stringify(store.getState()))
       this.setState({ rehydrated: true })
-    }).purge(['nav']); /// Just in case ;)
+    }).purge(['nav', 'game', 'character']); /// Just in case ;)
   }
 
   async _loadAssetsAsync() {

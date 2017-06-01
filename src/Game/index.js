@@ -58,6 +58,7 @@ class Game extends Component {
         this.scene.add(this._hero);
         this._hero.position.set(0, groundLevel, startingRow);
         this._hero.scale.set(1,1,1);
+        this.doGame();
 
       })()
     }
