@@ -23,6 +23,111 @@ export default {
     index: 4,
     name: "Tree Frog",
     id: "tree_frog"
-  }
+  },
+  emo_goose: {
+    index: 5,
+    name: "Emo Goose",
+    id: "emo_goose"
+  },
+  the_dark_lord: {
+    index: 6,
+    name: "The Dark Lord",
+    id: "the_dark_lord"
+  },
+  celebrity: {
+    index: 7,
+    name: "Celebrity",
+    id: "celebrity"
+  },
+  brown_bunny: {
+    index: 8,
+    name: "Brown Bunny",
+    id: "brown_bunny"
+  },
+  ghost: {
+    index: 9,
+    name: "Ghost",
+    id: "ghost"
+  },
+  baller: {
+    index: 10,
+    name: "Baller",
+    id: "baller"
+  },
+  zombie: {
+    index: 11,
+    name: "Zombie",
+    id: "zombie"
+  },
+  vampire: {
+    index: 12,
+    name: "Vampire",
+    id: "vampire"
+  },
+  mallard: {
+    index: 13,
+    name: "Mallard",
+    id: "mallard"
+  },
+  penguin: {
+    index: 14,
+    name: "Penguin",
+    id: "penguin"
+  },
+  pew_die_pug: {
+    index: 15,
+    name: "Pew Die Pug",
+    id: "pew_die_pug"
+  },
+  platypus: {
+    index: 16,
+    name: "Platypus",
+    id: "platypus"
+  },
+  rusty_robot: {
+    index: 17,
+    name: "Rusty Robot",
+    id: "rusty_robot"
+  },
+  specimen_115: {
+    index: 18,
+    name: "Specimen 115",
+    id: "specimen_115"
+  },
+  mad_wizard: {
+    index: 19,
+    name: "Mad Wizard",
+    id: "mad_wizard"
+  },
+  kiwi: {
+    index: 20,
+    name: "Kiwi",
+    id: "kiwi"
+  },
+  kangaroo: {
+    index: 21,
+    name: "Kangaroo",
+    id: "kangaroo"
+  },
+  hipster_whale: {
+    index: 22,
+    name: "Hipster Whale",
+    id: "hipster_whale"
+  },
+  floppy_fish: {
+    index: 23,
+    name: "Floppy Fish",
+    id: "floppy_fish"
+  },
+  doge: {
+    index: 24,
+    name: "Doge",
+    id: "doge"
+  },
+  crazy_ol_ben: {
+    index: 25,
+    name: "Crazy Ol' Ben",
+    id: "crazy_ol_ben"
+  },
 
 }

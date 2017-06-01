@@ -13,32 +13,29 @@ if (!console.timeEnd) {
   console.timeEnd = () => {};
 }
 
-export default (async name => {
-  if (!Models.hasOwnProperty(name)) {
-    return null;
-  }
-  let asset = Models[name];
+export default (async ({model, texture}) => {
+
 
   const loader = new THREE.OBJLoader();
-  let model = await new Promise((resolve, reject) =>
+  let _model = await new Promise((resolve, reject) =>
   loader.load(
-    Expo.Asset.fromModule(asset.model).uri,
+    Expo.Asset.fromModule(model).uri,
     resolve,
     () => {},
     reject)
   );
-  const textureAsset = Expo.Asset.fromModule(asset.texture);
+  const textureAsset = Expo.Asset.fromModule(texture);
 
   await textureAsset.downloadAsync();
-  const texture = THREEView.textureFromAsset(textureAsset);
-  texture.magFilter = THREE.LinearFilter;
-  texture.minFilter = THREE.LinearFilter;
-  model.traverse(child => {
+  const _texture = THREEView.textureFromAsset(textureAsset);
+  _texture.magFilter = THREE.LinearFilter;
+  _texture.minFilter = THREE.LinearFilter;
+  _model.traverse(child => {
     if (child instanceof THREE.Mesh) {
       // child.material.color = 0x00ff00;
-      child.material.map = texture;
+      child.material.map = _texture;
     }
   });
 
-  return model;
+  return _model;
 });
