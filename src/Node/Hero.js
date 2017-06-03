@@ -4,12 +4,17 @@ import Characters from '../../Characters';
 
 export default class Hero extends Generic {
   setup = async () => {
-    const characters = this.globalModels.characters;
+    const {characters} = this.globalModels;
+
     for (let id of Object.keys(Characters)) {
+      console.warn("Master", id, Object.keys(Characters).toString(), Characters.hasOwnProperty(id) )
+
       if (Characters.hasOwnProperty(id)) {
         let character = Characters[id];
-        const model = await this._download(characters[id]);
-        this.models[`${id}`] = model;
+
+        const {model, texture} = characters[character.id];
+        console.warn("Json", model, texture)
+        this.models[character.id] = await this._download({model, texture});
       }
     }
     return this.models;

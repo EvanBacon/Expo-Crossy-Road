@@ -7,9 +7,11 @@ road_1: Single Lane Road.
 */
 export default class Road extends Generic {
   setup = async () => {
+    const {environment: {road} } = this.globalModels;
+
     for (let i = 0; i < 2; i++) {
-      const model = await this._download(`road_${i}`);
-      this.models[`${i}`] = model;
+      console.warn(road);
+      this.models[`${i}`] = await this._download(road[`${i}`]);
     }
     return this.models;
   }

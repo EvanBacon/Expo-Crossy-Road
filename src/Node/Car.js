@@ -16,10 +16,11 @@ const cars = [
 export default class Car extends Generic {
 
   setup = async () => {
+    const {vehicles } = this.globalModels;
+
     for (let index in cars) {
       let car = cars[index];
-      const model = await this._download(car);
-      this.models[`${index}`] = model;
+      this.models[`${index}`] = await this._download(vehicles[car]);
     }
 
     return this.models;

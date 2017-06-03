@@ -93,7 +93,7 @@ class AppWithNavigationState extends React.Component {
         <App navigation={navigation}
         />
       }
-      
+
       </View>
     )
   }

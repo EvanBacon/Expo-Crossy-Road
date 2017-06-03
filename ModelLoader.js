@@ -49,6 +49,7 @@ class ModelLoader {
         this._boulder.setup(),
         this._tree.setup(),
         this._car.setup(),
+        //
         this._railroad.setup(),
         this._train.setup(),
         this._hero.setup(),

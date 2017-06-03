@@ -1,8 +1,13 @@
 import { Image } from 'react-native';
 import { Asset, Font } from 'expo';
 
-export default function cacheAssetsAsync({ images = [], fonts = [] }) {
-  return Promise.all([...cacheImages(images), ...cacheFonts(fonts)]);
+export default function cacheAssetsAsync({ images = [], fonts = [], audio = [] }) {
+  return Promise.all([...cacheImages(images), ...cacheFonts(fonts), ...cacheAudio(audio)]);
+}
+
+
+function cacheAudio(audio) {
+  return audio.map(phile => Asset.fromModule(phile).downloadAsync() );
 }
 
 function cacheImages(images) {

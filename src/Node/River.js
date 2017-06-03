@@ -4,7 +4,8 @@ import Generic from './Generic';
 
 export default class River extends Generic {
   setup = async () => {
-    const model = await this._download(`river`);
+    const {environment: {river} } = this.globalModels;
+    let model = await this._download(river);
     this.models[`${0}`] = model;
     return model;
   }

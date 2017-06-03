@@ -2,12 +2,12 @@ export default {
 
   coins: {
     red: {
-      model: require('./assets/models/collectables/coins/red/0.obj'),
-      texture: require('./assets/models/collectables/coins/red/0.png'),
+      model: require('./assets/models/collectables/red/0.obj'),
+      texture: require('./assets/models/collectables/red/0.png'),
     },
     yellow: {
-      model: require('./assets/models/collectables/coins/yellow/0.obj'),
-      texture: require('./assets/models/collectables/coins/yellow/0.png'),
+      model: require('./assets/models/collectables/yellow/0.obj'),
+      texture: require('./assets/models/collectables/yellow/0.png'),
     },
   },
   environment: {

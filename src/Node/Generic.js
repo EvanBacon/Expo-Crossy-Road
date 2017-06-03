@@ -23,13 +23,21 @@ export default class Generic {
   _downloadAssets = async ({model, texture}) => {
 
     const loader = new THREE.OBJLoader();
-    let _model = await new Promise((resolve, reject) =>
+let _model;
+    try {
+
+
+    _model = await new Promise((resolve, reject) =>
     loader.load(
       Expo.Asset.fromModule(model).uri,
       resolve,
       () => {},
       reject)
     );
+
+  } catch (error) {
+    console.error(error);
+  }
     const textureAsset = Expo.Asset.fromModule(texture);
 
     await textureAsset.downloadAsync();
@@ -41,6 +49,8 @@ export default class Generic {
     _model.traverse(child => {
       if (child instanceof THREE.Mesh) {
         child.material.map = _texture;
+        child.castShadow = true;
+
       }
     });
 
@@ -56,35 +66,25 @@ export default class Generic {
   }
 
   getNode = (key = '0') => {
+    console.warn(key, JSON.stringify(Object.keys(this.models)))
     if (this.models.hasOwnProperty(key)) {
       return this.models[key].clone();
     } else {
-      console.error(`Node with Key ${key} does not exist in ${this}! Node/Generic`);
+      console.warn(`Node with Key ${key} does not exist in ${JSON.stringify(Object.keys(this.models))}! Node/Generic`);
     }
   }
 
-  _download = async name => {
+  _download = async (props) => {
 
+    let model;
     try {
-      const model = await this._downloadAssets(name);
-
-      //Shadows ain't working D:
-      // if (name == "chicken") {
-        // model.receiveShadow = true;
-        // model.castShadow = true;
-
-        model.traverse( function( node ) { if ( node instanceof THREE.Mesh ) {
-          node.castShadow = true;
-          // node.receiveShadow = true;
-        } } );
-      // }
-
-
-      return model;
+      model = await this._downloadAssets(props);
     } catch (error) {
       console.error(error);
+      return;
     }
 
+    return model;
   }
 
   setup = async () => {

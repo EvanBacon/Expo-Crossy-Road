@@ -41,9 +41,11 @@ export default class Train extends Generic {
   }
 
   setup = async () => {
-    const front = await this._download(`train_front`);
-    const middle = await this._download(`train_middle`);
-    const back = await this._download(`train_back`);
+    const {vehicles: {train} } = this.globalModels;
+
+    const front = await this._download(train[`front`]);
+    const middle = await this._download(train[`middle`]);
+    const back = await this._download(train[`back`]);
 
     // await Promise.all([
     //   front,

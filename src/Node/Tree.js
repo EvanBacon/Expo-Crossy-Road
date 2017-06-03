@@ -3,9 +3,9 @@ import Generic from './Generic';
 
 export default class Grass extends Generic {
   setup = async () => {
+    const {environment: {tree} } = this.globalModels;
     for (let i = 0; i < 4; i++) {
-      const model = await this._download(`tree_${i}`);
-      this.models[`${i}`] = model;
+      this.models[`${i}`] = await this._download(tree[`${i}`]);
     }
     return this.models;
   }
