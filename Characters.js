@@ -129,5 +129,24 @@ export default {
     name: "Crazy Ol' Ben",
     id: "crazy_ol_ben"
   },
-
+  nikki: {
+    index: 26,
+    name: "Nikki",
+    id: "nikki"
+  },
+  ide: {
+    index: 27,
+    name: "Ide",
+    id: "ide"
+  },
+  brent: {
+    index: 28,
+    name: "Brent",
+    id: "brent"
+  },
+  bacon: {
+    index: 29,
+    name: "Mr. Bacon",
+    id: "bacon"
+  },
 }

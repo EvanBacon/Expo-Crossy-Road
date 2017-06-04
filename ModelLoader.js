@@ -18,9 +18,9 @@ const {
 
 class ModelLoader {
   constructor() {
-    // (async () => {
-    //   await this.loadModels();
-    // })()
+    (async () => {
+      await this.loadModels();
+    })()
   }
 
   loadModels = async () => {

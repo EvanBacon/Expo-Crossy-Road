@@ -206,6 +206,22 @@ export default {
 
 
   characters: {
+    nikki: {
+      model: require('./assets/models/characters/nikki/0.obj'),
+      texture: require('./assets/models/characters/nikki/0.png'),
+    },
+    ide: {
+      model: require('./assets/models/characters/ide/0.obj'),
+      texture: require('./assets/models/characters/ide/0.png'),
+    },
+    brent: {
+      model: require('./assets/models/characters/brent/0.obj'),
+      texture: require('./assets/models/characters/brent/0.png'),
+    },
+    bacon: {
+      model: require('./assets/models/characters/bacon/0.obj'),
+      texture: require('./assets/models/characters/bacon/0.png'),
+    },
     chicken: {
       model: require('./assets/models/characters/chicken/0.obj'),
       texture: require('./assets/models/characters/chicken/0.png'),

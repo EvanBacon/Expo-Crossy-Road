@@ -131,13 +131,12 @@ class Game extends Component {
   }
 
   createLights = () => {
-    let globalLight = new THREE.AmbientLight(0xffffff, .8);
 
     let shadowLight = new THREE.DirectionalLight(0xffffff, 0.3);
     shadowLight.position.set( 1, 1, 0 ); 			//default; light shining from top
     shadowLight.lookAt( 0, 0, 0 ); 			//default; light shining from top
 
-    this.scene.add(globalLight);
+    this.scene.add(new THREE.AmbientLight(0xffffff, .8));
     this.scene.add(shadowLight);
   }
 

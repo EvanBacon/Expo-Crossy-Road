@@ -1,6 +1,6 @@
 import Expo, {Audio} from 'expo';
 
-const sounds = {
+export default {
   chicken: {
     move: {
       "0":  require("./assets/audio/buck1 #010578.wav"),

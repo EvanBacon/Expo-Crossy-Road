@@ -77,7 +77,7 @@ class Root extends React.Component {
         fonts: [
           {"retro": require('./assets/fonts/retro.ttf')},
         ],
-        audio: arrayFromObject(AudioPhiles);
+        audio: arrayFromObject(AudioPhiles)
       });
 
       await modelLoader.loadModels();
