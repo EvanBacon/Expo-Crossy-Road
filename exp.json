@@ -2,7 +2,7 @@
   "name": "Crossy Road",
   "description": "The endless arcade hopper you'll never want to put down",
   "slug": "crossy-road",
-  "privacy": "unlisted",
+  "privacy": "public",
   "sdkVersion": "17.0.0",
   "version": "1.0.0",
   "orientation": "portrait",

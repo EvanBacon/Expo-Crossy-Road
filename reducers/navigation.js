@@ -64,7 +64,7 @@ export class AppNavigator {
 
 console.log(navigator);
 
-const initialState = router.router.getStateForAction(router.router.getActionForPathAndParams('CharacterSelect')); //Home
+const initialState = router.router.getStateForAction(router.router.getActionForPathAndParams('Home')); //Home
 
 export default (state = initialState, action) => {
   const nextState = router.router.getStateForAction(action, state);

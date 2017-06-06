@@ -27,8 +27,8 @@ const {
   RailRoad
 } = Node;
 
-import {scrollOffset} from './Carousel';
 export default class CharacterCard extends Component {
+  scale = 0.5;
   state = {
     setup: false
   }
@@ -36,71 +36,62 @@ export default class CharacterCard extends Component {
   componentWillMount() {
     this.scene = new THREE.Scene();
 
+    this.lights();
+    this.camera();
+    this.character();
+
+    this.setState({setup: true})
+  }
+
+  lights = () => {
+    this.scene.add(new THREE.AmbientLight(0xffffff, .9));
+    let shadowLight = new THREE.DirectionalLight(0xffffff, 1);
+    shadowLight.position.set( 1, 1, 0 ); 			//default; light shining from top
+    this.scene.add(shadowLight);
+  }
+  camera = () => {
     this.camera = new THREE.PerspectiveCamera(75, 1, 0.1, 10);
     this.camera.position.z = 1;
     this.camera.position.y = 0.4;
-
-    this.init();
-
+    // this.camera.lookAt(0,0,0);
   }
 
-  init = () => {
-    let globalLight = new THREE.AmbientLight(0xffffff, .9);
-    this.scene.add(globalLight);
-
-    let shadowLight = new THREE.DirectionalLight(0xffffff, 1);
-    shadowLight.position.set( 1, 1, 0 ); 			//default; light shining from top
-    shadowLight.lookAt( 0, 0, 0 ); 			//default; light shining from top
-    this.scene.add(shadowLight);
-
-    this.sceneWidth = (this.props.data.length - 1) * this.scale;
-    this.props.data.map((model, index) => this.addCharacter(model, index) );
-    this.setState({setup: true})
-  }
-  scale = 0.3;
-
-  models = [];
-  addCharacter = (model, index) => {
-    // console.warn("ccc", model);
-    let hero = modelLoader._hero.getNode(model);
-    this.scene.add(hero);
-    hero.scale.set(this.scale, this.scale, this.scale);
-    hero.position.x = -(this.sceneWidth * 0.5) + (index * this.scale)
-    this.models.push(hero);
+  character = () => {
+    this.character = modelLoader._hero.getNode(this.props.id);
+    this.character.scale.set(this.scale,this.scale,this.scale)
+    this.scene.add(this.character);
   }
 
   tick = dt => {
-    if (!this.state.setup || !this.models) { return; }
-    // this.models.map(val => val.rotation.y += 1 * dt)
-    this.camera.position.x = scrollOffset * 0.001
+    if (!this.state.setup) { return; }
+    this.character.rotation.y += 1 * dt
   };
 
   render() {
     if (this.state.setup) {
-
-    return (
-      <View pointerEvents={'none'}  style={StyleSheet.flatten([styles.container, StyleSheet.absoluteFill])}>
-        <View style={{backgroundColor: 'transparent', flex: 1}}>
-
-      {Expo.Constants.isDevice && <THREEView
-          backgroundColorAlpha={0}
-          style={{flex: 1}}
-          scene={this.scene}
-          camera={this.camera}
-          tick={this.tick}
-        />}
+      return (
+        <View pointerEvents={'none'}  style={StyleSheet.flatten([styles.container, this.props.style])}>
+          <View style={{flex: 1}}>
+            {Expo.Constants.isDevice &&
+              <THREEView
+                backgroundColorAlpha={0}
+                style={{flex: 1}}
+                scene={this.scene}
+                camera={this.camera}
+                tick={this.tick} />
+            }
+          </View>
         </View>
-      </View>
-    );
-  } else {
-    return null;
-  }
+      );
+    }
   }
 }
 
 const styles = StyleSheet.create({
   container: {
     padding: 0,
+    width:size,
+    height: size * 2,
     justifyContent: 'center',
   },
 });

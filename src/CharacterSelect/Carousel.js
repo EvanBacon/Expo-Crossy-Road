@@ -27,11 +27,12 @@ export default class Carousel extends Component {
     selected: 0
   }
   componentWillMount() {
-    this.scroll.addListener(this.onAnimationUpdate);
+    this.listener = this.scroll.addListener(this.onAnimationUpdate);
   }
   componentWillUnmount() {
-    this.scroll.removeListener(this.onAnimationUpdate);
+    this.scroll.removeListener(this.listener);
   }
+  onAnimationUpdate = ({value}) => scrollOffset = value;
 
   componentDidMount() {
     InteractionManager.runAfterInteractions(_=> {
@@ -40,7 +41,6 @@ export default class Carousel extends Component {
     });
   }
 
-  onAnimationUpdate = ({value}) => scrollOffset = value;
 
   renderItem = ({item, index}) => {
     const inset = width*0.75;
@@ -97,51 +97,38 @@ render() {
       character = Characters[key].name;
     }
 
-
   return (<View style={{flex: 1}}>
-    <AnimatedText style={{opacity: 1, backgroundColor: 'transparent', textAlign: 'center', color: 'white', fontSize: 24}}>{character}</AnimatedText>
+    <AnimatedText style={styles.text}>{character}</AnimatedText>
     <AnimatedFlatList
     style={styles.container}
     horizontal={true}
     showsHorizontalScrollIndicator={false}
     horizontal={true}
-    snapToInterval={characterWidth}
     contentContainerStyle={{
-      flex: 1,
-      minWidth: _width,
-      maxWidth: _width,
-      // alignItems: 'center',
-      //
-      // justifyContent: 'center'
-     }}
+      paddingHorizontal: (Dimensions.get('window').width - width) / 2
+    }}
     directionalLockEnabled={true}
-    pagingEnabled={false}
+    snapToInterval={width}
     onMomentumScrollEnd={this.momentumScrollEnd}
     onScroll={this._scrollSink}
     decelerationRate={0}
-    scrollEventThrottle={1}
-  >
-    <CharacterCard scrollAnimation={this.scroll} data={data}/>
-
-  </Animated.ScrollView>
-</View>
+    keyExtractor={ (item, index) => index }
+    data={keys}
+    renderItem={this.renderItem}
+    scrollEventThrottle={1}/>
+  </View>
 )
 }
 }
 
 const styles = StyleSheet.create({
   container: {
-
-    // flex: 1,
-    // alignItems: 'center',
-    // justifyContent: 'center',
-    // paddingTop: Constants.status BarHeight,
+    flex: 1,
   },
-  paragraph: {
-    margin: 24,
-    fontSize: 18,
-    fontWeight: 'bold',
+  text: {
+    opacity: 1,
+    backgroundColor: 'transparent',
     textAlign: 'center',
-    color: '#34495e',
+    color: 'white', fontSize: 24
   },
 });

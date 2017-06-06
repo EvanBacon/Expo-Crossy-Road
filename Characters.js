@@ -109,44 +109,45 @@ export default {
   //   name: "Kangaroo",
   //   id: "kangaroo"
   // },
-  hipster_whale: {
+  bacon: {
     index: 22,
+    name: "Bacon",
+    id: "bacon"
+  },
+  hipster_whale: {
+    index: 23,
     name: "Hipster Whale",
     id: "hipster_whale"
   },
   // floppy_fish: {
-  //   index: 23,
+  //   index: 24,
   //   name: "Floppy Fish",
   //   id: "floppy_fish"
   // },
   doge: {
-    index: 24,
+    index: 25,
     name: "Doge",
     id: "doge"
   },
   // crazy_ol_ben: {
-  //   index: 25,
+  //   index: 26,
   //   name: "Crazy Ol' Ben",
   //   id: "crazy_ol_ben"
   // },
   nikki: {
-    index: 26,
+    index: 27,
     name: "Nikki",
     id: "nikki"
   },
   ide: {
-    index: 27,
+    index: 28,
     name: "Ide",
     id: "ide"
   },
   brent: {
-    index: 28,
+    index: 29,
     name: "Brent",
     id: "brent"
   },
-  bacon: {
-    index: 29,
-    name: "Mr. Bacon",
-    id: "bacon"
-  },
+  
 }
