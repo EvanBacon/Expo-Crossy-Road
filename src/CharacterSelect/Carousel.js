@@ -86,26 +86,22 @@ momentumScrollEnd = () => {
 
 
 render() {
+
   const {keys,selected} = this.state
-  const data = Object.keys(Characters);
-  let width = Dimensions.get('window').width;
-  const characterWidth = width * 0.3
 
-  const padding = (Dimensions.get('window').width) / 2;
-  let _width = data.length * characterWidth;
 
-  console.warn(_width, characterWidth, data.length);
+    let key = keys[selected];
+    let character;
+
+    if (key) {
+      character = Characters[key].name;
+    }
+
+
   return (<View style={{flex: 1}}>
-    {/* {
-      translateX: this.scroll.interpolate({
-        inputRange: [offset - (width * 2), offset - width, offset, offset + width, offset + (width * 2)],
-        outputRange: [-inset * 3,-inset, 0, inset, inset * 3],
-      })
-    } */}
-    {/* <AnimatedText style={{opacity: 1, backgroundColor: 'transparent', textAlign: 'center', color: 'white', fontSize: 24}}>{Characters[keys[selected]].name}</AnimatedText> */}
-
-    <Animated.ScrollView
-    style={StyleSheet.absoluteFill}
+    <AnimatedText style={{opacity: 1, backgroundColor: 'transparent', textAlign: 'center', color: 'white', fontSize: 24}}>{character}</AnimatedText>
+    <AnimatedFlatList
+    style={styles.container}
     horizontal={true}
     showsHorizontalScrollIndicator={false}
     horizontal={true}
