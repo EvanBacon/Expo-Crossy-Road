@@ -80,11 +80,10 @@ export default class CharacterCard extends Component {
 
     return (
       <View pointerEvents={'none'}  style={StyleSheet.flatten([styles.container, StyleSheet.absoluteFill])}>
-        <View style={{backgroundColor: 'yellow', flex: 1}}>
+        <View style={{backgroundColor: 'transparent', flex: 1}}>
 
       {Expo.Constants.isDevice && <THREEView
-          backgroundColorAlpha={1}
-          backgroundColor={'blue'}
+          backgroundColorAlpha={0}
           style={{flex: 1}}
           scene={this.scene}
           camera={this.camera}
@@ -102,13 +101,6 @@ export default class CharacterCard extends Component {
 const styles = StyleSheet.create({
   container: {
     padding: 0,
-    // width: size,
-    // height: size,
-    // maxWidth: size,
-    // maxHeight: size,
-    // minWidth: size,
-    // minHeight: size,
-    backgroundColor: 'green',
     justifyContent: 'center',
   },
 });

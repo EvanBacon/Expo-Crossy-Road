@@ -4,9 +4,9 @@ import {
 
 import Characters from '../Characters'
 const initialState = {
-  id: Characters.bacon.id,
-  name: Characters.bacon.name,
-  index: Characters.bacon.index,
+  id: Characters.chicken.id,
+  name: Characters.chicken.name,
+  index: Characters.chicken.index,
 }
 
 export default function reducer(state = initialState, action) {

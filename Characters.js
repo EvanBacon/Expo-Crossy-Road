@@ -34,16 +34,16 @@ export default {
     name: "The Dark Lord",
     id: "the_dark_lord"
   },
-  celebrity: {
-    index: 7,
-    name: "Celebrity",
-    id: "celebrity"
-  },
-  brown_bunny: {
-    index: 8,
-    name: "Brown Bunny",
-    id: "brown_bunny"
-  },
+  // celebrity: {
+  //   index: 7,
+  //   name: "Celebrity",
+  //   id: "celebrity"
+  // },
+  // brown_bunny: {
+  //   index: 8,
+  //   name: "Brown Bunny",
+  //   id: "brown_bunny"
+  // },
   // ghost: {
   //   index: 9,
   //   name: "Ghost",
@@ -109,41 +109,41 @@ export default {
   //   name: "Kangaroo",
   //   id: "kangaroo"
   // },
-  // hipster_whale: {
-  //   index: 22,
-  //   name: "Hipster Whale",
-  //   id: "hipster_whale"
-  // },
+  hipster_whale: {
+    index: 22,
+    name: "Hipster Whale",
+    id: "hipster_whale"
+  },
   // floppy_fish: {
   //   index: 23,
   //   name: "Floppy Fish",
   //   id: "floppy_fish"
   // },
-  // doge: {
-  //   index: 24,
-  //   name: "Doge",
-  //   id: "doge"
-  // },
+  doge: {
+    index: 24,
+    name: "Doge",
+    id: "doge"
+  },
   // crazy_ol_ben: {
   //   index: 25,
   //   name: "Crazy Ol' Ben",
   //   id: "crazy_ol_ben"
   // },
-  // nikki: {
-  //   index: 26,
-  //   name: "Nikki",
-  //   id: "nikki"
-  // },
-  // ide: {
-  //   index: 27,
-  //   name: "Ide",
-  //   id: "ide"
-  // },
-  // brent: {
-  //   index: 28,
-  //   name: "Brent",
-  //   id: "brent"
-  // },
+  nikki: {
+    index: 26,
+    name: "Nikki",
+    id: "nikki"
+  },
+  ide: {
+    index: 27,
+    name: "Ide",
+    id: "ide"
+  },
+  brent: {
+    index: 28,
+    name: "Brent",
+    id: "brent"
+  },
   bacon: {
     index: 29,
     name: "Mr. Bacon",
