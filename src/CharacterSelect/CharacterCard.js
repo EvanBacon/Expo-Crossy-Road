@@ -38,7 +38,7 @@ export default class CharacterCard extends Component {
 
     this.camera = new THREE.PerspectiveCamera(75, 1, 0.1, 10);
     this.camera.position.z = 1;
-    this.camera.position.y = 0.5;
+    this.camera.position.y = 0.4;
 
     this.init();
 
@@ -72,7 +72,7 @@ export default class CharacterCard extends Component {
   tick = dt => {
     if (!this.state.setup || !this.models) { return; }
     // this.models.map(val => val.rotation.y += 1 * dt)
-    // this.scene.position.x = scrollOffset * -0.01
+    this.camera.position.x = scrollOffset * 0.001
   };
 
   render() {

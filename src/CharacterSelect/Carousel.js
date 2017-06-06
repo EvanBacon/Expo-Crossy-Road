@@ -90,6 +90,8 @@ render() {
   const data = Object.keys(Characters);
   let width = Dimensions.get('window').width;
   const characterWidth = width * 0.3
+
+  const padding = (Dimensions.get('window').width) / 2;
   let _width = data.length * characterWidth;
 
   console.warn(_width, characterWidth, data.length);
@@ -101,13 +103,14 @@ render() {
       })
     } */}
     {/* <AnimatedText style={{opacity: 1, backgroundColor: 'transparent', textAlign: 'center', color: 'white', fontSize: 24}}>{Characters[keys[selected]].name}</AnimatedText> */}
+
     <Animated.ScrollView
     style={StyleSheet.absoluteFill}
     horizontal={true}
     showsHorizontalScrollIndicator={false}
     horizontal={true}
+    snapToInterval={characterWidth}
     contentContainerStyle={{
-      // paddingHorizontal: (Dimensions.get('window').width - width) / 2,
       flex: 1,
       minWidth: _width,
       maxWidth: _width,

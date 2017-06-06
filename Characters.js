@@ -9,41 +9,41 @@ export default {
     name: "Android",
     id: "android_robot"
   },
-  // big_fat_pig: {
-  //   index: 2,
-  //   name: "Big Fat Pig",
-  //   id: "big_fat_pig"
-  // },
-  // poopy_pigeon: {
-  //   index: 3,
-  //   name: "Poopy Pigeon",
-  //   id: "poopy_pigeon"
-  // },
-  // tree_frog: {
-  //   index: 4,
-  //   name: "Tree Frog",
-  //   id: "tree_frog"
-  // },
-  // emo_goose: {
-  //   index: 5,
-  //   name: "Emo Goose",
-  //   id: "emo_goose"
-  // },
-  // the_dark_lord: {
-  //   index: 6,
-  //   name: "The Dark Lord",
-  //   id: "the_dark_lord"
-  // },
-  // celebrity: {
-  //   index: 7,
-  //   name: "Celebrity",
-  //   id: "celebrity"
-  // },
-  // brown_bunny: {
-  //   index: 8,
-  //   name: "Brown Bunny",
-  //   id: "brown_bunny"
-  // },
+  big_fat_pig: {
+    index: 2,
+    name: "Big Fat Pig",
+    id: "big_fat_pig"
+  },
+  poopy_pigeon: {
+    index: 3,
+    name: "Poopy Pigeon",
+    id: "poopy_pigeon"
+  },
+  tree_frog: {
+    index: 4,
+    name: "Tree Frog",
+    id: "tree_frog"
+  },
+  emo_goose: {
+    index: 5,
+    name: "Emo Goose",
+    id: "emo_goose"
+  },
+  the_dark_lord: {
+    index: 6,
+    name: "The Dark Lord",
+    id: "the_dark_lord"
+  },
+  celebrity: {
+    index: 7,
+    name: "Celebrity",
+    id: "celebrity"
+  },
+  brown_bunny: {
+    index: 8,
+    name: "Brown Bunny",
+    id: "brown_bunny"
+  },
   // ghost: {
   //   index: 9,
   //   name: "Ghost",
@@ -139,11 +139,11 @@ export default {
   //   name: "Ide",
   //   id: "ide"
   // },
-  brent: {
-    index: 28,
-    name: "Brent",
-    id: "brent"
-  },
+  // brent: {
+  //   index: 28,
+  //   name: "Brent",
+  //   id: "brent"
+  // },
   bacon: {
     index: 29,
     name: "Mr. Bacon",
