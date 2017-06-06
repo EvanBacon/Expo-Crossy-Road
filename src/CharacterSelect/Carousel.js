@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, View,Dimensions,InteractionManager, FlatList,Animated, StyleSheet } from 'react-native';
+import { Text,ScrollView, View,Dimensions,InteractionManager, FlatList,Animated, StyleSheet } from 'react-native';
 import { Constants } from 'expo';
 
 import Button from '../Button';
@@ -7,15 +7,15 @@ import Images from '../../Images';
 import RetroText from '../RetroText';
 import CharacterCard from './CharacterCard';
 import Characters from '../../Characters';
-
+// .map(val => Characters[val])
 const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 
 const width = 150;
 const AnimatedText = Animated.createAnimatedComponent(RetroText)
 
+export let scrollOffset = 0;
 
 export default class Carousel extends Component {
-  scrollOffset = 0;
   scroll = new Animated.Value(0);
 
   _scrollSink = Animated.event(
@@ -40,7 +40,7 @@ export default class Carousel extends Component {
     });
   }
 
-  onAnimationUpdate = ({value}) => this.scrollOffset = value;
+  onAnimationUpdate = ({value}) => scrollOffset = value;
 
   renderItem = ({item, index}) => {
     const inset = width*0.75;
@@ -78,7 +78,7 @@ export default class Carousel extends Component {
 }
 
 momentumScrollEnd = () => {
-  const selected = Math.floor(this.scrollOffset/width);
+  const selected = Math.floor(scrollOffset/width);
   this.setState({selected})
   this.props.onCurrentIndexChange(selected)
 }
@@ -87,30 +87,44 @@ momentumScrollEnd = () => {
 
 render() {
   const {keys,selected} = this.state
+  const data = Object.keys(Characters);
+  let width = Dimensions.get('window').width;
+  const characterWidth = width * 0.3
+  let _width = data.length * characterWidth;
+
+  console.warn(_width, characterWidth, data.length);
   return (<View style={{flex: 1}}>
+    {/* {
+      translateX: this.scroll.interpolate({
+        inputRange: [offset - (width * 2), offset - width, offset, offset + width, offset + (width * 2)],
+        outputRange: [-inset * 3,-inset, 0, inset, inset * 3],
+      })
+    } */}
     {/* <AnimatedText style={{opacity: 1, backgroundColor: 'transparent', textAlign: 'center', color: 'white', fontSize: 24}}>{Characters[keys[selected]].name}</AnimatedText> */}
-    <AnimatedFlatList
-    style={styles.container}
+    <Animated.ScrollView
+    style={StyleSheet.absoluteFill}
     horizontal={true}
     showsHorizontalScrollIndicator={false}
     horizontal={true}
     contentContainerStyle={{
-      paddingHorizontal: (Dimensions.get('window').width - width) / 2,
-      alignItems: 'center',
-      justifyContent: 'center'
+      // paddingHorizontal: (Dimensions.get('window').width - width) / 2,
+      flex: 1,
+      minWidth: _width,
+      maxWidth: _width,
+      // alignItems: 'center',
+      //
+      // justifyContent: 'center'
      }}
     directionalLockEnabled={true}
     pagingEnabled={false}
     onMomentumScrollEnd={this.momentumScrollEnd}
-
     onScroll={this._scrollSink}
-    renderItem={this.renderItem}
-    keyExtractor={(item: ItemT, index: number) => `tuner-card-${index}`}
     decelerationRate={0}
     scrollEventThrottle={1}
-    snapToInterval={width}
+  >
+    <CharacterCard scrollAnimation={this.scroll} data={data}/>
 
-    data={keys}/>
+  </Animated.ScrollView>
 </View>
 )
 }
@@ -118,6 +132,7 @@ render() {
 
 const styles = StyleSheet.create({
   container: {
+
     // flex: 1,
     // alignItems: 'center',
     // justifyContent: 'center',

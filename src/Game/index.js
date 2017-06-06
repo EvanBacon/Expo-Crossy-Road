@@ -424,7 +424,7 @@ class Game extends Component {
 
       const {type, entity} = this.floorMap[`${(this._hero.position.z + zPos)|0}`];
       if (type === "grass") {
-        console.warn("Grass")
+        
         const key = `${(this._hero.position.x + xPos)|0}`;
         if (entity.obstacleMap.hasOwnProperty(key)) {
           return true;

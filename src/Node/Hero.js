@@ -7,13 +7,9 @@ export default class Hero extends Generic {
     const {characters} = this.globalModels;
 
     for (let id of Object.keys(Characters)) {
-      console.warn("Master", id, Object.keys(Characters).toString(), Characters.hasOwnProperty(id) )
-
       if (Characters.hasOwnProperty(id)) {
         let character = Characters[id];
-
         const {model, texture} = characters[character.id];
-        console.warn("Json", model, texture)
         this.models[character.id] = await this._download({model, texture});
       }
     }

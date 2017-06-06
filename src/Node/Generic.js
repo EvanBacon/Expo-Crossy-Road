@@ -66,7 +66,6 @@ let _model;
   }
 
   getNode = (key = '0') => {
-    console.warn(key, JSON.stringify(Object.keys(this.models)))
     if (this.models.hasOwnProperty(key)) {
       return this.models[key].clone();
     } else {

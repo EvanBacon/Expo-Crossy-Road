@@ -12,6 +12,7 @@ import * as THREE from 'three'
 // import createTHREEViewClass from '../createTHREEViewClass';
 const THREEView = Expo.createTHREEViewClass(THREE);
 const size = 150;
+import Characters from '../../Characters';
 import {modelLoader} from '../../main';
 import Node from '../Node';
 const {
@@ -26,6 +27,7 @@ const {
   RailRoad
 } = Node;
 
+import {scrollOffset} from './Carousel';
 export default class CharacterCard extends Component {
   state = {
     setup: false
@@ -42,7 +44,7 @@ export default class CharacterCard extends Component {
 
   }
 
-  init = async () => {
+  init = () => {
     let globalLight = new THREE.AmbientLight(0xffffff, .9);
     this.scene.add(globalLight);
 
@@ -51,32 +53,39 @@ export default class CharacterCard extends Component {
     shadowLight.lookAt( 0, 0, 0 ); 			//default; light shining from top
     this.scene.add(shadowLight);
 
-    console.log("Adding model to line", this.props.id);
-    this.hero = modelLoader._hero.getNode(this.props.id);
-    this.scene.add(this.hero);
-    this.hero.scale.set(1,1,1);
-
+    this.sceneWidth = (this.props.data.length - 1) * this.scale;
+    this.props.data.map((model, index) => this.addCharacter(model, index) );
     this.setState({setup: true})
+  }
+  scale = 0.3;
 
+  models = [];
+  addCharacter = (model, index) => {
+    // console.warn("ccc", model);
+    let hero = modelLoader._hero.getNode(model);
+    this.scene.add(hero);
+    hero.scale.set(this.scale, this.scale, this.scale);
+    hero.position.x = -(this.sceneWidth * 0.5) + (index * this.scale)
+    this.models.push(hero);
   }
 
   tick = dt => {
-    if (!this.state.setup) {
-      return;
-    }
-    this.hero.rotation.y += 1 * dt;
+    if (!this.state.setup || !this.models) { return; }
+    // this.models.map(val => val.rotation.y += 1 * dt)
+    // this.scene.position.x = scrollOffset * -0.01
   };
 
   render() {
     if (this.state.setup) {
 
     return (
-      <View pointerEvents={'none'}  style={styles.container}>
-        <View style={{backgroundColor: 'transparent', flex: 1}}>
+      <View pointerEvents={'none'}  style={StyleSheet.flatten([styles.container, StyleSheet.absoluteFill])}>
+        <View style={{backgroundColor: 'yellow', flex: 1}}>
 
       {Expo.Constants.isDevice && <THREEView
-          backgroundColorAlpha={0}
-          style={{ flex: 1}}
+          backgroundColorAlpha={1}
+          backgroundColor={'blue'}
+          style={{flex: 1}}
           scene={this.scene}
           camera={this.camera}
           tick={this.tick}
@@ -93,12 +102,13 @@ export default class CharacterCard extends Component {
 const styles = StyleSheet.create({
   container: {
     padding: 0,
-    width: size,
-    height: size,
-    maxWidth: size,
-    maxHeight: size,
-    minWidth: size,
-    minHeight: size,
+    // width: size,
+    // height: size,
+    // maxWidth: size,
+    // maxHeight: size,
+    // minWidth: size,
+    // minHeight: size,
+    backgroundColor: 'green',
     justifyContent: 'center',
   },
 });
