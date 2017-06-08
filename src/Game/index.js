@@ -72,6 +72,10 @@ class Game extends Component {
     switch (gameState) {
       case playing:
       this.stopIdle();
+      TweenMax.to(this.title.position, 1, {
+        x: -10,
+      })
+
       this.onSwipe(swipeDirections.SWIPE_UP, {});
 
       break;
@@ -205,6 +209,13 @@ class Game extends Component {
     this.createParticles();
     this.createLights();
 
+    this.title = modelLoader._title.getNode();
+    let scale = 0.08;
+    this.title.scale.set(scale,scale,scale);
+    this.title.rotation.y = Math.PI;
+    this.title.position.set(10, 3, 9);
+    this.scene.add(this.title);
+
     // Mesh
     // console.warn(this.props.character.id)
     this._hero = this.hero.getNode(this.props.character.id);
@@ -311,6 +322,9 @@ class Game extends Component {
 
     this.idle();
 
+    this.title.position.x = 10
+
+
     for (i = 0; i < this.maxRows; i++) {
       this.grass[i].position.z = offset;
 
@@ -333,6 +347,11 @@ class Game extends Component {
     }
 
     this.setState({ ready: true });
+
+    TweenMax.to(this.title.position, 1, {
+      x: 0,
+      delay: 0.2,
+    })
   }
 
   mapRowToObstacle = (row) => {
@@ -375,7 +394,7 @@ class Game extends Component {
       break;
       case 2:
       {
-        if (((Math.random() * 4)|0) == 0) {
+        if (((Math.random() * 5)|0) == 0) {
           this.railRoads[this.railRoadCount].position.z = this.rowCount;
           this.railRoads[this.railRoadCount].active = true;
           this.floorMap[`${this.rowCount}`] = {type: 'railRoad', entity: this.railRoads[this.railRoadCount]};
@@ -424,7 +443,7 @@ class Game extends Component {
 
       const {type, entity} = this.floorMap[`${(this._hero.position.z + zPos)|0}`];
       if (type === "grass") {
-        
+
         const key = `${(this._hero.position.x + xPos)|0}`;
         if (entity.obstacleMap.hasOwnProperty(key)) {
           return true;

@@ -1,4 +1,9 @@
 export default {
+
+  'title': {
+    model: require('./assets/models/title/0.obj'),
+    texture: require('./assets/models/title/0.png'),
+  },
   environment: {
     grass: {
       '0': {

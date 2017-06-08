@@ -21,17 +21,14 @@ export default class Train extends Generic {
     const front = this.getNode('front');
     _train.add(front);
 
-    //
-
-    // console.log( box.min, box.max, box.size() );
     let offset = this.getDepth(front);
-    //
     for (let i = 0; i < size; i++) {
       const middle = this.getNode('middle');
-      middle.position.x = offset; //TODO: Measure.
+      const depth = this.getDepth(middle);
+      middle.position.x = offset //TODO: Measure.
 
       _train.add(middle);
-      offset += this.getDepth(middle);
+      offset += depth;
     }
     const back = this.getNode('back');
     back.position.x = offset;
@@ -46,7 +43,7 @@ export default class Train extends Generic {
     const front = await this._download(train[`front`]);
     const middle = await this._download(train[`middle`]);
     const back = await this._download(train[`back`]);
-    
+
     // await Promise.all([
     //   front,
     //   middle,

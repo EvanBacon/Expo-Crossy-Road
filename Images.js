@@ -27,7 +27,6 @@ export default {
     video_ads: require('./assets/images/buttons/video_ads.png'),
 
   },
-  title: require('./assets/images/title.png'),
   hand: {
     '0': require('./assets/images/hand/0.png'),
     '1': require('./assets/images/hand/1.png'),
