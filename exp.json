@@ -6,10 +6,10 @@
   "sdkVersion": "17.0.0",
   "version": "1.0.1",
   "orientation": "portrait",
-  "primaryColor": "#cccccc",
+  "primaryColor": "#8ee6ff",
   "icon": "./assets/icons/app.png",
   "loading": {
-    "backgroundColor": "#6dceea",
+    "backgroundColor": "#8ee6ff",
     "icon": "./assets/icons/loading.png",
     "hideExponentText": false
   },

@@ -1,8 +1,7 @@
-# Wavefront OBJ file
-# Exported by Misfit Model 3D 1.2.4
-# Mon Oct 26 16:15:33 2015
+# Blender v2.78 (sub 0) OBJ File: ''
+# www.blender.org
 
-mtllib train_middle.mtl
+mtllib metro_middle.mtl
 
 # 1252 Vertices
 v 2.125 1.375 0.375
@@ -5018,11 +5017,11 @@ vn 0.0 0.0 1.0
 vn 0.0 0.0 1.0
 vn 0.0 0.0 1.0
 
-# train_middle, 626 grouped triangles
+# metro_middle, 626 grouped triangles
 
-usemtl train_middle-tex.tex
-o train_middle
-g train_middle
+usemtl metro_middle-tex.tex
+o metro_middle
+g metro_middle
 
 f 1/1/1 2/2/2 3/3/3
 f 1/4/4 3/5/5 4/6/6

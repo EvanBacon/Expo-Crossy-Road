@@ -54,13 +54,13 @@ class Root extends React.Component {
   componentWillMount() {
     this._loadAssetsAsync();
 
-    Audio.setAudioModeAsync({
-      allowsRecordingIOS: false,
-      interruptionModeIOS: Audio.INTERRUPTION_MODE_IOS_DO_NOT_MIX,
-      playsInSilentLockedModeIOS: false,
-      shouldduckyAndroid: true,
-      interruptionModeAndroid: Audio.INTERRUPTION_MODE_ANDROID_DO_NOT_MIX,
-    });
+    // Audio.setAudioModeAsync({
+    //   allowsRecordingIOS: false,
+    //   interruptionModeIOS: Audio.INTERRUPTION_MODE_IOS_DO_NOT_MIX,
+    //   playsInSilentLockedModeIOS: false,
+    //   shouldduckyAndroid: true,
+    //   interruptionModeAndroid: Audio.INTERRUPTION_MODE_ANDROID_DO_NOT_MIX,
+    // });
 
 
     this.persister = persistStore(store, storeSettings, () => {
@@ -77,7 +77,7 @@ class Root extends React.Component {
         fonts: [
           {"retro": require('./assets/fonts/retro.ttf')},
         ],
-        audio: arrayFromObject(AudioPhiles)
+        // audio: arrayFromObject(AudioPhiles)
       });
 
       await modelLoader.loadModels();

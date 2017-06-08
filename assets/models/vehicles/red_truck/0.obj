@@ -1,8 +1,7 @@
-# Wavefront OBJ file
-# Exported by Misfit Model 3D 1.2.4
-# Mon Oct 26 15:55:21 2015
+# Blender v2.78 (sub 0) OBJ File: ''
+# www.blender.org
 
-mtllib Truck.mtl
+mtllib UziVert.mtl
 
 # 472 Vertices
 v 0.54 1.32 -1.5
@@ -1898,11 +1897,11 @@ vn 0.0 -0.0 1.0
 vn 0.0 -0.0 1.0
 vn 0.0 -0.0 1.0
 
-# Truck, 236 grouped triangles
+# UziVert, 236 grouped triangles
 
-usemtl Truck-tex.tex
-o Truck
-g Truck
+usemtl UziVert-tex.tex
+o UziVert
+g UziVert
 
 f 1/1/1 2/2/2 3/3/3
 f 1/4/4 3/5/5 4/6/6

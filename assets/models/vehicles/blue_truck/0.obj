@@ -1,8 +1,7 @@
-# Wavefront OBJ file
-# Exported by Misfit Model 3D 1.2.4
-# Mon Oct 26 15:55:50 2015
+# Blender v2.78 (sub 0) OBJ File: ''
+# www.blender.org
 
-mtllib truck_blue.mtl
+mtllib ugly_god_car.mtl
 
 # 472 Vertices
 v 0.54 1.32 -1.5
@@ -1898,11 +1897,11 @@ vn 0.0 -0.0 1.0
 vn 0.0 -0.0 1.0
 vn 0.0 -0.0 1.0
 
-# truck_blue, 236 grouped triangles
+# ugly_god_car, 236 grouped triangles
 
-usemtl truck_blue-tex.tex
-o truck_blue
-g truck_blue
+usemtl ugly_god_car-tex.tex
+o ugly_god_car
+g ugly_god_car
 
 f 1/1/1 2/2/2 3/3/3
 f 1/4/4 3/5/5 4/6/6
