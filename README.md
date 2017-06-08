@@ -1,4 +1,4 @@
-Expo Crossy Road
+Expo Frogger
 ========
 
 Expo: https://exp.host/@bacon/crossy-road
@@ -16,13 +16,6 @@ Stack:
 - [THREE.js](https://threejs.org/)
 - [GSAP](https://greensock.com/)
 
-
-----
-
-## Special Thanks
-
-- [Place I Got The Models](https://www.models-resource.com/mobile/crossyroad/)
-- [Inspiration](http://hipsterwhale.com/)
 ----
 
 ## Shameful Plug
@@ -41,5 +34,4 @@ Stack:
 
 ## Disclaimer
 
-I am not a hipster, nor am I now or have ever been a whale. Therefore I don't have the rights to Crossy Road or any of it's properties. 😅 Furthermore Crossy Road is a great game and I highly recommend downloading it and studying what makes it great!! ❤️🐋
-
+I am using this copyrighted work under the [fair use/educational purpose doctrine](http://fairuse.stanford.edu/overview/academic-and-educational-permissions/non-coursepack/).
