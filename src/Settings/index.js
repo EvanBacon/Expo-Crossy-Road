@@ -41,11 +41,11 @@ class Settings extends Component {
     const {characters, currentIndex} = this.state;
     const character = characters[currentIndex].name;
     Share.share({
-      message: `${character}! #expoCrossyroad @expo_io`,
-      url: 'https://exp.host/@evanbacon/crossy-road',
-      title: 'Expo Crossy Road'
+      message: `${character}! @expo_io`,
+      url: 'https://exp.host/@bacon/froggy-street',
+      title: 'Expo Froggy Street'
     }, {
-      dialogTitle: 'Share Expo Crossy Road',
+      dialogTitle: 'Share Expo Froggy Street',
       excludedActivityTypes: [
         'com.apple.UIKit.activity.AirDrop', // This speeds up showing the share sheet by a lot
         'com.apple.UIKit.activity.AddToReadingList' // This is just lame :)

@@ -1,4 +1,4 @@
-# Material file for train_middle.obj
+# Blender MTL File: 'None'
 
 newmtl train_middle-tex.tex
 	Ns 0
@@ -8,4 +8,3 @@ newmtl train_middle-tex.tex
 	Ks 0.0 0.0 0.0
 	Ka 0.2 0.2 0.2
 	map_Kd train_middle-tex.tex.png
-

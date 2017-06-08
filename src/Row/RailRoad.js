@@ -32,7 +32,7 @@ export default class RailRoad extends THREE.Object3D {
 
     this._trainMesh = _train.withSize((Math.random() * 2) + 1);
     const width = this.getWidth(this._trainMesh);
-    this.train = {mesh: this._trainMesh, speed: 0.8, width, collisionBox: (this.heroWidth / 2 + width / 2 - .1) };
+    this.train = {mesh: this._trainMesh, speed: -0.8, width, collisionBox: (this.heroWidth / 2 + width / 2 - .1) };
 
 
     this.setupLight(this.light);

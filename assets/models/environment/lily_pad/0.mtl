@@ -1,4 +1,4 @@
-# Material file for lilypad.obj
+# Blender MTL File: 'None'
 
 newmtl lilypad-tex.tex
 	Ns 0
@@ -8,4 +8,3 @@ newmtl lilypad-tex.tex
 	Ks 0.0 0.0 0.0
 	Ka 0.2 0.2 0.2
 	map_Kd lilypad-tex.tex.png
-

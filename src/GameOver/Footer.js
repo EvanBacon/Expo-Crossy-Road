@@ -41,11 +41,11 @@ export default class Footer extends Component {
 
     //TODO: Add Screen shot of player death
     Share.share({
-      message: `#expoCrossyroad @expo_io`,
-      url: 'https://exp.host/@evanbacon/crossy-road',
-      title: 'Expo Crossy Road'
+      message: `@expo_io`,
+      url: 'https://exp.host/@bacon/froggy-street',
+      title: 'Expo Froggy Street'
     }, {
-      dialogTitle: 'Share Expo Crossy Road',
+      dialogTitle: 'Share Expo Froggy Street',
       excludedActivityTypes: [
         'com.apple.UIKit.activity.AirDrop', // This speeds up showing the share sheet by a lot
         'com.apple.UIKit.activity.AddToReadingList' // This is just lame :)

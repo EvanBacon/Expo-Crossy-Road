@@ -1,58 +1,5 @@
 export default {
-
-  coins: {
-    red: {
-      model: require('./assets/models/collectables/red/0.obj'),
-      texture: require('./assets/models/collectables/red/0.png'),
-    },
-    yellow: {
-      model: require('./assets/models/collectables/yellow/0.obj'),
-      texture: require('./assets/models/collectables/yellow/0.png'),
-    },
-  },
   environment: {
-    bird: {
-      idle: {
-        '0':{
-          model: require('./assets/models/environment/bird/idle/0/0.obj'),
-          texture: require('./assets/models/environment/bird/idle/0/0.png'),
-        },
-        '1': {
-          model: require('./assets/models/environment/bird/idle/1/0.obj'),
-          texture: require('./assets/models/environment/bird/idle/1/0.png'),
-        }
-      },
-      flying: {
-        '0':{
-          model: require('./assets/models/environment/bird/flying/0/0.obj'),
-          texture: require('./assets/models/environment/bird/flying/0/0.png'),
-        },
-        '1': {
-          model: require('./assets/models/environment/bird/flying/1/0.obj'),
-          texture: require('./assets/models/environment/bird/flying/1/0.png'),
-        },
-        '2': {
-          model: require('./assets/models/environment/bird/flying/2/0.obj'),
-          texture: require('./assets/models/environment/bird/flying/2/0.png'),
-        }
-      }
-
-    },
-    eagle: {
-      '0': {
-        model: require('./assets/models/environment/eagle/0/0.obj'),
-        texture: require('./assets/models/environment/eagle/0/0.png'),
-      },
-      '1': {
-        model: require('./assets/models/environment/eagle/1/0.obj'),
-        texture: require('./assets/models/environment/eagle/1/0.png'),
-      },
-      '2': {
-        model: require('./assets/models/environment/eagle/2/0.obj'),
-        texture: require('./assets/models/environment/eagle/2/0.png'),
-      },
-    },
-
     grass: {
       '0': {
         model: require('./assets/models/environment/grass/0/0.obj'),
@@ -206,6 +153,14 @@ export default {
 
 
   characters: {
+    bacon: {
+      model: require('./assets/models/characters/bacon/0.obj'),
+      texture: require('./assets/models/characters/bacon/0.png'),
+    },
+    boss_fish: {
+      model: require('./assets/models/characters/boss_fish/0.obj'),
+      texture: require('./assets/models/characters/boss_fish/0.png'),
+    },
     nikki: {
       model: require('./assets/models/characters/nikki/0.obj'),
       texture: require('./assets/models/characters/nikki/0.png'),
@@ -218,118 +173,57 @@ export default {
       model: require('./assets/models/characters/brent/0.obj'),
       texture: require('./assets/models/characters/brent/0.png'),
     },
-    bacon: {
-      model: require('./assets/models/characters/bacon/0.obj'),
-      texture: require('./assets/models/characters/bacon/0.png'),
+
+    duck: {
+      model: require('./assets/models/characters/duck/0.obj'),
+      texture: require('./assets/models/characters/duck/0.png'),
     },
-    chicken: {
-      model: require('./assets/models/characters/chicken/0.obj'),
-      texture: require('./assets/models/characters/chicken/0.png'),
+    techno_robot: {
+      model: require('./assets/models/characters/techno_robot/0.obj'),
+      texture: require('./assets/models/characters/techno_robot/0.png'),
     },
-    android_robot: {
-      model: require('./assets/models/characters/android_robot/0.obj'),
-      texture: require('./assets/models/characters/android_robot/0.png'),
+    gangster_pigeon: {
+      model: require('./assets/models/characters/gangster_pigeon/0.obj'),
+      texture: require('./assets/models/characters/gangster_pigeon/0.png'),
     },
-    big_fat_pig: {
-      model: require('./assets/models/characters/big_fat_pig/0.obj'),
-      texture: require('./assets/models/characters/big_fat_pig/0.png'),
-    },
-    poopy_pigeon: {
-      model: require('./assets/models/characters/poopy_pigeon/0.obj'),
-      texture: require('./assets/models/characters/poopy_pigeon/0.png'),
-    },
-    tree_frog: {
-      model: require('./assets/models/characters/tree_frog/0.obj'),
-      texture: require('./assets/models/characters/tree_frog/0.png'),
+    dazzle_frog: {
+      model: require('./assets/models/characters/dazzle_frog/0.obj'),
+      texture: require('./assets/models/characters/dazzle_frog/0.png'),
     },
 
-    emo_goose: {
-      model: require('./assets/models/characters/emo_goose/0.obj'),
-      texture: require('./assets/models/characters/emo_goose/0.png'),
+    marilyn_goose: {
+      model: require('./assets/models/characters/marilyn_goose/0.obj'),
+      texture: require('./assets/models/characters/marilyn_goose/0.png'),
     },
 
-    the_dark_lord: {
-      model: require('./assets/models/characters/the_dark_lord/0.obj'),
-      texture: require('./assets/models/characters/the_dark_lord/0.png'),
+    emo_kid: {
+      model: require('./assets/models/characters/emo_kid/0.obj'),
+      texture: require('./assets/models/characters/emo_kid/0.png'),
     },
-    celebrity: {
-      model: require('./assets/models/characters/celebrity/0.obj'),
-      texture: require('./assets/models/characters/celebrity/0.png'),
+    your_mom: {
+      model: require('./assets/models/characters/your_mom/0.obj'),
+      texture: require('./assets/models/characters/your_mom/0.png'),
     },
-    brown_bunny: {
-      model: require('./assets/models/characters/brown_bunny/0.obj'),
-      texture: require('./assets/models/characters/brown_bunny/0.png'),
+    fan_boy: {
+      model: require('./assets/models/characters/fan_boy/0.obj'),
+      texture: require('./assets/models/characters/fan_boy/0.png'),
+    },
+    meme_dog: {
+      model: require('./assets/models/characters/meme_dog/0.obj'),
+      texture: require('./assets/models/characters/meme_dog/0.png'),
     },
 
-    crazy_ol_ben: {
-      model: require('./assets/models/characters/crazy_ol_ben/0.obj'),
-      texture: require('./assets/models/characters/crazy_ol_ben/0.png'),
+    retro_robot: {
+      model: require('./assets/models/characters/retro_robot/0.obj'),
+      texture: require('./assets/models/characters/retro_robot/0.png'),
     },
-    doge: {
-      model: require('./assets/models/characters/doge/0.obj'),
-      texture: require('./assets/models/characters/doge/0.png'),
+    pew_die_pup: {
+      model: require('./assets/models/characters/pew_die_pup/0.obj'),
+      texture: require('./assets/models/characters/pew_die_pup/0.png'),
     },
-    floppy_fish: {
-      model: require('./assets/models/characters/floppy_fish/0.obj'),
-      texture: require('./assets/models/characters/floppy_fish/0.png'),
-    },
-    hipster_whale: {
-      model: require('./assets/models/characters/hipster_whale/0.obj'),
-      texture: require('./assets/models/characters/hipster_whale/0.png'),
-    },
-    kangaroo: {
-      model: require('./assets/models/characters/kangaroo/0.obj'),
-      texture: require('./assets/models/characters/kangaroo/0.png'),
-    },
-    kiwi: {
-      model: require('./assets/models/characters/kiwi/0.obj'),
-      texture: require('./assets/models/characters/kiwi/0.png'),
-    },
-    mad_wizard: {
-      model: require('./assets/models/characters/mad_wizard/0.obj'),
-      texture: require('./assets/models/characters/mad_wizard/0.png'),
-    },
-    specimen_115: {
-      model: require('./assets/models/characters/specimen_115/0.obj'),
-      texture: require('./assets/models/characters/specimen_115/0.png'),
-    },
-    rusty_robot: {
-      model: require('./assets/models/characters/rusty_robot/0.obj'),
-      texture: require('./assets/models/characters/rusty_robot/0.png'),
-    },
-    platypus: {
-      model: require('./assets/models/characters/platypus/0.obj'),
-      texture: require('./assets/models/characters/platypus/0.png'),
-    },
-    pew_die_pug: {
-      model: require('./assets/models/characters/pew_die_pug/0.obj'),
-      texture: require('./assets/models/characters/pew_die_pug/0.png'),
-    },
-    penguin: {
-      model: require('./assets/models/characters/penguin/0.obj'),
-      texture: require('./assets/models/characters/penguin/0.png'),
-    },
-    mallard: {
-      model: require('./assets/models/characters/mallard/0.obj'),
-      texture: require('./assets/models/characters/mallard/0.png'),
-    },
-    vampire: {
-      model: require('./assets/models/characters/vampire/0.obj'),
-      texture: require('./assets/models/characters/vampire/0.png'),
-    },
-    zombie: {
-      model: require('./assets/models/characters/zombie/0.obj'),
-      texture: require('./assets/models/characters/zombie/0.png'),
-    },
-    baller: {
-      model: require('./assets/models/characters/baller/0.obj'),
-      texture: require('./assets/models/characters/baller/0.png'),
-    },
-    ghost: {
-      model: require('./assets/models/characters/ghost/0.obj'),
-      texture: require('./assets/models/characters/ghost/0.png'),
+    quackster: {
+      model: require('./assets/models/characters/quackster/0.obj'),
+      texture: require('./assets/models/characters/quackster/0.png'),
     },
   }
-
-
 }

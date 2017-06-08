@@ -1,4 +1,4 @@
-# Material file for Fuzz.obj
+# Blender MTL File: 'None'
 
 newmtl Fuzz-tex.tex
 	Ns 0
@@ -8,4 +8,3 @@ newmtl Fuzz-tex.tex
 	Ks 0.0 0.0 0.0
 	Ka 0.2 0.2 0.2
 	map_Kd Fuzz-tex.tex.png
-

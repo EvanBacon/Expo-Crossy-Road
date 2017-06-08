@@ -1,4 +1,4 @@
-# Material file for Wagon.obj
+# Blender MTL File: 'None'
 
 newmtl Wagon-tex.tex
 	Ns 0
@@ -8,4 +8,3 @@ newmtl Wagon-tex.tex
 	Ks 0.0 0.0 0.0
 	Ka 0.2 0.2 0.2
 	map_Kd Wagon-tex.tex.png
-

@@ -1,4 +1,4 @@
-# Material file for log_4.obj
+# Blender MTL File: 'None'
 
 newmtl log_4-tex.tex
 	Ns 0
@@ -8,4 +8,3 @@ newmtl log_4-tex.tex
 	Ks 0.0 0.0 0.0
 	Ka 0.2 0.2 0.2
 	map_Kd log_4-tex.tex.png
-

@@ -46,7 +46,7 @@ export default class Train extends Generic {
     const front = await this._download(train[`front`]);
     const middle = await this._download(train[`middle`]);
     const back = await this._download(train[`back`]);
-
+    
     // await Promise.all([
     //   front,
     //   middle,

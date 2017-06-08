@@ -1,4 +1,4 @@
-# Material file for truck_blue.obj
+# Blender MTL File: 'None'
 
 newmtl truck_blue-tex.tex
 	Ns 0
@@ -8,4 +8,3 @@ newmtl truck_blue-tex.tex
 	Ks 0.0 0.0 0.0
 	Ka 0.2 0.2 0.2
 	map_Kd truck_blue-tex.tex.png
-

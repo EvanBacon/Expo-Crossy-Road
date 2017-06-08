@@ -1,4 +1,4 @@
-# Material file for tree_2.obj
+# Blender MTL File: 'None'
 
 newmtl tree_2-tex.tex
 	Ns 0
@@ -8,4 +8,3 @@ newmtl tree_2-tex.tex
 	Ks 0.0 0.0 0.0
 	Ka 0.2 0.2 0.2
 	map_Kd tree_2-tex.tex.png
-

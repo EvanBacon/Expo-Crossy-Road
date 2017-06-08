@@ -16,12 +16,12 @@ import Banner from './Banner'
 const banner = [
   {
     color: '#f6c62b',
-    title: 'Get Updates Subscribe Now',
+    title: 'Get Notifications, Subscribe Now',
     button: {
       onPress: (_=> {
         Alert.alert(
      'Subscribe to our mailing list',
-     'Join our mailing list and discover the latest news from Hipster Whale and Crossy Road.\n\n Read our privacy policy on crossyroad.com/privacy',
+     'Join our mailing list and discover the latest news from Some Company and This Game.\n\n Read about fair use on http://fairuse.stanford.edu/overview/academic-and-educational-permissions/non-coursepack/#rules_for_reproducing_music',
      [
        {text: 'Cancel', onPress: () => console.log('Cancel Pressed!')},
        {text: 'OK', onPress: () => console.log('OK Pressed!')},

@@ -1,4 +1,4 @@
-# Material file for Sedan.obj
+# Blender MTL File: 'None'
 
 newmtl Sedan-tex.tex
 	Ns 0
@@ -8,4 +8,3 @@ newmtl Sedan-tex.tex
 	Ks 0.0 0.0 0.0
 	Ka 0.2 0.2 0.2
 	map_Kd Sedan-tex.tex.png
-
