@@ -140,7 +140,7 @@ class Game extends Component {
     shadowLight.position.set( 1, 1, 0 ); 			//default; light shining from top
     shadowLight.lookAt( 0, 0, 0 ); 			//default; light shining from top
 
-    this.scene.add(new THREE.AmbientLight(0xffffff, .8));
+    this.scene.add(new THREE.AmbientLight(0xe9ffdc, .8));
     this.scene.add(shadowLight);
   }
 
