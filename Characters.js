@@ -15,9 +15,9 @@ export default {
     name: "Dazzle Frog",
     id: "dazzle_frog"
   },
-  duck: {
-    name: "Duck",
-    id: "duck"
+  ducky: {
+    name: "ducky",
+    id: "ducky"
   },
   emo_kid: {
     name: "Emo Kid",

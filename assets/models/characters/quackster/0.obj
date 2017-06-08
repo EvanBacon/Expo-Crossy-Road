@@ -2,7 +2,7 @@
 # Exported by Misfit Model 3D 1.2.4
 # Sun Oct 25 02:40:06 2015
 
-mtllib Duck.mtl
+mtllib ducky.mtl
 
 # 388 Vertices
 v 0.15 0.85 -0.2
@@ -1562,11 +1562,11 @@ vn 0.0 0.0 1.0
 vn 0.0 0.0 1.0
 vn 0.0 0.0 1.0
 
-# Duck, 194 grouped triangles
+# ducky, 194 grouped triangles
 
-usemtl Duck-tex.tex
-o Duck
-g Duck
+usemtl ducky-tex.tex
+o ducky
+g ducky
 
 f 1/1/1 2/2/2 3/3/3
 f 1/4/4 3/5/5 4/6/6

@@ -1,7 +1,7 @@
 import Expo, {Audio} from 'expo';
 
 export default {
-  chicken: {
+  ducky: {
     move: {
       "0":  require("./assets/audio/buck1 #010578.wav"),
       "1":  require("./assets/audio/buck2 #010599.wav"),

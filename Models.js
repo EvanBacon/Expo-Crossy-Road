@@ -174,9 +174,9 @@ export default {
       texture: require('./assets/models/characters/brent/0.png'),
     },
 
-    duck: {
-      model: require('./assets/models/characters/duck/0.obj'),
-      texture: require('./assets/models/characters/duck/0.png'),
+    ducky: {
+      model: require('./assets/models/characters/ducky/0.obj'),
+      texture: require('./assets/models/characters/ducky/0.png'),
     },
     techno_robot: {
       model: require('./assets/models/characters/techno_robot/0.obj'),

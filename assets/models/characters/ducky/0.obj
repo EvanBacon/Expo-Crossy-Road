@@ -1,7 +1,7 @@
 # Blender v2.78 (sub 0) OBJ File: ''
 # www.blender.org
 
-mtllib Chicken.mtl
+mtllib ducky.mtl
 
 # 420 Vertices
 v 0.15 0.45 -0.3
@@ -1689,11 +1689,11 @@ vn 0.0 0.0 1.0
 vn 0.0 0.0 1.0
 vn 0.0 0.0 1.0
 
-# Chicken, 210 grouped triangles
+# ducky, 210 grouped triangles
 
-usemtl Chicken-tex-tex
-o Chicken
-g Chicken
+usemtl ducky-tex-tex
+o ducky
+g ducky
 
 f 1/1/1 2/2/2 3/3/3
 f 1/4/4 3/5/5 4/6/6
