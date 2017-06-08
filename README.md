@@ -1,7 +1,7 @@
 Expo Crossy Road
 ========
 
-__[Crossy Road](http://www.crossyroad.com/) by [Hipster Whale](http://hipsterwhale.com/)__
+__[Crossy Road](http://www.crossyroad.com/)
 
 Expo: https://exp.host/@bacon/crossy-road
 
@@ -24,10 +24,7 @@ Stack:
 ## Special Thanks
 
 - [Place I Got The Models](https://www.models-resource.com/mobile/crossyroad/)
-- [Nikhilesh Sigatapu](https://github.com/nikki93)
-- [Expo Team](https://twitter.com/expo_io)
-
-
+- [Inspiration](http://hipsterwhale.com/)__
 ----
 
 ## Shameful Plug
