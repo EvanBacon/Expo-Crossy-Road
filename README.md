@@ -1,11 +1,20 @@
 Expo Froggy Street
 ========
 
+This is a demo video game built with three.js for educational purposes. 🎓
 Expo: https://exp.host/@bacon/froggy-street
 
 ![Why did the ducky cross the road? Because, yolo](https://media.giphy.com/media/TyrecU7XJ7wmQ/giphy.gif?raw=true "Preview Gif 😀 ...I love you")
 
 Tutorial Coming Soon 😅
+
+- Loading Models
+- Game Logic
+- Building models with Magica
+- Itegrating Native UI with imperative code
+- Particles
+- Collisions
+- Custom Navigation
 
 ----
 
