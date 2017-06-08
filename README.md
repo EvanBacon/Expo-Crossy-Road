@@ -1,7 +1,7 @@
-Expo Frogger
+Expo Froggy Street
 ========
 
-Expo: https://exp.host/@bacon/crossy-road
+Expo: https://exp.host/@bacon/froggy-street
 
 ![Why did the chicken cross the road? Because, yolo](https://media.giphy.com/media/UAxmnxRLkmHEQ/200w_d.gif?raw=true "Preview Gif 😀 ...I love you")
 
