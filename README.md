@@ -22,7 +22,7 @@ Stack:
 ## Special Thanks
 
 - [Place I Got The Models](https://www.models-resource.com/mobile/crossyroad/)
-- [Inspiration](http://hipsterwhale.com/)__
+- [Inspiration](http://hipsterwhale.com/)
 ----
 
 ## Shameful Plug
