@@ -54,15 +54,6 @@ class Root extends React.Component {
   componentWillMount() {
     this._loadAssetsAsync();
 
-    // Audio.setAudioModeAsync({
-    //   allowsRecordingIOS: false,
-    //   interruptionModeIOS: Audio.INTERRUPTION_MODE_IOS_DO_NOT_MIX,
-    //   playsInSilentLockedModeIOS: false,
-    //   shouldduckyAndroid: true,
-    //   interruptionModeAndroid: Audio.INTERRUPTION_MODE_ANDROID_DO_NOT_MIX,
-    // });
-
-
     this.persister = persistStore(store, storeSettings, () => {
       console.log("Rehydrated");
       // console.warn(JSON.stringify(store.getState()))
@@ -77,7 +68,6 @@ class Root extends React.Component {
         fonts: [
           {"retro": require('./assets/fonts/retro.ttf')},
         ],
-        // audio: arrayFromObject(AudioPhiles)
       });
 
       await modelLoader.loadModels();
@@ -94,7 +84,6 @@ class Root extends React.Component {
   }
 
   render() {
-    return (<View style={{justifyContent: 'center', flex: 1, alignItems: 'center'}}><Text style={{fontSize: 36}}>🤷‍</Text></View>)
     if (this.state.appIsReady && this.state.rehydrated) {
       return (
         <Provider
