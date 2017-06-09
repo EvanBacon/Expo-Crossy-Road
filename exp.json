@@ -2,7 +2,7 @@
   "name": "Froggy Street",
   "description": "An infinite retro game you won't ever want to stop playing",
   "slug": "froggy-street",
-  "privacy": "public",
+  "privacy": "unlisted",
   "sdkVersion": "17.0.0",
   "version": "1.0.1",
   "orientation": "portrait",

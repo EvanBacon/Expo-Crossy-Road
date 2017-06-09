@@ -1,6 +1,6 @@
 import Expo, {AppLoading, Audio} from 'expo';
 import React from 'react';
-import {View, StyleSheet, AsyncStorage} from 'react-native';
+import {View,Text, StyleSheet, AsyncStorage} from 'react-native';
 import Images from './Images'
 import AudioPhiles from './AudioPhiles';
 import cacheAssetsAsync from './utils/cacheAssetsAsync';
@@ -94,6 +94,7 @@ class Root extends React.Component {
   }
 
   render() {
+    return (<View style={{justifyContent: 'center', flex: 1, alignItems: 'center'}}><Text style={{fontSize: 36}}>🤷‍</Text></View>)
     if (this.state.appIsReady && this.state.rehydrated) {
       return (
         <Provider

@@ -200,18 +200,9 @@ export default {
       model: require('./assets/models/characters/marilyn_goose/0.obj'),
       texture: require('./assets/models/characters/marilyn_goose/0.png'),
     },
-
-    emo_kid: {
-      model: require('./assets/models/characters/emo_kid/0.obj'),
-      texture: require('./assets/models/characters/emo_kid/0.png'),
-    },
     your_mom: {
       model: require('./assets/models/characters/your_mom/0.obj'),
       texture: require('./assets/models/characters/your_mom/0.png'),
-    },
-    fan_boy: {
-      model: require('./assets/models/characters/fan_boy/0.obj'),
-      texture: require('./assets/models/characters/fan_boy/0.png'),
     },
     meme_dog: {
       model: require('./assets/models/characters/meme_dog/0.obj'),
@@ -225,10 +216,6 @@ export default {
     pew_die_pup: {
       model: require('./assets/models/characters/pew_die_pup/0.obj'),
       texture: require('./assets/models/characters/pew_die_pup/0.png'),
-    },
-    quackster: {
-      model: require('./assets/models/characters/quackster/0.obj'),
-      texture: require('./assets/models/characters/quackster/0.png'),
     },
   }
 }
