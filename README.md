@@ -1,8 +1,11 @@
 Expo Froggy Street
 ========
 
+# NOTICE
+Hipster whale has threatened to present expo with a DMCA if I didn't remove this project.
+I'm currently working on an alternative project to go here instead.
+
 This is a demo video game built with three.js for educational purposes. 🎓
-Expo: https://exp.host/@bacon/froggy-street
 
 🤷‍
 
