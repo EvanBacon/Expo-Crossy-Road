@@ -162,10 +162,6 @@ export default {
       model: require('./assets/models/characters/bacon/0.obj'),
       texture: require('./assets/models/characters/bacon/0.png'),
     },
-    boss_fish: {
-      model: require('./assets/models/characters/boss_fish/0.obj'),
-      texture: require('./assets/models/characters/boss_fish/0.png'),
-    },
     nikki: {
       model: require('./assets/models/characters/nikki/0.obj'),
       texture: require('./assets/models/characters/nikki/0.png'),
@@ -195,27 +191,9 @@ export default {
       model: require('./assets/models/characters/dazzle_frog/0.obj'),
       texture: require('./assets/models/characters/dazzle_frog/0.png'),
     },
-
-    marilyn_goose: {
-      model: require('./assets/models/characters/marilyn_goose/0.obj'),
-      texture: require('./assets/models/characters/marilyn_goose/0.png'),
-    },
     your_mom: {
       model: require('./assets/models/characters/your_mom/0.obj'),
       texture: require('./assets/models/characters/your_mom/0.png'),
-    },
-    meme_dog: {
-      model: require('./assets/models/characters/meme_dog/0.obj'),
-      texture: require('./assets/models/characters/meme_dog/0.png'),
-    },
-
-    retro_robot: {
-      model: require('./assets/models/characters/retro_robot/0.obj'),
-      texture: require('./assets/models/characters/retro_robot/0.png'),
-    },
-    pew_die_pup: {
-      model: require('./assets/models/characters/pew_die_pup/0.obj'),
-      texture: require('./assets/models/characters/pew_die_pup/0.png'),
     },
   }
 }
