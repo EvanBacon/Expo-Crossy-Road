@@ -15,7 +15,7 @@ import Banner from './Banner'
 //TODO: Make this dynamic
 const banner = [
   {
-    color: '#f6c62b',
+    color: '#5dc3ea',
     title: 'Get Notifications, Subscribe Now',
     button: {
       onPress: (_=> {
@@ -36,12 +36,12 @@ const banner = [
     }
   },
   {
-    color: '#f8602c',
-    title: 'Free Gift in 2h 51m',
+    color: '#0062c7',
+    title: 'Expo in 2h 51m',
   },
   {
-    color: '#d73a32',
-    title: '44 * To Go',
+    color: '#0900c7',
+    title: '44 Lines To Code',
   }
 ]
 

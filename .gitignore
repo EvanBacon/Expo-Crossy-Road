@@ -1,6 +1,5 @@
 node_modules/**/*
 .expo/*
-/assets/*
 .babelrc
 npm-debug.*
 AudioPhiles

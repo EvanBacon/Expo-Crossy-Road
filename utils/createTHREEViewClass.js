@@ -125,6 +125,9 @@ export default THREE => class THREEView extends React.Component {
       this.props.backgroundColorAlpha
     );
 
+
+    let composer = new THREE.EffectComposer( renderer );
+
     // renderer.shadowMap.enabled = this.props.shadowMapEnabled;
     // // renderer.shadowMap.type = this.props.shadowMapType;
     // renderer.shadowMap.type = THREE.BasicShadowMap;
@@ -149,6 +152,20 @@ export default THREE => class THREEView extends React.Component {
 
       if (this.props.scene && this.props.camera) {
         const camera = this.props.camera;
+
+        composer.addPass( new THREE.RenderPass( this.props.scene, camera ) );
+
+        var dotScreenEffect = new THREE.ShaderPass( THREE.DotScreenShader );
+        dotScreenEffect.uniforms[ 'scale' ].value = 4;
+        composer.addPass( dotScreenEffect );
+
+        var rgbEffect = new THREE.ShaderPass( THREE.RGBShiftShader );
+        rgbEffect.uniforms[ 'amount' ].value = 0.0015;
+        rgbEffect.renderToScreen = true;
+        composer.addPass( rgbEffect );
+
+
+
         if (this.props.autoAspect && camera.aspect) {
           const desiredAspect = gl.drawingBufferWidth / gl.drawingBufferHeight;
           if (camera.aspect !== desiredAspect) {

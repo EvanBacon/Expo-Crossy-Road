@@ -34,6 +34,8 @@ import Rows from '../Row';
 import {Fill} from '../Row/Grass'
 const AnimatedGestureRecognizer = Animated.createAnimatedComponent(GestureRecognizer);
 
+const allowTrains = false;
+
 @connectGameState
 @connectCharacter
 class Game extends Component {
@@ -394,7 +396,7 @@ class Game extends Component {
       break;
       case 2:
       {
-        if (((Math.random() * 5)|0) == 0) {
+        if (((Math.random() * 5)|0) == 0 && allowTrains) {
           this.railRoads[this.railRoadCount].position.z = this.rowCount;
           this.railRoads[this.railRoadCount].active = true;
           this.floorMap[`${this.rowCount}`] = {type: 'railRoad', entity: this.railRoads[this.railRoadCount]};

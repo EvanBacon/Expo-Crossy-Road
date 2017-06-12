@@ -27,10 +27,10 @@ export default {
   //   name: "Fan Boy",
   //   id: "fan_boy"
   // },
-  // gangster_pigeon: {
-  //   name: "Gangster Pigeon",
-  //   id: "gangster_pigeon"
-  // },
+  gangster_pigeon: {
+    name: "Gangster Pigeon",
+    id: "gangster_pigeon"
+  },
   ide: {
     name: "Ide",
     id: "ide"

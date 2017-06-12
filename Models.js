@@ -175,25 +175,10 @@ export default {
       texture: require('./assets/models/characters/brent/0.png'),
     },
 
-    ducky: {
-      model: require('./assets/models/characters/ducky/0.obj'),
-      texture: require('./assets/models/characters/ducky/0.png'),
-    },
-    techno_robot: {
-      model: require('./assets/models/characters/techno_robot/0.obj'),
-      texture: require('./assets/models/characters/techno_robot/0.png'),
-    },
     gangster_pigeon: {
       model: require('./assets/models/characters/gangster_pigeon/0.obj'),
       texture: require('./assets/models/characters/gangster_pigeon/0.png'),
     },
-    dazzle_frog: {
-      model: require('./assets/models/characters/dazzle_frog/0.obj'),
-      texture: require('./assets/models/characters/dazzle_frog/0.png'),
-    },
-    your_mom: {
-      model: require('./assets/models/characters/your_mom/0.obj'),
-      texture: require('./assets/models/characters/your_mom/0.png'),
-    },
+
   }
 }
