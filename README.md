@@ -1,15 +1,13 @@
 Expo Froggy Street
 ========
 
-# NOTICE
-Hipster whale has threatened to present expo with a DMCA if I didn't remove this project.
-I'm currently working on an alternative project to go here instead.
-
 This is a demo video game built with three.js for educational purposes. 🎓
 
-🤷‍
+https://exp.host/@bacon/froggy-street
 
-Tutorial Coming Soon 😅
+![Why did the programmer cross the road? To get away from the DMCA](https://media.giphy.com/media/TyrecU7XJ7wmQ/giphy.gif?raw=true "Preview Gif 😀 ...I love you")
+
+Tutorial Coming Eventually 😅
 
 - Loading Models
 - Game Logic
