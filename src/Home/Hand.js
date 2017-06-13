@@ -35,5 +35,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     resizeMode: 'contain',
+    transform: [{scaleX: -1}]
   },
 });

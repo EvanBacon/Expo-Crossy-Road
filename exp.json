@@ -1,8 +1,8 @@
 {
-  "name": "Up Next 2",
-  "description": "ay, oo, oh, hey, yeah",
-  "slug": "frogger",
-  "privacy": "unlisted",
+  "name": "Froggy Street",
+  "description": "Super fun 3D game",
+  "slug": "crossy-road",
+  "privacy": "public",
   "sdkVersion": "17.0.0",
   "version": "1.0.1",
   "orientation": "portrait",

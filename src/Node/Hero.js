@@ -10,7 +10,7 @@ export default class Hero extends Generic {
       if (Characters.hasOwnProperty(id)) {
         let character = Characters[id];
         const {model, texture} = characters[character.id];
-        this.models[character.id] = await this._download({model, texture});
+        this.models[character.id] = await this._download({model, texture, randomTexture: false});
       }
     }
     return this.models;

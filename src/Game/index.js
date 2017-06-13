@@ -100,7 +100,9 @@ class Game extends Component {
     this.scene = new THREE.Scene();
 
     this.camera = new THREE.OrthographicCamera(-width, width, height, -height, -30, 30);
+    // this.camera.position.set(-1, 2.8, -2.9); // Change -1 to -.02
     this.camera.position.set(-1, 2.8, -2.9); // Change -1 to -.02
+
     this.camera.zoom = 110; // for birds eye view
     this.camera.updateProjectionMatrix();
     this.camera.lookAt(this.scene.position);

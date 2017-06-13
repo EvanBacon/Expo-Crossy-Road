@@ -149,12 +149,12 @@ class Settings extends Component {
           </View>
 
           <View key='content' style={{flex: 1, flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', alignItems: 'center'}}>
-            <View key='content' style={{flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', alignItems: 'center'}}>
+      {false &&    <View key='content' style={{flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', alignItems: 'center'}}>
 
-            {
-              buttons.map((val, index) => <TitleButton key={index} source={val.source} text={val.text} imageStyle={val.imageStyle} onPress={val.onPress}/>)
-            }
-          </View>
+          {
+            buttons.map((val, index) => <TitleButton key={index} source={val.source} text={val.text} imageStyle={val.imageStyle} onPress={val.onPress}/>)
+          }
+        </View>}
 
           </View>
 
