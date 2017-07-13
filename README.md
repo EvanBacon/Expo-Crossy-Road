@@ -3,6 +3,8 @@ Expo Froggy Street
 
 This is a demo video game built with three.js for educational purposes. 🎓
 
+![Why did the chicken cross the road? Because, yolo](https://media.giphy.com/media/UAxmnxRLkmHEQ/200w_d.gif?raw=true "Preview Gif 😀 ...I love you")
+
 https://exp.host/@bacon/froggy-street
 
 Tutorial Coming Eventually 😅
