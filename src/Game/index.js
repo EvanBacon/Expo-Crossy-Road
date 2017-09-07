@@ -137,15 +137,8 @@ class Game extends Component {
 
   createLights = () => {
 
-    // let shadowLight = new THREE.DirectionalLight(0xffffff, 0.3);
-    // shadowLight.position.set(1, 1, 0); 			//default; light shining from top
-    // shadowLight.lookAt(0, 0, 0); 			//default; light shining from top
-
-    this.world.add(new THREE.AmbientLight(0xffffff, .8));
-    // this.world.add(shadowLight);
-
-    // this.scene.add(new THREE.AmbientLight(0x666666));
-
+    this.world.add(new THREE.AmbientLight(0x666666, .8));
+    
     let light = new THREE.DirectionalLight(0xdfebff, 1.75);
     light.position.set(20, 30, 0.05);
     light.castShadow = !this.props.hideShadows;
