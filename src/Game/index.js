@@ -120,11 +120,10 @@ class Game extends Component {
 
     if (type === 'water') {
       this.waterParticles.mesh.position.copy(model.position);
-      this.waterParticles.mesh.visible = true;
       this.waterParticles.run(type);
     } else if (type == 'feathers') {
       this.featherParticles.mesh.position.copy(model.position);
-      // this.featherParticles.mesh.visible = true;
+      
       this.featherParticles.run(type, direction);
     }
     })
@@ -291,6 +290,11 @@ class Game extends Component {
     this._hero.position.set(0, groundLevel, startingRow);
     this._hero.scale.set(1,1,1);
     this._hero.rotation.set(0, Math.PI, 0);
+
+    this.featherParticles.mesh.position.copy(this._hero.position);
+    this.waterParticles.mesh.position.copy(this._hero.position);
+    this.featherParticles.mesh.position.y = this.waterParticles.mesh.position.y = 0;
+
     this.map = {};
     this.camCount = 0;
     this.map[`${0},${groundLevel|0},${startingRow|0}`] = 'player'
