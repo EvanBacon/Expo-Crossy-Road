@@ -54,9 +54,9 @@ class Game extends Component {
     if (nextProps.character.id !== this.props.character.id) {
       (async () => {
 
-        this.scene.remove(this._hero);
+        this.world.remove(this._hero);
         this._hero = this.hero.getNode(nextProps.character.id);
-        this.scene.add(this._hero);
+        this.world.add(this._hero);
         this._hero.position.set(0, groundLevel, startingRow);
         this._hero.scale.set(1, 1, 1);
         this.init();
@@ -93,7 +93,12 @@ class Game extends Component {
 
   componentWillMount() {
     this.scene = new THREE.Scene();
+    this.worldWithCamera = new THREE.Group();
+    this.worldWithCamera.position.z = -(startingRow);
 
+    this.world = new THREE.Group();
+    this.scene.add(this.worldWithCamera);
+    this.worldWithCamera.add(this.world);
     this.camera = new THREE.OrthographicCamera(-width, width, height, -height, -30, 30);
     this.camera.position.set(-1, 2.8, -2.9); // Change -1 to -.02
     this.camera.zoom = 110; // for birds eye view
@@ -108,10 +113,10 @@ class Game extends Component {
 
 
     this.waterParticles = new Water(THREE);
-    this.scene.add(this.waterParticles.mesh);
+    this.world.add(this.waterParticles.mesh);
 
     this.featherParticles = new Feathers(THREE);
-    this.scene.add(this.featherParticles.mesh);
+    this.world.add(this.featherParticles.mesh);
 
   }
 
@@ -136,22 +141,23 @@ class Game extends Component {
     // shadowLight.position.set(1, 1, 0); 			//default; light shining from top
     // shadowLight.lookAt(0, 0, 0); 			//default; light shining from top
 
-    // this.scene.add(new THREE.AmbientLight(0xffffff, .8));
-    // this.scene.add(shadowLight);
+    this.world.add(new THREE.AmbientLight(0xffffff, .8));
+    // this.world.add(shadowLight);
 
-    this.scene.add(new THREE.AmbientLight(0x666666));
+    // this.scene.add(new THREE.AmbientLight(0x666666));
 
     let light = new THREE.DirectionalLight(0xdfebff, 1.75);
     light.position.set(20, 30, 0.05);
-    light.castShadow = true;
+    light.castShadow = !this.props.hideShadows;
     light.shadow.mapSize.width = 1024 * 2;
     light.shadow.mapSize.height = 1024 * 2;
 
-    var d = 10;
+    var d = 15;
+    var v = 6;
     light.shadow.camera.left = - d;
-    light.shadow.camera.right = d;
-    light.shadow.camera.top = d;
-    light.shadow.camera.bottom = - d;
+    light.shadow.camera.right = 9;
+    light.shadow.camera.top = v;
+    light.shadow.camera.bottom = -v;
     light.shadow.camera.far = 100;
     light.shadow.bias = 0.0001;
 
@@ -160,7 +166,7 @@ class Game extends Component {
     this.light = light;
 
     var helper = new THREE.CameraHelper(light.shadow.camera);
-    this.scene.add(helper);
+    // this.scene.add(helper);
 
   }
 
@@ -238,7 +244,7 @@ class Game extends Component {
     this._hero.hitBy = null;
     this._hero.ridingOn = null;
     this._hero.ridingOnOffset = null;
-    this.scene.add(this._hero);
+    this.world.add(this._hero);
 
 
     // Assign mesh to corresponding array
@@ -249,10 +255,10 @@ class Game extends Component {
       this.water[i] = new Rows.Water(this.heroWidth, this.onCollide); // this._railroad.getRandom();
       this.road[i] = new Rows.Road(this.heroWidth, this.onCollide); // this._railroad.getRandom();
       this.railRoads[i] = new Rows.RailRoad(this.heroWidth, this.onCollide); // this._railroad.getRandom();
-      this.scene.add(this.grass[i]);
-      this.scene.add(this.water[i]);
-      this.scene.add(this.road[i]);
-      this.scene.add(this.railRoads[i]);
+      this.world.add(this.grass[i]);
+      this.world.add(this.water[i]);
+      this.world.add(this.road[i]);
+      this.world.add(this.railRoads[i]);
 
     }
 
@@ -270,7 +276,7 @@ class Game extends Component {
     //
     //   const width = this.getWidth(mesh);
     //   this.lilys[i] = {mesh, width, collisionBox: (this.heroWidth / 2 + width / 2 - .1) };
-    //   this.scene.add(mesh);
+    //   this.world.add(mesh);
     //
     //
     // }
@@ -311,7 +317,7 @@ class Game extends Component {
   init = () => {
     const offset = -30;
     this.setState({ score: 0 })
-    this.camera.position.z = startingRow + 1;
+    this.camera.position.z = 1;
     this._hero.position.set(0, groundLevel, startingRow);
     this._hero.scale.set(1, 1, 1);
     this._hero.rotation.set(0, Math.PI, 0);
@@ -504,12 +510,12 @@ class Game extends Component {
   // Move scene forward
   forwardScene = () => {
     const easing = 0.03;
-    this.camera.position.z += (((this._hero.position.z + 1) - this.camera.position.z) * easing);
-    this.camera.position.x = Math.min(2, Math.max(-2, this.camera.position.x + (((this._hero.position.x) - this.camera.position.x) * easing)));
+    this.world.position.z -= (((this._hero.position.z - startingRow) + this.world.position.z) * easing);
+    this.world.position.x = -Math.min(2, Math.max(-2, this.world.position.x + (((this._hero.position.x) - this.world.position.x) * easing)));
 
     // normal camera speed
-    if (this.camera.position.z - this.camCount > 1.0) {
-      this.camCount = this.camera.position.z;
+    if (-this.world.position.z - this.camCount > 1.0) {
+      this.camCount = -this.world.position.z;
       this.newRow();
     }
   }
@@ -556,7 +562,7 @@ class Game extends Component {
     if (this.gameState !== State.Game.playing) {
       return
     }
-    if (this._hero.position.z < this.camera.position.z - 8) {
+    if (this._hero.position.z < this.camera.position.z - 1) {
       ///TODO: rumble
       this.rumbleScreen()
       this.gameOver();
