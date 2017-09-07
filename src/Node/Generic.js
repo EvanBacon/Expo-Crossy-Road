@@ -20,7 +20,7 @@ export default class Generic {
     return box.size().width;
   }
 
-  _downloadAssets = async ({model, texture}) => {
+  _downloadAssets = async ({model, texture, castShadow, receiveShadow}) => {
 
     const loader = new THREE.OBJLoader();
 let _model;
@@ -49,10 +49,14 @@ let _model;
     _model.traverse(child => {
       if (child instanceof THREE.Mesh) {
         child.material.map = _texture;
-        child.castShadow = true;
-
+        child.castShadow = castShadow;
+        child.receiveShadow = receiveShadow;
       }
     });
+    // _model.scale.set(10, 10, 10)
+
+    _model.castShadow = castShadow;
+    _model.receiveShadow = receiveShadow;
 
     return _model;
   }
