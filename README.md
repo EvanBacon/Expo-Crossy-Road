@@ -5,7 +5,7 @@ Expo: https://exp.host/@bacon/crossy-road
 
 ![Why did the chicken cross the road? Because, yolo](https://media.giphy.com/media/UAxmnxRLkmHEQ/200w_d.gif?raw=true "Preview Gif 😀 ...I love you")
 
-Tutorial Coming Soon 😅
+Tutorial Coming Eventually 😅
 
 ----
 
