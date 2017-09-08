@@ -1,7 +1,8 @@
-# Blender v2.78 (sub 0) OBJ File: ''
-# www.blender.org
+# Wavefront OBJ file
+# Exported by Misfit Model 3D 1.2.4
+# Mon Oct 26 15:38:31 2015
 
-mtllib Pimp.mtl
+mtllib Ganster.mtl
 
 # 288 Vertices
 v 0.42 0.6 0.3
@@ -1161,11 +1162,11 @@ vn 0.0 -0.0 1.0
 vn 0.0 -0.0 1.0
 vn 0.0 -0.0 1.0
 
-# Pimp, 144 grouped triangles
+# Ganster, 144 grouped triangles
 
-usemtl Pimp-tex.tex
-o Pimp
-g Pimp
+usemtl Ganster-tex.tex
+o Ganster
+g Ganster
 
 f 1/1/1 2/2/2 3/3/3
 f 1/4/4 3/5/5 4/6/6

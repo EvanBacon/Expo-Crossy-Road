@@ -41,6 +41,8 @@ class Screen extends Component {
           }}>
 
           <RetroText style={styles.coins}>{this.props.coins}</RetroText>
+        {/* <AniamtedRetroText style={[styles.title, animatedTitleStyle]}>CROSSY ROAD</AniamtedRetroText> */}
+
       <View style={{justifyContent: 'center',alignItems: 'center', position: 'absolute', bottom: 8, left: 8, right: 8,}}>
         <Hand style={{width: 36}}/>
       <Footer style={{ height: 48}} onCharacterSelect={_=> {

@@ -13,8 +13,7 @@ const {
   Boulder,
   RailRoad,
   TrainLight,
-  LilyPad,
-  Title
+  LilyPad
 } = Node;
 
 class ModelLoader {
@@ -38,7 +37,6 @@ class ModelLoader {
     this._trainLight = new TrainLight();
     this._log = new Log();
     this._hero = new Hero();
-    this._title = new Title();
 
     try {
       //c
@@ -52,7 +50,6 @@ class ModelLoader {
         this._tree.setup(),
         this._car.setup(),
         //
-        this._title.setup(),
         this._railroad.setup(),
         this._train.setup(),
         this._hero.setup(),

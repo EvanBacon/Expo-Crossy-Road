@@ -1,4 +1,4 @@
-# Blender MTL File: 'None'
+# Material file for strip_train.obj
 
 newmtl strip_train-tex.tex
 	Ns 0
@@ -8,3 +8,4 @@ newmtl strip_train-tex.tex
 	Ks 0.0 0.0 0.0
 	Ka 0.2 0.2 0.2
 	map_Kd strip_train-tex.tex.png
+

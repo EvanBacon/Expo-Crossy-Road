@@ -1,6 +1,6 @@
 import Expo, {AppLoading, Audio} from 'expo';
 import React from 'react';
-import {View,Text, StyleSheet, AsyncStorage} from 'react-native';
+import {View, StyleSheet, AsyncStorage} from 'react-native';
 import Images from './Images'
 import AudioPhiles from './AudioPhiles';
 import cacheAssetsAsync from './utils/cacheAssetsAsync';
@@ -54,6 +54,15 @@ class Root extends React.Component {
   componentWillMount() {
     this._loadAssetsAsync();
 
+    Audio.setAudioModeAsync({
+      allowsRecordingIOS: false,
+      interruptionModeIOS: Audio.INTERRUPTION_MODE_IOS_DO_NOT_MIX,
+      playsInSilentLockedModeIOS: false,
+      shouldDuckAndroid: true,
+      interruptionModeAndroid: Audio.INTERRUPTION_MODE_ANDROID_DO_NOT_MIX,
+    });
+
+
     this.persister = persistStore(store, storeSettings, () => {
       console.log("Rehydrated");
       // console.warn(JSON.stringify(store.getState()))
@@ -68,6 +77,7 @@ class Root extends React.Component {
         fonts: [
           {"retro": require('./assets/fonts/retro.ttf')},
         ],
+        audio: arrayFromObject(AudioPhiles)
       });
 
       await modelLoader.loadModels();

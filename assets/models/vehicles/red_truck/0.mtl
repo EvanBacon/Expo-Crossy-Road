@@ -1,10 +1,11 @@
-# Blender MTL File: 'None'
+# Material file for Truck.obj
 
-newmtl UziVert-tex.tex
+newmtl Truck-tex.tex
 	Ns 0
 	d 1
 	illum 2
 	Kd 0.8 0.8 0.8
 	Ks 0.0 0.0 0.0
 	Ka 0.2 0.2 0.2
-	map_Kd UziVert-tex.tex.png
+	map_Kd Truck-tex.tex.png
+

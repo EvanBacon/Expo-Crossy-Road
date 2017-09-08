@@ -21,14 +21,17 @@ export default class Train extends Generic {
     const front = this.getNode('front');
     _train.add(front);
 
+    //
+
+    // console.log( box.min, box.max, box.size() );
     let offset = this.getDepth(front);
+    //
     for (let i = 0; i < size; i++) {
       const middle = this.getNode('middle');
-      const depth = this.getDepth(middle);
-      middle.position.x = offset //TODO: Measure.
+      middle.position.x = offset; //TODO: Measure.
 
       _train.add(middle);
-      offset += depth;
+      offset += this.getDepth(middle);
     }
     const back = this.getNode('back');
     back.position.x = offset;

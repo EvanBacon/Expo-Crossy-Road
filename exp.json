@@ -1,15 +1,15 @@
 {
-  "name": "Crossy Street",
-  "description": "Super fun 3D game",
-  "slug": "crossy-street",
+  "name": "Crossy Road",
+  "description": "The endless arcade hopper you'll never want to put down",
+  "slug": "crossy-road",
   "privacy": "public",
   "sdkVersion": "17.0.0",
-  "version": "1.0.1",
+  "version": "1.0.0",
   "orientation": "portrait",
-  "primaryColor": "#8ee6ff",
+  "primaryColor": "#cccccc",
   "icon": "./assets/icons/app.png",
   "loading": {
-    "backgroundColor": "#8ee6ff",
+    "backgroundColor": "#6dceea",
     "icon": "./assets/icons/loading.png",
     "hideExponentText": false
   },

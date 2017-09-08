@@ -46,12 +46,12 @@ let _model;
     _texture.magFilter = THREE.NearestFilter;
     _texture.minFilter = THREE.NearestFilter;
 
-    var mat = new THREE.MeshPhongMaterial( { color: '#'+Math.floor(Math.random()*16777215).toString(16), shading: THREE.FlatShading } )
-
     _model.traverse(child => {
+      if (child instanceof THREE.Mesh) {
         child.material.map = _texture;
         child.castShadow = castShadow;
         child.receiveShadow = receiveShadow;
+      }
     });
     // _model.scale.set(10, 10, 10)
 
@@ -86,6 +86,7 @@ let _model;
       console.error(error);
       return;
     }
+
     return model;
   }
 

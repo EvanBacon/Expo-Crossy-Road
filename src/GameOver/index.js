@@ -15,13 +15,13 @@ import Banner from './Banner'
 //TODO: Make this dynamic
 const banner = [
   {
-    color: '#5dc3ea',
-    title: 'Get Notifications, Subscribe Now',
+    color: '#f6c62b',
+    title: 'Get Updates Subscribe Now',
     button: {
       onPress: (_=> {
         Alert.alert(
      'Subscribe to our mailing list',
-     'Join our mailing list and discover the latest news from Some Company and This Game.\n\n Read about fair use on http://fairuse.stanford.edu/overview/academic-and-educational-permissions/non-coursepack/#rules_for_reproducing_music',
+     'Join our mailing list and discover the latest news from Hipster Whale and Crossy Road.\n\n Read our privacy policy on crossyroad.com/privacy',
      [
        {text: 'Cancel', onPress: () => console.log('Cancel Pressed!')},
        {text: 'OK', onPress: () => console.log('OK Pressed!')},
@@ -36,12 +36,12 @@ const banner = [
     }
   },
   {
-    color: '#0062c7',
-    title: 'Expo in 2h 51m',
+    color: '#f8602c',
+    title: 'Free Gift in 2h 51m',
   },
   {
-    color: '#0900c7',
-    title: '44 Lines To Code',
+    color: '#d73a32',
+    title: '44 * To Go',
   }
 ]
 

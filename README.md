@@ -1,23 +1,11 @@
-Expo Froggy Street
+Expo Frogger
 ========
 
-# NOTICE
-Hipster whale has threatened to present expo with a DMCA if I didn't remove this project.
-I'm currently working on an alternative project to go here instead.
+Expo: https://exp.host/@bacon/crossy-road
 
-This is a demo video game built with three.js for educational purposes. 🎓
-
-🤷‍
+![Why did the chicken cross the road? Because, yolo](https://media.giphy.com/media/UAxmnxRLkmHEQ/200w_d.gif?raw=true "Preview Gif 😀 ...I love you")
 
 Tutorial Coming Soon 😅
-
-- Loading Models
-- Game Logic
-- Building models with Magica
-- Itegrating Native UI with imperative code
-- Particles
-- Collisions
-- Custom Navigation
 
 ----
 

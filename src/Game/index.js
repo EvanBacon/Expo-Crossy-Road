@@ -35,8 +35,6 @@ import Rows from '../Row';
 import { Fill } from '../Row/Grass'
 const AnimatedGestureRecognizer = Animated.createAnimatedComponent(GestureRecognizer);
 
-const allowTrains = false;
-
 @connectGameState
 @connectCharacter
 class Game extends Component {
@@ -102,9 +100,7 @@ class Game extends Component {
     this.scene.add(this.worldWithCamera);
     this.worldWithCamera.add(this.world);
     this.camera = new THREE.OrthographicCamera(-width, width, height, -height, -30, 30);
-    // this.camera.position.set(-1, 2.8, -2.9); // Change -1 to -.02
     this.camera.position.set(-1, 2.8, -2.9); // Change -1 to -.02
-
     this.camera.zoom = 110; // for birds eye view
     this.camera.updateProjectionMatrix();
     this.camera.lookAt(this.scene.position);
@@ -232,13 +228,6 @@ class Game extends Component {
     this.createParticles();
     this.createLights();
 
-    this.title = modelLoader._title.getNode();
-    let scale = 0.08;
-    this.title.scale.set(scale,scale,scale);
-    this.title.rotation.y = Math.PI;
-    this.title.position.set(10, 3, 9);
-    this.scene.add(this.title);
-
     // Mesh
     // console.warn(this.props.character.id)
     this._hero = this.hero.getNode(this.props.character.id);
@@ -350,9 +339,6 @@ class Game extends Component {
 
     this.idle();
 
-    this.title.position.x = 10
-
-
     for (i = 0; i < this.maxRows; i++) {
       this.grass[i].position.z = offset;
 
@@ -375,11 +361,6 @@ class Game extends Component {
     }
 
     this.setState({ ready: true });
-
-    TweenMax.to(this.title.position, 1, {
-      x: 0,
-      delay: 0.2,
-    })
   }
 
   mapRowToObstacle = (row) => {

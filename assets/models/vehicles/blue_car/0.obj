@@ -1,7 +1,8 @@
-# Blender v2.78 (sub 0) OBJ File: ''
-# www.blender.org
+# Wavefront OBJ file
+# Exported by Misfit Model 3D 1.2.4
+# Mon Oct 26 15:14:03 2015
 
-mtllib Lil_Yachty.mtl
+mtllib Electric.mtl
 
 # 308 Vertices
 v 0.3 0.96 -0.42
@@ -1241,11 +1242,11 @@ vn 0.0 0.0 1.0
 vn 0.0 0.0 1.0
 vn 0.0 0.0 1.0
 
-# Lil_Yachty, 154 grouped triangles
+# Electric, 154 grouped triangles
 
-usemtl Lil_Yachty-tex.tex
-o Lil_Yachty
-g Lil_Yachty
+usemtl Electric-tex.tex
+o Electric
+g Electric
 
 f 1/1/1 2/2/2 3/3/3
 f 1/4/4 3/5/5 4/6/6

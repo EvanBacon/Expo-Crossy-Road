@@ -1,4 +1,4 @@
-# Blender MTL File: 'None'
+# Material file for rock.obj
 
 newmtl rock-tex.tex
 	Ns 0
@@ -8,3 +8,4 @@ newmtl rock-tex.tex
 	Ks 0.0 0.0 0.0
 	Ka 0.2 0.2 0.2
 	map_Kd rock-tex.tex.png
+

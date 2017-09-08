@@ -64,11 +64,15 @@ class AppWithNavigationState extends React.Component {
       });
     return (
       <View pointerEvents={this.state.transitioning ? 'none' : 'box-none'} style={{flex: 1, backgroundColor: Colors.blue}}>
-        <AnimatedGame navigation={navigation} gameOpacity={this.transitionAnimation} style={StyleSheet.absoluteFill} />
+        <AnimatedGame navigation={navigation} style={[StyleSheet.absoluteFill, {opacity: this.transitionAnimation.interpolate({
+          inputRange: [0, 1],
+          outputRange: [0, 1]
+        })
+      }]} />
 
       {gameState == State.Game.none &&
         <View pointerEvents="none" style={[StyleSheet.absoluteFill, {justifyContent: 'center', alignItems: 'center'}]}>
-        {/* <Animated.Image source={Images.title} style={{width: 322, height: 186, resizeMode: 'contain', transform: [
+        <Animated.Image source={Images.title} style={{width: 322, height: 186, resizeMode: 'contain', transform: [
           {
             translateX: this.transitionTitleAnimation.interpolate({
               inputRange: [0, 1],
@@ -81,7 +85,7 @@ class AppWithNavigationState extends React.Component {
               outputRange: [-105, 0]
             })
           }
-        ]}}/> */}
+        ]}}/>
         </View>
       }
 

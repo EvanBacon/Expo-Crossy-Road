@@ -41,11 +41,11 @@ class Settings extends Component {
     const {characters, currentIndex} = this.state;
     const character = characters[currentIndex].name;
     Share.share({
-      message: `${character}! @expo_io`,
-      url: 'https://exp.host/@bacon/froggy-street',
-      title: 'Expo Froggy Street'
+      message: `${character}! #expoCrossyroad @expo_io`,
+      url: 'https://exp.host/@evanbacon/crossy-road',
+      title: 'Expo Crossy Road'
     }, {
-      dialogTitle: 'Share Expo Froggy Street',
+      dialogTitle: 'Share Expo Crossy Road',
       excludedActivityTypes: [
         'com.apple.UIKit.activity.AirDrop', // This speeds up showing the share sheet by a lot
         'com.apple.UIKit.activity.AddToReadingList' // This is just lame :)
@@ -149,12 +149,12 @@ class Settings extends Component {
           </View>
 
           <View key='content' style={{flex: 1, flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', alignItems: 'center'}}>
-      {false &&    <View key='content' style={{flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', alignItems: 'center'}}>
+            <View key='content' style={{flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', alignItems: 'center'}}>
 
-          {
-            buttons.map((val, index) => <TitleButton key={index} source={val.source} text={val.text} imageStyle={val.imageStyle} onPress={val.onPress}/>)
-          }
-        </View>}
+            {
+              buttons.map((val, index) => <TitleButton key={index} source={val.source} text={val.text} imageStyle={val.imageStyle} onPress={val.onPress}/>)
+            }
+          </View>
 
           </View>
 

@@ -112,15 +112,6 @@ export default THREE => class THREEView extends React.Component {
     // renderer.gammaInput = true;
     // renderer.gammaOutput = true;
 
-
-    let effect = new THREE.OutlineEffect( renderer,{
-    defaultThickNess: 0.1,
-    defaultColor: new THREE.Color( 0x888888 ),
-    defaultAlpha: 1,
-    defaultKeepAlive: true // keeps outline material in cache even if material is removed from scene
-    } );
-    // effect.setSize( gl.drawingBufferWidth, gl.drawingBufferHeight );
-
  //    let effect = new THREE.OutlineEffect( renderer,{
  // defaultThickNess: 0.1,
  //  	defaultColor: new THREE.Color( 0x888888 ),
@@ -134,8 +125,6 @@ export default THREE => class THREEView extends React.Component {
       this.props.backgroundColorAlpha
     );
 
-
-
     // renderer.shadowMap.enabled = this.props.shadowMapEnabled;
     // // renderer.shadowMap.type = this.props.shadowMapType;
     // renderer.shadowMap.type = THREE.BasicShadowMap;
@@ -143,7 +132,7 @@ export default THREE => class THREEView extends React.Component {
     // renderer.shadowMap.renderSingleSided = this.props.shadowMapRenderSingleSided;
     // renderer.shadowMap.cascade = true;
 
-    let composer;
+
 
     let lastFrameTime;
     const animate = () => {
@@ -160,25 +149,6 @@ export default THREE => class THREEView extends React.Component {
 
       if (this.props.scene && this.props.camera) {
         const camera = this.props.camera;
-
-// if (!composer) {
-//         composer = new THREE.EffectComposer( renderer );
-//         composer.setSize(gl.drawingBufferWidth, gl.drawingBufferHeight);
-//
-//         let renderPass = new THREE.RenderPass( this.props.scene, this.props.camera );
-//
-//         var effect = new THREE.ShaderPass( THREE.DotScreenShader );
-//     effect.uniforms[ 'scale' ].value = 4;
-//     composer.addPass( effect );
-//     var effect = new THREE.ShaderPass( THREE.RGBShiftShader );
-//     effect.uniforms[ 'amount' ].value = 0.0015;
-//     effect.renderToScreen = true;
-//     composer.addPass( effect );
-//
-//
-// }
-
-
         if (this.props.autoAspect && camera.aspect) {
           const desiredAspect = gl.drawingBufferWidth / gl.drawingBufferHeight;
           if (camera.aspect !== desiredAspect) {
@@ -186,11 +156,9 @@ export default THREE => class THREEView extends React.Component {
             camera.updateProjectionMatrix();
           }
         }
-        effect.render( this.props.scene, camera );
-        // composer.render();
+        // effect.render( this.props.scene, camera );
 
-        // renderer.render(this.props.scene, camera);
-
+        renderer.render(this.props.scene, camera);
       }
       gl.flush();
       gl.endFrameEXP();
