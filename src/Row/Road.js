@@ -131,7 +131,7 @@ export default class Road extends THREE.Object3D {
             y: (Math.random() * Math.PI) - Math.PI/2,
           });
         }
-        this.onCollide(car);
+        this.onCollide(car, 'feathers', 'car');
         return;
       }
     }

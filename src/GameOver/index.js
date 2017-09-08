@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Text,Alert,Easing, Animated, Dimensions, View, StyleSheet, Share, AsyncStorage } from 'react-native';
-import { Constants } from 'expo';
-
+import Expo, { Constants } from 'expo';
+import AudioFiles from '../../Audio';
 const {width} = Dimensions.get('window');
 import Button from '../Button';
 import Images from '../../Images';
@@ -68,8 +68,21 @@ class GameOver extends Component {
 
   componentDidMount() {
 
-    setTimeout(_=> {
+    setTimeout( _ => {
       this._animateBanners()
+      
+      const playBannerSound = async () => {
+        const soundObject = new Expo.Audio.Sound();
+        try {
+          await soundObject.loadAsync(AudioFiles.banner);
+          await soundObject.playAsync();
+        } catch (error) {
+          console.warn("sound error", { error });
+        }
+      }
+      playBannerSound();
+      setTimeout(_=>playBannerSound(), 300);
+      setTimeout(_=>playBannerSound(), 600);
     }, 300);
 
   }

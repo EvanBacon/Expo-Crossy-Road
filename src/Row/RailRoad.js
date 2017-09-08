@@ -1,11 +1,11 @@
 import Expo from 'expo'
-import React, {Component} from 'react';
-
-import {TweenMax, Power2, TimelineLite} from "gsap";
+import React, { Component } from 'react';
+import AudioFiles from '../../Audio';
+import { TweenMax, Power2, TimelineLite } from "gsap";
 import * as THREE from 'three';
 
-import {groundLevel} from '../Game';
-import {modelLoader} from '../../App';
+import { groundLevel } from '../Game';
+import { modelLoader } from '../../App';
 export default class RailRoad extends THREE.Object3D {
   active = false;
 
@@ -21,7 +21,7 @@ export default class RailRoad extends THREE.Object3D {
     super();
     this.heroWidth = heroWidth;
     this.onCollide = onCollide;
-    const {_railroad, _trainLight, _train} = modelLoader;
+    const { _railroad, _trainLight, _train } = modelLoader;
 
     this.railRoad = _railroad.getNode();
 
@@ -32,7 +32,7 @@ export default class RailRoad extends THREE.Object3D {
 
     this._trainMesh = _train.withSize((Math.random() * 2) + 1);
     const width = this.getWidth(this._trainMesh);
-    this.train = {mesh: this._trainMesh, speed: 0.8, width, collisionBox: (this.heroWidth / 2 + width / 2 - .1) };
+    this.train = { mesh: this._trainMesh, speed: 0.8, width, collisionBox: (this.heroWidth / 2 + width / 2 - .1) };
 
 
     this.setupLight(this.light);
@@ -62,40 +62,43 @@ export default class RailRoad extends THREE.Object3D {
     if (!this.active) {
       return;
     }
-    this.drive({dt, player})
+    this.drive({ dt, player })
   }
 
-  drive = ({dt, player}) => {
-    const {position, hitByTrain, moving} = player;
-    const {train} = this;
-      const offset = 22 * 5;
+  drive = ({ dt, player }) => {
+    const { position, hitByTrain, moving } = player;
+    const { train } = this;
+    const offset = 22 * 5;
 
-        train.mesh.position.x += train.speed;
+    train.mesh.position.x += train.speed;
 
-        if (train.mesh.position.x > offset && train.speed > 0) {
-          train.mesh.position.x = -offset;
-          this.startRingingLight()
-          if (train === hitByTrain) {
-            player.hitByTrain = null;
-          }
-        } else if (train.mesh.position.x < -offset && train.speed < 0) {
-          train.mesh.position.x = offset;
-          this.startRingingLight()
-          if (train === hitByTrain) {
-            player.hitByTrain = null;
-          }
-        } else if (!moving) {
-          this.trainShouldCheckCollision({player})
-        }
+    if (train.mesh.position.x > offset && train.speed > 0) {
+      train.mesh.position.x = -offset;
+      this.startRingingLight()
+      this.playSound(AudioFiles.train.move['0']);      
+      
+      if (train === hitByTrain) {
+        player.hitByTrain = null;
+      }
+    } else if (train.mesh.position.x < -offset && train.speed < 0) {
+      train.mesh.position.x = offset;
+      this.startRingingLight()
+      this.playSound(AudioFiles.train.move['0']);      
+      if (train === hitByTrain) {
+        player.hitByTrain = null;
+      }
+    } else if (!moving) {
+      this.trainShouldCheckCollision({ player })
+    }
 
   }
 
 
-  trainShouldCheckCollision = ({player}) => {
-    const {train} = this;
+  trainShouldCheckCollision = ({ player }) => {
+    const { train } = this;
     if (Math.round(player.position.z) == this.position.z && player.isAlive) {
 
-      const {mesh, collisionBox} = train;
+      const { mesh, collisionBox } = train;
 
       if (player.position.x < mesh.position.x + collisionBox && player.position.x > mesh.position.x - collisionBox) {
         if (player.moving && Math.abs(player.position.z - Math.round(player.position.z)) > 0.1) {
@@ -107,10 +110,10 @@ export default class RailRoad extends THREE.Object3D {
             z: 0.2,
           });
           TweenMax.to(player.rotation, 0.3, {
-            z: (Math.random() * Math.PI) - Math.PI/2,
+            z: (Math.random() * Math.PI) - Math.PI / 2,
           });
 
-          this.onCollide(train);
+          this.onCollide(train, 'feathers', 'train');
           return;
         } else {
 
@@ -126,7 +129,7 @@ export default class RailRoad extends THREE.Object3D {
             x: 1.5,
           });
           TweenMax.to(player.rotation, 0.3, {
-            y: (Math.random() * Math.PI) - Math.PI/2,
+            y: (Math.random() * Math.PI) - Math.PI / 2,
           });
 
         }
@@ -141,7 +144,17 @@ export default class RailRoad extends THREE.Object3D {
     this.lightRinging = true;
     this.ringCount = 0;
     this.ringLight();
+    this.playSound(AudioFiles.trainAlarm);
 
+  }
+  playSound = async (audioFile) => {
+    const soundObject = new Expo.Audio.Sound();
+    try {
+      await soundObject.loadAsync(audioFile);
+      await soundObject.playAsync();
+    } catch (error) {
+      console.warn("sound error", { error });
+    }
   }
 
   ringLight = () => {

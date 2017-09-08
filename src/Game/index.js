@@ -98,13 +98,23 @@ class Game extends Component {
     this.audioFileMoveIndex = (this.audioFileMoveIndex + 1) % Object.keys(AudioFiles.chicken.move).length;
   }
 
+  playPassiveCarSound = () => {
+    this.playSound(AudioFiles.car.passive['1']);
+  }
+
+  playDeathSound = () => {
+    this.playSound(AudioFiles.chicken.die[`${ Math.floor(Math.random() * 2) }`])
+  }
+
+  playCarHitSound = () => {
+    this.playSound(AudioFiles.car.die[`${ Math.floor(Math.random() * 2) }`])
+  }
+
   playSound = async (audioFile) => {
     const soundObject = new Expo.Audio.Sound();
     try {
       await soundObject.loadAsync(audioFile);
-      console.warn("Play sound")
       await soundObject.playAsync();
-
       // Your sound is playing!
     } catch (error) {
       console.warn("sound error", {error});
@@ -113,7 +123,20 @@ class Game extends Component {
     }
   }
 
+  async componentDidMount() {
+    const soundObject = new Expo.Audio.Sound();
+    try {
+      await soundObject.loadAsync(AudioFiles.bg_music);
+      await soundObject.setVolumeAsync(0.05)
+      await soundObject.setIsLoopingAsync(true);
+      await soundObject.playAsync();
+      //unloadAsync
+    } catch (error) {      
+      console.warn("error", {error})
+    }
+  }
   componentWillMount() {
+
     this.scene = new THREE.Scene();
     this.worldWithCamera = new THREE.Group();
     this.worldWithCamera.position.z = -(startingRow);
@@ -147,6 +170,7 @@ class Game extends Component {
 
 
       if (type === 'water') {
+        this.playSound(AudioFiles.water);        
         this.waterParticles.mesh.position.copy(model.position);
         this.waterParticles.run(type);
       } else if (type == 'feathers') {
@@ -300,9 +324,18 @@ class Game extends Component {
     this.init();
   }
 
-  onCollide = (obstacle, type = 'feathers') => {
+  onCollide = (obstacle, type = 'feathers', collision) => {
     if (this.gameState != State.Game.playing) {
       return;
+    }
+    if (collision === 'car') {
+      this.playCarHitSound();
+      this.playDeathSound();
+      
+    } else if (collision === 'train') {
+      this.playSound(AudioFiles.train.die[`0`]);
+      this.playDeathSound();
+      
     }
     this._hero.isAlive = false;
     this.useParticle(this._hero, type, (obstacle || {}).speed || 0);
@@ -538,7 +571,6 @@ class Game extends Component {
   // Reset variables, restart game
   gameOver = () => {
     this._hero.moving = false;
-
     /// Stop player from finishing a movement
     this.heroAnimations.map(val => { val.pause(); val = null; });
     this.heroAnimations = [];
@@ -581,12 +613,16 @@ class Game extends Component {
       ///TODO: rumble
       this.rumbleScreen()
       this.gameOver();
+      this.playDeathSound();
+      
     }
     /// Check if offscreen
     if (this._hero.position.x < -5 || this._hero.position.x > 5) {
       ///TODO: Rumble death
       this.rumbleScreen()
       this.gameOver();
+      this.playDeathSound();
+      
     }
   }
 
@@ -636,9 +672,15 @@ class Game extends Component {
         this._hero.rotation.y = 0;
         if (!this.treeCollision("up")) {
           const row = (this.floorMap[`${this.initialPosition.z + 1}`] || {}).type
+
+          if (row == 'road') {
+            this.playPassiveCarSound()
+          }
+
           let shouldRound = row != "water"
           this.targetPosition = { x: this.initialPosition.x, y: this.initialPosition.y, z: this.initialPosition.z + 1 };
           if (shouldRound) {
+         
             this.targetPosition.x = Math.round(this.targetPosition.x);
             const { ridingOn } = this._hero
             if (ridingOn && ridingOn.dir) {
