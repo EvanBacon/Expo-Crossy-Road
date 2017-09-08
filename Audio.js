@@ -1,5 +1,3 @@
-import Expo, {Audio} from 'expo';
-
 export default {
   chicken: {
     move: {

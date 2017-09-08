@@ -10,10 +10,10 @@ import Expo from 'expo'
 import {TweenMax, Power2, TimelineLite} from "gsap";
 import * as THREE from 'three'
 // import createTHREEViewClass from '../createTHREEViewClass';
-const THREEView = Expo.createTHREEViewClass(THREE);
+// const THREEView = Expo.createTHREEViewClass(THREE);
 const size = 150;
 import Characters from '../../Characters';
-import {modelLoader} from '../../main';
+import {modelLoader} from '../../App';
 import Node from '../Node';
 const {
   Hero,
@@ -72,14 +72,14 @@ export default class CharacterCard extends Component {
       return (
         <View pointerEvents={'none'}  style={StyleSheet.flatten([styles.container, this.props.style])}>
           <View style={{flex: 1}}>
-            {Expo.Constants.isDevice &&
+            {/* {Expo.Constants.isDevice &&
               <THREEView
                 backgroundColorAlpha={0}
                 style={{flex: 1}}
                 scene={this.scene}
                 camera={this.camera}
                 tick={this.tick} />
-            }
+            } */}
           </View>
         </View>
       );

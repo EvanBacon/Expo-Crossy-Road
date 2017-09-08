@@ -5,7 +5,7 @@ import {TweenMax, Power2, TimelineLite} from "gsap";
 import * as THREE from 'three';
 
 import {groundLevel} from '../Game';
-import {modelLoader} from '../../main';
+import {modelLoader} from '../../App';
 import Foam from '../Particles/Foam'
 export default class Water extends THREE.Object3D {
   active = false;

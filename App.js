@@ -1,25 +1,26 @@
-import Expo, {AppLoading, Audio} from 'expo';
+import Expo, { AppLoading, Audio } from 'expo';
 import React from 'react';
-import {View, StyleSheet, AsyncStorage} from 'react-native';
+import { View, StyleSheet, AsyncStorage } from 'react-native';
 import Images from './Images'
-import AudioPhiles from './AudioPhiles';
+import AudioFiles from './Audio';
 import cacheAssetsAsync from './utils/cacheAssetsAsync';
 import arrayFromObject from './utils/arrayFromObject';
 
-import {connect} from 'react-redux';
-import {Provider} from 'react-redux';
+import { connect } from 'react-redux';
+import { Provider } from 'react-redux';
 
-import {THREE} from './utils/THREEglobal'
+import { THREE } from './utils/THREEglobal'
 
 import configureStore from './store';
 import AppWithNavigationState from './Navigation'
-import {persistStore, createTransform} from 'redux-persist'
+import { persistStore, createTransform } from 'redux-persist'
 export const store = configureStore()
 
 import ModelLoader from './ModelLoader';
 export const modelLoader = new ModelLoader();
 
 import State from './state'
+
 const gameTransform = createTransform(
   (inboundState, key) => {
     return {
@@ -36,7 +37,7 @@ const gameTransform = createTransform(
 
 const storeSettings = {
   storage: AsyncStorage,
-  blacklist: [ `nav`, 'game', 'character'],
+  blacklist: [`nav`, 'game', 'character'],
   transforms: [
     gameTransform
   ]
@@ -44,7 +45,7 @@ const storeSettings = {
 }
 
 // export const persister = persistStore(store, storeSettings)
-class Root extends React.Component {
+export default class App extends React.Component {
   persister;
   state = {
     appIsReady: false,
@@ -52,16 +53,25 @@ class Root extends React.Component {
   };
 
   componentWillMount() {
-    this._loadAssetsAsync();
-
     Audio.setAudioModeAsync({
       allowsRecordingIOS: false,
       interruptionModeIOS: Audio.INTERRUPTION_MODE_IOS_DO_NOT_MIX,
-      playsInSilentLockedModeIOS: false,
+      playsInSilentModeIOS: true,
       shouldDuckAndroid: true,
-      interruptionModeAndroid: Audio.INTERRUPTION_MODE_ANDROID_DO_NOT_MIX,
+      interruptionModeAndroid: Audio.INTERRUPTION_MODE_ANDROID_DO_NOT_MIX
     });
-
+    
+    // Audio.setIsEnabledAsync({})
+    
+    // Audio.setAudioModeAsync({
+    //   allowsRecordingIOS: false,
+    //   interruptionModeIOS: Audio.INTERRUPTION_MODE_IOS_DO_NOT_MIX,
+    //   playsInSilentLockedModeIOS: false,
+    //   shouldDuckAndroid: true,
+    //   interruptionModeAndroid: Audio.INTERRUPTION_MODE_ANDROID_DO_NOT_MIX,
+    // });
+    this._loadAssetsAsync();
+    
 
     this.persister = persistStore(store, storeSettings, () => {
       console.log("Rehydrated");
@@ -75,13 +85,12 @@ class Root extends React.Component {
       await cacheAssetsAsync({
         images: arrayFromObject(Images),
         fonts: [
-          {"retro": require('./assets/fonts/retro.ttf')},
+          { "retro": require('./assets/fonts/retro.ttf') },
         ],
-        audio: arrayFromObject(AudioPhiles)
+        audio: arrayFromObject(AudioFiles)
       });
 
       await modelLoader.loadModels();
-
     } catch (e) {
       console.warn(
         'There was an error caching assets (see: main.js), perhaps due to a ' +
@@ -89,7 +98,7 @@ class Root extends React.Component {
       );
       console.log(e.message);
     } finally {
-      this.setState({ appIsReady: true });
+      this.setState({ appIsReady: true }); 
     }
   }
 
@@ -99,14 +108,11 @@ class Root extends React.Component {
         <Provider
           store={store}
           persister={this.persister}
-          >
-          <AppWithNavigationState dispatch={store.dispatch}/>
+        >
+          <AppWithNavigationState dispatch={store.dispatch} />
         </Provider>
-    );
+      );
+    }
+    return (<AppLoading />);
   }
-  return (<AppLoading />);
 }
-}
-
-
-Expo.registerRootComponent(Root);

@@ -10,7 +10,7 @@ import {
   View,
 } from 'react-native';
 import ExpoTHREE from 'expo-three';
-
+import AudioFiles from '../../Audio'
 import GestureRecognizer, { swipeDirections } from '../GestureView';
 import Water from '../Particles/Water';
 import Feathers from '../Particles/Feathers';
@@ -26,7 +26,7 @@ const { width, height } = Dimensions.get('window');
 
 import connectGameState from '../../utils/connectGameState';
 import connectCharacter from '../../utils/connectCharacter';
-import { modelLoader } from '../../main';
+import { modelLoader } from '../../App';
 export const groundLevel = 0.4;
 const sceneColor = 0x6dceea;
 const startingRow = 8;
@@ -88,6 +88,28 @@ class Game extends Component {
         break;
       default:
         break;
+    }
+  }
+
+  audioFileMoveIndex = 0;
+  playMoveSound = () => {
+    // this.playSound(AudioFiles.chicken.move[`0`])
+    this.playSound(AudioFiles.chicken.move[`${this.audioFileMoveIndex}`])
+    this.audioFileMoveIndex = (this.audioFileMoveIndex + 1) % Object.keys(AudioFiles.chicken.move).length;
+  }
+
+  playSound = async (audioFile) => {
+    const soundObject = new Expo.Audio.Sound();
+    try {
+      await soundObject.loadAsync(audioFile);
+      console.warn("Play sound")
+      await soundObject.playAsync();
+
+      // Your sound is playing!
+    } catch (error) {
+      console.warn("sound error", {error});
+      
+      // An error occurred!
     }
   }
 
@@ -662,6 +684,7 @@ class Game extends Component {
 
     let delta = { x: (targetPosition.x - initialPosition.x), y: targetPosition.y - initialPosition.y, z: targetPosition.z - initialPosition.z }
 
+    this.playMoveSound();
     let timing = 0.5;
 
     this.heroAnimations = [];

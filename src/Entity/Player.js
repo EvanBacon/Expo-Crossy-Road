@@ -4,9 +4,8 @@ import React, {Component} from 'react';
 import {TweenMax, Power2, TimelineLite} from "gsap";
 import * as THREE from 'three';
 
-import {AudioPhiles} from '../../AudioPhiles';
 import {groundLevel} from '../Game';
-import {modelLoader} from '../../main';
+import {modelLoader} from '../../App';
 
 export default class Player extends THREE.Object3D {
 
