@@ -99,7 +99,10 @@ class Game extends Component {
   }
 
   playPassiveCarSound = () => {
-    this.playSound(AudioFiles.car.passive['1']);
+    if (Math.floor(Math.random() * 2) == 0) {
+      this.playSound(AudioFiles.car.passive['1']);
+    }
+    
   }
 
   playDeathSound = () => {
@@ -109,7 +112,7 @@ class Game extends Component {
   playCarHitSound = () => {
     this.playSound(AudioFiles.car.die[`${ Math.floor(Math.random() * 2) }`])
   }
-
+  waterSoundObject = new Expo.Audio.Sound();
   playSound = async (audioFile) => {
     const soundObject = new Expo.Audio.Sound();
     try {
@@ -134,6 +137,13 @@ class Game extends Component {
     } catch (error) {      
       console.warn("error", {error})
     }
+
+    try {
+      await this.waterSoundObject.loadAsync(AudioFiles.water);
+    } catch (error) {
+      console.warn("sound error", {error});
+    }
+
   }
   componentWillMount() {
 
@@ -166,13 +176,14 @@ class Game extends Component {
   }
 
   useParticle = (model, type, direction) => {
-    requestAnimationFrame(_ => {
+    requestAnimationFrame(async _ => {
 
 
       if (type === 'water') {
-        this.playSound(AudioFiles.water);        
+        
         this.waterParticles.mesh.position.copy(model.position);
         this.waterParticles.run(type);
+        await this.waterSoundObject.playAsync();
       } else if (type == 'feathers') {
         this.featherParticles.mesh.position.copy(model.position);
 

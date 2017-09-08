@@ -49,6 +49,9 @@ export default {
   },
   bg_music: require("./assets/audio/car-engine-loop-deep.wav"),
   
+  button_in: require("./assets/audio/Pop_1.wav"),
+  button_out: require("./assets/audio/Pop_2.wav"),
+
   banner: require("./assets/audio/bannerhit3-g.wav"),
   water: require("./assets/audio/watersplashlow.mp3"),
   trainAlarm: require("./assets/audio/Train_Alarm.wav"),
