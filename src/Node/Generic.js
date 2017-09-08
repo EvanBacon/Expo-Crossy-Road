@@ -20,7 +20,7 @@ export default class Generic {
     return box.size().width;
   }
 
-  _downloadAssets = async ({model, texture, randomTexture = true}) => {
+  _downloadAssets = async ({model, texture, castShadow, receiveShadow}) => {
 
     const loader = new THREE.OBJLoader();
 let _model;
@@ -49,19 +49,15 @@ let _model;
     var mat = new THREE.MeshPhongMaterial( { color: '#'+Math.floor(Math.random()*16777215).toString(16), shading: THREE.FlatShading } )
 
     _model.traverse(child => {
-      if (child instanceof THREE.Mesh) {
-        if (randomTexture) {
-        child.material = mat;
-      } else {
         child.material.map = _texture;
-      }
-
-
-        // child.castShadow = true;
-
-      }
+        child.castShadow = castShadow;
+        child.receiveShadow = receiveShadow;
     });
-    _model.scale.y = 0.8
+    // _model.scale.set(10, 10, 10)
+
+    _model.castShadow = castShadow;
+    _model.receiveShadow = receiveShadow;
+
     return _model;
   }
 

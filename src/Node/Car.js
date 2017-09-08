@@ -20,7 +20,7 @@ export default class Car extends Generic {
 
     for (let index in cars) {
       let car = cars[index];
-      this.models[`${index}`] = await this._download(vehicles[car]);
+      this.models[`${index}`] = await this._download({...vehicles[car], castShadow: true, receiveShadow: true });
     }
 
     return this.models;

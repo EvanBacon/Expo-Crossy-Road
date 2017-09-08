@@ -7,6 +7,8 @@
   "main": "main.js",
   "dependencies": {
     "expo": "17.0.0",
+    "expo-three": "^1.0.4",
+    "expo-three-orbit-controls": "^1.0.1",
     "gsap": "^1.19.1",
     "ndarray": "^1.0.18",
     "react": "16.0.0-alpha.6",

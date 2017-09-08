@@ -1,7 +1,7 @@
 {
-  "name": "Froggy Street",
+  "name": "Crossy Street",
   "description": "Super fun 3D game",
-  "slug": "froggy-street",
+  "slug": "crossy-street",
   "privacy": "public",
   "sdkVersion": "17.0.0",
   "version": "1.0.1",

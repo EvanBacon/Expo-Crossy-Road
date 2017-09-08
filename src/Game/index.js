@@ -1,5 +1,5 @@
-import Expo, {AppLoading} from 'expo';
-import React, {Component} from 'react';
+import Expo, { AppLoading } from 'expo';
+import React, { Component } from 'react';
 import {
   TouchableWithoutFeedback,
   Vibration,
@@ -9,29 +9,30 @@ import {
   InteractionManager,
   View,
 } from 'react-native';
+import ExpoTHREE from 'expo-three';
 
-import GestureRecognizer, {swipeDirections} from '../GestureView';
+import GestureRecognizer, { swipeDirections } from '../GestureView';
 import Water from '../Particles/Water';
 import Feathers from '../Particles/Feathers';
 
-import {TweenMax} from "gsap";
+import { TweenMax } from "gsap";
 import State from '../../state';
 import * as THREE from 'three';
 import createTHREEViewClass from '../../utils/createTHREEViewClass';
 import { NavigationActions } from 'react-navigation';
 
 const THREEView = createTHREEViewClass(THREE);
-const {width, height} = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 
 import connectGameState from '../../utils/connectGameState';
 import connectCharacter from '../../utils/connectCharacter';
-import {modelLoader} from '../../main';
+import { modelLoader } from '../../main';
 export const groundLevel = 0.4;
 const sceneColor = 0x6dceea;
 const startingRow = 8;
 
 import Rows from '../Row';
-import {Fill} from '../Row/Grass'
+import { Fill } from '../Row/Grass'
 const AnimatedGestureRecognizer = Animated.createAnimatedComponent(GestureRecognizer);
 
 const allowTrains = false;
@@ -40,7 +41,7 @@ const allowTrains = false;
 @connectCharacter
 class Game extends Component {
   /// Reserve State for UI related updates...
-  state = { ready: false, score: 0,};
+  state = { ready: false, score: 0, };
 
   maxRows = 20;
   sineCount = 0;
@@ -55,11 +56,11 @@ class Game extends Component {
     if (nextProps.character.id !== this.props.character.id) {
       (async () => {
 
-        this.scene.remove(this._hero);
+        this.world.remove(this._hero);
         this._hero = this.hero.getNode(nextProps.character.id);
-        this.scene.add(this._hero);
+        this.world.add(this._hero);
         this._hero.position.set(0, groundLevel, startingRow);
-        this._hero.scale.set(1,1,1);
+        this._hero.scale.set(1, 1, 1);
         this.init();
 
       })()
@@ -70,35 +71,36 @@ class Game extends Component {
       return;
     }
     this.gameState = gameState;
-    const {playing, gameOver, paused, none} = State.Game;
+    const { playing, gameOver, paused, none } = State.Game;
     switch (gameState) {
       case playing:
-      this.stopIdle();
-      TweenMax.to(this.title.position, 1, {
-        x: -10,
-      })
+        this.stopIdle();
+        this.onSwipe(swipeDirections.SWIPE_UP, {});
 
-      this.onSwipe(swipeDirections.SWIPE_UP, {});
-
-      break;
+        break;
       case gameOver:
 
-      break;
+        break;
       case paused:
 
-      break;
+        break;
       case none:
-      this.newScore();
+        this.newScore();
 
-      break;
+        break;
       default:
-      break;
+        break;
     }
   }
 
   componentWillMount() {
     this.scene = new THREE.Scene();
+    this.worldWithCamera = new THREE.Group();
+    this.worldWithCamera.position.z = -(startingRow);
 
+    this.world = new THREE.Group();
+    this.scene.add(this.worldWithCamera);
+    this.worldWithCamera.add(this.world);
     this.camera = new THREE.OrthographicCamera(-width, width, height, -height, -30, 30);
     // this.camera.position.set(-1, 2.8, -2.9); // Change -1 to -.02
     this.camera.position.set(-1, 2.8, -2.9); // Change -1 to -.02
@@ -115,37 +117,54 @@ class Game extends Component {
 
 
     this.waterParticles = new Water(THREE);
-    this.scene.add(this.waterParticles.mesh);
+    this.world.add(this.waterParticles.mesh);
 
     this.featherParticles = new Feathers(THREE);
-    this.scene.add(this.featherParticles.mesh);
+    this.world.add(this.featherParticles.mesh);
 
   }
 
   useParticle = (model, type, direction) => {
-    requestAnimationFrame(_=> {
+    requestAnimationFrame(_ => {
 
 
-    if (type === 'water') {
-      this.waterParticles.mesh.position.copy(model.position);
-      this.waterParticles.mesh.visible = true;
-      this.waterParticles.run(type);
-    } else if (type == 'feathers') {
-      this.featherParticles.mesh.position.copy(model.position);
-      // this.featherParticles.mesh.visible = true;
-      this.featherParticles.run(type, direction);
-    }
+      if (type === 'water') {
+        this.waterParticles.mesh.position.copy(model.position);
+        this.waterParticles.run(type);
+      } else if (type == 'feathers') {
+        this.featherParticles.mesh.position.copy(model.position);
+
+        this.featherParticles.run(type, direction);
+      }
     })
   }
 
   createLights = () => {
 
-    let shadowLight = new THREE.DirectionalLight(0xffffff, 0.3);
-    shadowLight.position.set( 1, 1, 0 ); 			//default; light shining from top
-    shadowLight.lookAt( 0, 0, 0 ); 			//default; light shining from top
+    this.world.add(new THREE.AmbientLight(0x666666, .8));
+    
+    let light = new THREE.DirectionalLight(0xdfebff, 1.75);
+    light.position.set(20, 30, 0.05);
+    light.castShadow = !this.props.hideShadows;
+    light.shadow.mapSize.width = 1024 * 2;
+    light.shadow.mapSize.height = 1024 * 2;
 
-    this.scene.add(new THREE.AmbientLight(0xe9ffdc, .8));
-    this.scene.add(shadowLight);
+    var d = 15;
+    var v = 6;
+    light.shadow.camera.left = - d;
+    light.shadow.camera.right = 9;
+    light.shadow.camera.top = v;
+    light.shadow.camera.bottom = -v;
+    light.shadow.camera.far = 100;
+    light.shadow.bias = 0.0001;
+
+    this.scene.add(light);
+
+    this.light = light;
+
+    var helper = new THREE.CameraHelper(light.shadow.camera);
+    // this.scene.add(helper);
+
   }
 
   newScore = () => {
@@ -153,7 +172,7 @@ class Game extends Component {
 
 
     // this.props.setGameState(State.Game.playing);
-    this.setState({score: 0})
+    this.setState({ score: 0 })
     this.init();
   }
 
@@ -181,7 +200,7 @@ class Game extends Component {
   }
 
   loadModels = () => {
-    const { _hero} = modelLoader;
+    const { _hero } = modelLoader;
 
     this.hero = _hero;
   }
@@ -194,19 +213,19 @@ class Game extends Component {
 
     // Variables
     this.grass = [],
-    this.grassCount = 0; //
+      this.grassCount = 0; //
     this.water = [],
-    this.waterCount = 0; // Terrain tiles
+      this.waterCount = 0; // Terrain tiles
     this.road = [],
-    this.roadCount = 0; //
+      this.roadCount = 0; //
     this.railRoads = [],
-    this.railRoadCount = 0; //
+      this.railRoadCount = 0; //
 
     this.lastHeroZ = 8;
 
     this.rowCount = 0;
     this.camCount = 0,
-    this.camSpeed = .02;
+      this.camSpeed = .02;
     this.heroWidth = .7;
 
     this.loadModels()
@@ -229,7 +248,7 @@ class Game extends Component {
     this._hero.hitBy = null;
     this._hero.ridingOn = null;
     this._hero.ridingOnOffset = null;
-    this.scene.add(this._hero);
+    this.world.add(this._hero);
 
 
     // Assign mesh to corresponding array
@@ -240,10 +259,10 @@ class Game extends Component {
       this.water[i] = new Rows.Water(this.heroWidth, this.onCollide); // this._railroad.getRandom();
       this.road[i] = new Rows.Road(this.heroWidth, this.onCollide); // this._railroad.getRandom();
       this.railRoads[i] = new Rows.RailRoad(this.heroWidth, this.onCollide); // this._railroad.getRandom();
-      this.scene.add(this.grass[i]);
-      this.scene.add(this.water[i]);
-      this.scene.add(this.road[i]);
-      this.scene.add(this.railRoads[i]);
+      this.world.add(this.grass[i]);
+      this.world.add(this.water[i]);
+      this.world.add(this.road[i]);
+      this.world.add(this.railRoads[i]);
 
     }
 
@@ -261,7 +280,7 @@ class Game extends Component {
     //
     //   const width = this.getWidth(mesh);
     //   this.lilys[i] = {mesh, width, collisionBox: (this.heroWidth / 2 + width / 2 - .1) };
-    //   this.scene.add(mesh);
+    //   this.world.add(mesh);
     //
     //
     // }
@@ -284,7 +303,7 @@ class Game extends Component {
     if (this.idleAnimation) {
       this.idleAnimation.pause();
       this.idleAnimation = null;
-      this._hero.scale.set(1,1,1);
+      this._hero.scale.set(1, 1, 1);
     }
   }
 
@@ -292,23 +311,28 @@ class Game extends Component {
     this.stopIdle();
 
     const s = 0.8;
-    this.idleAnimation = new TimelineMax({repeat: -1});
+    this.idleAnimation = new TimelineMax({ repeat: -1 });
     this.idleAnimation
-    .to(this._hero.scale, 0.3, {x:1,y:s,z:0.9, ease:Power1.easeIn})
-    .to(this._hero.scale, 0.6, {x:1,y:1,z:1, ease:Power1.easeOut})
+      .to(this._hero.scale, 0.3, { x: 1, y: s, z: 0.9, ease: Power1.easeIn })
+      .to(this._hero.scale, 0.6, { x: 1, y: 1, z: 1, ease: Power1.easeOut })
   }
 
   // Setup initial scene
   init = () => {
     const offset = -30;
-    this.setState({score: 0})
-    this.camera.position.z = startingRow + 1;
+    this.setState({ score: 0 })
+    this.camera.position.z = 1;
     this._hero.position.set(0, groundLevel, startingRow);
-    this._hero.scale.set(1,1,1);
+    this._hero.scale.set(1, 1, 1);
     this._hero.rotation.set(0, Math.PI, 0);
+
+    this.featherParticles.mesh.position.copy(this._hero.position);
+    this.waterParticles.mesh.position.copy(this._hero.position);
+    this.featherParticles.mesh.position.y = this.waterParticles.mesh.position.y = 0;
+
     this.map = {};
     this.camCount = 0;
-    this.map[`${0},${groundLevel|0},${startingRow|0}`] = 'player'
+    this.map[`${0},${groundLevel | 0},${startingRow | 0}`] = 'player'
     this.initialPosition = null;
     this.targetPosition = null;
     this.grassCount = 0;
@@ -390,39 +414,39 @@ class Game extends Component {
     let rk = rowKind || Math.floor(Math.random() * 3) + 1;
     switch (rk) {
       case 1:
-      this.grass[this.grassCount].position.z = this.rowCount;
-      this.grass[this.grassCount].generate(this.mapRowToObstacle(this.rowCount))
-      this.floorMap[`${this.rowCount}`] = {type: 'grass', entity: this.grass[this.grassCount]};
-      this.grassCount++;
-      this.lastRk = rk;
-      break;
+        this.grass[this.grassCount].position.z = this.rowCount;
+        this.grass[this.grassCount].generate(this.mapRowToObstacle(this.rowCount))
+        this.floorMap[`${this.rowCount}`] = { type: 'grass', entity: this.grass[this.grassCount] };
+        this.grassCount++;
+        this.lastRk = rk;
+        break;
       case 2:
-      {
-        if (((Math.random() * 5)|0) == 0 && allowTrains) {
-          this.railRoads[this.railRoadCount].position.z = this.rowCount;
-          this.railRoads[this.railRoadCount].active = true;
-          this.floorMap[`${this.rowCount}`] = {type: 'railRoad', entity: this.railRoads[this.railRoadCount]};
-          this.railRoadCount++;
-          this.lastRk = rk + 1000;
-        } else {
-          this.road[this.roadCount].position.z = this.rowCount;
-          this.road[this.roadCount].active = true;
-          this.floorMap[`${this.rowCount}`] = {type: 'road', entity: this.road[this.roadCount]};
-          this.roadCount++;
-          this.lastRk = rk;
+        {
+          if (((Math.random() * 4) | 0) == 0) {
+            this.railRoads[this.railRoadCount].position.z = this.rowCount;
+            this.railRoads[this.railRoadCount].active = true;
+            this.floorMap[`${this.rowCount}`] = { type: 'railRoad', entity: this.railRoads[this.railRoadCount] };
+            this.railRoadCount++;
+            this.lastRk = rk + 1000;
+          } else {
+            this.road[this.roadCount].position.z = this.rowCount;
+            this.road[this.roadCount].active = true;
+            this.floorMap[`${this.rowCount}`] = { type: 'road', entity: this.road[this.roadCount] };
+            this.roadCount++;
+            this.lastRk = rk;
+          }
         }
-      }
-      break;
+        break;
 
       case 3:
-      this.water[this.waterCount].position.z = this.rowCount;
-      this.water[this.waterCount].active = true;
-      this.water[this.waterCount].generate();
-      this.floorMap[`${this.rowCount}`] = {type: 'water', entity: this.water[this.waterCount]};
-      this.waterCount++;
+        this.water[this.waterCount].position.z = this.rowCount;
+        this.water[this.waterCount].active = true;
+        this.water[this.waterCount].generate();
+        this.floorMap[`${this.rowCount}`] = { type: 'water', entity: this.water[this.waterCount] };
+        this.waterCount++;
 
-      this.lastRk = rk;
-      break;
+        this.lastRk = rk;
+        break;
     }
 
     this.rowCount++;
@@ -443,12 +467,12 @@ class Game extends Component {
       xPos = -1;
     }
 
-    if (this.floorMap.hasOwnProperty(`${(this._hero.position.z + zPos)|0}`)) {
+    if (this.floorMap.hasOwnProperty(`${(this._hero.position.z + zPos) | 0}`)) {
 
-      const {type, entity} = this.floorMap[`${(this._hero.position.z + zPos)|0}`];
+      const { type, entity } = this.floorMap[`${(this._hero.position.z + zPos) | 0}`];
       if (type === "grass") {
 
-        const key = `${(this._hero.position.x + xPos)|0}`;
+        const key = `${(this._hero.position.x + xPos) | 0}`;
         if (entity.obstacleMap.hasOwnProperty(key)) {
           return true;
         }
@@ -476,7 +500,7 @@ class Game extends Component {
     let target = this._hero.hitBy.mesh.position.x;
     this._hero.position.x += this._hero.hitBy.speed;
     if (this.initialPosition)
-    this.initialPosition.x = target;
+      this.initialPosition.x = target;
   }
 
   rumbleScreen = () => {
@@ -498,12 +522,12 @@ class Game extends Component {
   // Move scene forward
   forwardScene = () => {
     const easing = 0.03;
-    this.camera.position.z += (((this._hero.position.z + 1) - this.camera.position.z) * easing);
-    this.camera.position.x =  Math.min(2, Math.max(-2, this.camera.position.x + (((this._hero.position.x) - this.camera.position.x) * easing)));
+    this.world.position.z -= (((this._hero.position.z - startingRow) + this.world.position.z) * easing);
+    this.world.position.x = -Math.min(2, Math.max(-2, this.world.position.x + (((this._hero.position.x) - this.world.position.x) * easing)));
 
     // normal camera speed
-    if (this.camera.position.z - this.camCount > 1.0) {
-      this.camCount = this.camera.position.z;
+    if (-this.world.position.z - this.camCount > 1.0) {
+      this.camCount = -this.world.position.z;
       this.newRow();
     }
   }
@@ -513,12 +537,12 @@ class Game extends Component {
     this._hero.moving = false;
 
     /// Stop player from finishing a movement
-    this.heroAnimations.map(val => {val.pause(); val = null;} );
+    this.heroAnimations.map(val => { val.pause(); val = null; });
     this.heroAnimations = [];
     this.gameState = State.Game.gameOver;
     this.props.setGameState(this.gameState)
 
-    InteractionManager.runAfterInteractions(_=> {
+    InteractionManager.runAfterInteractions(_ => {
       this.props.navigation.dispatch(NavigationActions.navigate({ routeName: 'GameOver' }))
     });
     // this.props.nav.navigation.navigate('GameOver', {})
@@ -545,12 +569,12 @@ class Game extends Component {
   }
 
 
-///TODO: Fix
+  ///TODO: Fix
   checkIfUserHasFallenOutOfFrame = () => {
     if (this.gameState !== State.Game.playing) {
       return
     }
-    if (this._hero.position.z < this.camera.position.z - 8) {
+    if (this._hero.position.z < this.camera.position.z - 1) {
       ///TODO: rumble
       this.rumbleScreen()
       this.gameOver();
@@ -566,16 +590,16 @@ class Game extends Component {
   updateScore = () => {
     const position = Math.max(Math.floor(this._hero.position.z) - 8, 0);
     if (this.state.score < position) {
-      this.setState({score: position})
+      this.setState({ score: position })
     }
   }
 
   moveWithDirection = direction => {
-    if (this.gameState != State.Game.playing ) {
+    if (this.gameState != State.Game.playing) {
       return;
     }
 
-    const {SWIPE_UP, SWIPE_DOWN, SWIPE_LEFT, SWIPE_RIGHT} = swipeDirections;
+    const { SWIPE_UP, SWIPE_DOWN, SWIPE_LEFT, SWIPE_RIGHT } = swipeDirections;
 
     this._hero.ridingOn = null;
 
@@ -591,30 +615,30 @@ class Game extends Component {
 
     switch (direction) {
       case SWIPE_LEFT:
-      this._hero.rotation.y = Math.PI/2
-      if (!this.treeCollision("left")) {
-        this.targetPosition = {x: this.initialPosition.x + 1, y: this.initialPosition.y, z: this.initialPosition.z};
-        this._hero.moving = true;
-      }
-      break;
+        this._hero.rotation.y = Math.PI / 2
+        if (!this.treeCollision("left")) {
+          this.targetPosition = { x: this.initialPosition.x + 1, y: this.initialPosition.y, z: this.initialPosition.z };
+          this._hero.moving = true;
+        }
+        break;
       case SWIPE_RIGHT:
-      this._hero.rotation.y = -Math.PI/2
-      if (!this.treeCollision("right")) {
-        this.targetPosition = {x: this.initialPosition.x - 1, y: this.initialPosition.y, z: this.initialPosition.z};
-        this._hero.moving = true;
+        this._hero.rotation.y = -Math.PI / 2
+        if (!this.treeCollision("right")) {
+          this.targetPosition = { x: this.initialPosition.x - 1, y: this.initialPosition.y, z: this.initialPosition.z };
+          this._hero.moving = true;
 
-      }
-      break;
+        }
+        break;
       case SWIPE_UP:
-      this._hero.rotation.y = 0;
-      if (!this.treeCollision("up")) {
-        const row = (this.floorMap[`${this.initialPosition.z + 1}`] || {}).type
-        let shouldRound = row != "water"
-        this.targetPosition = {x: this.initialPosition.x, y: this.initialPosition.y, z: this.initialPosition.z + 1};
-        if (shouldRound) {
-          this.targetPosition.x = Math.round(this.targetPosition.x);
-          const {ridingOn} = this._hero
-          if (ridingOn && ridingOn.dir) {
+        this._hero.rotation.y = 0;
+        if (!this.treeCollision("up")) {
+          const row = (this.floorMap[`${this.initialPosition.z + 1}`] || {}).type
+          let shouldRound = row != "water"
+          this.targetPosition = { x: this.initialPosition.x, y: this.initialPosition.y, z: this.initialPosition.z + 1 };
+          if (shouldRound) {
+            this.targetPosition.x = Math.round(this.targetPosition.x);
+            const { ridingOn } = this._hero
+            if (ridingOn && ridingOn.dir) {
               if (ridingOn.dir < 0) {
                 this.targetPosition.x = Math.floor(this.targetPosition.x);
               } else if (ridingOn.dir > 0) {
@@ -622,23 +646,23 @@ class Game extends Component {
               } else {
                 this.targetPosition.x = Math.round(this.targetPosition.x);
               }
+            }
           }
+
+          this._hero.moving = true;
+
         }
-
-        this._hero.moving = true;
-
-      }
-      break;
+        break;
       case SWIPE_DOWN:
-      this._hero.rotation.y = Math.PI
-      if (!this.treeCollision("down")) {
-        const row = (this.floorMap[`${this.initialPosition.z - 1}`] || {}).type
-        let shouldRound = row != "water"
-        this.targetPosition = {x: this.initialPosition.x, y: this.initialPosition.y, z: this.initialPosition.z - 1};
-        if (shouldRound) {
-          this.targetPosition.x = Math.round(this.targetPosition.x);
-          const {ridingOn} = this._hero
-          if (ridingOn && ridingOn.dir) {
+        this._hero.rotation.y = Math.PI
+        if (!this.treeCollision("down")) {
+          const row = (this.floorMap[`${this.initialPosition.z - 1}`] || {}).type
+          let shouldRound = row != "water"
+          this.targetPosition = { x: this.initialPosition.x, y: this.initialPosition.y, z: this.initialPosition.z - 1 };
+          if (shouldRound) {
+            this.targetPosition.x = Math.round(this.targetPosition.x);
+            const { ridingOn } = this._hero
+            if (ridingOn && ridingOn.dir) {
               if (ridingOn.dir < 0) {
                 this.targetPosition.x = Math.floor(this.targetPosition.x);
               } else if (ridingOn.dir > 0) {
@@ -646,16 +670,16 @@ class Game extends Component {
               } else {
                 this.targetPosition.x = Math.round(this.targetPosition.x);
               }
+            }
+
           }
-
+          this._hero.moving = true;
         }
-        this._hero.moving = true;
-      }
-      break;
+        break;
     }
-    let {targetPosition, initialPosition} = this;
+    let { targetPosition, initialPosition } = this;
 
-    let delta = {x: (targetPosition.x - initialPosition.x), y: targetPosition.y - initialPosition.y, z: targetPosition.z - initialPosition.z}
+    let delta = { x: (targetPosition.x - initialPosition.x), y: targetPosition.y - initialPosition.y, z: targetPosition.z - initialPosition.z }
 
     let timing = 0.5;
 
@@ -726,7 +750,7 @@ class Game extends Component {
 
     return (
       <AnimatedGestureRecognizer
-        onResponderGrant={_=> {
+        onResponderGrant={_ => {
           this.beginMoveWithDirection();
         }}
         onSwipe={(direction, state) => this.onSwipe(direction, state)}
@@ -734,47 +758,66 @@ class Game extends Component {
         style={{
           flex: 1,
         }}
-        >
-          <TouchableWithoutFeedback
-            onPressIn={_=> {
-              this.beginMoveWithDirection();
-            }}
-            style={{flex: 1}}
-            onPress={_=> {
-              this.onSwipe(swipeDirections.SWIPE_UP, {});
-            }}>
-            {Expo.Constants.isDevice && <THREEView
-              backgroundColor={sceneColor}
-              shadowMapEnabled={true}
-              shadowMapRenderSingleSided={true}
-              style={{ flex: 1 }}
-              scene={this.scene}
-              camera={this.camera}
-              tick={this.tick}
-            />}
-          </TouchableWithoutFeedback>
-        </AnimatedGestureRecognizer>
-      );
-    }
-
-    render() {
-
-      return (
-        <View style={[{flex: 1, backgroundColor: '#6dceea'}, this.props.style]}>
-          {this.renderGame()}
-          <Score score={this.state.score} gameOver={this.props.gameState === State.Game.gameOver}
-          />
-        </View>
-      );
-    }
+      >
+        <TouchableWithoutFeedback
+          onPressIn={_ => {
+            this.beginMoveWithDirection();
+          }}
+          style={{ flex: 1 }}
+          onPress={_ => {
+            this.onSwipe(swipeDirections.SWIPE_UP, {});
+          }}>
+          {Expo.Constants.isDevice && <Expo.GLView
+            style={{ flex: 1 }}
+            onContextCreate={this._onGLContextCreate}
+          />}
+        </TouchableWithoutFeedback>
+      </AnimatedGestureRecognizer>
+    );
   }
 
-  import Score from './Score';
-  import {connect} from 'react-redux';
-  export default connect(
-    state => ({
-      nav: state.nav
-    }),
-    {
+  _onGLContextCreate = async (gl) => {
+    const { drawingBufferWidth: width, drawingBufferHeight: height } = gl;
+
+    // NOTE: How to create an `Expo.GLView`-compatible THREE renderer
+    this.renderer = ExpoTHREE.createRenderer({ gl, antialias: true });
+    this.renderer.setSize(width, height);
+    this.renderer.setClearColor(sceneColor);
+    this.renderer.gammaInput = true;
+    this.renderer.gammaOutput = true;
+    this.renderer.shadowMap.enabled = true;
+
+    const render = () => {
+      requestAnimationFrame(render);
+      var time = Date.now();
+      this.tick(time);
+      this.renderer.render(this.scene, this.camera);
+
+      // NOTE: At the end of each frame, notify `Expo.GLView` with the below
+      gl.endFrameEXP();
     }
-  )(Game);
+    render();
+  }
+
+
+  render() {
+
+    return (
+      <View style={[{ flex: 1, backgroundColor: '#6dceea' }, this.props.style]}>
+        {this.renderGame()}
+        <Score score={this.state.score} gameOver={this.props.gameState === State.Game.gameOver}
+        />
+      </View>
+    );
+  }
+}
+
+import Score from './Score';
+import { connect } from 'react-redux';
+export default connect(
+  state => ({
+    nav: state.nav
+  }),
+  {
+  }
+)(Game);

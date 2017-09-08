@@ -7,7 +7,7 @@ import * as THREE from 'three';
 import {groundLevel} from '../Game';
 import {modelLoader} from '../../main';
 import Foam from '../Particles/Foam'
-export default class Road extends THREE.Object3D {
+export default class Water extends THREE.Object3D {
   active = false;
   entities = [];
 

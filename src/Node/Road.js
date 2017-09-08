@@ -10,7 +10,7 @@ export default class Road extends Generic {
     const {environment: {road} } = this.globalModels;
 
     for (let i = 0; i < 2; i++) {
-      this.models[`${i}`] = await this._download(road[`${i}`]);
+      this.models[`${i}`] = await this._download({...road[`${i}`], castShadow: false, receiveShadow: true });
     }
     return this.models;
   }
