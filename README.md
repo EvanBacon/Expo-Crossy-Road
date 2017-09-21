@@ -1,4 +1,4 @@
-Expo Frogger
+Expo Crossy Road
 ========
 
 Expo: https://exp.host/@bacon/crossy-road
