@@ -11,7 +11,6 @@ Tutorial Coming Eventually 😅
 
 Stack:
 
-- [React Native](https://facebook.github.io/react-native/)
 - [Expo](http://expo.io)
 - [THREE.js](https://threejs.org/)
 - [GSAP](https://greensock.com/)
