@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
 import { Image, StyleSheet } from 'react-native';
-import { Constants } from 'expo';
-import Images from '../../Images'
+
+import Images from '../../Images';
 
 const sprite = [Images.hand['0'], Images.hand['1']];
 export default class Sprite extends Component {
   interval = 400;
   index = 0;
   state = {
-    image: sprite[0]
-  }
+    image: sprite[0],
+  };
 
   componentDidMount() {
     this.timer = setInterval(this.updateSprite, this.interval);
@@ -20,13 +20,12 @@ export default class Sprite extends Component {
   }
 
   updateSprite = () => {
-    this.setState({image: sprite[(this.index ++) % sprite.length]});
-  }
+    this.setState({ image: sprite[this.index++ % sprite.length] });
+  };
 
   render = () => (
-
-        <Image source={this.state.image} style={[styles.image, this.props.style]}/>
-    );
+    <Image source={this.state.image} style={[styles.image, this.props.style]} />
+  );
 }
 
 const styles = StyleSheet.create({

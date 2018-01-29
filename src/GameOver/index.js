@@ -1,39 +1,45 @@
-import React, { Component } from 'react';
-import { Text,Alert,Easing, Animated, Dimensions, View, StyleSheet, Share, AsyncStorage } from 'react-native';
 import Expo, { Constants } from 'expo';
+import React, { Component } from 'react';
+import {
+  Alert,
+  Animated,
+  Dimensions,
+  Easing,
+  StyleSheet,
+  View,
+} from 'react-native';
+import { connect } from 'react-redux';
+
+import { setGameState } from '../../actions/game';
 import AudioFiles from '../../Audio';
-const {width} = Dimensions.get('window');
-import Button from '../Button';
-import Images from '../../Images';
-import RetroText from '../RetroText';
-import Colors from '../../Colors';
 import Characters from '../../Characters';
-
+import Images from '../../Images';
+import Banner from './Banner';
 import Footer from './Footer';
-import Banner from './Banner'
 
+const { width } = Dimensions.get('window');
 //TODO: Make this dynamic
 const banner = [
   {
     color: '#f6c62b',
     title: 'Get Updates Subscribe Now',
     button: {
-      onPress: (_=> {
+      onPress: _ => {
         Alert.alert(
-     'Subscribe to our mailing list',
-     'Join our mailing list and discover the latest news from Hipster Whale and Crossy Road.\n\n Read our privacy policy on crossyroad.com/privacy',
-     [
-       {text: 'Cancel', onPress: () => console.log('Cancel Pressed!')},
-       {text: 'OK', onPress: () => console.log('OK Pressed!')},
-     ],
-     {
-       cancelable: false
-     }
-   )
-      }),
+          'Subscribe to our mailing list',
+          'Join our mailing list and discover the latest news from Hipster Whale and Crossy Road.\n\n Read our privacy policy on crossyroad.com/privacy',
+          [
+            { text: 'Cancel', onPress: () => console.log('Cancel Pressed!') },
+            { text: 'OK', onPress: () => console.log('OK Pressed!') },
+          ],
+          {
+            cancelable: false,
+          },
+        );
+      },
       source: Images.button.mail,
-      style: {aspectRatio: 1.85, height: 40}
-    }
+      style: { aspectRatio: 1.85, height: 40 },
+    },
   },
   {
     color: '#f8602c',
@@ -42,56 +48,59 @@ const banner = [
   {
     color: '#d73a32',
     title: '44 * To Go',
-  }
-]
+  },
+];
 
 const AnimatedBanner = Animated.createAnimatedComponent(Banner);
 class GameOver extends Component {
   state = {
     currentIndex: 0,
     characters: Object.keys(Characters).map(val => Characters[val]),
-    animations: banner.map(val => new Animated.Value(0) )
-  }
+    animations: banner.map(val => new Animated.Value(0)),
+  };
   dismiss = () => {
     this.props.navigation.goBack();
-  }
+  };
 
   pickRandom = () => {
-    const {characters, currentIndex} = this.state;
+    const { characters, currentIndex } = this.state;
 
     const randomIndex = Math.floor(Math.random() * (characters.length - 1));
     const randomCharacter = characters[randomIndex];
     this.props.setCharacter(randomCharacter);
     this.dismiss();
-
-  }
+  };
 
   componentDidMount() {
+    setTimeout(_ => {
+      this._animateBanners();
 
-    setTimeout( _ => {
-      this._animateBanners()
-      
       const playBannerSound = async () => {
         const soundObject = new Expo.Audio.Sound();
         try {
           await soundObject.loadAsync(AudioFiles.banner);
           await soundObject.playAsync();
         } catch (error) {
-          console.warn("sound error", { error });
+          console.warn('sound error', { error });
         }
-      }
+      };
       playBannerSound();
-      setTimeout(_=>playBannerSound(), 300);
-      setTimeout(_=>playBannerSound(), 600);
+      setTimeout(_ => playBannerSound(), 300);
+      setTimeout(_ => playBannerSound(), 600);
     }, 300);
-
   }
 
   _animateBanners = () => {
-    const {timing} = Animated;
-    const animations = this.state.animations.map(animation => timing(animation, {toValue: 1, duration: 1000, easing: Easing.elastic() }));
+    const { timing } = Animated;
+    const animations = this.state.animations.map(animation =>
+      timing(animation, {
+        toValue: 1,
+        duration: 1000,
+        easing: Easing.elastic(),
+      }),
+    );
     Animated.stagger(300, animations).start();
-  }
+  };
 
   _showResult = result => {
     // if (result.action === Share.sharedAction) {
@@ -103,68 +112,62 @@ class GameOver extends Component {
     // } else if (result.action === Share.dismissedAction) {
     //   this.setState({result: 'dismissed'});
     // }
-  }
-
+  };
 
   select = () => {
-    const {characters, currentIndex} = this.state;
+    const { characters, currentIndex } = this.state;
 
     this.props.setCharacter(characters[currentIndex]);
     this.dismiss();
-  }
-
+  };
 
   render() {
-    const imageStyle={width: 60, height: 48};
-    const {animations} = this.state;
-
+    const imageStyle = { width: 60, height: 48 };
+    const { animations } = this.state;
 
     return (
       <View style={[styles.container, this.props.style]}>
+        <View key="content" style={{ flex: 1, justifyContent: 'center' }}>
+          {banner.map((val, index) => (
+            <AnimatedBanner
+              animatedValue={animations[index].interpolate({
+                inputRange: [0.2, 1],
+                outputRange: [-width, 0],
+                extrapolate: 'clamp',
+              })}
+              key={index}
+              style={{
+                backgroundColor: val.color,
+                transform: [
+                  {
+                    scaleY: animations[index].interpolate({
+                      inputRange: [0, 0.2],
+                      outputRange: [0, 1],
+                      extrapolate: 'clamp',
+                    }),
+                  },
+                ],
+              }}
+              title={val.title}
+              button={val.button}
+            />
+          ))}
+        </View>
 
-          <View key='content' style={{flex: 1, justifyContent: 'center'}}>
-
-            {
-              banner.map((val, index) => (
-                <AnimatedBanner
-                  animatedValue={animations[index].interpolate({
-                    inputRange:[0.2, 1],
-                    outputRange: [-width, 0],
-                    extrapolate: 'clamp'
-                  })}
-                  key={index}
-                  style={{
-                    backgroundColor: val.color,
-                    transform: [
-                      {
-                        scaleY: animations[index].interpolate({
-                          inputRange:[0, 0.2],
-                          outputRange: [0, 1],
-                          extrapolate: 'clamp'
-                        })
-                      }
-                    ]
-                  }}
-                  title={val.title}
-                  button={val.button}
-                />
-            ))
-            }
-          </View>
-
-          <Footer setGameState={this.props.setGameState} navigation={this.props.navigation}/>
+        <Footer
+          setGameState={this.props.setGameState}
+          navigation={this.props.navigation}
+        />
       </View>
     );
   }
 }
 
-import {connect} from 'react-redux';
-import {setGameState} from '../../actions/game';
-export default connect(state => ({}), {setGameState})(GameOver)
+export default connect(state => ({}), { setGameState })(GameOver);
 
 GameOver.defaultProps = {
-  coins: 0
-}
+  coins: 0,
+};
 
 const styles = StyleSheet.create({
   container: {

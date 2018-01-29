@@ -1,14 +1,13 @@
-import React, { Component, PropTypes } from "react";
-import hoistNonReactStatic from "hoist-non-react-statics";
-import {connect} from 'react-redux';
+import hoistNonReactStatic from 'hoist-non-react-statics';
+import React, { Component, PropTypes } from 'react';
+import { connect } from 'react-redux';
 
-import {setCharacter} from '../actions/character';
-export default (WrappedComponent) => {
+import { setCharacter } from '../actions/character';
+
+export default WrappedComponent => {
   class ConnectedCharacterComponent extends Component {
     render() {
-      return (
-        <WrappedComponent {...this.props} />
-      );
+      return <WrappedComponent {...this.props} />;
     }
   }
 
@@ -17,7 +16,7 @@ export default (WrappedComponent) => {
       character: state.character,
     }),
     {
-      setCharacter
-    }
+      setCharacter,
+    },
   )(hoistNonReactStatic(ConnectedCharacterComponent, WrappedComponent));
-}
+};

@@ -1,9 +1,6 @@
 //https://stackoverflow.com/questions/15248872/dynamically-create-2d-text-in-three-js
-import React, {Component} from 'react'
-import {Text} from 'react-native';
-
-import { Font } from 'expo';
-import * as THREE from 'three';
+import React, { Component } from 'react';
+import { THREE } from 'expo-three';
 
 /*
 let mesh = new TextMesh('Harambe', {
@@ -18,7 +15,6 @@ bevelEnabled: true
 });
 */
 export default class TextMesh {
-
   _options = {};
   _text;
   set text(str) {
@@ -34,21 +30,18 @@ export default class TextMesh {
     // this._updateMesh();
   }
 
-
-
-  _updateMesh = (fontPath) => {
+  _updateMesh = fontPath => {
     return new Promise((res, rej) => {
-
-
       const parseFont = font => {
-        console.log("Font Loaded", font)
-        var textGeometry = new THREE.TextGeometry( this._text, this._options);
-        var textMaterial = new THREE.MeshPhongMaterial(
-          { color: 0xff0000, specular: 0xffffff }
-        );
+        console.log('Font Loaded', font);
+        var textGeometry = new THREE.TextGeometry(this._text, this._options);
+        var textMaterial = new THREE.MeshPhongMaterial({
+          color: 0xff0000,
+          specular: 0xffffff,
+        });
 
         if (!this._mesh) {
-          this._mesh = new THREE.Mesh( textGeometry, textMaterial ) ;
+          this._mesh = new THREE.Mesh(textGeometry, textMaterial);
         } else {
           this._mesh.geometry = text;
           this._mesh.geometry.needsUpdate = true;
@@ -62,18 +55,15 @@ export default class TextMesh {
       loader.load(fontPath, parseFont).catch(rej);
     });
 
-
     //
     // // Example text options : {'font' : 'helvetiker','weight' : 'normal', 'style' : 'normal','size' : 100,'curveSegments' : 300};
     // var textShapes = THREE.FontUtils.generateShapes( text, this._options );
     // var text = new THREE.ShapeGeometry( textShapes );
     //
-
-  }
-
+  };
 
   constructor(text, options) {
-    this._text = text || "";
+    this._text = text || '';
     this._options = options || {};
     // this._updateMesh();
   }

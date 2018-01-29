@@ -1,17 +1,22 @@
 import React, { Component } from 'react';
-import { Text,ScrollView, View,Dimensions,InteractionManager, FlatList,Animated, StyleSheet } from 'react-native';
-import { Constants } from 'expo';
+import {
+  Animated,
+  Dimensions,
+  FlatList,
+  InteractionManager,
+  StyleSheet,
+  View,
+} from 'react-native';
 
-import Button from '../Button';
-import Images from '../../Images';
+import Characters from '../../Characters';
 import RetroText from '../RetroText';
 import CharacterCard from './CharacterCard';
-import Characters from '../../Characters';
+
 // .map(val => Characters[val])
 const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 
 const width = 150;
-const AnimatedText = Animated.createAnimatedComponent(RetroText)
+const AnimatedText = Animated.createAnimatedComponent(RetroText);
 
 export let scrollOffset = 0;
 
@@ -19,33 +24,32 @@ export default class Carousel extends Component {
   scroll = new Animated.Value(0);
 
   _scrollSink = Animated.event(
-    [{nativeEvent: { contentOffset: { x: this.scroll } }}],
-    {useNativeDriver: true},
+    [{ nativeEvent: { contentOffset: { x: this.scroll } } }],
+    { useNativeDriver: true },
   );
   state = {
     keys: [],
-    selected: 0
-  }
+    selected: 0,
+  };
   componentWillMount() {
     this.listener = this.scroll.addListener(this.onAnimationUpdate);
   }
   componentWillUnmount() {
     this.scroll.removeListener(this.listener);
   }
-  onAnimationUpdate = ({value}) => scrollOffset = value;
+  onAnimationUpdate = ({ value }) => (scrollOffset = value);
 
   componentDidMount() {
-    InteractionManager.runAfterInteractions(_=> {
+    InteractionManager.runAfterInteractions(_ => {
       const keys = Object.keys(Characters);
-      this.setState({keys})
+      this.setState({ keys });
     });
   }
 
-
-  renderItem = ({item, index}) => {
-    const inset = width*0.75;
-    const offset = (index * width);
-    const inputRange = [offset -  width,offset,offset + width];
+  renderItem = ({ item, index }) => {
+    const inset = width * 0.75;
+    const offset = index * width;
+    const inputRange = [offset - width, offset, offset + width];
     return (
       <Animated.View
         style={{
@@ -56,39 +60,48 @@ export default class Carousel extends Component {
               scale: this.scroll.interpolate({
                 inputRange,
                 outputRange: [0.3, 1, 0.3],
-                extrapolate: 'clamp'
-              })
+                extrapolate: 'clamp',
+              }),
             },
             {
               translateX: this.scroll.interpolate({
-                inputRange: [offset - (width * 2), offset - width, offset, offset + width, offset + (width * 2)],
-                outputRange: [-inset * 3,-inset, 0, inset, inset * 3],
-              })
-            }
-          ]
-        }}>
-        <CharacterCard opacity={this.scroll.interpolate({
-          inputRange: [(index * width) -  width,(index * width),(index * width) + width],
-          outputRange: [0, 1, 0],
-          extrapolate: 'clamp'
-        })} {...Characters[item]}/>
+                inputRange: [
+                  offset - width * 2,
+                  offset - width,
+                  offset,
+                  offset + width,
+                  offset + width * 2,
+                ],
+                outputRange: [-inset * 3, -inset, 0, inset, inset * 3],
+              }),
+            },
+          ],
+        }}
+      >
+        <CharacterCard
+          opacity={this.scroll.interpolate({
+            inputRange: [
+              index * width - width,
+              index * width,
+              index * width + width,
+            ],
+            outputRange: [0, 1, 0],
+            extrapolate: 'clamp',
+          })}
+          {...Characters[item]}
+        />
+      </Animated.View>
+    );
+  };
 
-    </Animated.View>
-  );
-}
+  momentumScrollEnd = () => {
+    const selected = Math.floor(scrollOffset / width);
+    this.setState({ selected });
+    this.props.onCurrentIndexChange(selected);
+  };
 
-momentumScrollEnd = () => {
-  const selected = Math.floor(scrollOffset/width);
-  this.setState({selected})
-  this.props.onCurrentIndexChange(selected)
-}
-
-
-
-render() {
-
-  const {keys,selected} = this.state
-
+  render() {
+    const { keys, selected } = this.state;
 
     let key = keys[selected];
     let character;
@@ -97,28 +110,30 @@ render() {
       character = Characters[key].name;
     }
 
-  return (<View style={{flex: 1}}>
-    <AnimatedText style={styles.text}>{character}</AnimatedText>
-    <AnimatedFlatList
-    style={styles.container}
-    horizontal={true}
-    showsHorizontalScrollIndicator={false}
-    horizontal={true}
-    contentContainerStyle={{
-      paddingHorizontal: (Dimensions.get('window').width - width) / 2
-    }}
-    directionalLockEnabled={true}
-    snapToInterval={width}
-    onMomentumScrollEnd={this.momentumScrollEnd}
-    onScroll={this._scrollSink}
-    decelerationRate={0}
-    keyExtractor={ (item, index) => index }
-    data={keys}
-    renderItem={this.renderItem}
-    scrollEventThrottle={1}/>
-  </View>
-)
-}
+    return (
+      <View style={{ flex: 1 }}>
+        <AnimatedText style={styles.text}>{character}</AnimatedText>
+        <AnimatedFlatList
+          style={styles.container}
+          horizontal={true}
+          showsHorizontalScrollIndicator={false}
+          horizontal={true}
+          contentContainerStyle={{
+            paddingHorizontal: (Dimensions.get('window').width - width) / 2,
+          }}
+          directionalLockEnabled={true}
+          snapToInterval={width}
+          onMomentumScrollEnd={this.momentumScrollEnd}
+          onScroll={this._scrollSink}
+          decelerationRate={0}
+          keyExtractor={(item, index) => index}
+          data={keys}
+          renderItem={this.renderItem}
+          scrollEventThrottle={1}
+        />
+      </View>
+    );
+  }
 }
 
 const styles = StyleSheet.create({
@@ -129,6 +144,7 @@ const styles = StyleSheet.create({
     opacity: 1,
     backgroundColor: 'transparent',
     textAlign: 'center',
-    color: 'white', fontSize: 24
+    color: 'white',
+    fontSize: 24,
   },
 });

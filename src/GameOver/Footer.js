@@ -1,36 +1,62 @@
 import React, { Component } from 'react';
-import { Text, View, Share, Dimensions, LayoutAnimation, Image, StyleSheet } from 'react-native';
-import { Constants } from 'expo';
-import Colors from '../../Colors'
-const {width} = Dimensions.get('window')
-import Button from '../Button'
-import Images from '../../Images'
-import State from '../../state'
+import {
+  Dimensions,
+  LayoutAnimation,
+  Share,
+  StyleSheet,
+  View,
+} from 'react-native';
+
+import Colors from '../../Colors';
+import Images from '../../Images';
+import State from '../../state';
+import Button from '../Button';
+
+const { width } = Dimensions.get('window');
 export default class Footer extends Component {
-  renderButton = ({onPress, source, style}, key) => (
-    <Button key={key} onPress={onPress} imageStyle={[styles.button, style]} source={source}/>
-  )
+  renderButton = ({ onPress, source, style }, key) => (
+    <Button
+      key={key}
+      onPress={onPress}
+      imageStyle={[styles.button, style]}
+      source={source}
+    />
+  );
 
   render() {
-    LayoutAnimation.easeInEaseOut()
+    LayoutAnimation.easeInEaseOut();
     const buttons = [
-      {onPress:(_=>{
-        this.props.navigation.navigate('Settings', {})
-      }), source: Images.button.settings, style: {aspectRatio: 1.25} },
-      {onPress:this.share, source: Images.button.share, style: {aspectRatio: 1.9} },
-      {onPress:(_=>{
-        this.props.navigation.goBack()
-        this.props.setGameState(State.Game.none)
-      }), source: Images.button.long_play, style: {aspectRatio: 1.9} },
-      {onPress:(_=>{
-        console.log("Game Center") //TODO: Add GC
-      }), source: Images.button.rank, style: {aspectRatio: 1.25} },
-    ]
+      {
+        onPress: _ => {
+          this.props.navigation.navigate('Settings', {});
+        },
+        source: Images.button.settings,
+        style: { aspectRatio: 1.25 },
+      },
+      {
+        onPress: this.share,
+        source: Images.button.share,
+        style: { aspectRatio: 1.9 },
+      },
+      {
+        onPress: _ => {
+          this.props.navigation.goBack();
+          this.props.setGameState(State.Game.none);
+        },
+        source: Images.button.long_play,
+        style: { aspectRatio: 1.9 },
+      },
+      {
+        onPress: _ => {
+          console.log('Game Center'); //TODO: Add GC
+        },
+        source: Images.button.rank,
+        style: { aspectRatio: 1.25 },
+      },
+    ];
     return (
       <View style={[styles.container, this.props.style]}>
-        {
-          buttons.map((value, index) => this.renderButton(value, index))
-        }
+        {buttons.map((value, index) => this.renderButton(value, index))}
       </View>
     );
   }
@@ -40,22 +66,24 @@ export default class Footer extends Component {
     // const character = characters[currentIndex].name;
 
     //TODO: Add Screen shot of player death
-    Share.share({
-      message: `#expoCrossyroad @expo_io`,
-      url: 'https://exp.host/@evanbacon/crossy-road',
-      title: 'Expo Crossy Road'
-    }, {
-      dialogTitle: 'Share Expo Crossy Road',
-      excludedActivityTypes: [
-        'com.apple.UIKit.activity.AirDrop', // This speeds up showing the share sheet by a lot
-        'com.apple.UIKit.activity.AddToReadingList' // This is just lame :)
-      ],
-      tintColor: Colors.blue
-    })
-    .then(this._showResult)
-    .catch((error) => this.setState({result: 'error: ' + error.message}));
-
-  }
+    Share.share(
+      {
+        message: `#expoCrossyroad @expo_io`,
+        url: 'https://exp.host/@evanbacon/crossy-road',
+        title: 'Expo Crossy Road',
+      },
+      {
+        dialogTitle: 'Share Expo Crossy Road',
+        excludedActivityTypes: [
+          'com.apple.UIKit.activity.AirDrop', // This speeds up showing the share sheet by a lot
+          'com.apple.UIKit.activity.AddToReadingList', // This is just lame :)
+        ],
+        tintColor: Colors.blue,
+      },
+    )
+      .then(this._showResult)
+      .catch(error => this.setState({ result: 'error: ' + error.message }));
+  };
 }
 
 const styles = StyleSheet.create({
@@ -72,5 +100,5 @@ const styles = StyleSheet.create({
   },
   button: {
     height: 56,
-  }
+  },
 });

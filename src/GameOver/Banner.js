@@ -1,31 +1,43 @@
 import React, { Component } from 'react';
-import { Text, View, Share, Animated, Dimensions, LayoutAnimation, Image, StyleSheet } from 'react-native';
-import { Constants } from 'expo';
+import { Animated, Dimensions, StyleSheet, View } from 'react-native';
 
-const {width} = Dimensions.get('window')
-import Button from '../Button'
-import Images from '../../Images'
-import State from '../../state'
-import RetroText from '../RetroText'
+import Button from '../Button';
+import RetroText from '../RetroText';
+
+const { width } = Dimensions.get('window');
 export default class Banner extends Component {
-  renderButton = ({onPress, source, style}, key) => (
-    <Button key={key} onPress={onPress} imageStyle={[styles.button, style]} source={source}/>
-  )
+  renderButton = ({ onPress, source, style }, key) => (
+    <Button
+      key={key}
+      onPress={onPress}
+      imageStyle={[styles.button, style]}
+      source={source}
+    />
+  );
 
   render() {
     // LayoutAnimation.easeInEaseOut()
-    const {animatedValue, style} = this.props;
+    const { animatedValue, style } = this.props;
 
     return (
       <View style={[styles.container, style]}>
-        <Animated.View style={{flex: 1, flexDirection: 'row', justifyContent: 'center', alignItems: 'center', transform: [{translateX: animatedValue}] }}>
-        <RetroText style={styles.text} numberOfLines={2}>{this.props.title}</RetroText>
-      {this.props.button && this.renderButton(this.props.button, 0)}
+        <Animated.View
+          style={{
+            flex: 1,
+            flexDirection: 'row',
+            justifyContent: 'center',
+            alignItems: 'center',
+            transform: [{ translateX: animatedValue }],
+          }}
+        >
+          <RetroText style={styles.text} numberOfLines={2}>
+            {this.props.title}
+          </RetroText>
+          {this.props.button && this.renderButton(this.props.button, 0)}
         </Animated.View>
       </View>
     );
   }
-
 }
 
 const styles = StyleSheet.create({
@@ -33,7 +45,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: 'white',
     flex: 2,
-    textAlign: 'center'
+    textAlign: 'center',
   },
   container: {
     alignItems: 'center',
@@ -48,5 +60,5 @@ const styles = StyleSheet.create({
   },
   button: {
     height: 56,
-  }
+  },
 });
