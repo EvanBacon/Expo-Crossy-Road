@@ -1,5 +1,4 @@
 export default {
-
   coins: {
     red: {
       model: require('./assets/models/collectables/red/0.obj'),
@@ -13,17 +12,17 @@ export default {
   environment: {
     bird: {
       idle: {
-        '0':{
+        '0': {
           model: require('./assets/models/environment/bird/idle/0/0.obj'),
           texture: require('./assets/models/environment/bird/idle/0/0.png'),
         },
         '1': {
           model: require('./assets/models/environment/bird/idle/1/0.obj'),
           texture: require('./assets/models/environment/bird/idle/1/0.png'),
-        }
+        },
       },
       flying: {
-        '0':{
+        '0': {
           model: require('./assets/models/environment/bird/flying/0/0.obj'),
           texture: require('./assets/models/environment/bird/flying/0/0.png'),
         },
@@ -34,9 +33,8 @@ export default {
         '2': {
           model: require('./assets/models/environment/bird/flying/2/0.obj'),
           texture: require('./assets/models/environment/bird/flying/2/0.png'),
-        }
-      }
-
+        },
+      },
     },
     eagle: {
       '0': {
@@ -61,7 +59,7 @@ export default {
       '1': {
         model: require('./assets/models/environment/grass/1/0.obj'),
         texture: require('./assets/models/environment/grass/1/0.png'),
-      }
+      },
     },
     road: {
       '0': {
@@ -71,7 +69,7 @@ export default {
       '1': {
         model: require('./assets/models/environment/road/1/0.obj'),
         texture: require('./assets/models/environment/road/1/0.png'),
-      }
+      },
     },
     log: {
       '0': {
@@ -89,7 +87,7 @@ export default {
       '3': {
         model: require('./assets/models/environment/log/3/0.obj'),
         texture: require('./assets/models/environment/log/3/0.png'),
-      }
+      },
     },
     tree: {
       '0': {
@@ -107,7 +105,7 @@ export default {
       '3': {
         model: require('./assets/models/environment/tree/3/0.obj'),
         texture: require('./assets/models/environment/tree/3/0.png'),
-      }
+      },
     },
     lily_pad: {
       model: require('./assets/models/environment/lily_pad/0.obj'),
@@ -121,7 +119,6 @@ export default {
     railroad: {
       model: require('./assets/models/environment/railroad/0.obj'),
       texture: require('./assets/models/environment/railroad/0.png'),
-
     },
     train_light: {
       active: {
@@ -137,7 +134,7 @@ export default {
       inactive: {
         model: require('./assets/models/environment/train_light/inactive/0.obj'),
         texture: require('./assets/models/environment/train_light/inactive/0.png'),
-      }
+      },
     },
     boulder: {
       '0': {
@@ -147,28 +144,24 @@ export default {
       '1': {
         model: require('./assets/models/environment/boulder/1/0.obj'),
         texture: require('./assets/models/environment/boulder/1/0.png'),
-      }
+      },
     },
-
   },
   vehicles: {
     train: {
       front: {
         model: require('./assets/models/vehicles/train/front/0.obj'),
         texture: require('./assets/models/vehicles/train/front/0.png'),
-
       },
       middle: {
         model: require('./assets/models/vehicles/train/middle/0.obj'),
         texture: require('./assets/models/vehicles/train/middle/0.png'),
-
       },
       back: {
         model: require('./assets/models/vehicles/train/back/0.obj'),
         texture: require('./assets/models/vehicles/train/back/0.png'),
-      }
+      },
     },
-
 
     police_car: {
       model: require('./assets/models/vehicles/police_car/0.obj'),
@@ -203,7 +196,6 @@ export default {
       texture: require('./assets/models/vehicles/taxi/0.png'),
     },
   },
-
 
   characters: {
     nikki: {
@@ -329,7 +321,5 @@ export default {
       model: require('./assets/models/characters/ghost/0.obj'),
       texture: require('./assets/models/characters/ghost/0.png'),
     },
-  }
-
-
-}
+  },
+};

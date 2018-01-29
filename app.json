@@ -15,12 +15,7 @@
       "hideExponentText": false
     },
     "packagerOpts": {
-      "assetExts": [
-        "ttf",
-        "mp4",
-        "mp3",
-        "obj"
-      ]
+      "assetExts": ["ttf", "mp4", "mp3", "obj", "wav"]
     },
     "ios": {
       "supportsTablet": true

@@ -1,5 +1,5 @@
-import Expo from 'expo'
-import React, {Component} from 'react';
+import React, { Component } from 'react';
+
 import Generic from './Generic';
 
 const cars = [
@@ -14,15 +14,18 @@ const cars = [
 ];
 
 export default class Car extends Generic {
-
   setup = async () => {
-    const {vehicles } = this.globalModels;
+    const { vehicles } = this.globalModels;
 
     for (let index in cars) {
       let car = cars[index];
-      this.models[`${index}`] = await this._download({...vehicles[car], castShadow: true, receiveShadow: true });
+      this.models[`${index}`] = await this._download({
+        ...vehicles[car],
+        castShadow: true,
+        receiveShadow: true,
+      });
     }
 
     return this.models;
-  }
+  };
 }

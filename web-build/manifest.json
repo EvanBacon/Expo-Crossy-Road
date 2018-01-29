@@ -1,0 +1,92 @@
+{
+  "background_color": "#ffffff",
+  "description": "The endless arcade hopper you'll never want to put down",
+  "dir": "auto",
+  "display": "fullscreen",
+  "lang": "en",
+  "name": "Crossy Road",
+  "orientation": "portrait",
+  "prefer_related_applications": true,
+  "related_applications": [
+    {
+      "platform": "itunes",
+      "url": "https://itunes.apple.com/us/app/crossy-road/id924373886?mt=8",
+      "id": "com.hipsterwhale.crossy"
+    },
+    {
+      "platform": "play",
+      "url": "http://play.google.com/store/apps/details?id=com.yodo1.crossyroad",
+      "id": "com.yodo1.crossyroad"
+    }
+  ],
+  "short_name": "Crossy",
+  "start_url": ".",
+  "theme_color": "#69CEED",
+  "icons": [
+    {
+      "src": "/assets/icons/icon_512x512.1e8b505a62610bb1ff40c29aa8cf075a.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "/assets/icons/icon_180x180.383b996123a56995b3bfbba157a622fc.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    },
+    {
+      "src": "/assets/splash/icon_1242x2688.2685e0fe8bb5874ba41f1384f0e4e55b.png",
+      "sizes": "1242x2688",
+      "type": "image/png"
+    },
+    {
+      "src": "/assets/splash/icon_1125x2436.3eef04c12c96dc5bfb9c44350a0f4dfe.png",
+      "sizes": "1125x2436",
+      "type": "image/png"
+    },
+    {
+      "src": "/assets/splash/icon_1242x2208.2fbf5bd319efb12c3a3359d966637b7a.png",
+      "sizes": "1242x2208",
+      "type": "image/png"
+    },
+    {
+      "src": "/assets/splash/icon_640x1136.5196a85733a56b0f846e7173fc0f6703.png",
+      "sizes": "640x1136",
+      "type": "image/png"
+    },
+    {
+      "src": "/assets/splash/icon_828x1792.eb53368584e674c17bfa321fafd4fbf0.png",
+      "sizes": "828x1792",
+      "type": "image/png"
+    },
+    {
+      "src": "/assets/splash/icon_750x1334.11c468f2c85b9fd86a4a9d163ea7d4c2.png",
+      "sizes": "750x1334",
+      "type": "image/png"
+    },
+    {
+      "src": "/assets/splash/icon_2048x2732.29c809e3e5e5f803a9c2349e44864d17.png",
+      "sizes": "2048x2732",
+      "type": "image/png"
+    },
+    {
+      "src": "/assets/icons/icon_192x192.8c53de9dc5192b79546c7ca212025090.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/assets/splash/icon_1668x2388.e98e7daee50f84ed75d30c8f86048aaf.png",
+      "sizes": "1668x2388",
+      "type": "image/png"
+    },
+    {
+      "src": "/assets/splash/icon_1536x2048.6597cedabdbe2f7d7f48114549aa1a98.png",
+      "sizes": "1536x2048",
+      "type": "image/png"
+    },
+    {
+      "src": "/assets/splash/icon_1668x2224.ead0fb31f851611d9cbc32b81a812d94.png",
+      "sizes": "1668x2224",
+      "type": "image/png"
+    }
+  ]
+}

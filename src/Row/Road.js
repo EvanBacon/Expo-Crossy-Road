@@ -1,66 +1,68 @@
-import Expo from 'expo'
-import React, {Component} from 'react';
+import { TweenLite } from 'gsap';
+import React, { Component } from 'react';
+import { THREE } from 'expo-three';
 
-import {TweenMax, Power2, TimelineLite} from "gsap";
-import * as THREE from 'three';
+import { groundLevel } from '../Game';
+import ModelLoader from '../../ModelLoader';
 
-import {groundLevel} from '../Game';
-import {modelLoader} from '../../App';
 export default class Road extends THREE.Object3D {
   active = false;
   cars = [];
 
-  getWidth = (mesh) => {
+  getWidth = mesh => {
     let box3 = new THREE.Box3();
     box3.setFromObject(mesh);
     // console.log( box.min, box.max, box.size() );
     return Math.round(box3.max.z - box3.min.z);
-  }
+  };
 
   carGen = () => {
     this.cars.map(val => {
       this.road.remove(val.mesh);
       val = null;
-    })
+    });
     this.cars = [];
 
     // Speeds: .01 through .08
     // Number of cars: 1 through 3
-    let speed = (Math.random() * 0.07) + 0.01;
+    let speed = Math.random() * 0.07 + 0.01;
     let numCars = Math.floor(Math.random() * 2) + 1;
     let xDir = 1;
 
-    if (Math.random() > .5) {
+    if (Math.random() > 0.5) {
       xDir = -1;
     }
 
     xPos = -6 * xDir;
 
     for (let x = 0; x < numCars; x++) {
-
       if (this.cars.length - 1 < x) {
-
-        let mesh = modelLoader._car.getRandom();
+        let mesh = ModelLoader.shared._car.getRandom();
         const width = this.getWidth(mesh);
 
-        this.cars.push({mesh: mesh, dir: xDir, width, collisionBox: (this.heroWidth / 2 + width / 2 - 0.1) });
+        this.cars.push({
+          mesh: mesh,
+          dir: xDir,
+          width,
+          collisionBox: this.heroWidth / 2 + width / 2 - 0.1,
+        });
 
-        this.road.add(mesh)
+        this.road.add(mesh);
       }
 
-      this.cars[x].mesh.position.set(xPos, .25, 0);
+      this.cars[x].mesh.position.set(xPos, 0.25, 0);
       this.cars[x].speed = speed * xDir;
-      this.cars[x].mesh.rotation.y = (Math.PI / 2) * xDir;
+      this.cars[x].mesh.rotation.y = Math.PI / 2 * xDir;
 
-      xPos -= ((Math.random() * 3) + 5) * xDir;
+      xPos -= (Math.random() * 3 + 5) * xDir;
     }
-  }
+  };
 
   constructor(heroWidth, onCollide) {
     super();
     this.heroWidth = heroWidth;
     this.onCollide = onCollide;
-    const {_road, _car} = modelLoader;
+    const { _road, _car } = ModelLoader.shared;
 
     this.road = _road.getNode('0');
     this.add(this.road);
@@ -72,68 +74,67 @@ export default class Road extends THREE.Object3D {
     if (!this.active) {
       return;
     }
-    this.cars.map(car => this.drive({dt, player, car}) )
+    this.cars.map(car => this.drive({ dt, player, car }));
+  };
 
-  }
+  drive = ({ dt, player, car }) => {
+    const { position, hitBy, moving } = player;
+    const offset = 11;
 
-  drive = ({dt, player, car}) => {
-    const {position, hitBy, moving} = player;
-      const offset = 11;
+    car.mesh.position.x += car.speed;
 
-        car.mesh.position.x += car.speed;
+    if (car.mesh.position.x > offset && car.speed > 0) {
+      car.mesh.position.x = -offset;
+      if (car === hitBy) {
+        player.hitBy = null;
+      }
+    } else if (car.mesh.position.x < -offset && car.speed < 0) {
+      car.mesh.position.x = offset;
+      if (car === hitBy) {
+        player.hitBy = null;
+      }
+    } else {
+      this.shouldCheckCollision({ player, car });
+    }
+  };
 
-        if (car.mesh.position.x > offset && car.speed > 0) {
-          car.mesh.position.x = -offset;
-          if (car === hitBy) {
-            player.hitBy = null;
-          }
-        } else if (car.mesh.position.x < -offset && car.speed < 0) {
-          car.mesh.position.x = offset;
-          if (car === hitBy) {
-            player.hitBy = null;
-          }
-        } else {
-          this.shouldCheckCollision({player, car})
-        }
-
-  }
-
-
-  shouldCheckCollision = ({player, car}) => {
+  shouldCheckCollision = ({ player, car }) => {
     if (Math.round(player.position.z) == this.position.z && player.isAlive) {
+      const { mesh, collisionBox } = car;
 
-      const {mesh, collisionBox} = car;
-
-      if (player.position.x < mesh.position.x + collisionBox && player.position.x > mesh.position.x - collisionBox) {
-        if (player.moving && Math.abs(player.position.z - Math.round(player.position.z)) > 0.1) {
-
+      if (
+        player.position.x < mesh.position.x + collisionBox &&
+        player.position.x > mesh.position.x - collisionBox
+      ) {
+        if (
+          player.moving &&
+          Math.abs(player.position.z - Math.round(player.position.z)) > 0.1
+        ) {
           player.hitBy = car;
 
           const forward = player.position.z - Math.round(player.position.z) > 0;
           player.position.z = this.position.z + (forward ? 0.52 : -0.52);
 
-          TweenMax.to(player.scale, 0.3, {
+          TweenLite.to(player.scale, 0.3, {
             y: 1.5,
             z: 0.2,
           });
-          TweenMax.to(player.rotation, 0.3, {
-            z: (Math.random() * Math.PI) - Math.PI/2,
+          TweenLite.to(player.rotation, 0.3, {
+            z: Math.random() * Math.PI - Math.PI / 2,
           });
-
         } else {
-
           player.position.y = groundLevel;
-          TweenMax.to(player.scale, 0.3, {
+          TweenLite.to(player.scale, 0.3, {
             y: 0.2,
             x: 1.5,
           });
-          TweenMax.to(player.rotation, 0.3, {
-            y: (Math.random() * Math.PI) - Math.PI/2,
+          TweenLite.to(player.rotation, 0.3, {
+            y: Math.random() * Math.PI - Math.PI / 2,
           });
         }
         this.onCollide(car, 'feathers', 'car');
         return;
       }
     }
-  }
+  };
 }

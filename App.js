@@ -1,55 +1,46 @@
 import Expo, { AppLoading, Audio } from 'expo';
 import React from 'react';
-import { View, StyleSheet, AsyncStorage } from 'react-native';
-import Images from './Images'
-import AudioFiles from './Audio';
-import cacheAssetsAsync from './utils/cacheAssetsAsync';
-import arrayFromObject from './utils/arrayFromObject';
-
-import { connect } from 'react-redux';
+import { AsyncStorage } from 'react-native';
 import { Provider } from 'react-redux';
+import { createTransform, persistStore } from 'redux-persist';
 
-import { THREE } from './utils/THREEglobal'
-
-import configureStore from './store';
-import AppWithNavigationState from './Navigation'
-import { persistStore, createTransform } from 'redux-persist'
-export const store = configureStore()
-
+import AudioFiles from './Audio';
+import Images from './Images';
 import ModelLoader from './ModelLoader';
-export const modelLoader = new ModelLoader();
+import AppWithNavigationState from './Navigation';
+import State from './state';
+import configureStore from './store';
+import arrayFromObject from './utils/arrayFromObject';
+import cacheAssetsAsync from './utils/cacheAssetsAsync';
 
-import State from './state'
+export const store = configureStore();
 
 const gameTransform = createTransform(
   (inboundState, key) => {
     return {
       ...inboundState,
-      gameState: State.Game.none
-    }
+      gameState: State.Game.none,
+    };
   },
   (outboundState, key) => {
-    return outboundState
+    return outboundState;
   },
-  { whitelist: [`game`] }
-)
-
+  { whitelist: [`game`] },
+);
 
 const storeSettings = {
   storage: AsyncStorage,
   blacklist: [`nav`, 'game', 'character'],
-  transforms: [
-    gameTransform
-  ]
+  transforms: [gameTransform],
   // whitelist: [ `game`, `character`]
-}
+};
 
 // export const persister = persistStore(store, storeSettings)
 export default class App extends React.Component {
   persister;
   state = {
     appIsReady: false,
-    rehydrated: false,
+    // rehydrated: false,
   };
 
   componentWillMount() {
@@ -65,35 +56,31 @@ export default class App extends React.Component {
     try {
       await cacheAssetsAsync({
         images: arrayFromObject(Images),
-        fonts: [
-          { "retro": require('./assets/fonts/retro.ttf') },
-        ],
-        audio: arrayFromObject(AudioFiles)
+        fonts: [{ retro: require('./assets/fonts/retro.ttf') }],
+        audio: arrayFromObject(AudioFiles),
       });
       
       await modelLoader.loadModels();
     } catch (e) {
       console.log(
         'There was an error caching assets (see: main.js), perhaps due to a ' +
-        'network timeout, so we skipped caching. Reload the app to try again.'
+          'network timeout, so we skipped caching. Reload the app to try again.',
       );
       console.log(e.message);
     } finally {
-      this.setState({ appIsReady: true }); 
     }
+    await ModelLoader.shared.load();
+    this.setState({ appIsReady: true });
   }
 
   render() {
-    if (this.state.appIsReady && this.state.rehydrated) {
+    if (this.state.appIsReady) {
       return (
-        <Provider
-          store={store}
-          persister={this.persister}
-        >
+        <Provider store={store}>
           <AppWithNavigationState dispatch={store.dispatch} />
         </Provider>
       );
     }
-    return (<AppLoading />);
+    return <AppLoading />;
   }
 }

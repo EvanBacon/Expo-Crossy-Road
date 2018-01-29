@@ -1,11 +1,11 @@
-import nav from './navigation'
-import game from './game'
-import character from './character'
+import { combineReducers } from 'redux';
 
-import { combineReducers } from 'redux'
+import character from './character';
+import game from './game';
+import nav from './navigation';
 
 export default combineReducers({
   nav,
   game,
-  character
+  character,
 });

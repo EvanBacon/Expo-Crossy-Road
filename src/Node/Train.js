@@ -1,21 +1,17 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
+import { THREE } from 'expo-three';
+
 import Generic from './Generic';
-// const {THREE} = global;
-import * as THREE from 'three'
 
 export default class Train extends Generic {
-
   getDepth = mesh => {
     let box3 = new THREE.Box3();
     box3.setFromObject(mesh);
 
     return Math.round(box3.max.x - box3.min.x);
-  }
-
+  };
 
   withSize = (size = 2) => {
-
-
     const _train = new THREE.Group();
 
     const front = this.getNode('front');
@@ -38,14 +34,26 @@ export default class Train extends Generic {
     _train.add(back);
 
     return _train;
-  }
+  };
 
   setup = async () => {
-    const {vehicles: {train} } = this.globalModels;
+    const { vehicles: { train } } = this.globalModels;
 
-    const front = await this._download({...train[`front`], receiveShadow: true, castShadow: true });
-    const middle = await this._download({...train[`middle`], receiveShadow: true, castShadow: true });
-    const back = await this._download({...train[`back`], receiveShadow: true, castShadow: true });
+    const front = await this._download({
+      ...train[`front`],
+      receiveShadow: true,
+      castShadow: true,
+    });
+    const middle = await this._download({
+      ...train[`middle`],
+      receiveShadow: true,
+      castShadow: true,
+    });
+    const back = await this._download({
+      ...train[`back`],
+      receiveShadow: true,
+      castShadow: true,
+    });
 
     // await Promise.all([
     //   front,
@@ -53,7 +61,7 @@ export default class Train extends Generic {
     //   back
     // ]);
 
-    this.models = {front, middle, back};
+    this.models = { front, middle, back };
     return this.models;
-  }
+  };
 }

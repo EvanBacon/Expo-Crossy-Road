@@ -1,15 +1,21 @@
 import React, { Component } from 'react';
-import { Text, View, Image, StyleSheet } from 'react-native';
-import { Constants } from 'expo';
-import TouchableBounce from 'react-native/Libraries/Components/Touchable/TouchableBounce'
+import { Image, StyleSheet } from 'react-native';
+import TouchableBounce from 'react-native/Libraries/Components/Touchable/TouchableBounce';
+
 import Images from '../../Images';
+
 export default class Button extends Component {
   render() {
     return (
-      <TouchableBounce onPress={this.props.onPress} style={[styles.container, this.props.style]}>
-        <Image source={Images.button.back} style={[styles.image, this.props.imageStyle]}/>
+      <TouchableBounce
+        onPress={this.props.onPress}
+        style={[styles.container, this.props.style]}
+      >
+        <Image
+          source={Images.button.back}
+          style={[styles.image, this.props.imageStyle]}
+        />
       </TouchableBounce>
-
     );
   }
 }

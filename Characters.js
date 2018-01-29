@@ -1,38 +1,38 @@
 export default {
   chicken: {
     index: 0,
-    name: "Chicken",
-    id: "chicken"
+    name: 'Chicken',
+    id: 'chicken',
   },
   android_robot: {
     index: 1,
-    name: "Android",
-    id: "android_robot"
+    name: 'Android',
+    id: 'android_robot',
   },
   big_fat_pig: {
     index: 2,
-    name: "Big Fat Pig",
-    id: "big_fat_pig"
+    name: 'Big Fat Pig',
+    id: 'big_fat_pig',
   },
   poopy_pigeon: {
     index: 3,
-    name: "Poopy Pigeon",
-    id: "poopy_pigeon"
+    name: 'Poopy Pigeon',
+    id: 'poopy_pigeon',
   },
   tree_frog: {
     index: 4,
-    name: "Tree Frog",
-    id: "tree_frog"
+    name: 'Tree Frog',
+    id: 'tree_frog',
   },
   emo_goose: {
     index: 5,
-    name: "Emo Goose",
-    id: "emo_goose"
+    name: 'Emo Goose',
+    id: 'emo_goose',
   },
   the_dark_lord: {
     index: 6,
-    name: "The Dark Lord",
-    id: "the_dark_lord"
+    name: 'The Dark Lord',
+    id: 'the_dark_lord',
   },
   // celebrity: {
   //   index: 7,
@@ -111,13 +111,13 @@ export default {
   // },
   bacon: {
     index: 22,
-    name: "Bacon",
-    id: "bacon"
+    name: 'Bacon',
+    id: 'bacon',
   },
   hipster_whale: {
     index: 23,
-    name: "Hipster Whale",
-    id: "hipster_whale"
+    name: 'Hipster Whale',
+    id: 'hipster_whale',
   },
   // floppy_fish: {
   //   index: 24,
@@ -126,8 +126,8 @@ export default {
   // },
   doge: {
     index: 25,
-    name: "Doge",
-    id: "doge"
+    name: 'Doge',
+    id: 'doge',
   },
   // crazy_ol_ben: {
   //   index: 26,
@@ -136,18 +136,17 @@ export default {
   // },
   nikki: {
     index: 27,
-    name: "Nikki",
-    id: "nikki"
+    name: 'Nikki',
+    id: 'nikki',
   },
   ide: {
     index: 28,
-    name: "Ide",
-    id: "ide"
+    name: 'Ide',
+    id: 'ide',
   },
   brent: {
     index: 29,
-    name: "Brent",
-    id: "brent"
+    name: 'Brent',
+    id: 'brent',
   },
-  
-}
+};

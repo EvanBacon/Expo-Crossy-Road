@@ -15,9 +15,9 @@ export default {
       "11": require("./assets/audio/buck12.wav"),
     },
     die: {
-      "0": require("./assets/audio/chickendeath.wav"),
-      "1": require("./assets/audio/chickendeath2.wav"),
-    }
+      '0': require('./assets/audio/chickendeath.wav'),
+      '1': require('./assets/audio/chickendeath2.wav'),
+    },
   },
   pig: {
     // move: {
@@ -37,33 +37,30 @@ export default {
     // },
 
     passive: {
-      "0": require("./assets/audio/car-engine-loop-deep.wav"),
-      "1": require("./assets/audio/car-horn.wav"),
+      '0': require('./assets/audio/car-engine-loop-deep.wav'),
+      '1': require('./assets/audio/car-horn.wav'),
     },
-    
-    die: {
-      "0": require("./assets/audio/carhit.mp3"),
-      "1": require("./assets/audio/carsquish3.wav"),
-    }
-   
-  },
-  bg_music: require("./assets/audio/car-engine-loop-deep.wav"),
-  
-  button_in: require("./assets/audio/Pop_1.wav"),
-  button_out: require("./assets/audio/Pop_2.wav"),
 
-  banner: require("./assets/audio/bannerhit3-g.wav"),
-  water: require("./assets/audio/watersplashlow.mp3"),
-  trainAlarm: require("./assets/audio/Train_Alarm.wav"),
+    die: {
+      '0': require('./assets/audio/carhit.mp3'),
+      '1': require('./assets/audio/carsquish3.wav'),
+    },
+  },
+  bg_music: require('./assets/audio/car-engine-loop-deep.wav'),
+
+  button_in: require('./assets/audio/Pop_1.wav'),
+  button_out: require('./assets/audio/Pop_2.wav'),
+
+  banner: require('./assets/audio/bannerhit3-g.wav'),
+  water: require('./assets/audio/watersplashlow.mp3'),
+  trainAlarm: require('./assets/audio/Train_Alarm.wav'),
   train: {
     move: {
-      "0": require("./assets/audio/train_pass_no_horn.wav"),
-      "1": require("./assets/audio/train_pass_shorter.wav"),
-    }, 
+      '0': require('./assets/audio/train_pass_no_horn.wav'),
+      '1': require('./assets/audio/train_pass_shorter.wav'),
+    },
     die: {
-      "0": require("./assets/audio/trainsplat.wav"),
-    }
-    
-  }
-  
-}
+      '0': require('./assets/audio/trainsplat.wav'),
+    },
+  },
+};
