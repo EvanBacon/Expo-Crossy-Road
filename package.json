@@ -9,7 +9,7 @@
     "fix": "rm -rf node_modules/gl-matrix/.babelrc"
   },
   "dependencies": {
-    "@expo/browser-polyfill": "^0.0.0-alpha.6",
+    "@expo/browser-polyfill": "^0.0.0-alpha.7",
     "@rematch/core": "^0.6.0",
     "@rematch/persist": "^0.2.1",
     "expo": "^26.0.0",

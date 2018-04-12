@@ -5,8 +5,10 @@ import ExpoTHREE, { THREE } from 'expo-three';
 import Assets from '../../Assets';
 // import Gem from '../nodes/Gem';
 import Ground from '../nodes/Ground';
-// import Hero from '../nodes/Hero';
+import Player from '../nodes/Player';
 import Lighting from '../nodes/Lighting';
+import GrassFloorRow from '../nodes/GrassFloorRow';
+import LevelMap from '../nodes/LevelMap';
 // import Train from '../nodes/Train';
 
 require('three/examples/js/controls/OrbitControls');
@@ -54,16 +56,9 @@ class PlayingLevel extends Exotic.GameObject {
     /*
     When we add `GameObject`s to eachother, they call `loadAsync` so we initialize in a promise.
     */
-    const types = [
-      // new Hero(),
-      new Ground(),
-      // new Gem(),
-      // new Exotic.Particles.Snow(),
-      // new Train(),
-      new Lighting(),
-    ];
+    const types = [new Player(), new LevelMap(), new Lighting()];
     const promises = types.map(type => this.add(type));
-    // const [hero, ground, gem, snow] = await Promise.all(promises);
+    const [player, levelMap, lighting] = await Promise.all(promises);
     // this.hero = hero;
     // this.ground = ground;
 
@@ -81,11 +76,11 @@ class PlayingLevel extends Exotic.GameObject {
     // );
   };
 
-  onTouchesBegan = ({ locationX: x, locationY: y }) => {
-    // this.hero.body.position.set(0, 0, 0);
-    // this.hero.body.velocity.set(0, 0, 0);
-    this.runHitTest();
-  };
+  // onTouchesBegan = ({ locationX: x, locationY: y }) => {
+  //   // this.hero.body.position.set(0, 0, 0);
+  //   // this.hero.body.velocity.set(0, 0, 0);
+  //   // this.runHitTest();
+  // };
 
   runHitTest = () => {
     this.raycaster.setFromCamera(this.game.touch, this.game.camera);

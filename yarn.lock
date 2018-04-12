@@ -392,9 +392,25 @@
     lodash "^4.2.0"
     to-fast-properties "^2.0.0"
 
-"@expo/browser-polyfill@^0.0.0-alpha.4", "@expo/browser-polyfill@^0.0.0-alpha.6":
+"@expo/browser-polyfill@^0.0.0-alpha.4":
   version "0.0.0-alpha.6"
   resolved "https://registry.yarnpkg.com/@expo/browser-polyfill/-/browser-polyfill-0.0.0-alpha.6.tgz#83b1f76197f88decb6e97a42596c75b1aba14bbb"
+  dependencies:
+    adaptive-bezier-curve "1.0.3"
+    adaptive-quadratic-curve "1.0.2"
+    color-parser "0.1.0"
+    earcut "2.1.3"
+    extrude-polyline "1.0.6"
+    fbemitter "^2.1.1"
+    gl-matrix "2.4.0"
+    react-native-console-time-polyfill "^0.0.6"
+    string-format "1.0.0"
+    text-encoding "^0.6.4"
+    xmldom-qsa "^1.0.3"
+
+"@expo/browser-polyfill@^0.0.0-alpha.7":
+  version "0.0.0-alpha.7"
+  resolved "https://registry.yarnpkg.com/@expo/browser-polyfill/-/browser-polyfill-0.0.0-alpha.7.tgz#cdf4dd242360f8ca557c67a1a868cc73a05be5ea"
   dependencies:
     adaptive-bezier-curve "1.0.3"
     adaptive-quadratic-curve "1.0.2"
