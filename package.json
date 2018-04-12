@@ -5,14 +5,25 @@
   "author": null,
   "private": true,
   "main": "node_modules/expo/AppEntry.js",
+  "scripts": {
+    "fix": "rm -rf node_modules/gl-matrix/.babelrc"
+  },
   "dependencies": {
-    "expo": "^25.0.0",
-    "expo-graphics": "^0.0.2",
+    "@expo/browser-polyfill": "^0.0.0-alpha.6",
+    "@rematch/core": "^0.6.0",
+    "@rematch/persist": "^0.2.1",
+    "expo": "^26.0.0",
+    "expo-asset-utils": "^0.0.4-alpha.2",
+    "expo-exotic": "^0.0.0",
+    "expo-graphics": "^0.0.3",
     "expo-three": "^2.2.2-alpha.0",
+    "firebase": "^4.9.0",
     "gsap": "^1.19.1",
     "ndarray": "^1.0.18",
-    "react": "16.2.0",
-    "react-native": "https://github.com/expo/react-native/archive/sdk-25.0.0.tar.gz",
+    "react": "16.3.1",
+    "react-native":
+      "https://github.com/expo/react-native/archive/sdk-26.0.0.tar.gz",
+    "react-native-animatable": "^1.2.4",
     "react-native-swipe-gestures": "^1.0.2",
     "react-navigation": "^1.0.0-beta.9",
     "react-redux": "^5.0.6",
@@ -20,6 +31,6 @@
     "redux-logger": "^3.0.6",
     "redux-persist": "^5.5.0",
     "redux-thunk": "^2.2.0",
-    "three": "^0.89.0"
+    "three": "^0.91.0"
   }
 }
