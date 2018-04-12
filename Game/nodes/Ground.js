@@ -34,7 +34,10 @@ class Land extends Exotic.PhysicsObject {
     });
     texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
     texture.repeat.set(70, 70);
-    const material = new THREE.MeshBasicMaterial({ map: texture, side: THREE.DoubleSide });
+    const material = new THREE.MeshBasicMaterial({
+      map: texture,
+      side: THREE.DoubleSide,
+    });
 
     const mesh = new THREE.Mesh(geometry, material);
 

@@ -93,12 +93,11 @@ class AudioManager {
       files: [...AssetUtils.arrayFromObject(this.assets)],
     });
 
-  async setupAsync() {
+  setupAsync = async () => {
     await this.configureExperienceAudioAsync();
     await this.downloadAsync();
     await this.setupAudioAsync();
-    await super.setupAsync();
-  }
+  };
 }
 
 AudioManager.sharedInstance = new AudioManager();

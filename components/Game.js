@@ -33,7 +33,7 @@ class Game extends React.Component {
           ref={ref => (global.gameRef = this.ref = ref)}
           key="game"
           onContextCreate={this.onContextCreate}
-          onRender={this.machine.onRender}
+          onRender={this.machine.update}
           onResize={this.machine.onResize}
           onShouldReloadContext={this.onShouldReloadContext}
         />

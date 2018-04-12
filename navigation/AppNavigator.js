@@ -39,4 +39,4 @@ const ModalStack = StackNavigator(
   },
 );
 
-export default createNavigator(ModalStack)(CrossFade);
+export default ModalStack; //createNavigator(ModalStack)(CrossFade);

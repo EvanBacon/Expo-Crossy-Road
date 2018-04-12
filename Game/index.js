@@ -6,7 +6,7 @@ import PlayingLevel from './levels/PlayingLevel';
 import Colors from '../constants/Colors';
 
 class Game extends Exotic.Game {
-  onContextCreate = async ({ gl, width, height, scale }) => {
+  onContextCreateAsync = async ({ gl, width, height, scale }) => {
     Exotic.Factory.shared.initMaterials(Colors);
     this.configureRenderer({ gl, width, height, scale });
     this.scene.size = { width: width, height: height };

@@ -23,14 +23,12 @@
       "assetExts": ["ttf", "mp4", "mp3", "obj", "wav", "mtl"]
     },
     "ios": {
-      "appStoreUrl": "https://expo.io/",
       "icon": "./assets/icons/ios.png",
       "supportsTablet": true,
       "bundleIdentifier": "com.evanbacon.crossyplatform",
       "buildNumber": "0.0.0"
     },
     "android": {
-      "playStoreUrl": "https://expo.io/",
       "icon": "./assets/icons/expo.png",
       "package": "com.evanbacon.crossyplatform",
       "versionCode": 1

@@ -1,3 +1,6 @@
+import '@expo/browser-polyfill';
+import './utils/disableLogs';
+
 import Expo from 'expo';
 import { THREE } from 'expo-three';
 import React from 'react';
@@ -42,7 +45,7 @@ export default class App extends React.Component {
       this._preloadAsync(),
       AudioManager.sharedInstance.setupAsync(),
     ]);
-    await ModelLoader.shared.load();
+    // await ModelLoader.shared.load();
     this.setState({ loading: false });
   };
 

@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   text: {
-    fontFamily: 'GothamNarrow-Book',
+    fontFamily: 'retro',
     opacity: 0.8,
     backgroundColor: 'transparent',
     marginHorizontal: 8,

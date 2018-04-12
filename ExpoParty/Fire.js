@@ -12,7 +12,7 @@ const collectionName = getSlug();
 class Fire {
   constructor() {
     this.init();
-    // this.observeAuth();
+    this.observeAuth();
   }
 
   init = () => firebase.initializeApp(Secret);
