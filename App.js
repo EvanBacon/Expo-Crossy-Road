@@ -43,7 +43,7 @@ export default class App extends React.Component {
   _setupExperienceAsync = async () => {
     await Promise.all([
       this._preloadAsync(),
-      AudioManager.sharedInstance.setupAsync(),
+      ...AudioManager.sharedInstance.setupAsync(),
     ]);
     // await ModelLoader.shared.load();
     this.setState({ loading: false });
@@ -67,12 +67,11 @@ export default class App extends React.Component {
     ];
   }
 
-  async _preloadAsync() {
-    await AssetUtils.cacheAssetsAsync({
+  _preloadAsync = () =>
+    AssetUtils.cacheAssetsAsync({
       fonts: this.fonts,
       files: this.files,
     });
-  }
 
   render() {
     return this.state.loading ? this.loadingScreen : this.screen;

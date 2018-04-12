@@ -1,41 +1,36 @@
-import ExpoGraphics from 'expo-graphics';
+import { GameView } from 'expo-exotic';
 import React from 'react';
-import { StyleSheet, Platform, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 import Machine from '../Game';
 import Footer from './Footer';
-import ScoreMeta from './ScoreMeta';
 import Polaroid from './Polaroid';
+import ScoreMeta from './ScoreMeta';
 import Title from './Title';
-import { dispatch } from '@rematch/core';
 
 class Game extends React.Component {
   componentWillMount() {
-    this.machine = new Machine();
+    this.game = new Machine();
   }
   componentWillUnmount() {
-    this.machine = null;
+    this.game = null;
   }
-
-  onContextCreate = async context => {
-    await this.machine.onContextCreateAsync(context);
-
-    this.props.onLoad();
-  };
 
   onLeaderboardPress = () => {
     this.props.navigation.navigate('Leaderboard');
   };
+
   render() {
+    const { onContextCreate, ...game } = this.game;
+
     return (
       <View style={styles.container} pointerEvents="box-none">
-        <ExpoGraphics.View
-          ref={ref => (global.gameRef = this.ref = ref)}
-          key="game"
-          onContextCreate={this.onContextCreate}
-          onRender={this.machine.update}
-          onResize={this.machine.onResize}
-          onShouldReloadContext={this.onShouldReloadContext}
+        <GameView
+          {...game}
+          onContextCreate={async props => {
+            await onContextCreate(props);
+            this.props.onLoad();
+          }}
         />
         <ScoreMeta />
         <Title />
@@ -45,10 +40,6 @@ class Game extends React.Component {
       </View>
     );
   }
-  onShouldReloadContext = () => {
-    /// The Android OS loses gl context on background, so we should reload it.
-    return Platform.OS === 'android';
-  };
 }
 
 export default Game;
