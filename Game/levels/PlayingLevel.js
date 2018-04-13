@@ -9,6 +9,7 @@ import Player from '../nodes/Player';
 import Lighting from '../nodes/Lighting';
 import GrassFloorRow from '../nodes/GrassFloorRow';
 import LevelMap from '../nodes/LevelMap';
+import Colors from '../../constants/Colors';
 // import Train from '../nodes/Train';
 
 require('three/examples/js/controls/OrbitControls');
@@ -37,7 +38,7 @@ class PlayingLevel extends Exotic.GameObject {
     //   assetForDirection: ({ direction }) =>
     //     Assets.images.skybox[direction + '.jpg'],
     // });
-    this.game.scene.fog = new THREE.Fog(0xa03619, 100, 150);
+    this.game.scene.fog = new THREE.Fog(Colors.blue, 100, 150);
   };
 
   configureCamera = () => {
@@ -59,7 +60,7 @@ class PlayingLevel extends Exotic.GameObject {
     const types = [new Player(), new LevelMap(), new Lighting()];
     const promises = types.map(type => this.add(type));
     const [player, levelMap, lighting] = await Promise.all(promises);
-    // this.hero = hero;
+    //s this.hero = hero;
     // this.ground = ground;
 
     // this.game.world.addContactMaterial(
