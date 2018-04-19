@@ -1,10 +1,10 @@
 import Assets from '../../Assets';
 import MultiObjectNode from './MultiObjectNode';
 
-class TrainCar extends MultiObjectNode {
+class TrainCarNode extends MultiObjectNode {
   static vehicleNames = ['front', 'back', 'middle'];
   constructor({ type }) {
-    if (!(type in TrainCar.vehicleNames)) {
+    if (!(type in TrainCarNode.vehicleNames)) {
       console.error('Invalid car name', type);
     }
     const assetIndex = Assets.models.vehicles.train;
@@ -13,4 +13,4 @@ class TrainCar extends MultiObjectNode {
   }
 }
 
-export default TrainCar;
+export default TrainCarNode;

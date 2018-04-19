@@ -1,16 +1,16 @@
 import Assets from '../../Assets';
 import MultiObjectNode from './MultiObjectNode';
-import TrainCar from './TrainCar';
+import TrainCarNode from './TrainCarNode';
 
-class Train extends CrossyNode {
+class TrainNode extends CrossyNode {
   async loadAsync(scene) {
     let types = [
-      new TrainCar({ type: 'front' }),
-      new TrainCar({ type: 'back' }),
+      new TrainCarNode({ type: 'front' }),
+      new TrainCarNode({ type: 'back' }),
     ];
 
     for (let i = 0; i < Math.floor(Math.random() * 3 + 1); i++) {
-      types.splice(1, 0, new TrainCar({ type: 'middle' }));
+      types.splice(1, 0, new TrainCarNode({ type: 'middle' }));
     }
 
     const promises = types.map(type => this.add(type));
@@ -21,4 +21,4 @@ class Train extends CrossyNode {
   }
 }
 
-export default Train;
+export default TrainNode;

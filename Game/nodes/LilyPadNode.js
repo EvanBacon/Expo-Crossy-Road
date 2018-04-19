@@ -7,6 +7,11 @@ class LilyPadNode extends CrossyNode {
     const modelIndex = Assets.models.environment.lily_pad;
     return super.loadAsync(scene, modelIndex);
   }
+
+  update(delta, time) {
+    super.update();
+    this.rotation.y = Math.sin(time);
+  }
 }
 
 export default LilyPadNode;

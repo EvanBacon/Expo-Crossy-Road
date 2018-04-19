@@ -23,7 +23,7 @@ class LevelMap extends Exotic.GameObject {
             types.push(new GrassFloorRow({ type: `${i % 2}` }));
             break;
           case 1:
-            types.push(new RiverFloorRow());
+            types.push(new RiverFloorRow({ index: i }));
             break;
           case 2:
             types.push(new RailRoadFloorRow());

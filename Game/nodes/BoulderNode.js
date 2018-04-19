@@ -4,7 +4,7 @@ import MultiObjectNode from './MultiObjectNode';
 class BoulderNode extends MultiObjectNode {
   constructor({ type }) {
     const assetIndex = Assets.models.environment.boulder;
-    super({ type: type || `${(Math.random() * 1) | 0}`, assetIndex });
+    super({ type: type || `${(Math.random() * 2) | 0}`, assetIndex });
     this.elevation = 0;
   }
 }
