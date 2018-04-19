@@ -1,5 +1,6 @@
 import Assets from '../../Assets';
 import MultiObjectNode from './MultiObjectNode';
+import CyclingMultiObjectNode from './CyclingMultiObjectNode';
 
 class CarNode extends CyclingMultiObjectNode {
   static vehicleNames = [
@@ -12,22 +13,27 @@ class CarNode extends CyclingMultiObjectNode {
     'red_truck',
     'taxi',
   ];
-  constructor({ type }) {
-    if (!(type in CarNode.vehicleNames)) {
-      console.error('Invalid car name', type);
-    }
+  constructor({ type, velocity }) {
     const assetIndex = Assets.models.vehicles;
 
-    let speed = (Math.random() * 2) + 1;
+    let speed = Math.random() * 2 + 1;
     let direction = Math.floor(Math.random() * 2) === 0 ? -1 : 1;
     super({
-      velocity: speed * direction
+      velocity: velocity || speed * direction,
       type:
         type ||
-        vehicleNames[Math.floor(Math.random() * CarNode.vehicleNames.length)],
+        CarNode.vehicleNames[
+          Math.floor(Math.random() * CarNode.vehicleNames.length)
+        ],
       assetIndex,
     });
     this.elevation = 0;
+
+    if (this.velocity < 0) {
+      this.rotation.y = -Math.PI / 2;
+    } else {
+      this.rotation.y = Math.PI / 2;
+    }
   }
 }
 

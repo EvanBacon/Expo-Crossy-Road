@@ -34,25 +34,41 @@ class RiverFloorRow extends RiverFloorRowNode {
     let promises = [];
     switch (this.riverFloorRowType) {
       case RiverFloorRowType.DYNAMIC:
-        console.log('RiverFloorRow add logs');
+        {
+          console.log('RiverFloorRow add logs');
 
-        let speed = Math.random() * 2 + 1;
-        let direction = Math.floor(Math.random() * 2) === 0 ? -1 : 1;
-        const velocity = speed * direction;
-        const log = new LogNode({ velocity });
-        promises.push(this.add(log));
+          let speed = Math.random() * 2 + 1;
+          let direction = Math.floor(Math.random() * 2) === 0 ? -1 : 1;
+          const velocity = speed * direction;
+
+          const amount = Math.floor(Math.random() * 2) + 2;
+          let usedRows = {};
+          while (promises.length < amount) {
+            let row = Math.floor(Math.random() * MapSize.rows);
+            if (!(row in usedRows)) {
+              usedRows[row] = true;
+              const log = new LogNode({ velocity });
+              log.row = row;
+              log.position.y = 0.2;
+              promises.push(this.add(log));
+            }
+          }
+        }
         break;
       case RiverFloorRowType.STATIC:
-        const amount = Math.floor(Math.random() * 2) + 2;
-        let usedRows = {};
-        console.log('RiverFloorRow add lilys', amount);
-        while (promises.length < amount) {
-          let row = Math.floor(Math.random() * MapSize.playableZone);
-          if (!(row in usedRows)) {
-            usedRows[row] = true;
-            let lily = new LilyPadNode();
-            lily.row = MapSize.boundRows + 1 + row;
-            promises.push(this.add(lily));
+        {
+          const amount = Math.floor(Math.random() * 2) + 2;
+          let usedRows = {};
+          console.log('RiverFloorRow add lilys', amount);
+          while (promises.length < amount) {
+            let row = Math.floor(Math.random() * MapSize.playableZone);
+            if (!(row in usedRows)) {
+              usedRows[row] = true;
+              let lily = new LilyPadNode();
+              lily.row = MapSize.boundRows + 1 + row;
+              lily.position.y = 0.2;
+              promises.push(this.add(lily));
+            }
           }
         }
         break;

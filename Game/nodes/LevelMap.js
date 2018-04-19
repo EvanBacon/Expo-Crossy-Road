@@ -16,7 +16,7 @@ class LevelMap extends Exotic.GameObject {
       } else if (i < MapSize.initialPlayerColumn + 2) {
         types.push(new GrassFloorRow({ type: `${i % 2}`, isFilled: false }));
       } else {
-        let node = (Math.random() * 3) | 0;
+        let node = (Math.random() * 4) | 0;
 
         switch (node) {
           case 0:
@@ -27,6 +27,9 @@ class LevelMap extends Exotic.GameObject {
             break;
           case 2:
             types.push(new RailRoadFloorRow());
+            break;
+          case 3:
+            types.push(new RoadFloorRow({ type: `${i % 2}` }));
             break;
         }
       }
