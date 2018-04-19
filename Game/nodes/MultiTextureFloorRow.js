@@ -8,6 +8,7 @@ class MultiTextureFloorRow extends FloorRow {
     super();
     this.type = type;
     this.assetName = assetName;
+    this.name = `${assetName}.type`;
   }
   async loadAsync(scene) {
     const modelIndex = {

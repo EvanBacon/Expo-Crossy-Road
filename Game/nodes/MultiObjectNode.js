@@ -8,6 +8,7 @@ class MultiObjectNode extends CrossyNode {
   constructor({ type, assetIndex }) {
     super();
     this.type = type;
+    this.name = `${type}.${assetIndex}`;
     this.assetIndex = assetIndex;
   }
 

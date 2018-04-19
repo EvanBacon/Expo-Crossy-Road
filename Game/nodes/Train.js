@@ -1,37 +1,21 @@
-import Exotic from 'expo-exotic';
-import * as CANNON from 'cannon';
-import ExpoTHREE, { THREE } from 'expo-three';
 import Assets from '../../Assets';
+import MultiObjectNode from './MultiObjectNode';
+import TrainCar from './TrainCar';
 
-class Train extends Exotic.PhysicsObject {
-  /*
-    This is called right after loadAsync.
-    We use this time to setup the physics.
-  */
-  loadBody = () => {
-    this.body = new CANNON.Body({
-      mass: 0.5,
-      material: new CANNON.Material(),
-    });
-    const { size } = this;
-    this.body.addShape(
-      new CANNON.Box(new CANNON.Vec3(this.width / 2, this.height / 2, this.depth / 2))
-    );
-  };
-
+class Train extends CrossyNode {
   async loadAsync(scene) {
-    const assetProvider = name => Assets.models.train[name];
+    let types = [
+      new TrainCar({ type: 'front' }),
+      new TrainCar({ type: 'back' }),
+    ];
 
-    const model = await ExpoTHREE.loadAsync(
-      [Assets.models.train['model.obj'], Assets.models.train['material.mtl']],
-      null,
-      assetProvider
-    );
-    ExpoTHREE.utils.computeMeshNormals(model);
-    ExpoTHREE.utils.scaleLongestSideToSize(model, 2);
-    ExpoTHREE.utils.alignMesh(model);
+    for (let i = 0; i < Math.floor(Math.random() * 3 + 1); i++) {
+      types.splice(1, 0, new TrainCar({ type: 'middle' }));
+    }
 
-    this.add(model);
+    const promises = types.map(type => this.add(type));
+    const nodes = await Promise.all(promises);
+    nodes.forEach((node, index) => (node.column = index));
 
     return super.loadAsync(scene);
   }

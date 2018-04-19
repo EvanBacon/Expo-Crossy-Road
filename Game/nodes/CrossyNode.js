@@ -1,7 +1,10 @@
 import Exotic from 'expo-exotic';
 import ExpoTHREE from 'expo-three';
+import MeshPool from '../MeshPool';
 
 class CrossyNode extends Exotic.GameObject {
+  name = '';
+
   get column() {
     return Math.floor(this.position.z);
   }
@@ -28,22 +31,22 @@ class CrossyNode extends Exotic.GameObject {
 
   async loadAsync(scene, modelIndex, alignment = { x: 1, y: 1, z: 0 }) {
     if (modelIndex) {
-      const model = await this.loadStaticModelFromIndexAsync(modelIndex);
-
-      model.traverse(child => {
-        if (child instanceof THREE.Mesh) {
-          if (child.material.map) {
-            child.material.map.magFilter = THREE.LinearFilter;
-            child.material.map.minFilter = THREE.LinearFilter;
+      let mesh = MeshPool.shared.getCloneForMeshNamed(this.name);
+      if (!mesh) {
+        mesh = await this.loadStaticModelFromIndexAsync(modelIndex);
+        mesh.traverse(child => {
+          if (child instanceof THREE.Mesh) {
+            if (child.material.map) {
+              child.material.map.magFilter = THREE.LinearFilter;
+              child.material.map.minFilter = THREE.LinearFilter;
+            }
           }
-        }
-      });
-      ExpoTHREE.utils.alignMesh(model, alignment);
+        });
+        MeshPool.shared.meshes[this.name] = mesh;
+        ExpoTHREE.utils.alignMesh(mesh, alignment);
+      }
 
-      this.add(model);
-
-      // ExpoTHREE.utils.computeMeshNormals(model);
-      // ExpoTHREE.utils.scaleLongestSideToSize(model, 2);
+      this.add(mesh);
     }
     return super.loadAsync(scene);
   }

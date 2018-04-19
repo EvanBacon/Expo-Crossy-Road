@@ -1,5 +1,6 @@
 import Assets from '../../Assets';
 import CrossyNode from './CrossyNode';
+import MapSize from '../../constants/MapSize';
 
 class Player extends CrossyNode {
   constructor() {
@@ -13,6 +14,7 @@ class Player extends CrossyNode {
     this.column = MapSize.initialPlayerColumn;
   };
 
+  name = 'characters.chicken';
   async loadAsync(scene) {
     const modelIndex = Assets.models.characters.chicken;
     return super.loadAsync(scene, modelIndex);
