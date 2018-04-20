@@ -5,6 +5,7 @@ import MeshPool from '../MeshPool';
 class CrossyNode extends Exotic.GameObject {
   name = '';
 
+  collisionSize = 1;
   get column() {
     return Math.floor(this.position.z);
   }
@@ -47,8 +48,13 @@ class CrossyNode extends Exotic.GameObject {
       }
 
       this.add(mesh);
+
+      this.collisionSize = this.width
+      console.log({collisionSize: this.collisionSize})
+      await super.loadAsync(scene)
+      return mesh
     }
-    return super.loadAsync(scene);
+    return super.loadAsync(scene)
   }
 
   loadStaticModelFromIndexAsync = async modelIndex => {

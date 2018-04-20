@@ -19,6 +19,8 @@ class RiverFloorRow extends RiverFloorRowNode {
       RiverFloorRowTypeMap[index % RiverFloorRowTypeMap.length];
   }
 
+  obstacles = []
+
   addObstacleAsync = async x => {
     const spawnChance = 0.4;
     let mesh =
@@ -51,6 +53,7 @@ class RiverFloorRow extends RiverFloorRowNode {
               log.row = row;
               log.position.y = 0.2;
               promises.push(this.add(log));
+              this.obstacles.push(log)
             }
           }
         }
@@ -68,6 +71,7 @@ class RiverFloorRow extends RiverFloorRowNode {
               lily.row = MapSize.boundRows + 1 + row;
               lily.position.y = 0.2;
               promises.push(this.add(lily));
+              this.obstacles.push(lily)
             }
           }
         }

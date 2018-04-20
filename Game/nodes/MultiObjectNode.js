@@ -12,13 +12,13 @@ class MultiObjectNode extends CrossyNode {
     this.assetIndex = assetIndex;
   }
 
-  async loadAsync(scene) {
+  async loadAsync(scene, _modelIndex, alignment) {
     if (!this.assetIndex || !this.type) {
       console.error('Please define a valid `assetIndex`, and `type`');
       return;
     }
     let modelIndex = this.assetIndex[this.type];
-    return super.loadAsync(scene, modelIndex);
+    return super.loadAsync(scene, modelIndex, alignment);
   }
 }
 

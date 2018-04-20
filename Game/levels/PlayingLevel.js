@@ -28,7 +28,7 @@ class PlayingLevel extends Exotic.GameObject {
     await this.configureScene();
     this.game.debugPhysics = true;
 
-    new THREE.OrbitControls(this.game.camera);
+    // new THREE.OrbitControls(this.game.camera);
 
     return await super.loadAsync();
   };
@@ -42,8 +42,8 @@ class PlayingLevel extends Exotic.GameObject {
   };
 
   configureCamera = () => {
-    this.game.camera.position.set(5, 3, -10);
-    this.game.camera.lookAt(0, 0, 0);
+    // this.game.camera.position.set(5, 3, -10);
+    // this.game.camera.lookAt(0, 0, 0);
   };
 
   configureWorld = () => {
@@ -60,6 +60,16 @@ class PlayingLevel extends Exotic.GameObject {
     const types = [new Player(), new LevelMap(), new Lighting()];
     const promises = types.map(type => this.add(type));
     const [player, levelMap, lighting] = await Promise.all(promises);
+    this.game.player = player
+    this.game.levelMap = levelMap
+
+    global.onSwipe = direction => {
+      player.rotate(direction)
+      if (levelMap.canMove(player, direction)) {
+        player.move(direction)
+      }
+    }
+    
     //s this.hero = hero;
     // this.ground = ground;
 

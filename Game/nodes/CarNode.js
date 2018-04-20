@@ -1,6 +1,7 @@
 import Assets from '../../Assets';
 import MultiObjectNode from './MultiObjectNode';
 import CyclingMultiObjectNode from './CyclingMultiObjectNode';
+import ExpoTHREE from 'expo-three';
 
 class CarNode extends CyclingMultiObjectNode {
   static vehicleNames = [
@@ -34,6 +35,10 @@ class CarNode extends CyclingMultiObjectNode {
     } else {
       this.rotation.y = Math.PI / 2;
     }
+  }
+
+  loadAsync(scene) {
+    return super.loadAsync(scene, null, {y: 1})
   }
 }
 

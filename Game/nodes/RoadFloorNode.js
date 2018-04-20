@@ -1,12 +1,14 @@
 import MultiTextureFloorRow from './MultiTextureFloorRow';
 import CarNode from './CarNode';
 import MapSize from '../../constants/MapSize';
+import ExpoTHREE from 'expo-three';
 
 class RoadFloorRow extends MultiTextureFloorRow {
   constructor({ type }) {
     super({ type, assetName: 'road' });
   }
 
+  obstacles = []
   async loadAsync(scene) {
     let promises = [];
 
@@ -16,15 +18,18 @@ class RoadFloorRow extends MultiTextureFloorRow {
 
     const amount = Math.floor(Math.random() * 2) + 2;
     let usedRows = {};
+    let index = 0
+    const offset = Math.floor(MapSize.rows / amount)
     while (promises.length < amount) {
-      let row = Math.floor(Math.random() * MapSize.rows);
-      if (!(row in usedRows)) {
-        usedRows[row] = true;
+      
         const obstacle = new CarNode({ velocity });
-        obstacle.row = row;
-        obstacle.position.y = 0.2;
+        obstacle.row = index + (offset * index);
+        obstacle.position.y = 0;
+        // console.log({node})
+        obstacle.position.z = -0.5
+        this.obstacles.push(obstacle)
         promises.push(this.add(obstacle));
-      }
+        index += 1
     }
 
     await Promise.all(promises);
