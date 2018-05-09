@@ -11,6 +11,7 @@ const collectionName = getSlug();
 
 class Fire {
   constructor() {
+    return;
     this.init();
     this.observeAuth();
   }

@@ -10,9 +10,12 @@ import Lighting from '../nodes/Lighting';
 import GrassFloorRow from '../nodes/GrassFloorRow';
 import LevelMap from '../nodes/LevelMap';
 import Colors from '../../constants/Colors';
+import MapSize from '../../constants/MapSize';
 // import Train from '../nodes/Train';
 
 require('three/examples/js/controls/OrbitControls');
+
+const startingRow = 2;
 
 class PlayingLevel extends Exotic.GameObject {
   raycaster = new THREE.Raycaster();
@@ -26,7 +29,7 @@ class PlayingLevel extends Exotic.GameObject {
     this.configureCamera();
     this.configureWorld();
     await this.configureScene();
-    this.game.debugPhysics = true;
+    // this.game.debugPhysics = true;
 
     // new THREE.OrbitControls(this.game.camera);
 
@@ -47,11 +50,44 @@ class PlayingLevel extends Exotic.GameObject {
   };
 
   configureWorld = () => {
-    this.game.world.gravity.set(0, -5, 0);
-    this.game.world.defaultContactMaterial.contactEquationStiffness = 1e8;
-    this.game.world.defaultContactMaterial.contactEquationRelaxation = 10;
-    this.game.world.defaultContactMaterial.friction = 0;
+    // this.game.world.gravity.set(0, -5, 0);
+    // this.game.world.defaultContactMaterial.contactEquationStiffness = 1e8;
+    // this.game.world.defaultContactMaterial.contactEquationRelaxation = 10;
+    // this.game.world.defaultContactMaterial.friction = 0;
   };
+
+  camCount = 0;
+
+  forwardScene = () => {
+    const easing = 0.03;
+    this.position.z -=
+      (this.game.player.position.z - startingRow + this.position.z) * easing;
+
+    const targetX = this.position.x; //- MapSize.initialPlayerRow;
+    const bufferX = 2;
+    this.position.x =
+      this.position.x + (this.game.player.position.x - targetX) * easing;
+    //  -Math.min(
+    //   bufferX,
+    //   Math.max(
+    //     -bufferX,
+    //     this.position.x + (this.game.player.position.x - targetX) * easing,
+    //   ),
+    // );
+
+    // normal camera speed
+    if (-this.position.z - this.camCount > 1.0) {
+      this.camCount = -this.position.z;
+      this.newRow();
+    }
+  };
+
+  newRow = () => {};
+
+  update(delta, time) {
+    super.update(delta, time);
+    // this.forwardScene();
+  }
 
   loadObjects = async () => {
     /*
@@ -60,16 +96,16 @@ class PlayingLevel extends Exotic.GameObject {
     const types = [new Player(), new LevelMap(), new Lighting()];
     const promises = types.map(type => this.add(type));
     const [player, levelMap, lighting] = await Promise.all(promises);
-    this.game.player = player
-    this.game.levelMap = levelMap
+    this.game.player = player;
+    this.game.levelMap = levelMap;
 
     global.onSwipe = direction => {
-      player.rotate(direction)
+      player.rotate(direction);
       if (levelMap.canMove(player, direction)) {
-        player.move(direction)
+        player.move(direction);
       }
-    }
-    
+    };
+
     //s this.hero = hero;
     // this.ground = ground;
 

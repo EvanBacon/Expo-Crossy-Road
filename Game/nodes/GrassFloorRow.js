@@ -8,17 +8,19 @@ const FillType = {
   EMPTY: 'EMPTY',
 };
 
+global.obstacleMap = {};
+
 class GrassFloorRow extends MultiTextureFloorRow {
   isFilled = null;
-  obstacles = []
-  rowIndex = 0
+  obstacles = [];
+  rowIndex = 0;
   constructor({ type, isFilled = false }) {
     super({ type, assetName: 'grass' });
     this.isFilled = isFilled;
   }
 
   async loadAsync(scene) {
-    await this.generateObstaclesAsync();
+    // await this.generateObstaclesAsync();
     return super.loadAsync(scene);
   }
 
@@ -28,12 +30,12 @@ class GrassFloorRow extends MultiTextureFloorRow {
       Math.random() < spawnChance ? new BoulderNode({}) : new TreeNode({});
     this.obstacleMap[`${x | 0}`] = mesh;
     mesh.row = x;
-    this.obstacles.push(mesh)
+    this.obstacles.push(mesh);
 
     if (!global.obstacleMap) {
-      global.obstacleMap = {}
+      global.obstacleMap = {};
     }
-    global.obstacleMap[`${x | 0}|${this.rowIndex | 0}`] = true
+    global.obstacleMap[`${x | 0}|${this.rowIndex | 0}`] = true;
     await this.add(mesh);
   };
 

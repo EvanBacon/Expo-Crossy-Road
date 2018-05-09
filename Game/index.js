@@ -4,8 +4,9 @@ import { PixelRatio } from 'react-native';
 
 import PlayingLevel from './levels/PlayingLevel';
 import Colors from '../constants/Colors';
-import Direction from './Direction'
+import Direction from './Direction';
 import MapSize from '../constants/MapSize';
+import TWEEN from './Tween';
 
 class Game extends Exotic.Game {
   onContextCreate = async ({ gl, width, height, scale }) => {
@@ -14,12 +15,18 @@ class Game extends Exotic.Game {
     this.scene.size = { width: width, height: height };
 
     /// Standard Camera
-    this.camera = new THREE.OrthographicCamera(-width, width, height, -height, -30, 30);
+    this.camera = new THREE.OrthographicCamera(
+      -width,
+      width,
+      height,
+      -height,
+      -30,
+      30,
+    );
     this.camera.position.set(-1, 2.8, -2.9); // Change -1 to -.02
     this.camera.zoom = 110; // for birds eye view
     this.camera.updateProjectionMatrix();
     this.camera.lookAt(this.scene.position);
-
 
     // this.camera = new THREE.PerspectiveCamera(75, width / height, 0.01, 10000);
     await this.loadAsync(this.scene);
@@ -53,80 +60,80 @@ class Game extends Exotic.Game {
     this.level = new PlayingLevel(this);
     await this.level.loadAsync(this.scene);
     this.scene.add(this.level);
-    this.level.position.x = -MapSize.rows/2
-    this.level.position.z = -8
+    this.level.position.x = -MapSize.rows / 2;
+    this.level.position.z = -8;
     return super.loadAsync(this.scene);
   };
 
   update = (delta, time) => {
     this.renderer.render(this.scene, this.camera);
-
+    TWEEN.update();
     super.update(delta, time);
   };
 
+  maxTapTime = 500;
+
   onTouchesBegan = () => {
-
-  }
-  onTouchesMoved = () => {
-
-  }
-  onTouchesEnded = ({gestureState}) => {
-    this.endTouches(gestureState)
-  }
-  onTouchesCancelled = ({gestureState}) => {
-    this.endTouches(gestureState)
-  }
+    this.tapStart = Date.now();
+  };
+  onTouchesMoved = () => {};
+  onTouchesEnded = ({ gestureState }) => {
+    this.endTouches(gestureState);
+  };
+  onTouchesCancelled = ({ gestureState }) => {
+    this.endTouches(gestureState);
+  };
 
   endTouches = gestureState => {
-    const swipeDirection = this._getSwipeDirection(gestureState);
+    let swipeDirection = this._getSwipeDirection(gestureState);
     if (!swipeDirection) {
-      return
+      if (Date.now() - this.tapStart < this.maxTapTime) {
+        swipeDirection = Direction.UP;
+      } else {
+        return;
+      }
     }
-    console.log({swipeDirection})
+    console.log({ swipeDirection });
     this._triggerSwipeHandlers(swipeDirection, gestureState);
-  }
+  };
 
   _triggerSwipeHandlers(swipeDirection, gestureState) {
-    const {onSwipe} = global;
+    const { onSwipe } = global;
     onSwipe && onSwipe(swipeDirection, gestureState);
   }
 
   _getSwipeDirection(gestureState) {
-    const {LEFT, RIGHT, UP, DOWN} = Direction;
-    const {dx, dy} = gestureState;
+    const { LEFT, RIGHT, UP, DOWN } = Direction;
+    const { dx, dy } = gestureState;
     if (this._isValidHorizontalSwipe(gestureState)) {
-      return (dx > 0)
-        ? RIGHT
-        : LEFT;
+      return dx > 0 ? RIGHT : LEFT;
     } else if (this._isValidVerticalSwipe(gestureState)) {
-      return (dy > 0)
-        ? DOWN
-        : UP;
+      return dy > 0 ? DOWN : UP;
     }
     return null;
   }
 
   _isValidHorizontalSwipe(gestureState) {
-    const {vx, dy} = gestureState;
+    const { vx, dy } = gestureState;
     return isValidSwipe(vx, dy);
   }
 
   _isValidVerticalSwipe(gestureState) {
-    const {vy, dx} = gestureState;
+    const { vy, dx } = gestureState;
     return isValidSwipe(vy, dx);
   }
-
-
 }
 
 const swipeConfig = {
   velocityThreshold: 0.3,
-  directionalOffsetThreshold: 80
+  directionalOffsetThreshold: 80,
 };
 
 function isValidSwipe(velocity, directionalOffset) {
-  return Math.abs(velocity) > swipeConfig.velocityThreshold && Math.abs(directionalOffset) < swipeConfig.directionalOffsetThreshold;
+  return (
+    Math.abs(velocity) > swipeConfig.velocityThreshold &&
+    Math.abs(directionalOffset) < swipeConfig.directionalOffsetThreshold
+  );
 }
-
 
 export default Game;

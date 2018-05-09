@@ -8,8 +8,9 @@ class RoadFloorRow extends MultiTextureFloorRow {
     super({ type, assetName: 'road' });
   }
 
-  obstacles = []
-  async loadAsync(scene) {
+  obstacles = [];
+
+  addObstaclesAsync = async () => {
     let promises = [];
 
     let speed = Math.random() * 2 + 1;
@@ -18,22 +19,24 @@ class RoadFloorRow extends MultiTextureFloorRow {
 
     const amount = Math.floor(Math.random() * 2) + 2;
     let usedRows = {};
-    let index = 0
-    const offset = Math.floor(MapSize.rows / amount)
+    let index = 0;
+    const offset = Math.floor(MapSize.rows / amount);
     while (promises.length < amount) {
-      
-        const obstacle = new CarNode({ velocity });
-        obstacle.row = index + (offset * index);
-        obstacle.position.y = 0;
-        // console.log({node})
-        obstacle.position.z = -0.5
-        this.obstacles.push(obstacle)
-        promises.push(this.add(obstacle));
-        index += 1
+      const obstacle = new CarNode({ velocity });
+      obstacle.row = index + offset * index;
+      obstacle.position.y = 0;
+      // console.log({node})
+      obstacle.position.z = -0.5;
+      this.obstacles.push(obstacle);
+      promises.push(this.add(obstacle));
+      index += 1;
     }
 
     await Promise.all(promises);
+  };
 
+  async loadAsync(scene) {
+    // await this.addObstaclesAsync()
     return super.loadAsync(scene);
   }
 }
