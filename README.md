@@ -30,7 +30,7 @@ Stack:
  [![Expo](https://img.shields.io/badge/Expo-@Bacon-4630EB.svg?maxAge=2592000)](https://expo.io/@bacon)
  [![Github Pages](https://img.shields.io/badge/Portfolio-EvanBacon-4078c0.svg?maxAge=2592000)](http://EvanBacon.github.io)
  [![LinkedIn](https://img.shields.io/badge/LinkedIn-EvanBacon-007bb5.svg?maxAge=2592000)](https://www.linkedin.com/in/evan-bacon-10605b58)
-
+[![reactnative.gallery](https://img.shields.io/badge/reactnative.gallery-%F0%9F%8E%AC-green.svg)](https://reactnative.gallery)
 ----
 
 ## Disclaimer
