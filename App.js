@@ -53,29 +53,10 @@ export default class App extends React.Component {
   };
 
   componentWillMount() {
-    Audio.setAudioModeAsync({
-      allowsRecordingIOS: false,
-      interruptionModeIOS: Audio.INTERRUPTION_MODE_IOS_DO_NOT_MIX,
-      playsInSilentModeIOS: true,
-      shouldDuckAndroid: true,
-      interruptionModeAndroid: Audio.INTERRUPTION_MODE_ANDROID_DO_NOT_MIX
-    });
-    
-    // Audio.setIsEnabledAsync({})
-    
-    // Audio.setAudioModeAsync({
-    //   allowsRecordingIOS: false,
-    //   interruptionModeIOS: Audio.INTERRUPTION_MODE_IOS_DO_NOT_MIX,
-    //   playsInSilentLockedModeIOS: false,
-    //   shouldDuckAndroid: true,
-    //   interruptionModeAndroid: Audio.INTERRUPTION_MODE_ANDROID_DO_NOT_MIX,
-    // });
+    Audio.setIsEnabledAsync(true)
     this._loadAssetsAsync();
-    
-
     this.persister = persistStore(store, storeSettings, () => {
       console.log("Rehydrated");
-      // console.warn(JSON.stringify(store.getState()))
       this.setState({ rehydrated: true })
     }).purge(['nav', 'game', 'character']); /// Just in case ;)
   }
@@ -89,10 +70,10 @@ export default class App extends React.Component {
         ],
         audio: arrayFromObject(AudioFiles)
       });
-
+      
       await modelLoader.loadModels();
     } catch (e) {
-      console.warn(
+      console.log(
         'There was an error caching assets (see: main.js), perhaps due to a ' +
         'network timeout, so we skipped caching. Reload the app to try again.'
       );
