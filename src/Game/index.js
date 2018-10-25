@@ -35,8 +35,7 @@ import Rows from '../Row';
 import { Fill } from '../Row/Grass'
 const AnimatedGestureRecognizer = Animated.createAnimatedComponent(GestureRecognizer);
 
-@connectGameState
-@connectCharacter
+
 class Game extends Component {
   /// Reserve State for UI related updates...
   state = { ready: false, score: 0, };
@@ -877,4 +876,4 @@ export default connect(
   }),
   {
   }
-)(Game);
+)(connectGameState(connectCharacter(Game)));

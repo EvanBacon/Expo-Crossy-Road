@@ -10,7 +10,7 @@ import Colors from '../../Colors';
 import Characters from '../../Characters';
 import connectCharacter from '../../utils/connectCharacter'
 
-@connectCharacter
+
 class CharacterSelect extends Component {
   state = {
     currentIndex: 0,
@@ -110,7 +110,7 @@ class CharacterSelect extends Component {
 
 import {connect} from 'react-redux';
 
-export default connect(state => ({}), {})(CharacterSelect)
+export default connect(state => ({}), {})(connectCharacter(CharacterSelect))
 
       CharacterSelect.defaultProps = {
         coins: 0
