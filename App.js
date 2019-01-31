@@ -22,7 +22,7 @@ export default class App extends React.Component {
       await Promise.all([Font.loadAsync({ retro: require('./assets/fonts/retro.ttf') })]);
       await ModelLoader.loadModels();
     } catch (e) {
-      console.log({ e });
+      console.warn(e);
     } finally {
       this.setState({ appIsReady: true });
     }

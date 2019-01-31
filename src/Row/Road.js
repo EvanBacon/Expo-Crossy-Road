@@ -61,7 +61,7 @@ export default class Road extends THREE.Object3D {
     super();
     this.heroWidth = heroWidth;
     this.onCollide = onCollide;
-    const { _road, _car } = ModelLoader;
+    const { _road } = ModelLoader;
 
     this.road = _road.getNode('0');
     this.add(this.road);
@@ -77,7 +77,7 @@ export default class Road extends THREE.Object3D {
   };
 
   drive = ({ dt, player, car }) => {
-    const { position, hitBy, moving } = player;
+    const { hitBy } = player;
     const offset = 11;
 
     car.mesh.position.x += car.speed;

@@ -1,4 +1,4 @@
-import Generic from '../Generic';
+import Generic from './Generic';
 
 export default class TrainLight extends Generic {
   setup = async () => {

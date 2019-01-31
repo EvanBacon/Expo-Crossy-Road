@@ -17,8 +17,7 @@ import Hand from './Hand';
 import State from '../../state';
 
 import { setGameState } from '../../actions/game';
-const { width, height } = Dimensions.get('window');
-const AniamtedRetroText = Animated.createAnimatedComponent(RetroText);
+const { width } = Dimensions.get('window');
 class Screen extends Component {
   animation = new Animated.Value(0);
   componentDidMount() {

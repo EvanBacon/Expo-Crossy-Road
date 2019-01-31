@@ -10,31 +10,27 @@ export default class Smoke {
     });
     this.mesh = new THREE.Group();
     const size = 0.1;
-    var bigParticleGeom = new THREE.CubeGeometry(size, size, 0.01, 1);
-    // var smallParticleGeom = new THREE.CubeGeometry(0.1, 0.1, 0.1, 1);
+    let bigParticleGeom = new THREE.CubeGeometry(size, size, 0.01, 1);
+    // let smallParticleGeom = new THREE.CubeGeometry(0.1, 0.1, 0.1, 1);
     this.parts = [];
-    for (var i = 0; i < 10; i++) {
-      var partPink = new THREE.Mesh(bigParticleGeom, this.waterMat);
-      // var partGreen = new THREE.Mesh(smallParticleGeom, this.waterMat);
+    for (let i = 0; i < 10; i++) {
+      let partPink = new THREE.Mesh(bigParticleGeom, this.waterMat);
+      // let partGreen = new THREE.Mesh(smallParticleGeom, this.waterMat);
       this.parts.push(partPink);
       this.mesh.add(partPink);
     }
   }
 
   run = (type, direction) => {
-    var explosionSpeed = 0.3;
+    let explosionSpeed = 0.3;
 
-    const removeParticle = p => {
-      p.visible = false;
-    };
-
-    for (var i = 0; i < this.parts.length; i++) {
+    for (let i = 0; i < this.parts.length; i++) {
       let m = direction < 0 ? -1 : 1;
 
-      var tx = (Math.random() * 1.0 + 3) * m;
-      var ty = Math.random() * 1.0 + 1;
-      var tz = Math.random() * 2.0;
-      var p = this.parts[i];
+      let tx = (Math.random() * 1.0 + 3) * m;
+      let ty = Math.random() * 1.0 + 1;
+      let tz = Math.random() * 2.0;
+      let p = this.parts[i];
 
       const bezier = {
         type: 'cubic',
@@ -51,7 +47,7 @@ export default class Smoke {
       p.position.set(0, 0, 0);
       p.scale.set(1, 1, 1);
       p.visible = true;
-      var s = explosionSpeed + Math.random() * 0.5;
+      let s = explosionSpeed + Math.random() * 0.5;
 
       TweenMax.to(p.position, s * 5, {
         bezier,

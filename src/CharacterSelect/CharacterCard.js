@@ -3,12 +3,10 @@ import { StyleSheet, View } from 'react-native';
 import * as THREE from 'three';
 
 import ModelLoader from '../../ModelLoader';
-import Node from '../Node';
 
 // import createTHREEViewClass from '../createTHREEViewClass';
 // const THREEView = Expo.createTHREEViewClass(THREE);
 const size = 150;
-const { Hero, Car, Log, Road, Grass, River, Tree, Train, RailRoad } = Node;
 
 export default class CharacterCard extends Component {
   scale = 0.5;

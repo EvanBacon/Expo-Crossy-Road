@@ -3,29 +3,35 @@ import React, { Component } from 'react';
 import { Share, StyleSheet, View } from 'react-native';
 import { connect } from 'react-redux';
 
-import Characters from '../../Characters';
-import Colors from '../../Colors';
-import Images from '../../Images';
-import Button from '../Button';
-import RetroText from '../RetroText';
+import Characters from '../Characters';
+import Colors from '../Colors';
+import Images from '../Images';
+import Button from './Button';
+import RetroText from './RetroText';
 
 // import Footer from './Footer';
 
-const TitleButton = ({ text, imageStyle, source, onPress }) => (
-  <View
-    style={{
-      justifyContent: 'center',
-      width: 115,
-      height: 100,
-      alignItems: 'center',
-      marginHorizontal: 4,
-    }}>
-    <Button imageStyle={imageStyle} source={source} onPress={onPress} />
-    <RetroText style={{ textAlign: 'center', color: 'white', fontSize: 12, marginTop: 8 }}>
-      {text.toUpperCase()}
-    </RetroText>
-  </View>
-);
+class TitleButton extends React.Component {
+  render() {
+    const { text, imageStyle, source, onPress } = this.props;
+
+    return (
+      <View
+        style={{
+          justifyContent: 'center',
+          width: 115,
+          height: 100,
+          alignItems: 'center',
+          marginHorizontal: 4,
+        }}>
+        <Button imageStyle={imageStyle} source={source} onPress={onPress} />
+        <RetroText style={{ textAlign: 'center', color: 'white', fontSize: 12, marginTop: 8 }}>
+          {text.toUpperCase()}
+        </RetroText>
+      </View>
+    );
+  }
+}
 
 class Settings extends Component {
   state = {

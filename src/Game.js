@@ -1,34 +1,28 @@
-import { Audio, Constants, GLView } from 'expo';
-import ExpoTHREE from '../../ExpoTHREE';
-import { Bounce, Power4, TimelineMax,Power1, TweenMax } from 'gsap';
+import { Audio, GLView } from 'expo';
+import { Bounce, Power1, Power4, TimelineMax, TweenMax } from 'gsap';
 import React, { Component } from 'react';
-import { Animated, Dimensions, StyleSheet, InteractionManager, TouchableWithoutFeedback, Vibration, View } from 'react-native';
-import { NavigationActions } from 'react-navigation';
+import { Dimensions, InteractionManager, StyleSheet, Vibration, View } from 'react-native';
 import * as THREE from 'three';
-// import Touchable from '../Touchable';
-import ModelLoader from '../../ModelLoader';
 
-import Characters from '../../Characters'
+import AudioFiles from '../Audio';
+import Characters from '../Characters';
+import ExpoTHREE from '../ExpoTHREE';
+import ModelLoader from '../ModelLoader';
+import State from '../state';
+import GameOver from './GameOver';
+import GestureRecognizer, { swipeDirections } from './GestureView';
+import Feathers from './Particles/Feathers';
+import Water from './Particles/Water';
+import Rows from './Row';
+import { Fill } from './Row/Grass';
+import Score from './Score';
+
 const initialState = {
   id: Characters.chicken.id,
   name: Characters.chicken.name,
   index: Characters.chicken.index,
-}
+};
 
-import AudioFiles from '../../Audio';
-import State from '../../state';
-import GestureRecognizer, { swipeDirections } from '../GestureView';
-import Feathers from '../Particles/Feathers';
-import Water from '../Particles/Water';
-import Rows from '../Row';
-import { Fill } from '../Row/Grass';
-import Score from './Score';
-import GameOver from '../GameOver';
-
-// import connectCharacter from '../../utils/connectCharacter';
-// import connectGameState from '../../utils/connectGameState';
-// import createTHREEViewClass from '../../utils/createTHREEViewClass';
-// const THREEView = createTHREEViewClass(THREE);
 const { width, height } = Dimensions.get('window');
 
 
@@ -42,8 +36,6 @@ console.ignoredYellowBox = [
 export const groundLevel = 0.4;
 const sceneColor = 0x6dceea;
 const startingRow = 8;
-
-const AnimatedGestureRecognizer = Animated.createAnimatedComponent(GestureRecognizer);
 
 class Game extends Component {
   /// Reserve State for UI related updates...
@@ -110,7 +102,7 @@ class Game extends Component {
   };
 
   playPassiveCarSound = () => {
-    if (Math.floor(Math.random() * 2) == 0) {
+    if (Math.floor(Math.random() * 2) === 0) {
       this.playSound(AudioFiles.car.passive['1']);
     }
   };
@@ -190,13 +182,13 @@ class Game extends Component {
     this.world.add(this.featherParticles.mesh);
   };
 
-  useParticle = (model, type, direction) => {
-    requestAnimationFrame(async _ => {
+  useParticle = (model, type, direction = 0) => {
+    requestAnimationFrame(async () => {
       if (type === 'water') {
         this.waterParticles.mesh.position.copy(model.position);
         this.waterParticles.run(type);
         // await this.waterSoundObject.playAsync();
-      } else if (type == 'feathers') {
+      } else if (type === 'feathers') {
         this.featherParticles.mesh.position.copy(model.position);
 
         this.featherParticles.run(type, direction);
@@ -213,8 +205,8 @@ class Game extends Component {
     light.shadow.mapSize.width = 1024 * 2;
     light.shadow.mapSize.height = 1024 * 2;
 
-    var d = 15;
-    var v = 6;
+    let d = 15;
+    let v = 6;
     light.shadow.camera.left = -d;
     light.shadow.camera.right = 9;
     light.shadow.camera.top = v;
@@ -226,7 +218,7 @@ class Game extends Component {
 
     this.light = light;
 
-    var helper = new THREE.CameraHelper(light.shadow.camera);
+    // let helper = new THREE.CameraHelper(light.shadow.camera);
     // this.scene.add(helper);
   };
 
@@ -253,10 +245,10 @@ class Game extends Component {
     box3.setFromObject(mesh);
     return Math.round(box3.max.x - box3.min.x);
   };
-  getDepth = mesh => {
-    let box3 = new THREE.Box3();
-    box3.setFromObject(mesh);
 
+  getDepth = mesh => {
+    const box3 = new THREE.Box3();
+    box3.setFromObject(mesh);
     return Math.round(box3.max.z - box3.min.z);
   };
 
@@ -311,8 +303,8 @@ class Game extends Component {
     this.init();
   };
 
-  onCollide = (obstacle, type = 'feathers', collision) => {
-    if (this.state.gameState != State.Game.playing) {
+  onCollide = (obstacle = {}, type = 'feathers', collision) => {
+    if (this.state.gameState !== State.Game.playing) {
       return;
     }
     if (collision === 'car') {
@@ -323,7 +315,7 @@ class Game extends Component {
       this.playDeathSound();
     }
     this._hero.isAlive = false;
-    this.useParticle(this._hero, type, (obstacle || {}).speed || 0);
+    this.useParticle(this._hero, type, obstacle.speed);
     this.rumbleScreen();
     this.gameOver();
   };
@@ -408,23 +400,22 @@ class Game extends Component {
       return Fill.solid;
     } else if (this.rowCount < 10) {
       return Fill.empty;
-    } else {
-      return Fill.random;
     }
+    return Fill.random;
   };
 
   // Scene generators
   newRow = rowKind => {
-    if (this.grassCount == this.maxRows) {
+    if (this.grassCount === this.maxRows) {
       this.grassCount = 0;
     }
-    if (this.roadCount == this.maxRows) {
+    if (this.roadCount === this.maxRows) {
       this.roadCount = 0;
     }
-    if (this.waterCount == this.maxRows) {
+    if (this.waterCount === this.maxRows) {
       this.waterCount = 0;
     }
-    if (this.railRoadCount == this.maxRows) {
+    if (this.railRoadCount === this.maxRows) {
       this.railRoadCount = 0;
     }
     if (this.rowCount < 10) {
@@ -441,23 +432,21 @@ class Game extends Component {
         this.lastRk = rk;
         break;
       case 2:
-        {
-          if (((Math.random() * 4) | 0) == 0) {
-            this.railRoads[this.railRoadCount].position.z = this.rowCount;
-            this.railRoads[this.railRoadCount].active = true;
-            this.floorMap[`${this.rowCount}`] = {
-              type: 'railRoad',
-              entity: this.railRoads[this.railRoadCount],
-            };
-            this.railRoadCount++;
-            this.lastRk = rk + 1000;
-          } else {
-            this.road[this.roadCount].position.z = this.rowCount;
-            this.road[this.roadCount].active = true;
-            this.floorMap[`${this.rowCount}`] = { type: 'road', entity: this.road[this.roadCount] };
-            this.roadCount++;
-            this.lastRk = rk;
-          }
+        if (((Math.random() * 4) | 0) === 0) {
+          this.railRoads[this.railRoadCount].position.z = this.rowCount;
+          this.railRoads[this.railRoadCount].active = true;
+          this.floorMap[`${this.rowCount}`] = {
+            type: 'railRoad',
+            entity: this.railRoads[this.railRoadCount],
+          };
+          this.railRoadCount++;
+          this.lastRk = rk + 1000;
+        } else {
+          this.road[this.roadCount].position.z = this.rowCount;
+          this.road[this.roadCount].active = true;
+          this.floorMap[`${this.rowCount}`] = { type: 'road', entity: this.road[this.roadCount] };
+          this.roadCount++;
+          this.lastRk = rk;
         }
         break;
 
@@ -576,13 +565,13 @@ class Game extends Component {
   tick = dt => {
     // this.drive();
 
-    for (let railRoad of this.railRoads) {
+    for (const railRoad of this.railRoads) {
       railRoad.update(dt, this._hero);
     }
-    for (let road of this.road) {
+    for (const road of this.road) {
       road.update(dt, this._hero);
     }
-    for (let water of this.water) {
+    for (const water of this.water) {
       water.update(dt, this._hero);
     }
 
@@ -665,11 +654,11 @@ class Game extends Component {
         if (!this.treeCollision('up')) {
           const row = (this.floorMap[`${this.initialPosition.z + 1}`] || {}).type;
 
-          if (row == 'road') {
+          if (row === 'road') {
             this.playPassiveCarSound();
           }
 
-          let shouldRound = row != 'water';
+          let shouldRound = row !== 'water';
           this.targetPosition = {
             x: this.initialPosition.x,
             y: this.initialPosition.y,
@@ -696,7 +685,7 @@ class Game extends Component {
         this._hero.rotation.y = Math.PI;
         if (!this.treeCollision('down')) {
           const row = (this.floorMap[`${this.initialPosition.z - 1}`] || {}).type;
-          let shouldRound = row != 'water';
+          let shouldRound = row !== 'water';
           this.targetPosition = {
             x: this.initialPosition.x,
             y: this.initialPosition.y,
@@ -791,7 +780,7 @@ class Game extends Component {
     });
   };
 
-  onSwipe = (gestureName) => this.moveWithDirection(gestureName);
+  onSwipe = gestureName => this.moveWithDirection(gestureName);
 
   renderGame = () => {
     if (!this.state.ready) {
@@ -870,6 +859,5 @@ class Game extends Component {
     );
   }
 }
-
 
 export default Game;

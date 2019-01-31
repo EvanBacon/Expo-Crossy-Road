@@ -10,11 +10,11 @@ export default class Water {
     });
     this.mesh = new THREE.Group();
     const size = 0.2;
-    var bigParticleGeom = new THREE.CubeGeometry(size, size + 0.1, size, 1);
+    const bigParticleGeom = new THREE.CubeGeometry(size, size + 0.1, size, 1);
     // var smallParticleGeom = new THREE.CubeGeometry(0.1, 0.1, 0.1, 1);
     this.parts = [];
-    for (var i = 0; i < 15; i++) {
-      var partPink = new THREE.Mesh(bigParticleGeom, this.waterMat);
+    for (let i = 0; i < 15; i++) {
+      let partPink = new THREE.Mesh(bigParticleGeom, this.waterMat);
       // var partGreen = new THREE.Mesh(smallParticleGeom, this.waterMat);
       this.parts.push(partPink);
       this.mesh.add(partPink);
@@ -22,17 +22,17 @@ export default class Water {
   }
 
   run = () => {
-    var explosionSpeed = 0.3;
+    const explosionSpeed = 0.3;
 
     const removeParticle = p => {
       p.visible = false;
     };
 
-    for (var i = 0; i < this.parts.length; i++) {
-      var tx = -1.0 + Math.random() * 1.0;
-      var ty = Math.random() * 2.0 + 1;
-      var tz = -1.0 + Math.random() * 1.0;
-      var p = this.parts[i];
+    for (let i = 0; i < this.parts.length; i++) {
+      let tx = -1.0 + Math.random() * 1.0;
+      let ty = Math.random() * 2.0 + 1;
+      let tz = -1.0 + Math.random() * 1.0;
+      let p = this.parts[i];
 
       const bezier = {
         type: 'cubic',
@@ -50,7 +50,7 @@ export default class Water {
       p.position.set(0, 0, 0);
       p.scale.set(1, 1, 1);
       p.visible = true;
-      var s = explosionSpeed + Math.random() * 0.5;
+      const s = explosionSpeed + Math.random() * 0.5;
 
       TweenMax.to(p.position, s * 4, {
         bezier,

@@ -21,7 +21,7 @@ class CharacterSelect extends Component {
   };
 
   pickRandom = () => {
-    const { characters, currentIndex } = this.state;
+    const { characters } = this.state;
 
     const randomIndex = Math.floor(Math.random() * (characters.length - 1));
     const randomCharacter = characters[randomIndex];

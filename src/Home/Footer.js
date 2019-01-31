@@ -50,7 +50,7 @@ export default class Footer extends Component {
 
         <View style={{ flexDirection: 'column-reverse' }}>
           <Button
-            onPress={_ => {
+            onPress={() => {
               this.setState({ menuOpen: !this.state.menuOpen });
             }}
             style={[{ opacity: this.state.menuOpen ? 0.8 : 1.0 }, imageStyle]}

@@ -13,10 +13,10 @@ export default class Foam {
     });
     this.mesh = new THREE.Group();
     const size = 0.6;
-    var bigParticleGeom = new THREE.PlaneGeometry(size, size, 1);
+    let bigParticleGeom = new THREE.PlaneGeometry(size, size, 1);
     this.parts = [];
-    for (var i = 0; i < 6; i++) {
-      var particle = new THREE.Mesh(bigParticleGeom, this.waterMat);
+    for (let i = 0; i < 6; i++) {
+      let particle = new THREE.Mesh(bigParticleGeom, this.waterMat);
       particle.rotation.x = Math.PI / 2;
       this.parts.push(particle);
       this.mesh.add(particle);
@@ -35,11 +35,6 @@ export default class Foam {
         // ease: Bounce.easeOut,
       });
 
-    var explosionSpeed = 0.3;
-
-    const removeParticle = p => {
-      p.visible = false;
-    };
     const setup = (n, i) => {
       n.position.set(rand({ min: -0.1, max: 0.1 }), 0, (0.6 / this.parts.length) * i + 0.2);
       n.visible = true;
@@ -74,7 +69,7 @@ export default class Foam {
 
           TweenMax.to(n.position, lDuration, {
             x: n.position.x + rand({ min: 0.2, max: 1.0 }) * this.direction,
-            onComplete: _ => runAnimation(n, i),
+            onComplete: () => runAnimation(n, i),
           });
         },
       });
@@ -85,9 +80,8 @@ export default class Foam {
       animate(n, i);
     };
 
-    for (var i = 0; i < this.parts.length; i++) {
-      let m = direction < 0 ? -1 : 1;
-      var p = this.parts[i];
+    for (let i = 0; i < this.parts.length; i++) {
+      let p = this.parts[i];
       runAnimation(p, i);
     }
   };

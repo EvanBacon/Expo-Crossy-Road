@@ -1,20 +1,15 @@
-import Node from './src/Node';
-
-//a
-const {
-  Hero,
-  Car,
-  Log,
-  Road,
-  Grass,
-  River,
-  Tree,
-  Train,
-  Boulder,
-  RailRoad,
-  TrainLight,
-  LilyPad,
-} = Node;
+import Hero from './src/Node/Hero';
+import Car from './src/Node/Car';
+import Log from './src/Node/Log';
+import Road from './src/Node/Road';
+import Grass from './src/Node/Grass';
+import River from './src/Node/River';
+import Tree from './src/Node/Tree';
+import Train from './src/Node/Train';
+import Boulder from './src/Node/Boulder';
+import RailRoad from './src/Node/RailRoad';
+import TrainLight from './src/Node/TrainLight';
+import LilyPad from './src/Node/LilyPad';
 
 class ModelLoader {
   loadModels = async () => {

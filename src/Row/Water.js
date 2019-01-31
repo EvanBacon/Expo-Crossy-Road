@@ -8,6 +8,8 @@ import Foam from '../Particles/Foam';
 export default class Water extends THREE.Object3D {
   active = false;
   entities = [];
+  sineCount = 0;
+  sineInc = Math.PI / 50;
 
   getWidth = mesh => {
     let box3 = new THREE.Box3();
@@ -145,7 +147,7 @@ export default class Water extends THREE.Object3D {
 
   ///Is Lily
   isStaticRow = index => {
-    return index % 2 == 0; //&& (Math.random() * 2 == 0)
+    return index % 2 === 0; //&& (Math.random() * 2 == 0)
   };
 
   update = (dt, player) => {
@@ -161,7 +163,6 @@ export default class Water extends THREE.Object3D {
   };
 
   move = ({ dt, player, entity }) => {
-    const { position, ridingOn, moving } = player;
     const offset = 11;
 
     entity.mesh.position.x += entity.speed;
@@ -174,11 +175,8 @@ export default class Water extends THREE.Object3D {
     }
   };
 
-  sineCount = 0;
-  sineInc = Math.PI / 50;
-
   shouldCheckHazardCollision = ({ player }) => {
-    if (Math.round(player.position.z) == this.position.z && !player.moving) {
+    if (Math.round(player.position.z) === this.position.z && !player.moving) {
       if (!player.ridingOn) {
         if (player.isAlive) {
           this.onCollide(this.floor, 'water');
@@ -195,7 +193,7 @@ export default class Water extends THREE.Object3D {
   };
 
   shouldCheckCollision = ({ player, entity }) => {
-    if (Math.round(player.position.z) == this.position.z && player.isAlive) {
+    if (Math.round(player.position.z) === this.position.z && player.isAlive) {
       const { mesh, collisionBox } = entity;
 
       if (
