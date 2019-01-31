@@ -2,7 +2,6 @@ import * as THREE from 'three';
 
 import Generic from './Generic';
 
-// const {THREE} = global;
 export default class Train extends Generic {
   getDepth = mesh => {
     let box3 = new THREE.Box3();

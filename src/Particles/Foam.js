@@ -1,12 +1,9 @@
 import { Bounce, Power2, TweenMax } from 'gsap';
-import React, { Component } from 'react';
 
-let THREE;
+import * as THREE from 'three';
 
-//// TODO: use vertices
 export default class Foam {
-  constructor(_THREE, direction) {
-    THREE = _THREE;
+  constructor(direction) {
     this.direction = direction;
     this.waterMat = new THREE.MeshPhongMaterial({
       color: 0xffffff,

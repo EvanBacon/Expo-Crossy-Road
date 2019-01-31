@@ -1,9 +1,8 @@
 import { Bounce, TweenMax } from 'gsap';
 
-let THREE;
+import * as THREE from 'three';
 export default class Water {
-  constructor(_THREE) {
-    THREE = _THREE;
+  constructor() {
     this.waterMat = new THREE.MeshPhongMaterial({
       color: 0x71d7ff,
       // shading: THREE.FlatShading,

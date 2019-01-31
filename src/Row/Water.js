@@ -136,7 +136,7 @@ export default class Water extends THREE.Object3D {
     this.floor = _river.getNode();
     this.add(this.floor);
 
-    let foam = new Foam(THREE, 1);
+    let foam = new Foam(1);
     foam.mesh.position.set(4.5, 0.2, -0.5);
     foam.mesh.visible = true;
     foam.run();

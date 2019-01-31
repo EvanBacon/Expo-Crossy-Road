@@ -33,9 +33,9 @@ const { width, height } = Dimensions.get('window');
 
 
 console.ignoredYellowBox = [
-  'extension not supported'
-  // 'THREE.WebGLRenderer',
-  // 'THREE.WebGLProgram',
+  'WebGL',
+  'THREE.WebGLRenderer',
+  'THREE.WebGLProgram',
 ];
 
 
@@ -54,6 +54,7 @@ class Game extends Component {
     gameState: State.Game.playing 
     // gameState: State.Game.gameOver
   };
+  floorMap = {};
 
   maxRows = 20;
   sineCount = 0;
@@ -182,10 +183,10 @@ class Game extends Component {
   }
 
   createParticles = () => {
-    this.waterParticles = new Water(THREE);
+    this.waterParticles = new Water();
     this.world.add(this.waterParticles.mesh);
 
-    this.featherParticles = new Feathers(THREE);
+    this.featherParticles = new Feathers();
     this.world.add(this.featherParticles.mesh);
   };
 
@@ -194,7 +195,7 @@ class Game extends Component {
       if (type === 'water') {
         this.waterParticles.mesh.position.copy(model.position);
         this.waterParticles.run(type);
-        await this.waterSoundObject.playAsync();
+        // await this.waterSoundObject.playAsync();
       } else if (type == 'feathers') {
         this.featherParticles.mesh.position.copy(model.position);
 
@@ -268,16 +269,18 @@ class Game extends Component {
   doGame = async () => {
     this.timing = 0.1;
 
-    // Variables
-    (this.grass = []), (this.grassCount = 0); //
-    (this.water = []), (this.waterCount = 0); // Terrain tiles
-    (this.road = []), (this.roadCount = 0); //
-    (this.railRoads = []), (this.railRoadCount = 0); //
-
+    this.grass = [];
+    this.grassCount = 0;
+    this.water = [];
+    this.waterCount = 0;
+    this.road = [];
+    this.roadCount = 0;
+    this.railRoads = []; 
+    this.railRoadCount = 0;
     this.lastHeroZ = 8;
-
     this.rowCount = 0;
-    (this.camCount = 0), (this.camSpeed = 0.02);
+    this.camCount = 0;
+    this.camSpeed = 0.02;
     this.heroWidth = 0.7;
 
     this.loadModels();
@@ -285,9 +288,7 @@ class Game extends Component {
     this.createLights();
 
     // Mesh
-    // console.warn(this.props.character.id)
     this._hero = this.hero.getNode(initialState.id);
-    //Custom Params
     this._hero.moving = false;
     this._hero.hitBy = null;
     this._hero.ridingOn = null;
@@ -297,33 +298,15 @@ class Game extends Component {
     // Assign mesh to corresponding array
     // and add mesh to scene
     for (let i = 0; i < this.maxRows; i++) {
-      this.grass[i] = new Rows.Grass(this.heroWidth); // this._railroad.getRandom();
-      this.water[i] = new Rows.Water(this.heroWidth, this.onCollide); // this._railroad.getRandom();
-      this.road[i] = new Rows.Road(this.heroWidth, this.onCollide); // this._railroad.getRandom();
-      this.railRoads[i] = new Rows.RailRoad(this.heroWidth, this.onCollide); // this._railroad.getRandom();
+      this.grass[i] = new Rows.Grass(this.heroWidth);
+      this.water[i] = new Rows.Water(this.heroWidth, this.onCollide);
+      this.road[i] = new Rows.Road(this.heroWidth, this.onCollide);
+      this.railRoads[i] = new Rows.RailRoad(this.heroWidth, this.onCollide);
       this.world.add(this.grass[i]);
       this.world.add(this.water[i]);
       this.world.add(this.road[i]);
       this.world.add(this.railRoads[i]);
     }
-
-    // // Repeat above for terrain objects
-    // for (i = 0; i < 20; i++) {
-    //   const mesh = this._lilyPad.getRandom();
-    //
-    //   TweenMax.to(mesh.rotation, (Math.random() * 2) + 2, {
-    //     y: (Math.random() * 1.5) + 0.5,
-    //     yoyo: true,
-    //     repeat: -1,
-    //     ease: Power1.easeInOut
-    //   });
-    //
-    //   const width = this.getWidth(mesh);
-    //   this.lilys[i] = {mesh, width, collisionBox: (this.heroWidth / 2 + width / 2 - .1) };
-    //   this.world.add(mesh);
-    //
-    //
-    // }
 
     this.init();
   };
@@ -374,7 +357,8 @@ class Game extends Component {
 
     this.featherParticles.mesh.position.copy(this._hero.position);
     this.waterParticles.mesh.position.copy(this._hero.position);
-    this.featherParticles.mesh.position.y = this.waterParticles.mesh.position.y = 0;
+    this.featherParticles.mesh.position.y = 0;
+    this.waterParticles.mesh.position.y = 0;
 
     this.map = {};
     this.camCount = 0;
@@ -429,7 +413,6 @@ class Game extends Component {
     }
   };
 
-  floorMap = {};
   // Scene generators
   newRow = rowKind => {
     if (this.grassCount == this.maxRows) {
@@ -610,20 +593,18 @@ class Game extends Component {
     this.forwardScene();
   };
 
-  ///TODO: Fix
   checkIfUserHasFallenOutOfFrame = () => {
     if (this.state.gameState !== State.Game.playing) {
       return;
     }
     if (this._hero.position.z < this.camera.position.z - 1) {
-      ///TODO: rumble
       this.rumbleScreen();
       this.gameOver();
       this.playDeathSound();
     }
-    /// Check if offscreen
+
+    // Check if offscreen
     if (this._hero.position.x < -5 || this._hero.position.x > 5) {
-      ///TODO: Rumble death
       this.rumbleScreen();
       this.gameOver();
       this.playDeathSound();
@@ -638,7 +619,7 @@ class Game extends Component {
   };
 
   moveWithDirection = direction => {
-    if (this.state.gameState != State.Game.playing) {
+    if (this.state.gameState !== State.Game.playing) {
       return;
     }
 
@@ -747,7 +728,6 @@ class Game extends Component {
     };
 
     this.playMoveSound();
-    let timing = 0.5;
 
     this.heroAnimations = [];
 
@@ -825,17 +805,15 @@ class Game extends Component {
 
     return (
         <GestureRecognizer
-        onResponderGrant={() => {
+          onResponderGrant={() => {
             this.beginMoveWithDirection();
           }}
-          onSwipe={(direction, state) => { 
-            
+          onSwipe={(direction) => { 
               this.onSwipe(direction)
           }}
           config={config}
           onTap={() => {
-            this.onSwipe(swipeDirections.SWIPE_UP, {});
-
+            this.onSwipe(swipeDirections.SWIPE_UP);
           }} 
           style={{ flex: 1 }}>
           <GLView style={{ flex: 1 }} onContextCreate={this._onGLContextCreate} />
@@ -858,7 +836,7 @@ class Game extends Component {
 
     const render = () => {
       requestAnimationFrame(render);
-      var time = Date.now();
+      const time = Date.now();
       this.tick(time);
       this.renderer.render(this.scene, this.camera);
 
@@ -874,10 +852,13 @@ class Game extends Component {
     }
 
     return (
-      <View style={StyleSheet.absoluteFillObject}><GameOver onRestart={() => {
-      // this.setState({ gameState: State.Game.playing })
-      this.updateWithGameState(State.Game.playing)
-    }}/></View>)
+      <View style={StyleSheet.absoluteFillObject}>
+        <GameOver onRestart={() => {
+          this.updateWithGameState(State.Game.playing)
+          }}
+        />
+      </View>
+    );
   }
   render() {
     return (
@@ -892,11 +873,3 @@ class Game extends Component {
 
 
 export default Game;
-
-// export default connect(
-//   state => ({
-//     nav: state.nav
-//   }),
-//   {
-//   }
-// )(connectGameState(connectCharacter(Game)));

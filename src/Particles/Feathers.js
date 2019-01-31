@@ -1,12 +1,9 @@
 import { TweenMax } from 'gsap';
-import React, { Component } from 'react';
 
-let THREE;
-//// TODO: use vertices
+import * as THREE from 'three';
 
 export default class Feathers {
-  constructor(_THREE) {
-    THREE = _THREE;
+  constructor() {
     this.waterMat = new THREE.MeshPhongMaterial({
       color: 0xffffff,
       flatShading: true,

@@ -66,7 +66,6 @@ class GestureView extends Component {
   onKeyDown = e => {
     const direction = keyMap[e.code];
     if (direction) {
-      // this.props.onStartGesture({ direction });
       this.props.onResponderGrant();
     }
   };
@@ -74,13 +73,11 @@ class GestureView extends Component {
   onKeyUp = e => {
     const direction = keyMap[e.code];
     if (direction) {
-      // this.props.onEndGesture({ direction });
       this.props.onSwipe(direction);
     }
   };
 
   _handleShouldSetPanResponder = (evt, gestureState) => {
-    console.log('_handleShouldSetPanResponder', this._gestureIsClick(gestureState), gestureState);
     return evt.nativeEvent.touches.length === 1;
   };
 
@@ -96,7 +93,6 @@ class GestureView extends Component {
   _triggerSwipeHandlers = (swipeDirection, gestureState) => {
     const { onSwipe, onSwipeUp, onSwipeDown, onSwipeLeft, onSwipeRight, onTap } = this.props;
     const { SWIPE_LEFT, SWIPE_RIGHT, SWIPE_UP, SWIPE_DOWN } = swipeDirections;
-    console.log('SWIPE', swipeDirection, gestureState);
     onSwipe && onSwipe(swipeDirection, gestureState);
     switch (swipeDirection) {
       case SWIPE_LEFT:

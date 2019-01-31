@@ -1,12 +1,8 @@
 import { TweenMax } from 'gsap';
-import React, { Component } from 'react';
-
-let THREE;
-//// TODO: use vertices
+import * as THREE from 'three';
 
 export default class Smoke {
-  constructor(_THREE) {
-    THREE = _THREE;
+  constructor() {
     this.waterMat = new THREE.MeshPhongMaterial({
       color: 0x192b31,
       // shading: THREE.FlatShading,
