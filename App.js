@@ -1,79 +1,37 @@
-import '@expo/browser-polyfill';
-import './utils/disableLogs';
-
-import Expo from 'expo';
-import { THREE } from 'expo-three';
+import { Font } from 'expo';
 import React from 'react';
 import { View } from 'react-native';
 
-import Assets from './Assets';
-import Settings from './constants/Settings';
-import AudioManager from './AudioManager';
-import Gate from './rematch/Gate';
-import AppNavigator from './navigation/AppNavigator';
-import AssetUtils from 'expo-asset-utils';
+import * as THREE from 'three';
+import ModelLoader from './ModelLoader';
+import Game from './src/Game';
+
+global.THREE = THREE;
+require('three/examples/js/loaders/OBJLoader');
 
 export default class App extends React.Component {
-  state = { loading: true };
-
-  get loadingScreen() {
-    if (Settings.debug) {
-      return <View />;
-    } else {
-      return <Expo.AppLoading />;
-    }
-  }
-
-  get screen() {
-    return (
-      <Gate>
-        <AppNavigator />
-      </Gate>
-    );
-  }
-
-  componentWillMount() {
-    THREE.suppressExpoWarnings(true);
-    this._setupExperienceAsync();
-  }
-  componentWillUnmount() {
-    THREE.suppressExpoWarnings(false);
-  }
-
-  _setupExperienceAsync = async () => {
-    await Promise.all([
-      this._preloadAsync(),
-      ...AudioManager.sharedInstance.setupAsync(),
-    ]);
-    // await ModelLoader.shared.load();
-    this.setState({ loading: false });
+  persister;
+  state = {
+    appIsReady: false,
   };
 
-  get fonts() {
-    let items = {};
-    const keys = Object.keys(Assets.fonts || {});
-    for (let key of keys) {
-      const item = Assets.fonts[key];
-      const name = key.substr(0, key.lastIndexOf('.'));
-      items[name] = item;
+  async componentWillMount() {
+    // Audio.setIsEnabledAsync(true);
+
+    try {
+      await Promise.all([Font.loadAsync({ retro: require('./assets/fonts/retro.ttf') })]);
+      await ModelLoader.loadModels();
+    } catch (e) {
+      console.log({ e });
+    } finally {
+      this.setState({ appIsReady: true });
     }
-    return [items];
   }
-
-  get files() {
-    return [
-      ...AssetUtils.arrayFromObject(Assets.images || {}),
-      ...AssetUtils.arrayFromObject(Assets.models || {}),
-    ];
-  }
-
-  _preloadAsync = () =>
-    AssetUtils.cacheAssetsAsync({
-      fonts: this.fonts,
-      files: this.files,
-    });
 
   render() {
-    return this.state.loading ? this.loadingScreen : this.screen;
+    if (this.state.appIsReady) {
+      return <Game />;
+    }
+    return <View />;
   }
 }

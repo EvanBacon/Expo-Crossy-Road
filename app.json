@@ -4,7 +4,7 @@
     "description": "The endless arcade hopper you'll never want to put down",
     "slug": "crossy-road",
     "privacy": "public",
-    "sdkVersion": "26.0.0",
+    "sdkVersion": "32.0.0",
     "version": "1.0.0",
     "orientation": "portrait",
     "primaryColor": "#69CEED",
@@ -16,10 +16,11 @@
     },
     "loading": {
       "backgroundColor": "#69CEED",
-      "icon": "./assets/icons/loading.png",
+      "icon": "./assets/icons/expo.png",
       "hideExponentText": false
     },
     "packagerOpts": {
+      "config": "rn-cli.config.js",
       "assetExts": ["ttf", "mp4", "mp3", "obj", "wav", "mtl"]
     },
     "ios": {
