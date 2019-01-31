@@ -10,6 +10,7 @@ export default class Water extends THREE.Object3D {
   entities = [];
   sineCount = 0;
   sineInc = Math.PI / 50;
+  top = 0.25;
 
   getWidth = mesh => {
     let box3 = new THREE.Box3();

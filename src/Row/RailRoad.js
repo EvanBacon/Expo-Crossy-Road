@@ -9,6 +9,8 @@ import { groundLevel } from '../Game';
 export default class RailRoad extends THREE.Object3D {
   active = false;
 
+  top = 0.5;
+
   getWidth = mesh => {
     let box3 = new THREE.Box3();
     box3.setFromObject(mesh);

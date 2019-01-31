@@ -152,9 +152,7 @@ class Game extends Component {
     this.setupGame();
   }
 
-
   setupGame = () => {
-    console.log("setupGame");
     // if (!this.scene) {
       this.scene = new THREE.Scene();
       this.worldWithCamera = new THREE.Group();
@@ -166,6 +164,7 @@ class Game extends Component {
 
     this.worldWithCamera.position.z = -startingRow;
     this.camera.position.set(-1, 2.8, -2.9); // Change -1 to -.02
+    // this.camera.position.set(-1, 1, -2.9); // Change -1 to -.02
     this.camera.zoom = 110; // for birds eye view
     this.camera.updateProjectionMatrix();
     this.camera.lookAt(this.scene.position);
@@ -233,7 +232,11 @@ class Game extends Component {
   doneMoving = () => {
     this._hero.moving = false;
     this.updateScore();
-
+    if (this.idleAnimation) {
+      this.idleAnimation.play();
+    } else {
+      this.idle();
+    }
     this.lastHeroZ = this._hero.position.z;
     this._hero.lastPosition = this._hero.position;
 
@@ -307,6 +310,7 @@ class Game extends Component {
     if (this.state.gameState !== State.Game.playing) {
       return;
     }
+    this.stopIdle();
     if (collision === 'car') {
       this.playCarHitSound();
       this.playDeathSound();
@@ -321,14 +325,19 @@ class Game extends Component {
   };
 
   stopIdle = () => {
-    if (this.idleAnimation) {
-      this.idleAnimation.pause();
-      this.idleAnimation = null;
-      this._hero.scale.set(1, 1, 1);
+    if (!this.idleAnimation) {
+      return;
     }
+    this.idleAnimation.pause();
+    this.idleAnimation = null;
+    this._hero.scale.set(1, 1, 1);
+    
   };
 
   idle = () => {
+    if (this.idleAnimation) {
+      return;
+    }
     this.stopIdle();
 
     const s = 0.8;
@@ -466,8 +475,8 @@ class Game extends Component {
 
   // Detect collisions with trees/cars
   treeCollision = dir => {
-    var zPos = 0;
-    var xPos = 0;
+    let zPos = 0;
+    let xPos = 0;
     if (dir == 'up') {
       zPos = 1;
     } else if (dir == 'down') {
@@ -613,23 +622,26 @@ class Game extends Component {
     }
 
     const { SWIPE_UP, SWIPE_DOWN, SWIPE_LEFT, SWIPE_RIGHT } = swipeDirections;
-
+    
     this._hero.ridingOn = null;
-
+    
     if (!this.initialPosition) {
       this.initialPosition = this._hero.position;
       this.targetPosition = this.initialPosition;
     }
-
+    
     if (this._hero.moving) {
       this._hero.position = this.targetPosition;
       // return
     }
 
+    let velocity = { x: 0, z: 0};
     switch (direction) {
       case SWIPE_LEFT:
         this._hero.rotation.y = Math.PI / 2;
         if (!this.treeCollision('left')) {
+          velocity = { x: 1, z: 0 };
+
           this.targetPosition = {
             x: this.initialPosition.x + 1,
             y: this.initialPosition.y,
@@ -641,6 +653,8 @@ class Game extends Component {
       case SWIPE_RIGHT:
         this._hero.rotation.y = -Math.PI / 2;
         if (!this.treeCollision('right')) {
+          velocity = { x: -1, z: 0 };
+
           this.targetPosition = {
             x: this.initialPosition.x - 1,
             y: this.initialPosition.y,
@@ -652,13 +666,14 @@ class Game extends Component {
       case SWIPE_UP:
         this._hero.rotation.y = 0;
         if (!this.treeCollision('up')) {
-          const row = (this.floorMap[`${this.initialPosition.z + 1}`] || {}).type;
-
-          if (row === 'road') {
+          let rowObject = (this.floorMap[`${this.initialPosition.z}`] || {});
+          if (rowObject.type === 'road') {
             this.playPassiveCarSound();
           }
 
-          let shouldRound = row !== 'water';
+          let shouldRound = rowObject.type !== 'water';
+          velocity = { x: 0, z: 1 };
+
           this.targetPosition = {
             x: this.initialPosition.x,
             y: this.initialPosition.y,
@@ -686,6 +701,8 @@ class Game extends Component {
         if (!this.treeCollision('down')) {
           const row = (this.floorMap[`${this.initialPosition.z - 1}`] || {}).type;
           let shouldRound = row !== 'water';
+          velocity = { x: 0, z: -1 };
+
           this.targetPosition = {
             x: this.initialPosition.x,
             y: this.initialPosition.y,
@@ -710,11 +727,18 @@ class Game extends Component {
     }
     let { targetPosition, initialPosition } = this;
 
+    let rowObject = (this.floorMap[`${this.initialPosition.z + velocity.z}`] || {});
+    let finalY = rowObject.entity.top || groundLevel;
+
+    console.log("MOVE TO: ", rowObject.type, finalY, rowObject.entity.top)
+
     let delta = {
       x: targetPosition.x - initialPosition.x,
-      y: targetPosition.y - initialPosition.y,
+      y: finalY,
       z: targetPosition.z - initialPosition.z,
     };
+
+
 
     this.playMoveSound();
 
@@ -723,7 +747,7 @@ class Game extends Component {
     this.heroAnimations.push(
       TweenMax.to(this._hero.position, this.timing, {
         x: this.initialPosition.x + delta.x * 0.75,
-        y: groundLevel + 0.5,
+        y: finalY + 0.5,
         z: this.initialPosition.z + delta.z * 0.75,
       })
     );
@@ -756,11 +780,14 @@ class Game extends Component {
     this.heroAnimations.push(
       TweenMax.to(this._hero.position, this.timing, {
         x: this.targetPosition.x,
-        y: this.targetPosition.y,
+        y: finalY,
         z: this.targetPosition.z,
         ease: Power4.easeOut,
         delay: 0.151,
-        onComplete: this.doneMoving,
+        onComplete: () => {
+          console.log("Done", this._hero.position)
+          this.doneMoving()
+        },
         onCompleteParams: [],
       })
     );
@@ -768,10 +795,13 @@ class Game extends Component {
     this.initialPosition = this.targetPosition;
   };
 
+
   beginMoveWithDirection = direction => {
     if (this.state.gameState !== State.Game.playing) {
       return;
     }
+    this.idleAnimation.pause();
+
     TweenMax.to(this._hero.scale, 0.2, {
       x: 1.2,
       y: 0.75,

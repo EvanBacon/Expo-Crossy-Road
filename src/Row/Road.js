@@ -8,6 +8,8 @@ export default class Road extends THREE.Object3D {
   active = false;
   cars = [];
 
+  top = 0.3;
+
   getWidth = mesh => {
     let box3 = new THREE.Box3();
     box3.setFromObject(mesh);

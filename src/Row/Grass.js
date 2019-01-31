@@ -13,6 +13,7 @@ export default class Grass extends THREE.Object3D {
   active = false;
   entities = [];
 
+  top = 0.4;
   /*
 
 * Build Walls
