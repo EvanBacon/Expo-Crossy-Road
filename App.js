@@ -8,6 +8,7 @@ import GameScreen from './screens/GameScreen';
 
 global.THREE = THREE;
 require('three/examples/js/loaders/OBJLoader');
+require('three/examples/js/controls/OrbitControls');
 
 console.ignoredYellowBox = [
   'WebGL',

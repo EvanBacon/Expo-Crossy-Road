@@ -6,6 +6,7 @@ import ModelLoader from '../../ModelLoader';
 import AudioFiles from '../../Audio';
 import { groundLevel } from '../GameSettings';
 
+const IS_MUTED = true;
 export default class RailRoad extends THREE.Object3D {
   active = false;
 
@@ -146,6 +147,7 @@ export default class RailRoad extends THREE.Object3D {
     // this.playSound(AudioFiles.trainAlarm);
   };
   playSound = async audioFile => {
+    if (IS_MUTED) return;
     const soundObject = new Audio.Sound();
     try {
       await soundObject.loadAsync(audioFile);

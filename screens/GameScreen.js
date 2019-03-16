@@ -33,6 +33,8 @@ const { width, height } = Dimensions.get('window');
 
 import { groundLevel, sceneColor, startingRow } from '../src/GameSettings';
 
+const DEBUG_CAMERA_CONTROLS = false;
+
 class Game extends Component {
   /// Reserve State for UI related updates...
   state = {
@@ -42,7 +44,7 @@ class Game extends Component {
     gameState: State.Game.playing,
     // gameState: State.Game.gameOver
   };
-  
+
   floorMap = {};
 
   maxRows = 20;
@@ -166,6 +168,10 @@ class Game extends Component {
     );
     // }
 
+    if (DEBUG_CAMERA_CONTROLS) {
+      this.debugControls = new THREE.OrbitControls(this.camera);
+    }
+
     this.worldWithCamera.position.z = -startingRow;
     this.camera.position.set(-1, 2.8, -2.9); // Change -1 to -.02
     // this.camera.position.set(-1, 1, -2.9); // Change -1 to -.02
@@ -221,8 +227,8 @@ class Game extends Component {
 
     this.light = light;
 
-    // let helper = new THREE.CameraHelper(light.shadow.camera);
-    // this.scene.add(helper);
+    let helper = new THREE.CameraHelper(light.shadow.camera);
+    this.scene.add(helper);
   };
 
   newScore = () => {
@@ -845,6 +851,7 @@ class Game extends Component {
 
     return (
       <GestureView
+        pointerEvents={DEBUG_CAMERA_CONTROLS ? 'none' : undefined}
         onStartGesture={this.beginMoveWithDirection}
         onSwipe={this.onSwipe}
       >
