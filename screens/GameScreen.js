@@ -775,43 +775,33 @@ class Game extends Component {
 
     this.playMoveSound();
 
-    this.heroAnimations = [];
+    const { timing } = this;
 
-    this.heroAnimations.push(
-      TweenMax.to(this._hero.position, this.timing, {
+    this.heroAnimations = [
+      TweenMax.to(this._hero.position, timing, {
         x: this.initialPosition.x + delta.x * 0.75,
         y: finalY + 0.5,
         z: this.initialPosition.z + delta.z * 0.75,
       }),
-    );
-
-    this.heroAnimations.push(
-      TweenMax.to(this._hero.scale, this.timing, {
+      TweenMax.to(this._hero.scale, timing, {
         x: 1,
         y: 1.2,
         z: 1,
       }),
-    );
-    this.heroAnimations.push(
-      TweenMax.to(this._hero.scale, this.timing, {
+      TweenMax.to(this._hero.scale, timing, {
         x: 1.0,
         y: 0.8,
         z: 1,
-        delay: this.timing,
+        delay: timing,
       }),
-    );
-    this.heroAnimations.push(
-      TweenMax.to(this._hero.scale, this.timing, {
+      TweenMax.to(this._hero.scale, timing, {
         x: 1,
         y: 1,
         z: 1,
         ease: Bounce.easeOut,
-        delay: this.timing * 2,
+        delay: timing * 2,
       }),
-    );
-
-    this.heroAnimations.push(
-      TweenMax.to(this._hero.position, this.timing, {
+      TweenMax.to(this._hero.position, timing, {
         x: this.targetPosition.x,
         y: finalY,
         z: this.targetPosition.z,
@@ -823,7 +813,7 @@ class Game extends Component {
         },
         onCompleteParams: [],
       }),
-    );
+    ];
 
     this.initialPosition = this.targetPosition;
   };
