@@ -4,7 +4,7 @@ import { View } from 'react-native';
 
 import * as THREE from 'three';
 import ModelLoader from './ModelLoader';
-import Game from './src/Game';
+import GameScreen from './screens/GameScreen';
 
 global.THREE = THREE;
 require('three/examples/js/loaders/OBJLoader');
@@ -32,7 +32,7 @@ export default class App extends React.Component {
 
   render() {
     if (this.state.appIsReady) {
-      return <Game />;
+      return <GameScreen />;
     }
     return <View />;
   }

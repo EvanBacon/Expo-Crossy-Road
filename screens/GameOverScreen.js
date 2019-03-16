@@ -11,11 +11,11 @@ import {
 // import { connect } from 'react-redux';
 
 // import { setGameState } from '../../actions/game';
-import AudioFiles from '../../Audio';
-import Characters from '../../Characters';
-import Images from '../../Images';
-import Banner from './Banner';
-import Footer from './Footer';
+import AudioFiles from '../Audio';
+import Characters from '../Characters';
+import Images from '../Images';
+import Banner from '../components/GameOver/Banner';
+import Footer from '../components/GameOver/Footer';
 
 const { width } = Dimensions.get('window');
 

@@ -12,11 +12,11 @@ import {
 import { Constants } from 'expo';
 import { connect } from 'react-redux';
 import RetroText from '../RetroText';
-import Footer from './Footer';
-import Hand from './Hand';
-import State from '../../state';
+import Footer from '../components/Home/Footer';
+import Hand from '../components/HandCTA';
+import State from '../state';
 
-import { setGameState } from '../../actions/game';
+import { setGameState } from '../actions/game';
 const { width } = Dimensions.get('window');
 class Screen extends Component {
   animation = new Animated.Value(0);
@@ -46,10 +46,14 @@ class Screen extends Component {
       <View style={styles.container}>
         <TouchableOpacity
           activeOpacity={0.9}
-          style={[StyleSheet.absoluteFill, { justifyContent: 'center', alignItems: 'center' }]}
+          style={[
+            StyleSheet.absoluteFill,
+            { justifyContent: 'center', alignItems: 'center' },
+          ]}
           onPress={_ => {
             this.props.setGameState(State.Game.playing);
-          }}>
+          }}
+        >
           <RetroText style={styles.coins}>{this.props.coins}</RetroText>
           {/* <AniamtedRetroText style={[styles.title, animatedTitleStyle]}>CROSSY ROAD</AniamtedRetroText> */}
 
@@ -61,7 +65,8 @@ class Screen extends Component {
               bottom: 8,
               left: 8,
               right: 8,
-            }}>
+            }}
+          >
             <Hand style={{ width: 36 }} />
             <Footer
               style={{ height: 48 }}
@@ -95,7 +100,12 @@ const styles = StyleSheet.create({
     paddingTop: Constants.statusBarHeight,
     backgroundColor: 'transparent',
   },
-  title: { color: 'white', fontSize: 48, backgroundColor: 'transparent', textAlign: 'center' },
+  title: {
+    color: 'white',
+    fontSize: 48,
+    backgroundColor: 'transparent',
+    textAlign: 'center',
+  },
   coins: {
     position: 'absolute',
     top: Constants.statusBarHeight,

@@ -23,9 +23,17 @@ class TitleButton extends React.Component {
           height: 100,
           alignItems: 'center',
           marginHorizontal: 4,
-        }}>
+        }}
+      >
         <Button imageStyle={imageStyle} source={source} onPress={onPress} />
-        <RetroText style={{ textAlign: 'center', color: 'white', fontSize: 12, marginTop: 8 }}>
+        <RetroText
+          style={{
+            textAlign: 'center',
+            color: 'white',
+            fontSize: 12,
+            marginTop: 8,
+          }}
+        >
           {text.toUpperCase()}
         </RetroText>
       </View>
@@ -66,7 +74,7 @@ class Settings extends Component {
           'com.apple.UIKit.activity.AddToReadingList', // This is just lame :)
         ],
         tintColor: Colors.blue,
-      }
+      },
     )
       .then(this._showResult)
       .catch(error => this.setState({ result: 'error: ' + error.message }));
@@ -153,7 +161,9 @@ class Settings extends Component {
 
     return (
       <View style={[styles.container, this.props.style]}>
-        <View style={{ flexDirection: 'row', marginTop: 8, paddingHorizontal: 4 }}>
+        <View
+          style={{ flexDirection: 'row', marginTop: 8, paddingHorizontal: 4 }}
+        >
           <Button
             source={Images.button.back}
             imageStyle={imageStyle}
@@ -171,7 +181,8 @@ class Settings extends Component {
             flexWrap: 'wrap',
             justifyContent: 'center',
             alignItems: 'center',
-          }}>
+          }}
+        >
           <View
             key="content"
             style={{
@@ -179,7 +190,8 @@ class Settings extends Component {
               flexWrap: 'wrap',
               justifyContent: 'center',
               alignItems: 'center',
-            }}>
+            }}
+          >
             {buttons.map((val, index) => (
               <TitleButton
                 key={index}
@@ -200,7 +212,7 @@ class Settings extends Component {
 
 export default connect(
   state => ({}),
-  {}
+  {},
 )(Settings);
 
 Settings.defaultProps = {

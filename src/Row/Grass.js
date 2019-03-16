@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 
 import ModelLoader from '../../ModelLoader';
-import { groundLevel } from '../Game';
+import { groundLevel } from '../GameSettings';
 
 export const Fill = {
   empty: 'empty',
@@ -38,7 +38,9 @@ export default class Grass extends THREE.Object3D {
   obstacleMap = {};
   addObstacle = x => {
     let mesh =
-      Math.random() < 0.4 ? ModelLoader._boulder.getRandom() : ModelLoader._tree.getRandom();
+      Math.random() < 0.4
+        ? ModelLoader._boulder.getRandom()
+        : ModelLoader._tree.getRandom();
     this.obstacleMap[`${x | 0}`] = { index: this.entities.length };
     this.entities.push({ mesh });
     this.floor.add(mesh);

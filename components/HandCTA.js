@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Image, StyleSheet } from 'react-native';
 
-import Images from '../../Images';
+import Images from '../Images';
 
 const sprite = [Images.hand['0'], Images.hand['1']];
 export default class Sprite extends Component {
@@ -23,7 +23,9 @@ export default class Sprite extends Component {
     this.setState({ image: sprite[this.index++ % sprite.length] });
   };
 
-  render = () => <Image source={this.state.image} style={[styles.image, this.props.style]} />;
+  render = () => (
+    <Image source={this.state.image} style={[styles.image, this.props.style]} />
+  );
 }
 
 const styles = StyleSheet.create({

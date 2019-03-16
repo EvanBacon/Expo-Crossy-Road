@@ -3,13 +3,13 @@ import React, { Component } from 'react';
 import { Share, StyleSheet, View } from 'react-native';
 import { connect } from 'react-redux';
 
-import Characters from '../../Characters';
-import Colors from '../../Colors';
-import Images from '../../Images';
+import Characters from '../Characters';
+import Colors from '../Colors';
+import Images from '../Images';
 import connectCharacter from '../../utils/connectCharacter';
-import Button from '../Button';
+import Button from '../components/Button';
 import RetroText from '../RetroText';
-import Carousel from './Carousel';
+import Carousel from '../components/CharacterSelect/Carousel';
 
 class CharacterSelect extends Component {
   state = {
@@ -44,7 +44,7 @@ class CharacterSelect extends Component {
           'com.apple.UIKit.activity.AddToReadingList', // This is just lame :)
         ],
         tintColor: Colors.blue,
-      }
+      },
     )
       .then(this._showResult)
       .catch(error => this.setState({ result: 'error: ' + error.message }));
@@ -74,7 +74,9 @@ class CharacterSelect extends Component {
 
     return (
       <View style={[styles.container, this.props.style]}>
-        <View style={{ flexDirection: 'row', marginTop: 8, paddingHorizontal: 4 }}>
+        <View
+          style={{ flexDirection: 'row', marginTop: 8, paddingHorizontal: 4 }}
+        >
           <Button
             source={Images.button.back}
             imageStyle={imageStyle}
@@ -90,7 +92,13 @@ class CharacterSelect extends Component {
           }}
         />
 
-        <View style={{ flexDirection: 'row', justifyContent: 'center', marginBottom: 8 }}>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'center',
+            marginBottom: 8,
+          }}
+        >
           <Button
             source={Images.button.random}
             imageStyle={imageStyle}
@@ -114,7 +122,14 @@ class CharacterSelect extends Component {
           />
         </View>
         <RetroText
-          style={{ position: 'absolute', fontSize: 24, color: 'white', bottom: 4, left: 8 }}>
+          style={{
+            position: 'absolute',
+            fontSize: 24,
+            color: 'white',
+            bottom: 4,
+            left: 8,
+          }}
+        >
           4/ 8
         </RetroText>
       </View>
@@ -124,7 +139,7 @@ class CharacterSelect extends Component {
 
 export default connect(
   state => ({}),
-  {}
+  {},
 )(connectCharacter(CharacterSelect));
 
 CharacterSelect.defaultProps = {

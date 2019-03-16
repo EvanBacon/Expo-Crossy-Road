@@ -2,7 +2,7 @@ import { TweenMax } from 'gsap';
 import * as THREE from 'three';
 
 import ModelLoader from '../../ModelLoader';
-import { groundLevel } from '../Game';
+import { groundLevel } from '../GameSettings';
 
 export default class Road extends THREE.Object3D {
   active = false;
@@ -107,7 +107,10 @@ export default class Road extends THREE.Object3D {
         player.position.x < mesh.position.x + collisionBox &&
         player.position.x > mesh.position.x - collisionBox
       ) {
-        if (player.moving && Math.abs(player.position.z - Math.round(player.position.z)) > 0.1) {
+        if (
+          player.moving &&
+          Math.abs(player.position.z - Math.round(player.position.z)) > 0.1
+        ) {
           player.hitBy = car;
 
           const forward = player.position.z - Math.round(player.position.z) > 0;

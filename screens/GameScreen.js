@@ -15,13 +15,13 @@ import Characters from '../Characters';
 import ExpoTHREE from '../ExpoTHREE';
 import ModelLoader from '../ModelLoader';
 import State from '../state';
-import GameOver from './GameOver';
-import GestureRecognizer, { swipeDirections } from './GestureView';
-import Feathers from './Particles/Feathers';
-import Water from './Particles/Water';
-import Rows from './Row';
-import { Fill } from './Row/Grass';
-import Score from './Score';
+import GameOverScreen from './GameOverScreen';
+import GestureRecognizer, { swipeDirections } from '../components/GestureView';
+import Feathers from '../src/Particles/Feathers';
+import Water from '../src/Particles/Water';
+import Rows from '../src/Row';
+import { Fill } from '../src/Row/Grass';
+import Score from '../components/ScoreText';
 
 const initialState = {
   id: Characters.chicken.id,
@@ -37,7 +37,7 @@ console.ignoredYellowBox = [
   'THREE.WebGLProgram',
 ];
 
-export const groundLevel = 0.4;
+import { groundLevel } from '../src/GameSettings';
 const sceneColor = 0x6dceea;
 const startingRow = 8;
 
@@ -907,7 +907,7 @@ class Game extends Component {
 
     return (
       <View style={StyleSheet.absoluteFillObject}>
-        <GameOver
+        <GameOverScreen
           onRestart={() => {
             this.updateWithGameState(State.Game.playing);
           }}

@@ -4,7 +4,7 @@ import * as THREE from 'three';
 
 import ModelLoader from '../../ModelLoader';
 import AudioFiles from '../../Audio';
-import { groundLevel } from '../Game';
+import { groundLevel } from '../GameSettings';
 
 export default class RailRoad extends THREE.Object3D {
   active = false;

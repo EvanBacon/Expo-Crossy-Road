@@ -2,7 +2,7 @@ import { Power2, TweenMax } from 'gsap';
 import * as THREE from 'three';
 
 import ModelLoader from '../../ModelLoader';
-import { groundLevel } from '../Game';
+import { groundLevel } from '../GameSettings';
 import Foam from '../Particles/Foam';
 
 export default class Water extends THREE.Object3D {
@@ -158,7 +158,9 @@ export default class Water extends THREE.Object3D {
     this.entities.map(entity => this.move({ dt, player, entity }));
 
     if (!player.moving && !player.ridingOn) {
-      this.entities.map(entity => this.shouldCheckCollision({ dt, player, entity }));
+      this.entities.map(entity =>
+        this.shouldCheckCollision({ dt, player, entity }),
+      );
       this.shouldCheckHazardCollision({ player });
     }
   };
