@@ -31,10 +31,15 @@ const initialState = {
 
 const { width, height } = Dimensions.get('window');
 
-import { groundLevel, sceneColor, startingRow } from '../src/GameSettings';
+import {
+  groundLevel,
+  maxRows,
+  sceneColor,
+  startingRow,
+} from '../src/GameSettings';
 
 const DEBUG_CAMERA_CONTROLS = false;
-
+const waterSoundObject = new Audio.Sound();
 class Game extends Component {
   /// Reserve State for UI related updates...
   state = {
@@ -46,11 +51,6 @@ class Game extends Component {
   };
 
   floorMap = {};
-
-  maxRows = 20;
-  sineCount = 0;
-  sineInc = Math.PI / 50;
-  waterSoundObject = new Audio.Sound();
 
   componentWillReceiveProps(nextProps, nextState) {
     if (nextState.gameState !== this.state.gameState) {
@@ -302,7 +302,7 @@ class Game extends Component {
 
     // Assign mesh to corresponding array
     // and add mesh to scene
-    for (let i = 0; i < this.maxRows; i++) {
+    for (let i = 0; i < maxRows; i++) {
       this.grass[i] = new Rows.Grass(this.heroWidth);
       this.water[i] = new Rows.Water(this.heroWidth, this.onCollide);
       this.road[i] = new Rows.Road(this.heroWidth, this.onCollide);
@@ -390,7 +390,7 @@ class Game extends Component {
 
     this.idle();
 
-    for (let i = 0; i < this.maxRows; i++) {
+    for (let i = 0; i < maxRows; i++) {
       this.grass[i].position.z = offset;
 
       this.water[i].position.z = offset;
@@ -406,7 +406,7 @@ class Game extends Component {
     this.grassCount++;
     this.rowCount++;
 
-    for (let i = 0; i < 23; i++) {
+    for (let i = 0; i < maxRows + 3; i++) {
       this.newRow();
     }
 
@@ -424,25 +424,29 @@ class Game extends Component {
 
   // Scene generators
   newRow = rowKind => {
-    if (this.grassCount === this.maxRows) {
+    if (this.grassCount === maxRows) {
       this.grassCount = 0;
     }
-    if (this.roadCount === this.maxRows) {
+    if (this.roadCount === maxRows) {
       this.roadCount = 0;
     }
-    if (this.waterCount === this.maxRows) {
+    if (this.waterCount === maxRows) {
       this.waterCount = 0;
     }
-    if (this.railRoadCount === this.maxRows) {
+    if (this.railRoadCount === maxRows) {
       this.railRoadCount = 0;
     }
     if (this.rowCount < 10) {
-      rowKind = 1;
+      rowKind = 'grass';
     }
 
-    let rk = rowKind || Math.floor(Math.random() * 3) + 1;
-    switch (rk) {
-      case 1:
+    const ROW_TYPES = ['grass', 'roadtype', 'water'];
+    if (rowKind == null) {
+      rowKind = ROW_TYPES[Math.floor(Math.random() * ROW_TYPES.length)];
+    }
+
+    switch (rowKind) {
+      case 'grass':
         this.grass[this.grassCount].position.z = this.rowCount;
         this.grass[this.grassCount].generate(
           this.mapRowToObstacle(this.rowCount),
@@ -452,9 +456,8 @@ class Game extends Component {
           entity: this.grass[this.grassCount],
         };
         this.grassCount++;
-        this.lastRk = rk;
         break;
-      case 2:
+      case 'roadtype':
         if (((Math.random() * 4) | 0) === 0) {
           this.railRoads[this.railRoadCount].position.z = this.rowCount;
           this.railRoads[this.railRoadCount].active = true;
@@ -463,7 +466,6 @@ class Game extends Component {
             entity: this.railRoads[this.railRoadCount],
           };
           this.railRoadCount++;
-          this.lastRk = rk + 1000;
         } else {
           this.road[this.roadCount].position.z = this.rowCount;
           this.road[this.roadCount].active = true;
@@ -472,11 +474,9 @@ class Game extends Component {
             entity: this.road[this.roadCount],
           };
           this.roadCount++;
-          this.lastRk = rk;
         }
         break;
-
-      case 3:
+      case 'water':
         this.water[this.waterCount].position.z = this.rowCount;
         this.water[this.waterCount].active = true;
         this.water[this.waterCount].generate();
@@ -485,8 +485,6 @@ class Game extends Component {
           entity: this.water[this.waterCount],
         };
         this.waterCount++;
-
-        this.lastRk = rk;
         break;
     }
 
