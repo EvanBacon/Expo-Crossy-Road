@@ -31,15 +31,7 @@ const initialState = {
 
 const { width, height } = Dimensions.get('window');
 
-console.ignoredYellowBox = [
-  'WebGL',
-  'THREE.WebGLRenderer',
-  'THREE.WebGLProgram',
-];
-
-import { groundLevel } from '../src/GameSettings';
-const sceneColor = 0x6dceea;
-const startingRow = 8;
+import { groundLevel, sceneColor, startingRow } from '../src/GameSettings';
 
 class Game extends Component {
   /// Reserve State for UI related updates...
@@ -50,11 +42,13 @@ class Game extends Component {
     gameState: State.Game.playing,
     // gameState: State.Game.gameOver
   };
+  
   floorMap = {};
 
   maxRows = 20;
   sineCount = 0;
   sineInc = Math.PI / 50;
+  waterSoundObject = new Audio.Sound();
 
   componentWillReceiveProps(nextProps, nextState) {
     if (nextState.gameState !== this.state.gameState) {
@@ -98,8 +92,8 @@ class Game extends Component {
   };
 
   audioFileMoveIndex = 0;
+
   playMoveSound = () => {
-    // this.playSound(AudioFiles.chicken.move[`0`])
     this.playSound(AudioFiles.chicken.move[`${this.audioFileMoveIndex}`]);
     this.audioFileMoveIndex =
       (this.audioFileMoveIndex + 1) %
@@ -119,7 +113,6 @@ class Game extends Component {
   playCarHitSound = () => {
     this.playSound(AudioFiles.car.die[`${Math.floor(Math.random() * 2)}`]);
   };
-  waterSoundObject = new Audio.Sound();
   playSound = async audioFile => {
     // return;
 
@@ -850,30 +843,16 @@ class Game extends Component {
       return;
     }
 
-    const config = {
-      velocityThreshold: 0.2,
-      directionalOffsetThreshold: 80,
-    };
-
     return (
-      <GestureRecognizer
-        onResponderGrant={() => {
-          this.beginMoveWithDirection();
-        }}
-        onSwipe={direction => {
-          this.onSwipe(direction);
-        }}
-        config={config}
-        onTap={() => {
-          this.onSwipe(swipeDirections.SWIPE_UP);
-        }}
-        style={{ flex: 1 }}
+      <GestureView
+        onStartGesture={this.beginMoveWithDirection}
+        onSwipe={this.onSwipe}
       >
         <GLView
           style={{ flex: 1, height: '100%', overflow: 'hidden' }}
           onContextCreate={this._onGLContextCreate}
         />
-      </GestureRecognizer>
+      </GestureView>
     );
   };
 
@@ -931,5 +910,29 @@ class Game extends Component {
     );
   }
 }
+
+const GestureView = ({ onStartGesture, onSwipe, ...props }) => {
+  const config = {
+    velocityThreshold: 0.2,
+    directionalOffsetThreshold: 80,
+  };
+
+  return (
+    <GestureRecognizer
+      onResponderGrant={() => {
+        onStartGesture();
+      }}
+      onSwipe={direction => {
+        onSwipe(direction);
+      }}
+      config={config}
+      onTap={() => {
+        onSwipe(swipeDirections.SWIPE_UP);
+      }}
+      style={{ flex: 1 }}
+      {...props}
+    />
+  );
+};
 
 export default Game;

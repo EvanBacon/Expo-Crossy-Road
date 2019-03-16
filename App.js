@@ -9,6 +9,12 @@ import GameScreen from './screens/GameScreen';
 global.THREE = THREE;
 require('three/examples/js/loaders/OBJLoader');
 
+console.ignoredYellowBox = [
+  'WebGL',
+  'THREE.WebGLRenderer',
+  'THREE.WebGLProgram',
+];
+
 export default class App extends React.Component {
   persister;
   state = {
