@@ -4,8 +4,6 @@ import * as THREE from 'three';
 
 import ModelLoader from '../../ModelLoader';
 
-// import createTHREEViewClass from '../createTHREEViewClass';
-// const THREEView = Expo.createTHREEViewClass(THREE);
 const size = 150;
 
 export default class CharacterCard extends Component {
@@ -55,7 +53,8 @@ export default class CharacterCard extends Component {
       return (
         <View
           pointerEvents={'none'}
-          style={StyleSheet.flatten([styles.container, this.props.style])}>
+          style={StyleSheet.flatten([styles.container, this.props.style])}
+        >
           <View style={{ flex: 1 }}>
             {/* {Expo.Constants.isDevice &&
               <THREEView

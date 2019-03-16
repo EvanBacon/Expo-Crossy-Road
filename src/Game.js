@@ -1,7 +1,13 @@
 import { Audio, GLView } from 'expo';
 import { Bounce, Power1, Power4, TimelineMax, TweenMax } from 'gsap';
 import React, { Component } from 'react';
-import { Dimensions, InteractionManager, StyleSheet, Vibration, View } from 'react-native';
+import {
+  Dimensions,
+  InteractionManager,
+  StyleSheet,
+  Vibration,
+  View,
+} from 'react-native';
 import * as THREE from 'three';
 
 import AudioFiles from '../Audio';
@@ -25,13 +31,11 @@ const initialState = {
 
 const { width, height } = Dimensions.get('window');
 
-
 console.ignoredYellowBox = [
   'WebGL',
   'THREE.WebGLRenderer',
   'THREE.WebGLProgram',
 ];
-
 
 export const groundLevel = 0.4;
 const sceneColor = 0x6dceea;
@@ -39,11 +43,11 @@ const startingRow = 8;
 
 class Game extends Component {
   /// Reserve State for UI related updates...
-  state = { 
-    ready: false, 
-    score: 0, 
+  state = {
+    ready: false,
+    score: 0,
     viewKey: 0,
-    gameState: State.Game.playing 
+    gameState: State.Game.playing,
     // gameState: State.Game.gameOver
   };
   floorMap = {};
@@ -98,7 +102,8 @@ class Game extends Component {
     // this.playSound(AudioFiles.chicken.move[`0`])
     this.playSound(AudioFiles.chicken.move[`${this.audioFileMoveIndex}`]);
     this.audioFileMoveIndex =
-      (this.audioFileMoveIndex + 1) % Object.keys(AudioFiles.chicken.move).length;
+      (this.audioFileMoveIndex + 1) %
+      Object.keys(AudioFiles.chicken.move).length;
   };
 
   playPassiveCarSound = () => {
@@ -116,7 +121,7 @@ class Game extends Component {
   };
   waterSoundObject = new Audio.Sound();
   playSound = async audioFile => {
-    return;
+    // return;
 
     const soundObject = new Audio.Sound();
     try {
@@ -141,7 +146,6 @@ class Game extends Component {
     // } catch (error) {
     //   console.warn('error', { error });
     // }
-
     // try {
     //   await this.waterSoundObject.loadAsync(AudioFiles.water);
     // } catch (error) {
@@ -154,12 +158,19 @@ class Game extends Component {
 
   setupGame = () => {
     // if (!this.scene) {
-      this.scene = new THREE.Scene();
-      this.worldWithCamera = new THREE.Group();
-      this.world = new THREE.Group();
-      this.scene.add(this.worldWithCamera);
-      this.worldWithCamera.add(this.world);
-      this.camera = new THREE.OrthographicCamera(-width, width, height, -height, -30, 30);
+    this.scene = new THREE.Scene();
+    this.worldWithCamera = new THREE.Group();
+    this.world = new THREE.Group();
+    this.scene.add(this.worldWithCamera);
+    this.worldWithCamera.add(this.world);
+    this.camera = new THREE.OrthographicCamera(
+      -width,
+      width,
+      height,
+      -height,
+      -30,
+      30,
+    );
     // }
 
     this.worldWithCamera.position.z = -startingRow;
@@ -171,7 +182,7 @@ class Game extends Component {
 
     this.doGame();
     // this.props.setGameState(State.Game.none)
-  }
+  };
 
   createParticles = () => {
     this.waterParticles = new Water();
@@ -270,7 +281,7 @@ class Game extends Component {
     this.waterCount = 0;
     this.road = [];
     this.roadCount = 0;
-    this.railRoads = []; 
+    this.railRoads = [];
     this.railRoadCount = 0;
     this.lastHeroZ = 8;
     this.rowCount = 0;
@@ -325,13 +336,12 @@ class Game extends Component {
   };
 
   stopIdle = () => {
-    if (!this.idleAnimation) {
+    if (!this.idleAnimation || !this.idleAnimation.pause) {
       return;
     }
     this.idleAnimation.pause();
     this.idleAnimation = null;
     this._hero.scale.set(1, 1, 1);
-    
   };
 
   idle = () => {
@@ -435,8 +445,13 @@ class Game extends Component {
     switch (rk) {
       case 1:
         this.grass[this.grassCount].position.z = this.rowCount;
-        this.grass[this.grassCount].generate(this.mapRowToObstacle(this.rowCount));
-        this.floorMap[`${this.rowCount}`] = { type: 'grass', entity: this.grass[this.grassCount] };
+        this.grass[this.grassCount].generate(
+          this.mapRowToObstacle(this.rowCount),
+        );
+        this.floorMap[`${this.rowCount}`] = {
+          type: 'grass',
+          entity: this.grass[this.grassCount],
+        };
         this.grassCount++;
         this.lastRk = rk;
         break;
@@ -453,7 +468,10 @@ class Game extends Component {
         } else {
           this.road[this.roadCount].position.z = this.rowCount;
           this.road[this.roadCount].active = true;
-          this.floorMap[`${this.rowCount}`] = { type: 'road', entity: this.road[this.roadCount] };
+          this.floorMap[`${this.rowCount}`] = {
+            type: 'road',
+            entity: this.road[this.roadCount],
+          };
           this.roadCount++;
           this.lastRk = rk;
         }
@@ -463,7 +481,10 @@ class Game extends Component {
         this.water[this.waterCount].position.z = this.rowCount;
         this.water[this.waterCount].active = true;
         this.water[this.waterCount].generate();
-        this.floorMap[`${this.rowCount}`] = { type: 'water', entity: this.water[this.waterCount] };
+        this.floorMap[`${this.rowCount}`] = {
+          type: 'water',
+          entity: this.water[this.waterCount],
+        };
         this.waterCount++;
 
         this.lastRk = rk;
@@ -488,7 +509,9 @@ class Game extends Component {
     }
 
     if (this.floorMap.hasOwnProperty(`${(this._hero.position.z + zPos) | 0}`)) {
-      const { type, entity } = this.floorMap[`${(this._hero.position.z + zPos) | 0}`];
+      const { type, entity } = this.floorMap[
+        `${(this._hero.position.z + zPos) | 0}`
+      ];
       if (type === 'grass') {
         const key = `${(this._hero.position.x + xPos) | 0}`;
         if (entity.obstacleMap.hasOwnProperty(key)) {
@@ -539,10 +562,15 @@ class Game extends Component {
   // Move scene forward
   forwardScene = () => {
     const easing = 0.03;
-    this.world.position.z -= (this._hero.position.z - startingRow + this.world.position.z) * easing;
+    this.world.position.z -=
+      (this._hero.position.z - startingRow + this.world.position.z) * easing;
     this.world.position.x = -Math.min(
       2,
-      Math.max(-2, this.world.position.x + (this._hero.position.x - this.world.position.x) * easing)
+      Math.max(
+        -2,
+        this.world.position.x +
+          (this._hero.position.x - this.world.position.x) * easing,
+      ),
     );
 
     // normal camera speed
@@ -557,12 +585,14 @@ class Game extends Component {
     this._hero.moving = false;
     /// Stop player from finishing a movement
     this.heroAnimations.map(val => {
-      val.pause();
+      if (val.pause) {
+        val.pause();
+      }
       val = null;
     });
     this.heroAnimations = [];
     // this.gameState = State.Game.gameOver;
-    this.setState({ gameState: State.Game.gameOver })
+    this.setState({ gameState: State.Game.gameOver });
     // this.props.setGameState(this.gameState);
 
     InteractionManager.runAfterInteractions(_ => {
@@ -622,20 +652,24 @@ class Game extends Component {
     }
 
     const { SWIPE_UP, SWIPE_DOWN, SWIPE_LEFT, SWIPE_RIGHT } = swipeDirections;
-    
+
     this._hero.ridingOn = null;
-    
+
     if (!this.initialPosition) {
       this.initialPosition = this._hero.position;
       this.targetPosition = this.initialPosition;
     }
-    
+
     if (this._hero.moving) {
-      this._hero.position = this.targetPosition;
+      this._hero.position.set(
+        this.targetPosition.x,
+        this.targetPosition.y,
+        this.targetPosition.z,
+      );
       // return
     }
 
-    let velocity = { x: 0, z: 0};
+    let velocity = { x: 0, z: 0 };
     switch (direction) {
       case SWIPE_LEFT:
         this._hero.rotation.y = Math.PI / 2;
@@ -666,7 +700,7 @@ class Game extends Component {
       case SWIPE_UP:
         this._hero.rotation.y = 0;
         if (!this.treeCollision('up')) {
-          let rowObject = (this.floorMap[`${this.initialPosition.z}`] || {});
+          let rowObject = this.floorMap[`${this.initialPosition.z}`] || {};
           if (rowObject.type === 'road') {
             this.playPassiveCarSound();
           }
@@ -699,7 +733,8 @@ class Game extends Component {
       case SWIPE_DOWN:
         this._hero.rotation.y = Math.PI;
         if (!this.treeCollision('down')) {
-          const row = (this.floorMap[`${this.initialPosition.z - 1}`] || {}).type;
+          const row = (this.floorMap[`${this.initialPosition.z - 1}`] || {})
+            .type;
           let shouldRound = row !== 'water';
           velocity = { x: 0, z: -1 };
 
@@ -727,18 +762,17 @@ class Game extends Component {
     }
     let { targetPosition, initialPosition } = this;
 
-    let rowObject = (this.floorMap[`${this.initialPosition.z + velocity.z}`] || {});
+    let rowObject =
+      this.floorMap[`${this.initialPosition.z + velocity.z}`] || {};
     let finalY = rowObject.entity.top || groundLevel;
 
-    console.log("MOVE TO: ", rowObject.type, finalY, rowObject.entity.top)
+    console.log('MOVE TO: ', rowObject.type, finalY, rowObject.entity.top);
 
     let delta = {
       x: targetPosition.x - initialPosition.x,
       y: finalY,
       z: targetPosition.z - initialPosition.z,
     };
-
-
 
     this.playMoveSound();
 
@@ -749,7 +783,7 @@ class Game extends Component {
         x: this.initialPosition.x + delta.x * 0.75,
         y: finalY + 0.5,
         z: this.initialPosition.z + delta.z * 0.75,
-      })
+      }),
     );
 
     this.heroAnimations.push(
@@ -757,7 +791,7 @@ class Game extends Component {
         x: 1,
         y: 1.2,
         z: 1,
-      })
+      }),
     );
     this.heroAnimations.push(
       TweenMax.to(this._hero.scale, this.timing, {
@@ -765,7 +799,7 @@ class Game extends Component {
         y: 0.8,
         z: 1,
         delay: this.timing,
-      })
+      }),
     );
     this.heroAnimations.push(
       TweenMax.to(this._hero.scale, this.timing, {
@@ -774,7 +808,7 @@ class Game extends Component {
         z: 1,
         ease: Bounce.easeOut,
         delay: this.timing * 2,
-      })
+      }),
     );
 
     this.heroAnimations.push(
@@ -785,16 +819,15 @@ class Game extends Component {
         ease: Power4.easeOut,
         delay: 0.151,
         onComplete: () => {
-          console.log("Done", this._hero.position)
-          this.doneMoving()
+          console.log('Done', this._hero.position);
+          this.doneMoving();
         },
         onCompleteParams: [],
-      })
+      }),
     );
 
     this.initialPosition = this.targetPosition;
   };
-
 
   beginMoveWithDirection = direction => {
     if (this.state.gameState !== State.Game.playing) {
@@ -823,24 +856,26 @@ class Game extends Component {
     };
 
     return (
-        <GestureRecognizer
-          onResponderGrant={() => {
-            this.beginMoveWithDirection();
-          }}
-          onSwipe={(direction) => { 
-              this.onSwipe(direction)
-          }}
-          config={config}
-          onTap={() => {
-            this.onSwipe(swipeDirections.SWIPE_UP);
-          }} 
-          style={{ flex: 1 }}>
-          <GLView style={{ flex: 1 }} onContextCreate={this._onGLContextCreate} />
-        </GestureRecognizer>
+      <GestureRecognizer
+        onResponderGrant={() => {
+          this.beginMoveWithDirection();
+        }}
+        onSwipe={direction => {
+          this.onSwipe(direction);
+        }}
+        config={config}
+        onTap={() => {
+          this.onSwipe(swipeDirections.SWIPE_UP);
+        }}
+        style={{ flex: 1 }}
+      >
+        <GLView
+          style={{ flex: 1, height: '100%', overflow: 'hidden' }}
+          onContextCreate={this._onGLContextCreate}
+        />
+      </GestureRecognizer>
     );
   };
-
-  
 
   _onGLContextCreate = async gl => {
     const { drawingBufferWidth: width, drawingBufferHeight: height } = gl;
@@ -872,18 +907,25 @@ class Game extends Component {
 
     return (
       <View style={StyleSheet.absoluteFillObject}>
-        <GameOver onRestart={() => {
-          this.updateWithGameState(State.Game.playing)
+        <GameOver
+          onRestart={() => {
+            this.updateWithGameState(State.Game.playing);
           }}
         />
       </View>
     );
-  }
+  };
   render() {
     return (
-      <View pointerEvents="box-none" style={[{ flex: 1, backgroundColor: '#6dceea' }, this.props.style]}>
+      <View
+        pointerEvents="box-none"
+        style={[{ flex: 1, backgroundColor: '#6dceea' }, this.props.style]}
+      >
         {this.renderGame()}
-        <Score score={this.state.score} gameOver={this.state.gameState === State.Game.gameOver} />
+        <Score
+          score={this.state.score}
+          gameOver={this.state.gameState === State.Game.gameOver}
+        />
         {this.renderGameOver()}
       </View>
     );

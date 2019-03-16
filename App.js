@@ -1,4 +1,4 @@
-import { Font } from 'expo';
+import { Font, Audio } from 'expo';
 import React from 'react';
 import { View } from 'react-native';
 
@@ -16,10 +16,12 @@ export default class App extends React.Component {
   };
 
   async componentWillMount() {
-    // Audio.setIsEnabledAsync(true);
+    Audio.setIsEnabledAsync(true);
 
     try {
-      await Promise.all([Font.loadAsync({ retro: require('./assets/fonts/retro.ttf') })]);
+      await Promise.all([
+        Font.loadAsync({ retro: require('./assets/fonts/retro.ttf') }),
+      ]);
       await ModelLoader.loadModels();
     } catch (e) {
       console.warn(e);

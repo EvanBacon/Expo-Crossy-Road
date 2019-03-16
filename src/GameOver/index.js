@@ -1,6 +1,13 @@
 import { Constants, Audio } from 'expo';
 import React, { Component } from 'react';
-import { Alert, Animated, Dimensions, Easing, StyleSheet, View } from 'react-native';
+import {
+  Alert,
+  Animated,
+  Dimensions,
+  Easing,
+  StyleSheet,
+  View,
+} from 'react-native';
 // import { connect } from 'react-redux';
 
 // import { setGameState } from '../../actions/game';
@@ -28,7 +35,7 @@ const banner = [
           ],
           {
             cancelable: false,
-          }
+          },
         );
       },
       source: Images.button.mail,
@@ -71,13 +78,13 @@ class GameOver extends Component {
       this._animateBanners();
 
       const playBannerSound = async () => {
-        // const soundObject = new Audio.Sound();
-        // try {
-        //   await soundObject.loadAsync(AudioFiles.banner);
-        //   await soundObject.playAsync();
-        // } catch (error) {
-        //   console.warn('sound error', { error });
-        // }
+        const soundObject = new Audio.Sound();
+        try {
+          await soundObject.loadAsync(AudioFiles.banner);
+          await soundObject.playAsync();
+        } catch (error) {
+          console.warn('sound error', { error });
+        }
       };
       playBannerSound();
       setTimeout(() => playBannerSound(), 300);
@@ -88,7 +95,11 @@ class GameOver extends Component {
   _animateBanners = () => {
     const { timing } = Animated;
     const animations = this.state.animations.map(animation =>
-      timing(animation, { toValue: 1, duration: 1000, easing: Easing.elastic() })
+      timing(animation, {
+        toValue: 1,
+        duration: 1000,
+        easing: Easing.elastic(),
+      }),
     );
     Animated.stagger(300, animations).start();
   };
@@ -145,7 +156,10 @@ class GameOver extends Component {
           ))}
         </View>
 
-        <Footer setGameState={this.props.onRestart} navigation={this.props.navigation} />
+        <Footer
+          setGameState={this.props.onRestart}
+          navigation={this.props.navigation}
+        />
       </View>
     );
   }
