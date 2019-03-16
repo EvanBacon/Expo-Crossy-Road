@@ -143,7 +143,7 @@ export default class RailRoad extends THREE.Object3D {
     this.lightRinging = true;
     this.ringCount = 0;
     this.ringLight();
-    this.playSound(AudioFiles.trainAlarm);
+    // this.playSound(AudioFiles.trainAlarm);
   };
   playSound = async audioFile => {
     const soundObject = new Audio.Sound();
