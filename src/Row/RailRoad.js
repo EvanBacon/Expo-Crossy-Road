@@ -102,7 +102,10 @@ export default class RailRoad extends THREE.Object3D {
         player.position.x < mesh.position.x + collisionBox &&
         player.position.x > mesh.position.x - collisionBox
       ) {
-        if (player.moving && Math.abs(player.position.z - Math.round(player.position.z)) > 0.1) {
+        if (
+          player.moving &&
+          Math.abs(player.position.z - Math.round(player.position.z)) > 0.1
+        ) {
           const forward = player.position.z - Math.round(player.position.z) > 0;
           player.position.z = this.position.z + (forward ? 0.52 : -0.52);
 
@@ -143,13 +146,13 @@ export default class RailRoad extends THREE.Object3D {
     this.playSound(AudioFiles.trainAlarm);
   };
   playSound = async audioFile => {
-    // const soundObject = new Audio.Sound();
-    // try {
-    //   await soundObject.loadAsync(audioFile);
-    //   await soundObject.playAsync();
-    // } catch (error) {
-    //   console.warn('sound error', { error });
-    // }
+    const soundObject = new Audio.Sound();
+    try {
+      await soundObject.loadAsync(audioFile);
+      await soundObject.playAsync();
+    } catch (error) {
+      console.warn('sound error', { error });
+    }
   };
 
   ringLight = () => {

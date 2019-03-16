@@ -136,21 +136,21 @@ class Game extends Component {
   };
 
   async componentDidMount() {
-    // const soundObject = new Audio.Sound();
-    // try {
-    //   await soundObject.loadAsync(AudioFiles.bg_music);
-    //   await soundObject.setVolumeAsync(0.05);
-    //   await soundObject.setIsLoopingAsync(true);
-    //   await soundObject.playAsync();
-    //   //unloadAsync
-    // } catch (error) {
-    //   console.warn('error', { error });
-    // }
-    // try {
-    //   await this.waterSoundObject.loadAsync(AudioFiles.water);
-    // } catch (error) {
-    //   console.warn('sound error', { error });
-    // }
+    const soundObject = new Audio.Sound();
+    try {
+      await soundObject.loadAsync(AudioFiles.bg_music);
+      await soundObject.setVolumeAsync(0.05);
+      await soundObject.setIsLoopingAsync(true);
+      await soundObject.playAsync();
+      //unloadAsync
+    } catch (error) {
+      console.warn('error', { error });
+    }
+    try {
+      await this.waterSoundObject.loadAsync(AudioFiles.water);
+    } catch (error) {
+      console.warn('sound error', { error });
+    }
   }
   componentWillMount() {
     this.setupGame();
@@ -197,7 +197,7 @@ class Game extends Component {
       if (type === 'water') {
         this.waterParticles.mesh.position.copy(model.position);
         this.waterParticles.run(type);
-        // await this.waterSoundObject.playAsync();
+        await this.waterSoundObject.playAsync();
       } else if (type === 'feathers') {
         this.featherParticles.mesh.position.copy(model.position);
 
