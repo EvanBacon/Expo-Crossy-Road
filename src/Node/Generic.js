@@ -10,7 +10,8 @@ import Models from '../../Models';
 function textureFromAsset(asset) {
   if (!asset.localUri) {
     throw new Error(
-      `Asset '${asset.name}' needs to be downloaded before ` + `being used as an OpenGL texture.`
+      `Asset '${asset.name}' needs to be downloaded before ` +
+        `being used as an OpenGL texture.`,
     );
   }
   const texture = new THREE.Texture();
@@ -38,7 +39,7 @@ export default class Generic {
   _downloadAssets = async ({ model, texture, castShadow, receiveShadow }) => {
     const loader = new THREE.OBJLoader();
     let _model = await new Promise((resolve, reject) =>
-      loader.load(Asset.fromModule(model).uri, resolve, () => {}, reject)
+      loader.load(Asset.fromModule(model).uri, resolve, () => {}, reject),
     );
 
     const textureAsset = Asset.fromModule(texture);
@@ -49,9 +50,16 @@ export default class Generic {
     _texture.magFilter = THREE.NearestFilter;
     _texture.minFilter = THREE.NearestFilter;
 
+    const material = new THREE.MeshPhongMaterial({
+      map: _texture,
+      flatShading: true,
+    });
+
     _model.traverse(child => {
       if (child instanceof THREE.Mesh) {
-        child.material.map = _texture;
+        // child.material.flatShading = true;
+        // child.material.emissive = 0x111111;
+        child.material = material;
         child.castShadow = castShadow;
         child.receiveShadow = receiveShadow;
       }
@@ -75,8 +83,8 @@ export default class Generic {
     } else {
       console.warn(
         `Node with Key ${key} does not exist in ${JSON.stringify(
-          Object.keys(this.models)
-        )}! Node/Generic`
+          Object.keys(this.models),
+        )}! Node/Generic`,
       );
     }
   };

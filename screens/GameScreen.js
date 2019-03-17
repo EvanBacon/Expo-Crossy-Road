@@ -167,7 +167,6 @@ class Game extends Component {
       this.camera.bottom = -(height * scale);
       this.camera.zoom = width * 0.15; // for birds eye view
       this.camera.updateProjectionMatrix();
-      console.log('SCALE:', this.camera.zoom);
     }
     if (this.scene) {
       // const scale = width / 400;
@@ -203,7 +202,6 @@ class Game extends Component {
     this.updateScale();
 
     this.doGame();
-    window.scene = this.scene;
     // this.props.setGameState(State.Game.none)
   };
 

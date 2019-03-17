@@ -140,8 +140,8 @@ export default class Water extends THREE.Object3D {
     this.add(this.floor);
 
     const foam = new Foam(1);
-    // foam.position.set(4.5, 0.2, -0.5);
-    // foam.visible = true;
+    foam.position.set(4.5, 0.2, -0.5);
+    foam.visible = true;
     foam.run();
     this.add(foam);
   }

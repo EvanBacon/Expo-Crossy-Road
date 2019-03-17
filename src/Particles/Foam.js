@@ -91,14 +91,14 @@ import Proton from '../Proton';
 //   }
 // }
 
-const size = 10.6;
+const size = 0.6;
 
 const material = new THREE.MeshPhongMaterial({
   color: 0xffffff,
   flatShading: true,
   side: THREE.DoubleSide,
 });
-const geometry = new THREE.BoxBufferGeometry(size, size, 10);
+const geometry = new THREE.PlaneBufferGeometry(size, size, 1);
 
 export default class Foam extends THREE.Object3D {
   parts = [];
@@ -179,7 +179,7 @@ export default class Foam extends THREE.Object3D {
 
     for (let i = 0; i < this.parts.length; i++) {
       let p = this.parts[i];
-      // runAnimation(p, i);
+      runAnimation(p, i);
     }
   };
 }
