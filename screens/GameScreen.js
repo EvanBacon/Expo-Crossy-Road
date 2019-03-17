@@ -29,6 +29,7 @@ const initialState = {
   index: Characters.chicken.index,
 };
 
+const IDLE_DURING_GAME_PLAY = false;
 const { width, height } = Dimensions.get('window');
 
 import {
@@ -264,10 +265,12 @@ class Game extends Component {
   doneMoving = () => {
     this._hero.moving = false;
     this.updateScore();
-    if (this.idleAnimation) {
-      this.idleAnimation.play();
-    } else {
-      this.idle();
+    if (IDLE_DURING_GAME_PLAY) {
+      if (this.idleAnimation) {
+        this.idleAnimation.play();
+      } else {
+        this.idle();
+      }
     }
     this.lastHeroZ = this._hero.position.z;
     this._hero.lastPosition = this._hero.position;
@@ -373,8 +376,8 @@ class Game extends Component {
     const s = 0.8;
     this.idleAnimation = new TimelineMax({ repeat: -1 });
     this.idleAnimation
-      .to(this._hero.scale, 0.3, { x: 1, y: s, z: 0.9, ease: Power1.easeIn })
-      .to(this._hero.scale, 0.6, { x: 1, y: 1, z: 1, ease: Power1.easeOut });
+      .to(this._hero.scale, 0.3, { y: s, ease: Power1.easeIn })
+      .to(this._hero.scale, 0.3, { y: 1, ease: Power1.easeOut });
   };
 
   // Setup initial scene
