@@ -513,26 +513,13 @@ class Game extends Component {
   };
 
   // Detect collisions with trees/cars
-  treeCollision = dir => {
-    let zPos = 0;
-    let xPos = 0;
-    if (dir == 'up') {
-      zPos = 1;
-    } else if (dir == 'down') {
-      zPos = -1;
-    } else if (dir == 'left') {
-      xPos = 1;
-    } else if (dir == 'right') {
-      xPos = -1;
-    }
-
-    if (this.floorMap.hasOwnProperty(`${(this._hero.position.z + zPos) | 0}`)) {
-      const { type, entity } = this.floorMap[
-        `${(this._hero.position.z + zPos) | 0}`
-      ];
+  treeCollision = position => {
+    const targetZ = `${position.z | 0}`;
+    if (targetZ in this.floorMap) {
+      const { type, entity } = this.floorMap[targetZ];
       if (type === 'grass') {
-        const key = `${(this._hero.position.x + xPos) | 0}`;
-        if (entity.obstacleMap.hasOwnProperty(key)) {
+        const key = `${position.x | 0}`;
+        if (key in entity.obstacleMap) {
           return true;
         }
       }
@@ -692,8 +679,8 @@ class Game extends Component {
     let velocity = { x: 0, z: 0 };
     switch (direction) {
       case SWIPE_LEFT:
-        this._hero.rotation.y = Math.PI / 2;
-        if (!this.treeCollision('left')) {
+        {
+          this._hero.rotation.y = Math.PI / 2;
           velocity = { x: 1, z: 0 };
 
           this.targetPosition = {
@@ -705,8 +692,8 @@ class Game extends Component {
         }
         break;
       case SWIPE_RIGHT:
-        this._hero.rotation.y = -Math.PI / 2;
-        if (!this.treeCollision('right')) {
+        {
+          this._hero.rotation.y = -Math.PI / 2;
           velocity = { x: -1, z: 0 };
 
           this.targetPosition = {
@@ -718,8 +705,8 @@ class Game extends Component {
         }
         break;
       case SWIPE_UP:
-        this._hero.rotation.y = 0;
-        if (!this.treeCollision('up')) {
+        {
+          this._hero.rotation.y = 0;
           let rowObject = this.floorMap[`${this.initialPosition.z}`] || {};
           if (rowObject.type === 'road') {
             this.playPassiveCarSound();
@@ -752,8 +739,8 @@ class Game extends Component {
         }
         break;
       case SWIPE_DOWN:
-        this._hero.rotation.y = Math.PI;
-        if (!this.treeCollision('down')) {
+        {
+          this._hero.rotation.y = Math.PI;
           const row = (this.floorMap[`${this.initialPosition.z - 1}`] || {})
             .type;
           let shouldRound = true; //row !== 'water';
@@ -783,6 +770,16 @@ class Game extends Component {
     }
     let { targetPosition, initialPosition } = this;
 
+    // Check collision
+    if (this.treeCollision(this.targetPosition)) {
+      this.targetPosition = {
+        x: this.initialPosition.x,
+        y: this.initialPosition.y,
+        z: this.initialPosition.z,
+      };
+      this._hero.moving = false;
+    }
+
     const targetRow =
       this.floorMap[`${this.initialPosition.z + velocity.z}`] || {};
     let finalY = targetRow.entity.top || groundLevel;
@@ -793,13 +790,14 @@ class Game extends Component {
     ) {
       finalY = targetRow.entity.getPlayerSunkenPosition();
     }
+    this.targetPosition.y = finalY;
 
     // console.log('MOVE TO: ', rowObject.type, finalY, rowObject.entity.top);
 
     let delta = {
-      x: targetPosition.x - initialPosition.x,
-      y: finalY,
-      z: targetPosition.z - initialPosition.z,
+      x: this.targetPosition.x - initialPosition.x,
+      y: this.targetPosition.y,
+      z: this.targetPosition.z - initialPosition.z,
     };
 
     this.playMoveSound();
@@ -809,7 +807,7 @@ class Game extends Component {
     this.heroAnimations = [
       TweenMax.to(this._hero.position, timing, {
         x: this.initialPosition.x + delta.x * 0.75,
-        y: finalY + 0.5,
+        y: this.targetPosition.y + 0.5,
         z: this.initialPosition.z + delta.z * 0.75,
       }),
       TweenMax.to(this._hero.scale, timing, {
@@ -832,7 +830,7 @@ class Game extends Component {
       }),
       TweenMax.to(this._hero.position, timing, {
         x: this.targetPosition.x,
-        y: finalY,
+        y: this.targetPosition.y,
         z: this.targetPosition.z,
         ease: Power4.easeOut,
         delay: 0.151,
