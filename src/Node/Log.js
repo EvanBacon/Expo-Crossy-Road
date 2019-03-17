@@ -7,7 +7,11 @@ export default class Log extends Generic {
     } = this.globalModels;
 
     for (let i = 0; i < 4; i++) {
-      const model = await this._download({ ...log[`${i}`], castShadow: true, receiveShadow: true });
+      const model = await this._download({
+        ...log[`${i}`],
+        castShadow: true,
+        receiveShadow: true,
+      });
       this.models[`${i}`] = model;
     }
     return this.models;

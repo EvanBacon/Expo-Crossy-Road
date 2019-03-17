@@ -46,6 +46,7 @@ export default class Water extends THREE.Object3D {
         const width = this.getWidth(mesh);
         this.entities.push({
           mesh,
+          top: 0.2,
           min: 0.01,
           mid: 0.125,
           dir: 0,
@@ -90,6 +91,7 @@ export default class Water extends THREE.Object3D {
 
         this.entities.push({
           mesh,
+          top: 0.3,
           min: -0.3,
           mid: -0.1,
           dir: xDir,
@@ -121,11 +123,11 @@ export default class Water extends THREE.Object3D {
     });
 
     TweenMax.to(player.position, timing * 0.9, {
-      y: Settings.groundLevel + -0.1,
+      y: entity.top + entity.min,
     });
 
     TweenMax.to(player.position, timing, {
-      y: Settings.groundLevel,
+      y: entity.top + entity.mid,
       delay: timing,
     });
   };
@@ -178,12 +180,17 @@ export default class Water extends THREE.Object3D {
     }
   };
 
-  shouldPlayerDieOnMove = position => {
+  getRidableForPosition = position => {
     if (Math.round(position.z) !== this.position.z) {
-      return false;
+      return null;
     }
     const log = this.getCollisionLog(position);
-    return !log;
+    return log;
+  };
+
+  // When the player jumps onto a lily or log we want it to be smooth, predict the position ahead of time.
+  getPlayerLowerBouncePositionForEntity = entity => {
+    return entity.top + entity.mid;
   };
 
   getPlayerSunkenPosition = () => {

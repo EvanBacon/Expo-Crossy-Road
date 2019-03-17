@@ -773,8 +773,9 @@ class Game extends Component {
     }
     let { targetPosition, initialPosition } = this;
 
-    // Check collision
+    // Check collision using the computed movement.
     if (this.treeCollision(this.targetPosition)) {
+      // If we collide with an object, then reset the target position so the character just jumps up.
       this.targetPosition = {
         x: this.initialPosition.x,
         y: this.initialPosition.y,
@@ -787,12 +788,20 @@ class Game extends Component {
       this.floorMap[`${this.initialPosition.z + velocity.z}`] || {};
     let finalY = targetRow.entity.top || groundLevel;
     // If the next move is into the river, then we want to jump into it.
-    if (
-      targetRow.type === 'water' &&
-      targetRow.entity.shouldPlayerDieOnMove(this.targetPosition)
-    ) {
-      finalY = targetRow.entity.getPlayerSunkenPosition();
+    if (targetRow.type === 'water') {
+      const ridable = targetRow.entity.getRidableForPosition(
+        this.targetPosition,
+      );
+      console.log(ridable);
+      if (!ridable) {
+        finalY = targetRow.entity.getPlayerSunkenPosition();
+      } else {
+        finalY = targetRow.entity.getPlayerLowerBouncePositionForEntity(
+          ridable,
+        );
+      }
     }
+
     this.targetPosition.y = finalY;
 
     // console.log('MOVE TO: ', rowObject.type, finalY, rowObject.entity.top);
