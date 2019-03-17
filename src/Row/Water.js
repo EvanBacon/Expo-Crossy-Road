@@ -38,7 +38,7 @@ export default class Water extends THREE.Object3D {
     // Number of cars: 1 through 3
     let numItems = Math.floor(Math.random() * 2) + 2;
 
-    let xPos = Math.random() * 2 - 4;
+    let xPos = Math.floor(Math.random() * 2 - 4);
 
     for (let x = 0; x < numItems; x++) {
       if (this.entities.length - 1 < x) {
@@ -55,7 +55,7 @@ export default class Water extends THREE.Object3D {
         this.floor.add(mesh);
       }
 
-      this.entities[x].mesh.position.set(xPos + 0.4, 0.125, 0);
+      this.entities[x].mesh.position.set(xPos, 0.125, 0);
       this.entities[x].speed = 0;
       // this.entities[x].mesh.rotation.y = (Math.PI / 2) * xDir;
 
@@ -66,7 +66,7 @@ export default class Water extends THREE.Object3D {
         ease: Power2.easeInOut,
       });
 
-      xPos += Math.random() * 2 + 1;
+      xPos += Math.floor(Math.random() * 2 + 1);
     }
   };
 
