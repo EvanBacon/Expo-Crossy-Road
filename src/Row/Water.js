@@ -178,13 +178,25 @@ export default class Water extends THREE.Object3D {
     }
   };
 
+  shouldPlayerDieOnMove = position => {
+    if (Math.round(position.z) !== this.position.z) {
+      return false;
+    }
+    const log = this.getCollisionLog(position);
+    return !log;
+  };
+
+  getPlayerSunkenPosition = () => {
+    return Math.sin(this.sineCount) * 0.08 - 0.2;
+  };
+
   shouldCheckHazardCollision = ({ player }) => {
     if (Math.round(player.position.z) === this.position.z && !player.moving) {
       if (!player.ridingOn) {
         if (player.isAlive) {
           this.onCollide(this.floor, 'water');
         } else {
-          let y = Math.sin(this.sineCount) * 0.08 - 0.2;
+          let y = this.getPlayerSunkenPosition();
           this.sineCount += this.sineInc;
           player.position.y = y;
           player.rotation.y += 0.01;
@@ -193,6 +205,28 @@ export default class Water extends THREE.Object3D {
         }
       }
     }
+  };
+
+  getCollisionLog = position => {
+    for (const entity of this.entities) {
+      const log = this.willCollideWithLog2D({ position, entity });
+      if (log) {
+        return log;
+      }
+    }
+  };
+
+  willCollideWithLog2D = ({ position, entity }) => {
+    const { mesh, collisionBox } = entity;
+
+    if (
+      position.x < mesh.position.x + collisionBox &&
+      position.x > mesh.position.x - collisionBox
+    ) {
+      return entity;
+    }
+
+    return null;
   };
 
   shouldCheckCollision = ({ player, entity }) => {

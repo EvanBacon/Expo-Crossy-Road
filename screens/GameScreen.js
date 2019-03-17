@@ -725,7 +725,7 @@ class Game extends Component {
             this.playPassiveCarSound();
           }
 
-          let shouldRound = rowObject.type !== 'water';
+          let shouldRound = true; // rowObject.type !== 'water';
           velocity = { x: 0, z: 1 };
 
           this.targetPosition = {
@@ -733,6 +733,7 @@ class Game extends Component {
             y: this.initialPosition.y,
             z: this.initialPosition.z + 1,
           };
+
           if (shouldRound) {
             this.targetPosition.x = Math.round(this.targetPosition.x);
             const { ridingOn } = this._hero;
@@ -755,7 +756,7 @@ class Game extends Component {
         if (!this.treeCollision('down')) {
           const row = (this.floorMap[`${this.initialPosition.z - 1}`] || {})
             .type;
-          let shouldRound = row !== 'water';
+          let shouldRound = true; //row !== 'water';
           velocity = { x: 0, z: -1 };
 
           this.targetPosition = {
@@ -782,9 +783,16 @@ class Game extends Component {
     }
     let { targetPosition, initialPosition } = this;
 
-    let rowObject =
+    const targetRow =
       this.floorMap[`${this.initialPosition.z + velocity.z}`] || {};
-    let finalY = rowObject.entity.top || groundLevel;
+    let finalY = targetRow.entity.top || groundLevel;
+    // If the next move is into the river, then we want to jump into it.
+    if (
+      targetRow.type === 'water' &&
+      targetRow.entity.shouldPlayerDieOnMove(this.targetPosition)
+    ) {
+      finalY = targetRow.entity.getPlayerSunkenPosition();
+    }
 
     // console.log('MOVE TO: ', rowObject.type, finalY, rowObject.entity.top);
 
