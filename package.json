@@ -6,8 +6,8 @@
   "private": true,
   "devDependencies": {
     "@expo/webpack-config": "^0.1.5",
-    "babel-preset-expo": "^5.0.0",
     "babel-eslint": "^10.0.1",
+    "babel-preset-expo": "^5.0.0",
     "eslint": "^5.9.0",
     "eslint-config-airbnb": "^17.1.0",
     "eslint-plugin-import": "^2.14.0",
@@ -37,6 +37,7 @@
     "redux": "^4.0.1",
     "redux-persist": "^5.5.0",
     "three": "^0.88.0",
+    "three.proton.js": "^0.1.5",
     "uuid": "^3.1.0"
   }
 }

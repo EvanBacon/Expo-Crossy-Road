@@ -8714,6 +8714,11 @@ text-table@0.2.0, text-table@^0.2.0:
   resolved "https://registry.yarnpkg.com/text-table/-/text-table-0.2.0.tgz#7f5ee823ae805207c00af2df4a84ec3fcfa570b4"
   integrity sha1-f17oI66AUgfACvLfSoTsP8+lcLQ=
 
+three.proton.js@^0.1.5:
+  version "0.1.5"
+  resolved "https://registry.yarnpkg.com/three.proton.js/-/three.proton.js-0.1.5.tgz#3ae32fd9cf3b5698e3b546946e53badbda04948e"
+  integrity sha512-6RlDLJMzJWOWeMaBuEYIgLDeC/Tuqih4zCQ5gi5JZMR2T0N9Hebpreo+6O7eeuj3yIwRX/VnLmTgWHd92p0eQA==
+
 three@0.88.0, three@^0.88.0:
   version "0.88.0"
   resolved "https://registry.yarnpkg.com/three/-/three-0.88.0.tgz#4256c2fc38e4fb23a0d23eba2b6cce4df8e466d5"

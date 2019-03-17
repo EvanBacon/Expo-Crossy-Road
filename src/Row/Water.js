@@ -2,7 +2,7 @@ import { Power2, TweenMax } from 'gsap';
 import * as THREE from 'three';
 
 import ModelLoader from '../../ModelLoader';
-import { groundLevel } from '../GameSettings';
+import * as Settings from '../GameSettings';
 import Foam from '../Particles/Foam';
 
 export default class Water extends THREE.Object3D {
@@ -28,7 +28,7 @@ export default class Water extends THREE.Object3D {
 
     if (this.isStaticRow(this.position.z | 0)) {
       this.generateStatic();
-    } else {
+    } else if (!Settings.disableDriftwood) {
       this.generateDynamic();
     }
   };
@@ -121,11 +121,11 @@ export default class Water extends THREE.Object3D {
     });
 
     TweenMax.to(player.position, timing * 0.9, {
-      y: groundLevel + -0.1,
+      y: Settings.groundLevel + -0.1,
     });
 
     TweenMax.to(player.position, timing, {
-      y: groundLevel,
+      y: Settings.groundLevel,
       delay: timing,
     });
   };
@@ -139,11 +139,11 @@ export default class Water extends THREE.Object3D {
     this.floor = _river.getNode();
     this.add(this.floor);
 
-    let foam = new Foam(1);
-    foam.mesh.position.set(4.5, 0.2, -0.5);
-    foam.mesh.visible = true;
+    const foam = new Foam(1);
+    // foam.position.set(4.5, 0.2, -0.5);
+    // foam.visible = true;
     foam.run();
-    this.floor.add(foam.mesh);
+    this.add(foam);
   }
 
   ///Is Lily

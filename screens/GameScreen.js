@@ -146,27 +146,51 @@ class Game extends Component {
     } catch (error) {
       console.warn('sound error', { error });
     }
+
+    Dimensions.addEventListener('change', this.onScreenResize);
   }
+
+  onScreenResize = ({ window }) => {
+    this.updateScale();
+  };
+
+  componentWillUnmount() {
+    Dimensions.removeEventListener('change', this.onScreenResize);
+  }
+
+  updateScale = () => {
+    const { width, height, scale } = Dimensions.get('window');
+    if (this.camera) {
+      this.camera.left = -(width * scale);
+      this.camera.right = width * scale;
+      this.camera.top = height * scale;
+      this.camera.bottom = -(height * scale);
+      this.camera.zoom = width * 0.15; // for birds eye view
+      this.camera.updateProjectionMatrix();
+      console.log('SCALE:', this.camera.zoom);
+    }
+    if (this.scene) {
+      // const scale = width / 400;
+      // this.scene.scale.set(scale, scale, scale);
+      // this.camera.lookAt(this.scene.position);
+      // this.renderer.setPixelRatio(scale);
+    }
+    if (this.renderer) {
+      this.renderer.setSize(width * scale, height * scale);
+    }
+  };
+
   componentWillMount() {
     this.setupGame();
   }
 
   setupGame = () => {
-    // if (!this.scene) {
     this.scene = new THREE.Scene();
     this.worldWithCamera = new THREE.Group();
     this.world = new THREE.Group();
     this.scene.add(this.worldWithCamera);
     this.worldWithCamera.add(this.world);
-    this.camera = new THREE.OrthographicCamera(
-      -width,
-      width,
-      height,
-      -height,
-      -30,
-      30,
-    );
-    // }
+    this.camera = new THREE.OrthographicCamera(-1, 1, 1, -1, -30, 30);
 
     if (DEBUG_CAMERA_CONTROLS) {
       this.debugControls = new THREE.OrbitControls(this.camera);
@@ -174,12 +198,12 @@ class Game extends Component {
 
     this.worldWithCamera.position.z = -startingRow;
     this.camera.position.set(-1, 2.8, -2.9); // Change -1 to -.02
-    // this.camera.position.set(-1, 1, -2.9); // Change -1 to -.02
-    this.camera.zoom = 110; // for birds eye view
-    this.camera.updateProjectionMatrix();
     this.camera.lookAt(this.scene.position);
 
+    this.updateScale();
+
     this.doGame();
+    window.scene = this.scene;
     // this.props.setGameState(State.Game.none)
   };
 
@@ -227,8 +251,8 @@ class Game extends Component {
 
     this.light = light;
 
-    let helper = new THREE.CameraHelper(light.shadow.camera);
-    this.scene.add(helper);
+    // let helper = new THREE.CameraHelper(light.shadow.camera);
+    // this.scene.add(helper);
   };
 
   newScore = () => {

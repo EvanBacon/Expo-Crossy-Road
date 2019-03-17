@@ -4,6 +4,7 @@ import { View } from 'react-native';
 
 import * as THREE from 'three';
 import ModelLoader from './ModelLoader';
+// import GameScreen from './screens/DebugScene';
 import GameScreen from './screens/GameScreen';
 
 global.THREE = THREE;
@@ -16,6 +17,8 @@ console.ignoredYellowBox = [
   'THREE.WebGLProgram',
 ];
 
+const DEBUG_DONT_LOAD_ASSETS = false;
+
 export default class App extends React.Component {
   persister;
   state = {
@@ -23,6 +26,9 @@ export default class App extends React.Component {
   };
 
   async componentWillMount() {
+    if (DEBUG_DONT_LOAD_ASSETS) {
+      return;
+    }
     Audio.setIsEnabledAsync(true);
 
     try {
@@ -38,6 +44,10 @@ export default class App extends React.Component {
   }
 
   render() {
+    if (DEBUG_DONT_LOAD_ASSETS) {
+      return <GameScreen />;
+    }
+
     if (this.state.appIsReady) {
       return <GameScreen />;
     }
