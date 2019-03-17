@@ -53,6 +53,9 @@ export default class Generic {
     const material = new THREE.MeshPhongMaterial({
       map: _texture,
       flatShading: true,
+      emissiveIntensity: 0,
+      shininess: 0,
+      reflectivity: 0,
     });
 
     _model.traverse(child => {

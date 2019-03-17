@@ -142,7 +142,7 @@ class Game extends Component {
       console.warn('error', { error });
     }
     try {
-      await this.waterSoundObject.loadAsync(AudioFiles.water);
+      await waterSoundObject.loadAsync(AudioFiles.water);
     } catch (error) {
       console.warn('sound error', { error });
     }
@@ -218,7 +218,7 @@ class Game extends Component {
       if (type === 'water') {
         this.waterParticles.mesh.position.copy(model.position);
         this.waterParticles.run(type);
-        await this.waterSoundObject.playAsync();
+        await waterSoundObject.playAsync();
       } else if (type === 'feathers') {
         this.featherParticles.mesh.position.copy(model.position);
 
@@ -357,10 +357,9 @@ class Game extends Component {
   };
 
   stopIdle = () => {
-    if (!this.idleAnimation || !this.idleAnimation.pause) {
-      return;
+    if (this.idleAnimation && this.idleAnimation.pause) {
+      this.idleAnimation.pause();
     }
-    this.idleAnimation.pause();
     this.idleAnimation = null;
     this._hero.scale.set(1, 1, 1);
   };
@@ -611,12 +610,14 @@ class Game extends Component {
     });
     this.heroAnimations = [];
     // this.gameState = State.Game.gameOver;
-    this.setState({ gameState: State.Game.gameOver });
+    setTimeout(() => {
+      this.setState({ gameState: State.Game.gameOver });
+    }, 300);
     // this.props.setGameState(this.gameState);
 
-    InteractionManager.runAfterInteractions(_ => {
-      // this.props.navigation.dispatch(NavigationActions.navigate({ routeName: 'GameOver' }));
-    });
+    // InteractionManager.runAfterInteractions(_ => {
+    // this.props.navigation.dispatch(NavigationActions.navigate({ routeName: 'GameOver' }));
+    // });
     // this.props.nav.navigation.navigate('GameOver', {})
   };
 
@@ -785,7 +786,7 @@ class Game extends Component {
       this.floorMap[`${this.initialPosition.z + velocity.z}`] || {};
     let finalY = rowObject.entity.top || groundLevel;
 
-    console.log('MOVE TO: ', rowObject.type, finalY, rowObject.entity.top);
+    // console.log('MOVE TO: ', rowObject.type, finalY, rowObject.entity.top);
 
     let delta = {
       x: targetPosition.x - initialPosition.x,
@@ -842,7 +843,7 @@ class Game extends Component {
     if (this.state.gameState !== State.Game.playing) {
       return;
     }
-    this.idleAnimation.pause();
+    this.stopIdle();
 
     TweenMax.to(this._hero.scale, 0.2, {
       x: 1.2,
