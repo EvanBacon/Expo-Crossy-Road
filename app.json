@@ -20,17 +20,17 @@
     "ios": {
       "icon": "./assets/icons/app.png",
       "supportsTablet": true,
-      "bundleIdentifier": "com.evanbacon.crossyplatform",
-      "buildNumber": "0.0.0"
+      "bundleIdentifier": "com.hipsterwhale.crossy",
+      "buildNumber": "0.0.0",
+      "appStoreUrl": "https://itunes.apple.com/us/app/crossy-road/id924373886?mt=8"
     },
     "android": {
       "icon": "./assets/icons/app.png",
-      "package": "com.evanbacon.crossyplatform",
+      "package": "com.yodo1.crossyroad",
       "versionCode": 1
     },
     "web": {
-      "shortName": "Crossy",
-      "report": true
+      "shortName": "Crossy"
     }
   }
 }
