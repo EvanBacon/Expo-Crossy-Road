@@ -37,6 +37,9 @@ export default class Generic {
   };
 
   _downloadAssets = async ({ model, texture, castShadow, receiveShadow }) => {
+    if (!THREE.OBJLoader) {
+      require('three/examples/js/loaders/OBJLoader');
+    }
     const loader = new THREE.OBJLoader();
     let _model = await new Promise((resolve, reject) =>
       loader.load(Asset.fromModule(model).uri, resolve, () => {}, reject),

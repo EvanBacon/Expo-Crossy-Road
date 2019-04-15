@@ -9,6 +9,10 @@ export const Fill = {
   random: 'random',
 };
 
+const HAS_WALLS = true;
+const HAS_OBSTACLES = true;
+const HAS_VARIETY = true;
+
 export default class Grass extends THREE.Object3D {
   active = false;
   entities = [];
@@ -37,10 +41,15 @@ export default class Grass extends THREE.Object3D {
 
   obstacleMap = {};
   addObstacle = x => {
-    let mesh =
-      Math.random() < 0.4
-        ? ModelLoader._boulder.getRandom()
-        : ModelLoader._tree.getRandom();
+    let mesh;
+    if (HAS_VARIETY) {
+      mesh =
+        Math.random() < 0.4
+          ? ModelLoader._boulder.getRandom()
+          : ModelLoader._tree.getRandom();
+    } else {
+      mesh = ModelLoader._tree.getRandom();
+    }
     this.obstacleMap[`${x | 0}`] = { index: this.entities.length };
     this.entities.push({ mesh });
     this.floor.add(mesh);
@@ -58,18 +67,22 @@ export default class Grass extends THREE.Object3D {
         continue;
       }
 
-      /// Walls
-      if (x >= 9 || x <= -1) {
-        this.addObstacle(_x);
-        continue;
+      if (HAS_WALLS) {
+        /// Walls
+        if (x >= 9 || x <= -1) {
+          this.addObstacle(_x);
+          continue;
+        }
       }
 
-      if (_rowCount < count) {
-        if (_x !== 0 && Math.random() > 0.6) {
-          if (type == Fill.empty && _x == 0) {
-          } else {
-            this.addObstacle(_x);
-            _rowCount++;
+      if (HAS_OBSTACLES) {
+        if (_rowCount < count) {
+          if (_x !== 0 && Math.random() > 0.6) {
+            if (type == Fill.empty && _x == 0) {
+            } else {
+              this.addObstacle(_x);
+              _rowCount++;
+            }
           }
         }
       }

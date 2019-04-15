@@ -8,26 +8,29 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "primaryColor": "#69CEED",
-    "icon": "./assets/icons/expo.png",
+    "icon": "./assets/icons/app.png",
     "platforms": ["android", "ios", "web"],
     "splash": {
-      "image": "./assets/icons/splash.png",
-      "backgroundColor": "#69CEED",
+      "image": "./assets/icons/loading.png",
       "resizeMode": "cover"
     },
     "packagerOpts": {
       "assetExts": ["ttf", "mp4", "mp3", "obj", "wav", "mtl"]
     },
     "ios": {
-      "icon": "./assets/icons/ios.png",
+      "icon": "./assets/icons/app.png",
       "supportsTablet": true,
       "bundleIdentifier": "com.evanbacon.crossyplatform",
       "buildNumber": "0.0.0"
     },
     "android": {
-      "icon": "./assets/icons/expo.png",
+      "icon": "./assets/icons/app.png",
       "package": "com.evanbacon.crossyplatform",
       "versionCode": 1
+    },
+    "web": {
+      "shortName": "Crossy",
+      "report": true
     }
   }
 }

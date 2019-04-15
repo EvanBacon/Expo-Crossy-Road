@@ -32,6 +32,11 @@ const initialState = {
 const IDLE_DURING_GAME_PLAY = false;
 const { width, height } = Dimensions.get('window');
 
+const normalizeAngle = angle => {
+  return Math.atan2(Math.sin(angle), Math.cos(angle));
+};
+
+const PI_2 = Math.PI * 0.5;
 import {
   groundLevel,
   maxRows,
@@ -166,7 +171,7 @@ class Game extends Component {
       this.camera.right = width * scale;
       this.camera.top = height * scale;
       this.camera.bottom = -(height * scale);
-      this.camera.zoom = width * 0.15; // for birds eye view
+      this.camera.zoom = 300;
       this.camera.updateProjectionMatrix();
     }
     if (this.scene) {
@@ -193,7 +198,7 @@ class Game extends Component {
     this.camera = new THREE.OrthographicCamera(-1, 1, 1, -1, -30, 30);
 
     if (DEBUG_CAMERA_CONTROLS) {
-      this.debugControls = new THREE.OrbitControls(this.camera);
+      // this.debugControls = new THREE.OrbitControls(this.camera);
     }
 
     this.worldWithCamera.position.z = -startingRow;
@@ -222,7 +227,6 @@ class Game extends Component {
         await waterSoundObject.playAsync();
       } else if (type === 'feathers') {
         this.featherParticles.mesh.position.copy(model.position);
-
         this.featherParticles.run(type, direction);
       }
     });
@@ -627,6 +631,7 @@ class Game extends Component {
     if (!this._hero.moving) {
       this.moveUserOnEntity();
       this.moveUserOnCar();
+      this.checkIfUserHasFallenOutOfFrame();
     }
     this.forwardScene();
   };
@@ -656,6 +661,7 @@ class Game extends Component {
     }
   };
 
+  targetRotation;
   moveWithDirection = direction => {
     if (this.state.gameState !== State.Game.playing) {
       return;
@@ -670,20 +676,46 @@ class Game extends Component {
       this.targetPosition = this.initialPosition;
     }
 
+
+
     if (this._hero.moving) {
       this._hero.position.set(
         this.targetPosition.x,
         this.targetPosition.y,
         this.targetPosition.z,
       );
+      if (this.targetRotation) {
+        this._hero.rotation.y = normalizeAngle(this.targetRotation);
+      }
       // return
     }
 
+  
+
+    const calculateRotation = (currrent, target) => {
+      if (target !== currrent) {
+        let _target = target; //+ Math.PI;
+        if (_target % currrent === 0) {
+          _target = currrent;
+        } else if (_target > 0) {
+          _target += currrent / 2;
+        } else {
+          _target -= currrent / 2;
+        }
+        return _target; // - Math.PI;
+      }
+      return target;
+    };
+
     let velocity = { x: 0, z: 0 };
+
+    this.targetRotation = normalizeAngle(this._hero.rotation.y);
+    // const normalizedRotation = normalizeAngle(this._hero.rotation.y)
     switch (direction) {
       case SWIPE_LEFT:
         {
-          this._hero.rotation.y = Math.PI / 2;
+          this.targetRotation = PI_2; // calculateRotation(targetRotation, Math.PI / 2);
+
           velocity = { x: 1, z: 0 };
 
           this.targetPosition = {
@@ -696,7 +728,22 @@ class Game extends Component {
         break;
       case SWIPE_RIGHT:
         {
-          this._hero.rotation.y = -Math.PI / 2;
+          // targetRotation = calculateRotation(targetRotation, -Math.PI / 2);
+          console.log(
+            'before',
+            this.targetRotation,
+            -PI_2,
+            this.targetRotation === -PI_2,
+          );
+          if (this.targetPosition === 0) {
+            this.targetPosition = -PI_2;
+          } else if (
+            (this.targetRotation | 0) !== -(PI_2 | 0) &&
+            (this.targetRotation | 0) !== ((Math.PI + PI_2) | 0)
+          ) {
+            this.targetRotation = Math.PI + PI_2;
+          }
+          console.log('after', this.targetRotation);
           velocity = { x: -1, z: 0 };
 
           this.targetPosition = {
@@ -709,7 +756,7 @@ class Game extends Component {
         break;
       case SWIPE_UP:
         {
-          this._hero.rotation.y = 0;
+          this.targetRotation = 0;
           let rowObject = this.floorMap[`${this.initialPosition.z}`] || {};
           if (rowObject.type === 'road') {
             this.playPassiveCarSound();
@@ -743,7 +790,7 @@ class Game extends Component {
         break;
       case SWIPE_DOWN:
         {
-          this._hero.rotation.y = Math.PI;
+          this.targetRotation = Math.PI;
           const row = (this.floorMap[`${this.initialPosition.z - 1}`] || {})
             .type;
           let shouldRound = true; //row !== 'water';
@@ -816,41 +863,54 @@ class Game extends Component {
 
     const { timing } = this;
 
-    this.heroAnimations = [
-      TweenMax.to(this._hero.position, timing, {
-        x: this.initialPosition.x + delta.x * 0.75,
-        y: this.targetPosition.y + 0.5,
-        z: this.initialPosition.z + delta.z * 0.75,
-      }),
-      TweenMax.to(this._hero.scale, timing, {
+    const inAirPosition = {
+      x: this.initialPosition.x + delta.x * 0.75,
+      y: this.targetPosition.y + 0.5,
+      z: this.initialPosition.z + delta.z * 0.75,
+    };
+
+    const positionChangeAnimation = new TimelineMax({
+      onComplete: () => {
+        console.log('Done', this._hero.position);
+        this.doneMoving();
+      },
+    });
+
+    positionChangeAnimation
+      .to(this._hero.position, timing, { ...inAirPosition })
+      .to(this._hero.position, timing, {
+        x: this.targetPosition.x,
+        y: this.targetPosition.y,
+        z: this.targetPosition.z,
+      });
+
+    const scaleChangeAnimation = new TimelineMax();
+    scaleChangeAnimation
+      .to(this._hero.scale, timing, {
         x: 1,
         y: 1.2,
         z: 1,
-      }),
-      TweenMax.to(this._hero.scale, timing, {
+      })
+      .to(this._hero.scale, timing, {
         x: 1.0,
         y: 0.8,
         z: 1,
-        delay: timing,
-      }),
-      TweenMax.to(this._hero.scale, timing, {
+      })
+      .to(this._hero.scale, timing, {
         x: 1,
         y: 1,
         z: 1,
         ease: Bounce.easeOut,
-        delay: timing * 2,
-      }),
-      TweenMax.to(this._hero.position, timing, {
-        x: this.targetPosition.x,
-        y: this.targetPosition.y,
-        z: this.targetPosition.z,
-        ease: Power4.easeOut,
-        delay: 0.151,
-        onComplete: () => {
-          console.log('Done', this._hero.position);
-          this.doneMoving();
-        },
-        onCompleteParams: [],
+      });
+
+    this.heroAnimations = [
+      positionChangeAnimation,
+      scaleChangeAnimation,
+      TweenMax.to(this._hero.rotation, timing, {
+        y: this.targetRotation,
+        ease: Power1.easeInOut,
+        onComplete: () =>
+          (this._hero.rotation.y = normalizeAngle(this._hero.rotation.y)),
       }),
     ];
 
@@ -934,7 +994,7 @@ class Game extends Component {
     return (
       <View
         pointerEvents="box-none"
-        style={[{ flex: 1, backgroundColor: '#6dceea' }, this.props.style]}
+        style={[StyleSheet.absoluteFill, { flex: 1, backgroundColor: '#6dceea' }, this.props.style]}
       >
         {this.renderGame()}
         <Score

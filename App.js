@@ -1,4 +1,4 @@
-import { Font, Audio } from 'expo';
+import { Font, Audio, AppLoading } from 'expo';
 import React from 'react';
 import { View } from 'react-native';
 
@@ -8,7 +8,7 @@ import ModelLoader from './ModelLoader';
 import GameScreen from './screens/GameScreen';
 
 global.THREE = THREE;
-require('three/examples/js/loaders/OBJLoader');
+
 // require('three/examples/js/controls/OrbitControls');
 
 console.ignoredYellowBox = [
@@ -34,8 +34,8 @@ export default class App extends React.Component {
     try {
       await Promise.all([
         Font.loadAsync({ retro: require('./assets/fonts/retro.ttf') }),
+        ModelLoader.loadModels()
       ]);
-      await ModelLoader.loadModels();
     } catch (e) {
       console.warn(e);
     } finally {
@@ -51,6 +51,6 @@ export default class App extends React.Component {
     if (this.state.appIsReady) {
       return <GameScreen />;
     }
-    return <View />;
+    return <AppLoading />;
   }
 }

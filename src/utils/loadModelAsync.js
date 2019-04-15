@@ -26,6 +26,9 @@ async function loadOBJAsync(resource) {
   if (!asset.localUri) {
     await asset.downloadAsync();
   }
+  if (!THREE.OBJLoader) {
+    require('three/examples/js/loaders/OBJLoader');
+  }
   const loader = new THREE.OBJLoader();
   return await new Promise((resolve, reject) =>
     loader.load(asset.localUri, resolve, () => {}, reject),

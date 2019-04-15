@@ -4,6 +4,10 @@
   "description": "The endless arcade hopper you'll never want to put down",
   "author": null,
   "private": true,
+  "scripts": {
+    "serve": "serve ./web-build",
+    "deploy:web": "netlify deploy"
+  },
   "devDependencies": {
     "@expo/webpack-config": "^0.1.5",
     "babel-eslint": "^10.0.1",
@@ -12,7 +16,8 @@
     "eslint-config-airbnb": "^17.1.0",
     "eslint-plugin-import": "^2.14.0",
     "eslint-plugin-jsx-a11y": "^6.1.2",
-    "eslint-plugin-react": "^7.11.1"
+    "eslint-plugin-react": "^7.11.1",
+    "serve": "^11.0.0"
   },
   "main": "node_modules/expo/AppEntry.js",
   "dependencies": {
