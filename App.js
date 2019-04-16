@@ -1,12 +1,13 @@
-import { Font, Audio, AppLoading } from 'expo';
+import { Audio, Font } from 'expo';
 import React from 'react';
-import { View } from 'react-native';
-
+import { Image } from 'react-native';
 import * as THREE from 'three';
+
 import ModelLoader from './ModelLoader';
-// import GameScreen from './screens/DebugScene';
+import AppNavigator from './navigation/AppNavigator';
 import GameScreen from './screens/GameScreen';
 
+// import GameScreen from './screens/DebugScene';
 global.THREE = THREE;
 
 // require('three/examples/js/controls/OrbitControls');
@@ -34,7 +35,7 @@ export default class App extends React.Component {
     try {
       await Promise.all([
         Font.loadAsync({ retro: require('./assets/fonts/retro.ttf') }),
-        ModelLoader.loadModels()
+        ModelLoader.loadModels(),
       ]);
     } catch (e) {
       console.warn(e);
@@ -49,8 +50,13 @@ export default class App extends React.Component {
     }
 
     if (this.state.appIsReady) {
-      return <GameScreen />;
+      return <AppNavigator />;
     }
-    return <AppLoading />;
+    return (
+      <Image
+        style={{ backgroundColor: '#69CEED', flex: 1, resizeMode: 'cover' }}
+        source={require('./assets/icons/loading.png')}
+      />
+    );
   }
 }
