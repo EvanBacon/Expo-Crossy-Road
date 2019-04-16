@@ -1,14 +1,13 @@
 import { Constants } from 'expo';
 import React, { Component } from 'react';
-import { Share, StyleSheet, View } from 'react-native';
+import { Share, Text, StyleSheet, View } from 'react-native';
 import { connect } from 'react-redux';
 
 import Characters from '../Characters';
 import Colors from '../Colors';
 import Images from '../Images';
-import connectCharacter from '../../utils/connectCharacter';
+// import connectCharacter from '../../utils/connectCharacter';
 import Button from '../components/Button';
-import RetroText from '../RetroText';
 import Carousel from '../components/CharacterSelect/Carousel';
 
 class CharacterSelect extends Component {
@@ -121,8 +120,9 @@ class CharacterSelect extends Component {
             }}
           />
         </View>
-        <RetroText
+        <Text
           style={{
+            fontFamily: 'retro',
             position: 'absolute',
             fontSize: 24,
             color: 'white',
@@ -131,16 +131,17 @@ class CharacterSelect extends Component {
           }}
         >
           4/ 8
-        </RetroText>
+        </Text>
       </View>
     );
   }
 }
 
-export default connect(
-  state => ({}),
-  {},
-)(connectCharacter(CharacterSelect));
+export default CharacterSelect;
+// export default connect(
+//   state => ({}),
+//   {},
+// )(connectCharacter(CharacterSelect));
 
 CharacterSelect.defaultProps = {
   coins: 0,

@@ -1,13 +1,12 @@
 import { Constants } from 'expo';
 import React, { Component } from 'react';
-import { Share, StyleSheet, View } from 'react-native';
+import { Share, Text, StyleSheet, View } from 'react-native';
 import { connect } from 'react-redux';
 
 import Characters from '../Characters';
 import Colors from '../Colors';
 import Images from '../Images';
 import Button from './Button';
-import RetroText from './RetroText';
 
 // import Footer from './Footer';
 
@@ -26,8 +25,9 @@ class TitleButton extends React.Component {
         }}
       >
         <Button imageStyle={imageStyle} source={source} onPress={onPress} />
-        <RetroText
+        <Text
           style={{
+            fontFamily: 'retro',
             textAlign: 'center',
             color: 'white',
             fontSize: 12,
@@ -35,7 +35,7 @@ class TitleButton extends React.Component {
           }}
         >
           {text.toUpperCase()}
-        </RetroText>
+        </Text>
       </View>
     );
   }

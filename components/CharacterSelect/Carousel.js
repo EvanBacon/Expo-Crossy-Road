@@ -1,24 +1,34 @@
 import React, { Component } from 'react';
-import { Animated, Dimensions, FlatList, InteractionManager, StyleSheet, View } from 'react-native';
+import {
+  Animated,
+  Text,
+  Dimensions,
+  FlatList,
+  InteractionManager,
+  StyleSheet,
+  View,
+} from 'react-native';
 
 import Characters from '../../Characters';
-import RetroText from '../RetroText';
 import CharacterCard from './CharacterCard';
 
 // .map(val => Characters[val])
 const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 
 const width = 150;
-const AnimatedText = Animated.createAnimatedComponent(RetroText);
+const AnimatedText = Animated.createAnimatedComponent(Text);
 
 export let scrollOffset = 0;
 
 export default class Carousel extends Component {
   scroll = new Animated.Value(0);
 
-  _scrollSink = Animated.event([{ nativeEvent: { contentOffset: { x: this.scroll } } }], {
-    useNativeDriver: true,
-  });
+  _scrollSink = Animated.event(
+    [{ nativeEvent: { contentOffset: { x: this.scroll } } }],
+    {
+      useNativeDriver: true,
+    },
+  );
   state = {
     keys: [],
     selected: 0,
@@ -68,10 +78,15 @@ export default class Carousel extends Component {
               }),
             },
           ],
-        }}>
+        }}
+      >
         <CharacterCard
           opacity={this.scroll.interpolate({
-            inputRange: [index * width - width, index * width, index * width + width],
+            inputRange: [
+              index * width - width,
+              index * width,
+              index * width + width,
+            ],
             outputRange: [0, 1, 0],
             extrapolate: 'clamp',
           })}
@@ -129,6 +144,7 @@ const styles = StyleSheet.create({
   },
   text: {
     opacity: 1,
+    fontFamily: 'retro',
     backgroundColor: 'transparent',
     textAlign: 'center',
     color: 'white',

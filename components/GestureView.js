@@ -78,6 +78,7 @@ class GestureView extends Component {
   };
 
   _handleShouldSetPanResponder = (evt, gestureState) => {
+    evt.preventDefault();
     return evt.nativeEvent.touches.length === 1;
   };
 
@@ -86,6 +87,7 @@ class GestureView extends Component {
   };
 
   _handlePanResponderEnd = (evt, gestureState) => {
+    evt.preventDefault();
     const swipeDirection = this._getSwipeDirection(gestureState);
     this._triggerSwipeHandlers(swipeDirection, gestureState);
   };

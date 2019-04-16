@@ -10,14 +10,12 @@ import {
   StyleSheet,
 } from 'react-native';
 import { Constants } from 'expo';
-import { connect } from 'react-redux';
-import RetroText from '../RetroText';
+// import { connect } from 'react-redux';
 import Footer from '../components/Home/Footer';
 import Hand from '../components/HandCTA';
 import State from '../state';
 
-import { setGameState } from '../actions/game';
-const { width } = Dimensions.get('window');
+// import { setGameState } from '../actions/game';
 class Screen extends Component {
   animation = new Animated.Value(0);
   componentDidMount() {
@@ -36,7 +34,7 @@ class Screen extends Component {
         {
           translateX: this.animation.interpolate({
             inputRange: [0, 1],
-            outputRange: [-width, 0],
+            outputRange: [-Dimensions.get('window').width, 0],
           }),
         },
       ],
@@ -51,10 +49,10 @@ class Screen extends Component {
             { justifyContent: 'center', alignItems: 'center' },
           ]}
           onPress={_ => {
-            this.props.setGameState(State.Game.playing);
+            // this.props.setGameState(State.Game.playing);
           }}
         >
-          <RetroText style={styles.coins}>{this.props.coins}</RetroText>
+          <Text style={styles.coins}>{this.props.coins}</Text>
           {/* <AniamtedRetroText style={[styles.title, animatedTitleStyle]}>CROSSY ROAD</AniamtedRetroText> */}
 
           <View
@@ -107,6 +105,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   coins: {
+    fontFamily: 'retro',
     position: 'absolute',
     top: Constants.statusBarHeight,
     right: 8,

@@ -1,7 +1,5 @@
 import React from 'react';
-import { View } from 'react-native';
-
-import RetroText from './RetroText';
+import { View, Text } from 'react-native';
 
 // import { setHighScore } from '../../actions/game';
 
@@ -20,23 +18,31 @@ class Score extends React.Component {
 
   render = () => (
     <View style={{ position: 'absolute', top: 15, left: 8 }}>
-      <RetroText
+      <Text
         pointerEvents={'none'}
-        style={{ color: 'white', fontSize: 48, backgroundColor: 'transparent' }}>
+        style={{
+          color: 'white',
+          fontFamily: 'retro',
+          fontSize: 48,
+          backgroundColor: 'transparent',
+        }}
+      >
         {this.props.score}
-      </RetroText>
+      </Text>
 
       {this.props.highScore && (
-        <RetroText
+        <Text
           pointerEvents={'none'}
           style={{
             color: 'white',
+            fontFamily: 'retro',
             fontSize: 14,
             letterSpacing: -0.1,
             backgroundColor: 'transparent',
-          }}>
+          }}
+        >
           TOP {this.props.highScore}
-        </RetroText>
+        </Text>
       )}
     </View>
   );

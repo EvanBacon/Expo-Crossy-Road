@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { StyleSheet, View } from 'react-native';
 import * as THREE from 'three';
 
-import ModelLoader from '../../ModelLoader';
+// import ModelLoader from '../../ModelLoader';
 
 const size = 150;
 
@@ -36,9 +36,10 @@ export default class CharacterCard extends Component {
   };
 
   character = () => {
-    this.character = ModelLoader._hero.getNode(this.props.id);
-    this.character.scale.set(this.scale, this.scale, this.scale);
-    this.scene.add(this.character);
+    console.warn('ModelLoader not imp');
+    // this.character = ModelLoader._hero.getNode(this.props.id);
+    // this.character.scale.set(this.scale, this.scale, this.scale);
+    // this.scene.add(this.character);
   };
 
   tick = dt => {

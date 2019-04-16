@@ -5,6 +5,7 @@ import {
   Dimensions,
   InteractionManager,
   StyleSheet,
+  Animated,
   Vibration,
   View,
 } from 'react-native';
@@ -58,6 +59,8 @@ class Game extends Component {
 
   floorMap = {};
 
+  transitionScreensValue = new Animated.Value(1);
+
   componentWillReceiveProps(nextProps, nextState) {
     if (nextState.gameState !== this.state.gameState) {
       this.updateWithGameState(nextState.gameState, this.state.gameState);
@@ -82,9 +85,26 @@ class Game extends Component {
     const { playing, gameOver, paused, none } = State.Game;
     switch (gameState) {
       case playing:
-        this.setupGame();
-        this.stopIdle();
-        this.onSwipe(swipeDirections.SWIPE_UP);
+        Animated.timing(this.transitionScreensValue, {
+          toValue: 0,
+          duration: 200,
+          onComplete: ({ finished }) => {
+            this.setupGame();
+            this.stopIdle();
+            if (finished) {
+              Animated.timing(this.transitionScreensValue, {
+                toValue: 1,
+                duration: 300,
+                onComplete: ({ finished }) => {
+                  if (finished) {
+                    this.onSwipe(swipeDirections.SWIPE_UP);
+                  }
+                },
+              }).start();
+            }
+          },
+        }).start();
+
         break;
       case gameOver:
         break;
@@ -676,8 +696,6 @@ class Game extends Component {
       this.targetPosition = this.initialPosition;
     }
 
-
-
     if (this._hero.moving) {
       this._hero.position.set(
         this.targetPosition.x,
@@ -689,8 +707,6 @@ class Game extends Component {
       }
       // return
     }
-
-  
 
     const calculateRotation = (currrent, target) => {
       if (target !== currrent) {
@@ -994,9 +1010,17 @@ class Game extends Component {
     return (
       <View
         pointerEvents="box-none"
-        style={[StyleSheet.absoluteFill, { flex: 1, backgroundColor: '#6dceea' }, this.props.style]}
+        style={[
+          StyleSheet.absoluteFill,
+          { flex: 1, backgroundColor: '#6dceea' },
+          this.props.style,
+        ]}
       >
-        {this.renderGame()}
+        <Animated.View
+          style={{ flex: 1, opacity: this.transitionScreensValue }}
+        >
+          {this.renderGame()}
+        </Animated.View>
         <Score
           score={this.state.score}
           gameOver={this.state.gameState === State.Game.gameOver}

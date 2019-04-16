@@ -1,13 +1,17 @@
 import React, { Component } from 'react';
-import { Animated, Dimensions, StyleSheet, View } from 'react-native';
+import { Text, Animated, Dimensions, StyleSheet, View } from 'react-native';
 
 import Button from '../Button';
-import RetroText from '../RetroText';
 
 const { width } = Dimensions.get('window');
 export default class Banner extends Component {
   renderButton = ({ onPress, source, style }, key) => (
-    <Button key={key} onPress={onPress} imageStyle={[styles.button, style]} source={source} />
+    <Button
+      key={key}
+      onPress={onPress}
+      imageStyle={[styles.button, style]}
+      source={source}
+    />
   );
 
   render() {
@@ -23,10 +27,11 @@ export default class Banner extends Component {
             justifyContent: 'center',
             alignItems: 'center',
             transform: [{ translateX: animatedValue }],
-          }}>
-          <RetroText style={styles.text} numberOfLines={2}>
+          }}
+        >
+          <Text style={styles.text} numberOfLines={2}>
             {this.props.title}
-          </RetroText>
+          </Text>
           {this.props.button && this.renderButton(this.props.button, 0)}
         </Animated.View>
       </View>
@@ -39,6 +44,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: 'white',
     flex: 2,
+    fontFamily: 'retro',
     textAlign: 'center',
   },
   container: {
