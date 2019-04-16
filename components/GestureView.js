@@ -1,7 +1,15 @@
 'use strict';
 import React, { Component } from 'react';
 import { PanResponder, View, StyleSheet } from 'react-native';
+import { findDOMNode } from 'react-dom';
 
+const getElement = component => {
+  try {
+    return findDOMNode(component);
+  } catch (e) {
+    return component;
+  }
+};
 export const swipeDirections = {
   SWIPE_UP: 'SWIPE_UP',
   SWIPE_DOWN: 'SWIPE_DOWN',
@@ -30,13 +38,21 @@ export const keyMap = {
   D: 'SWIPE_RIGHT',
 };
 
-function isValidSwipe(velocity, velocityThreshold, directionalOffset, directionalOffsetThreshold) {
+function isValidSwipe(
+  velocity,
+  velocityThreshold,
+  directionalOffset,
+  directionalOffsetThreshold,
+) {
   return (
     Math.abs(velocity) > velocityThreshold &&
     Math.abs(directionalOffset) < directionalOffsetThreshold
   );
 }
 
+const freezeBody = e => {
+  e.preventDefault();
+};
 class GestureView extends Component {
   constructor(props, context) {
     super(props, context);
@@ -55,6 +71,10 @@ class GestureView extends Component {
     window.addEventListener('keyup', this.onKeyUp, false);
   }
   componentWillUnmount() {
+    if (this.view) {
+      this.view.removeEventListener('touchstart', freezeBody, false);
+      this.view.removeEventListener('touchmove', freezeBody, false);
+    }
     window.removeEventListener('keydown', this.onKeyDown);
     window.removeEventListener('keyup', this.onKeyUp);
   }
@@ -93,7 +113,14 @@ class GestureView extends Component {
   };
 
   _triggerSwipeHandlers = (swipeDirection, gestureState) => {
-    const { onSwipe, onSwipeUp, onSwipeDown, onSwipeLeft, onSwipeRight, onTap } = this.props;
+    const {
+      onSwipe,
+      onSwipeUp,
+      onSwipeDown,
+      onSwipeLeft,
+      onSwipeRight,
+      onTap,
+    } = this.props;
     const { SWIPE_LEFT, SWIPE_RIGHT, SWIPE_UP, SWIPE_DOWN } = swipeDirections;
     onSwipe && onSwipe(swipeDirection, gestureState);
     switch (swipeDirection) {
@@ -145,6 +172,18 @@ class GestureView extends Component {
       <View
         style={StyleSheet.flatten([{ flex: 1, cursor: 'pointer' }, style])}
         tabIndex="0"
+        ref={view => {
+          const nextView = getElement(view);
+          if (nextView && nextView.addEventListener) {
+            nextView.addEventListener('touchstart', freezeBody, false);
+            nextView.addEventListener('touchmove', freezeBody, false);
+          }
+          if (this.view && this.view.removeEventListener) {
+            this.view.removeEventListener('touchstart', freezeBody, false);
+            this.view.removeEventListener('touchmove', freezeBody, false);
+          }
+          this.view = nextView;
+        }}
         {...props}
         {...this._panResponder.panHandlers}
       />

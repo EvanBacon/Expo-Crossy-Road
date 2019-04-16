@@ -1012,7 +1012,7 @@ class Game extends Component {
         pointerEvents="box-none"
         style={[
           StyleSheet.absoluteFill,
-          { flex: 1, backgroundColor: '#6dceea' },
+          { flex: 1, position: 'fixed', backgroundColor: '#6dceea' },
           this.props.style,
         ]}
       >
