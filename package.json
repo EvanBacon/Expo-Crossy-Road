@@ -2,21 +2,14 @@
   "name": "Crossy-Road",
   "version": "0.0.0",
   "description": "The endless arcade hopper you'll never want to put down",
-  "author": null,
-  "private": true,
+  "author": "Evan Bacon",
+  "private": false,
   "scripts": {
     "serve": "serve ./web-build",
     "deploy:web": "netlify deploy"
   },
   "devDependencies": {
-    "@expo/webpack-config": "^0.1.5",
-    "babel-eslint": "^10.0.1",
     "babel-preset-expo": "^5.0.0",
-    "eslint": "^5.9.0",
-    "eslint-config-airbnb": "^17.1.0",
-    "eslint-plugin-import": "^2.14.0",
-    "eslint-plugin-jsx-a11y": "^6.1.2",
-    "eslint-plugin-react": "^7.11.1",
     "serve": "^11.0.0"
   },
   "main": "node_modules/expo/AppEntry.js",
@@ -25,24 +18,17 @@
     "@rematch/core": "^1.0.6",
     "@rematch/persist": "^1.1.5",
     "@tweenjs/tween.js": "^17.2.0",
-    "date-format": "^2.0.0",
     "expo": "^33.0.0-alpha.web.0",
-    "expo-asset-utils": "^1.0.0",
-    "expo-graphics": "^1.0.2",
     "expo-three": "^3.0.0-alpha.6",
     "gsap": "^2.0.2",
-    "prop-types": "^15.6.0",
     "react": "16.5.0",
     "react-dom": "^16.8.4",
     "react-native": "0.57.1",
-    "react-native-animatable": "^1.2.4",
     "react-native-web": "^0.11.1",
-    "react-navigation": "3.1.0",
+    "react-navigation": "^3.8.1",
     "react-redux": "^6.0.0",
     "redux": "^4.0.1",
     "redux-persist": "^5.5.0",
-    "three": "^0.88.0",
-    "three.proton.js": "^0.1.5",
-    "uuid": "^3.1.0"
+    "three": "^0.88.0"
   }
 }
