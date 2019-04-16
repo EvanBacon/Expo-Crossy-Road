@@ -16,6 +16,7 @@ import Characters from '../Characters';
 import Images from '../Images';
 import Banner from '../components/GameOver/Banner';
 import Footer from '../components/GameOver/Footer';
+import AudioManager from '../AudioManager';
 
 const { width } = Dimensions.get('window');
 
@@ -78,13 +79,14 @@ class GameOver extends Component {
       this._animateBanners();
 
       const playBannerSound = async () => {
-        const soundObject = new Audio.Sound();
-        try {
-          await soundObject.loadAsync(AudioFiles.banner);
-          await soundObject.playAsync();
-        } catch (error) {
-          console.warn('sound error', { error });
-        }
+        await AudioManager.playAsync(AudioManager.sounds.banner);
+        // const soundObject = new Audio.Sound();
+        // try {
+        //   await soundObject.loadAsync(AudioFiles.banner);
+        //   await soundObject.playAsync();
+        // } catch (error) {
+        //   console.warn('sound error', { error });
+        // }
       };
       playBannerSound();
       setTimeout(() => playBannerSound(), 300);

@@ -1,38 +1,26 @@
-import { Audio } from 'expo';
 import React, { Component } from 'react';
 import {
   Image,
   StyleSheet,
   TouchableOpacity as TouchableBounce,
 } from 'react-native';
-// import TouchableBounce from 'react-native/Libraries/Components/Touchable/TouchableBounce';
 
-import AudioFiles from '../../Audio';
+import AudioManager from '../../AudioManager';
+
+// import TouchableBounce from 'react-native/Libraries/Components/Touchable/TouchableBounce';
 
 export default class Button extends Component {
   state = { soundReady: false };
-  async componentWillUnmount() {
-    if (this.buttonInSoundObject) {
-      this.buttonInSoundObject.unloadAsync();
-    }
-    if (this.buttonOutSoundObject) {
-      this.buttonOutSoundObject.unloadAsync();
-    }
-  }
 
   render() {
     return (
       <TouchableBounce
         onPress={this.props.onPress}
         onPressIn={async () => {
-          this.buttonInSoundObject = new Audio.Sound();
-          await this.buttonInSoundObject.loadAsync(AudioFiles.button_in);
-          this.buttonInSoundObject.playAsync();
+          await AudioManager.playAsync(AudioManager.sounds.button_in);
         }}
         onPressOut={async _ => {
-          this.buttonOutSoundObject = new Audio.Sound();
-          await this.buttonOutSoundObject.loadAsync(AudioFiles.button_out);
-          this.buttonOutSoundObject.playAsync();
+          await AudioManager.playAsync(AudioManager.sounds.button_out);
         }}
         style={[styles.container, this.props.style]}
       >

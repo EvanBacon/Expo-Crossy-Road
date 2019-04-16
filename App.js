@@ -1,8 +1,8 @@
-import { Audio, Font } from 'expo';
+import { Font } from 'expo';
 import React from 'react';
 import { Image } from 'react-native';
 import * as THREE from 'three';
-
+import AudioManager from './AudioManager';
 import ModelLoader from './ModelLoader';
 import AppNavigator from './navigation/AppNavigator';
 import GameScreen from './screens/GameScreen';
@@ -30,10 +30,10 @@ export default class App extends React.Component {
     if (DEBUG_DONT_LOAD_ASSETS) {
       return;
     }
-    Audio.setIsEnabledAsync(true);
 
     try {
       await Promise.all([
+        AudioManager.setupAsync(),
         Font.loadAsync({ retro: require('./assets/fonts/retro.ttf') }),
         ModelLoader.loadModels(),
       ]);

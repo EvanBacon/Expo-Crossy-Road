@@ -1,4 +1,4 @@
-import { Audio, GLView } from 'expo';
+import { GLView } from 'expo';
 import { Bounce, Power1, Power4, TimelineMax, TweenMax } from 'gsap';
 import React, { Component } from 'react';
 import {
@@ -10,8 +10,6 @@ import {
   View,
 } from 'react-native';
 import * as THREE from 'three';
-
-import AudioFiles from '../Audio';
 import Characters from '../Characters';
 import ExpoTHREE from '../ExpoTHREE';
 import ModelLoader from '../ModelLoader';
@@ -44,9 +42,9 @@ import {
   sceneColor,
   startingRow,
 } from '../src/GameSettings';
+import AudioManager from '../AudioManager';
 
 const DEBUG_CAMERA_CONTROLS = false;
-const waterSoundObject = new Audio.Sound();
 class Game extends Component {
   /// Reserve State for UI related updates...
   state = {
@@ -121,57 +119,38 @@ class Game extends Component {
 
   audioFileMoveIndex = 0;
 
-  playMoveSound = () => {
-    this.playSound(AudioFiles.chicken.move[`${this.audioFileMoveIndex}`]);
+  playMoveSound = async () => {
+    await AudioManager.playAsync(
+      AudioManager.sounds.chicken.move[`${this.audioFileMoveIndex}`],
+    );
     this.audioFileMoveIndex =
       (this.audioFileMoveIndex + 1) %
-      Object.keys(AudioFiles.chicken.move).length;
+      Object.keys(AudioManager.sounds.chicken.move).length;
   };
 
-  playPassiveCarSound = () => {
+  playPassiveCarSound = async () => {
     if (Math.floor(Math.random() * 2) === 0) {
-      this.playSound(AudioFiles.car.passive['1']);
+      await AudioManager.playAsync(AudioManager.sounds.car.passive[`1`]);
     }
   };
 
-  playDeathSound = () => {
-    this.playSound(AudioFiles.chicken.die[`${Math.floor(Math.random() * 2)}`]);
+  playDeathSound = async () => {
+    await AudioManager.playAsync(
+      AudioManager.sounds.chicken.die[`${Math.floor(Math.random() * 2)}`],
+    );
   };
 
-  playCarHitSound = () => {
-    this.playSound(AudioFiles.car.die[`${Math.floor(Math.random() * 2)}`]);
-  };
-  playSound = async audioFile => {
-    // return;
-
-    const soundObject = new Audio.Sound();
-    try {
-      await soundObject.loadAsync(audioFile);
-      await soundObject.playAsync();
-      // Your sound is playing!
-    } catch (error) {
-      console.warn('sound error', { error });
-
-      // An error occurred!
-    }
+  playCarHitSound = async () => {
+    await AudioManager.playAsync(
+      AudioManager.sounds.car.die[`${Math.floor(Math.random() * 2)}`],
+    );
   };
 
   async componentDidMount() {
-    const soundObject = new Audio.Sound();
-    try {
-      await soundObject.loadAsync(AudioFiles.bg_music);
-      await soundObject.setVolumeAsync(0.05);
-      await soundObject.setIsLoopingAsync(true);
-      await soundObject.playAsync();
-      //unloadAsync
-    } catch (error) {
-      console.warn('error', { error });
-    }
-    try {
-      await waterSoundObject.loadAsync(AudioFiles.water);
-    } catch (error) {
-      console.warn('sound error', { error });
-    }
+    // AudioManager.sounds.bg_music.setVolumeAsync(0.05);
+    // await AudioManager.playAsync(
+    //   AudioManager.sounds.bg_music, true
+    // );
 
     Dimensions.addEventListener('change', this.onScreenResize);
   }
@@ -244,7 +223,7 @@ class Game extends Component {
       if (type === 'water') {
         this.waterParticles.mesh.position.copy(model.position);
         this.waterParticles.run(type);
-        await waterSoundObject.playAsync();
+        await AudioManager.playAsync(AudioManager.sounds.water);
       } else if (type === 'feathers') {
         this.featherParticles.mesh.position.copy(model.position);
         this.featherParticles.run(type, direction);
@@ -365,7 +344,7 @@ class Game extends Component {
     this.init();
   };
 
-  onCollide = (obstacle = {}, type = 'feathers', collision) => {
+  onCollide = async (obstacle = {}, type = 'feathers', collision) => {
     if (this.state.gameState !== State.Game.playing) {
       return;
     }
@@ -374,7 +353,7 @@ class Game extends Component {
       this.playCarHitSound();
       this.playDeathSound();
     } else if (collision === 'train') {
-      this.playSound(AudioFiles.train.die[`0`]);
+      await AudioManager.playAsync(AudioManager.sounds.train.die[`0`]);
       this.playDeathSound();
     }
     this._hero.isAlive = false;

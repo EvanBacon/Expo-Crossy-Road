@@ -1,9 +1,8 @@
-import { Audio } from 'expo';
 import { TweenMax } from 'gsap';
 import * as THREE from 'three';
 
+import AudioManager from '../../AudioManager';
 import ModelLoader from '../../ModelLoader';
-import AudioFiles from '../../Audio';
 import { groundLevel } from '../GameSettings';
 
 const IS_MUTED = true;
@@ -77,15 +76,14 @@ export default class RailRoad extends THREE.Object3D {
     if (train.mesh.position.x > offset && train.speed > 0) {
       train.mesh.position.x = -offset;
       this.startRingingLight();
-      this.playSound(AudioFiles.train.move['0']);
-
+      AudioManager.playAsync(AudioManager.sounds.train.move['0']);
       if (train === hitByTrain) {
         player.hitByTrain = null;
       }
     } else if (train.mesh.position.x < -offset && train.speed < 0) {
       train.mesh.position.x = offset;
       this.startRingingLight();
-      this.playSound(AudioFiles.train.move['0']);
+      AudioManager.playAsync(AudioManager.sounds.train.move['0']);
       if (train === hitByTrain) {
         player.hitByTrain = null;
       }
@@ -144,17 +142,9 @@ export default class RailRoad extends THREE.Object3D {
     this.lightRinging = true;
     this.ringCount = 0;
     this.ringLight();
-    // this.playSound(AudioFiles.trainAlarm);
-  };
-  playSound = async audioFile => {
-    if (IS_MUTED) return;
-    const soundObject = new Audio.Sound();
-    try {
-      await soundObject.loadAsync(audioFile);
-      await soundObject.playAsync();
-    } catch (error) {
-      console.warn('sound error', { error });
-    }
+    //  AudioManager.playAsync(
+    //   AudioManager.sounds.trainAlarm
+    // );
   };
 
   ringLight = () => {
