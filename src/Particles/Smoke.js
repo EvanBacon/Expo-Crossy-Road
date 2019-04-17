@@ -72,14 +72,14 @@ export default class Smoke {
       //
       // });
 
-      // TweenMax.to(p.position, s, {
+      // TweenLite.to(p.position, s, {
       //   x: tx,
       //   y: ty,
       //   z: tz,
       //   // ease: Power4.easeOut,
       //   // yoyo:true, repeat:1
       // });
-      // TweenMax.to(p.position, s * 2.5, {
+      // TweenLite.to(p.position, s * 2.5, {
       //   x: tx * 1.5,
       //   y: 0,
       //   z: tz * 1.5,

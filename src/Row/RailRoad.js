@@ -14,7 +14,6 @@ export default class RailRoad extends THREE.Object3D {
   getWidth = mesh => {
     let box3 = new THREE.Box3();
     box3.setFromObject(mesh);
-    // console.log( box.min, box.max, box.size() );
     return Math.round(box3.max.x - box3.min.x);
   };
 
@@ -108,7 +107,7 @@ export default class RailRoad extends THREE.Object3D {
           const forward = player.position.z - Math.round(player.position.z) > 0;
           player.position.z = this.position.z + (forward ? 0.52 : -0.52);
 
-          TweenMax.to(player.scale, 0.3, {
+          TweenLite.to(player.scale, 0.3, {
             y: 1.5,
             z: 0.2,
           });

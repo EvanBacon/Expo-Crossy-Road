@@ -42,6 +42,8 @@ export default class App extends React.Component {
     } finally {
       this.setState({ appIsReady: true });
     }
+    await ModelLoader.shared.load();
+    this.setState({ appIsReady: true });
   }
 
   render() {

@@ -70,7 +70,6 @@ export default class Generic {
         child.receiveShadow = receiveShadow;
       }
     });
-    // _model.scale.set(10, 10, 10)
 
     _model.castShadow = castShadow;
     _model.receiveShadow = receiveShadow;

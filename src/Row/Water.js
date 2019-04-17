@@ -113,11 +113,11 @@ export default class Water extends THREE.Object3D {
   bounce = ({ entity, player }) => {
     let timing = 0.2;
 
-    TweenMax.to(entity.mesh.position, timing * 0.9, {
+    TweenLite.to(entity.mesh.position, timing * 0.9, {
       y: entity.min,
     });
 
-    TweenMax.to(entity.mesh.position, timing, {
+    TweenLite.to(entity.mesh.position, timing, {
       y: entity.mid,
       delay: timing,
     });

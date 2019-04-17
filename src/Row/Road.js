@@ -53,7 +53,7 @@ export default class Road extends THREE.Object3D {
 
       this.cars[x].mesh.position.set(xPos, 0.25, 0);
       this.cars[x].speed = speed * xDir;
-      this.cars[x].mesh.rotation.y = (Math.PI / 2) * xDir;
+      this.cars[x].mesh.rotation.y = Math.PI / 2 * xDir;
 
       xPos -= (Math.random() * 3 + 5) * xDir;
     }
@@ -116,7 +116,7 @@ export default class Road extends THREE.Object3D {
           const forward = player.position.z - Math.round(player.position.z) > 0;
           player.position.z = this.position.z + (forward ? 0.52 : -0.52);
 
-          TweenMax.to(player.scale, 0.3, {
+          TweenLite.to(player.scale, 0.3, {
             y: 1.5,
             z: 0.2,
           });
@@ -125,7 +125,7 @@ export default class Road extends THREE.Object3D {
           });
         } else {
           player.position.y = groundLevel;
-          TweenMax.to(player.scale, 0.3, {
+          TweenLite.to(player.scale, 0.3, {
             y: 0.2,
             x: 1.5,
           });
