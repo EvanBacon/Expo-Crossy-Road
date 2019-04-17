@@ -3,7 +3,7 @@ import { Image, StyleSheet } from 'react-native';
 
 import Images from '../Images';
 
-const sprite = [Images.hand['0'], Images.hand['1']];
+const sprite = Object.values(Images.hand);
 export default class Sprite extends Component {
   interval = 400;
   index = 0;

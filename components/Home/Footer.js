@@ -37,7 +37,6 @@ export default class Footer extends Component {
   };
 
   render() {
-    LayoutAnimation.easeInEaseOut();
     return (
       <View style={[styles.container, this.props.style]}>
         <Button

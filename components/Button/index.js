@@ -7,8 +7,6 @@ import {
 
 import AudioManager from '../../AudioManager';
 
-// import TouchableBounce from 'react-native/Libraries/Components/Touchable/TouchableBounce';
-
 export default class Button extends Component {
   state = { soundReady: false };
 
@@ -31,20 +29,6 @@ export default class Button extends Component {
       </TouchableBounce>
     );
   }
-
-  /*
-  <TouchableWithoutFeedback onPressIn={_=> {
-      this.animation.setValue(1);
-    }} onPressOut={_=> {
-      this.animation.setValue(0);
-    }} onPress={this.props.onPress} style={[styles.container, this.props.style]}>
-    <Animated.View style={{overflow: 'hidden'}}>
-    <Animated.View style={this.wrapStyle}>
-      <Image source={this.props.source} style={[styles.image, this.props.imageStyle]}/>
-    </Animated.View>
-  </Animated.View>
-  </TouchableWithoutFeedback>
-  */
 }
 
 const styles = StyleSheet.create({

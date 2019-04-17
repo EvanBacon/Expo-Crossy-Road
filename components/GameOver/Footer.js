@@ -1,5 +1,11 @@
 import React, { Component } from 'react';
-import { Dimensions, LayoutAnimation, Share, StyleSheet, View } from 'react-native';
+import {
+  Dimensions,
+  LayoutAnimation,
+  Share,
+  StyleSheet,
+  View,
+} from 'react-native';
 
 import Colors from '../../Colors';
 import Images from '../../Images';
@@ -9,22 +15,31 @@ import Button from '../Button';
 const { width } = Dimensions.get('window');
 export default class Footer extends Component {
   renderButton = ({ onPress, source, style }, key) => (
-    <Button key={key} onPress={onPress} imageStyle={[styles.button, style]} source={source} />
+    <Button
+      key={key}
+      onPress={onPress}
+      imageStyle={[styles.button, style]}
+      source={source}
+    />
   );
 
   render() {
     LayoutAnimation.easeInEaseOut();
     const buttons = [
       {
-        onPress: _ => {
+        onPress: () => {
           // this.props.navigation.navigate('Settings', {});
         },
         source: Images.button.settings,
         style: { aspectRatio: 1.25 },
       },
-      { onPress: this.share, source: Images.button.share, style: { aspectRatio: 1.9 } },
       {
-        onPress: _ => {
+        onPress: this.share,
+        source: Images.button.share,
+        style: { aspectRatio: 1.9 },
+      },
+      {
+        onPress: () => {
           // this.props.navigation.goBack();
           this.props.setGameState(State.Game.none);
         },
@@ -47,27 +62,21 @@ export default class Footer extends Component {
   }
 
   share = () => {
-    // const {characters, currentIndex} = this.state;
-    // const character = characters[currentIndex].name;
-
-    //TODO: Add Screen shot of player death
     Share.share(
       {
-        message: `#expoCrossyroad @expo_io`,
-        url: 'https://exp.host/@evanbacon/crossy-road',
-        title: 'Expo Crossy Road',
+        message: `Check out not-crossy-road by @baconbrix`,
+        url: 'https://crossyroad.netlify.com',
+        title: 'Not Crossy Road',
       },
       {
-        dialogTitle: 'Share Expo Crossy Road',
+        dialogTitle: 'Share Not Crossy Road',
         excludedActivityTypes: [
           'com.apple.UIKit.activity.AirDrop', // This speeds up showing the share sheet by a lot
           'com.apple.UIKit.activity.AddToReadingList', // This is just lame :)
         ],
         tintColor: Colors.blue,
-      }
-    )
-      .then(this._showResult)
-      .catch(error => this.setState({ result: 'error: ' + error.message }));
+      },
+    );
   };
 }
 
