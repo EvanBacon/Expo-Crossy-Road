@@ -1,8 +1,29 @@
-import Expo from 'expo';
-import React, { Component } from 'react';
-import ExpoTHREE, { THREE } from 'expo-three';
+import { Asset } from 'expo';
+import * as THREE from 'three';
 
+import ExpoTHREE from '../../ExpoTHREE.web';
 import Models from '../../Models';
+// import createTHREEViewClass from '../../utils/createTHREEViewClass';
+
+// const THREEView = createTHREEViewClass(THREE);
+
+function textureFromAsset(asset) {
+  if (!asset.localUri) {
+    throw new Error(
+      `Asset '${asset.name}' needs to be downloaded before ` +
+        `being used as an OpenGL texture.`,
+    );
+  }
+  const texture = new THREE.Texture();
+  texture.image = {
+    data: asset,
+    width: asset.width,
+    height: asset.height,
+  };
+  texture.needsUpdate = true;
+  texture.isDataTexture = true; // send to gl.texImage2D() verbatim
+  return texture;
+}
 
 export default class Generic {
   models = {};
@@ -16,15 +37,35 @@ export default class Generic {
   };
 
   _downloadAssets = async ({ model, texture, castShadow, receiveShadow }) => {
-    let _model = await ExpoTHREE.loadAsync(model);
-    const _texture = await ExpoTHREE.loadAsync(texture);
+    if (!THREE.OBJLoader) {
+      require('three/examples/js/loaders/OBJLoader');
+    }
+    const loader = new THREE.OBJLoader();
+    let _model = await new Promise((resolve, reject) =>
+      loader.load(Asset.fromModule(model).uri, resolve, () => {}, reject),
+    );
+
+    const textureAsset = Asset.fromModule(texture);
+
+    await textureAsset.downloadAsync();
+    const _texture = ExpoTHREE.loadAsync(textureAsset); // textureFromAsset(textureAsset);
 
     _texture.magFilter = THREE.NearestFilter;
     _texture.minFilter = THREE.NearestFilter;
 
+    const material = new THREE.MeshPhongMaterial({
+      map: _texture,
+      flatShading: true,
+      emissiveIntensity: 0,
+      shininess: 0,
+      reflectivity: 0,
+    });
+
     _model.traverse(child => {
       if (child instanceof THREE.Mesh) {
-        child.material.map = _texture;
+        // child.material.flatShading = true;
+        // child.material.emissive = 0x111111;
+        child.material = material;
         child.castShadow = castShadow;
         child.receiveShadow = receiveShadow;
       }
@@ -42,7 +83,7 @@ export default class Generic {
   };
 
   getNode = (key = '0') => {
-    if (this.models.hasOwnProperty(key)) {
+    if (key in this.models) {
       return this.models[key].clone();
     } else {
       console.warn(
@@ -54,15 +95,7 @@ export default class Generic {
   };
 
   _download = async props => {
-    let model;
-    try {
-      model = await this._downloadAssets(props);
-    } catch (error) {
-      console.error(error);
-      return;
-    }
-
-    return model;
+    return await this._downloadAssets(props);
   };
 
   setup = async () => {};

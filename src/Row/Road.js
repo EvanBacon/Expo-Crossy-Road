@@ -1,13 +1,14 @@
-import { TweenLite } from 'gsap';
-import React, { Component } from 'react';
-import { THREE } from 'expo-three';
+import { TweenMax } from 'gsap';
+import * as THREE from 'three';
 
-import { groundLevel } from '../Game';
 import ModelLoader from '../../ModelLoader';
+import { groundLevel } from '../GameSettings';
 
 export default class Road extends THREE.Object3D {
   active = false;
   cars = [];
+
+  top = 0.3;
 
   getWidth = mesh => {
     let box3 = new THREE.Box3();
@@ -33,15 +34,15 @@ export default class Road extends THREE.Object3D {
       xDir = -1;
     }
 
-    xPos = -6 * xDir;
+    let xPos = -6 * xDir;
 
     for (let x = 0; x < numCars; x++) {
       if (this.cars.length - 1 < x) {
-        let mesh = ModelLoader.shared._car.getRandom();
+        let mesh = ModelLoader._car.getRandom();
         const width = this.getWidth(mesh);
 
         this.cars.push({
-          mesh: mesh,
+          mesh,
           dir: xDir,
           width,
           collisionBox: this.heroWidth / 2 + width / 2 - 0.1,
@@ -62,7 +63,7 @@ export default class Road extends THREE.Object3D {
     super();
     this.heroWidth = heroWidth;
     this.onCollide = onCollide;
-    const { _road, _car } = ModelLoader.shared;
+    const { _road } = ModelLoader;
 
     this.road = _road.getNode('0');
     this.add(this.road);
@@ -78,7 +79,7 @@ export default class Road extends THREE.Object3D {
   };
 
   drive = ({ dt, player, car }) => {
-    const { position, hitBy, moving } = player;
+    const { hitBy } = player;
     const offset = 11;
 
     car.mesh.position.x += car.speed;
@@ -119,7 +120,7 @@ export default class Road extends THREE.Object3D {
             y: 1.5,
             z: 0.2,
           });
-          TweenLite.to(player.rotation, 0.3, {
+          TweenMax.to(player.rotation, 0.3, {
             z: Math.random() * Math.PI - Math.PI / 2,
           });
         } else {
@@ -128,12 +129,11 @@ export default class Road extends THREE.Object3D {
             y: 0.2,
             x: 1.5,
           });
-          TweenLite.to(player.rotation, 0.3, {
+          TweenMax.to(player.rotation, 0.3, {
             y: Math.random() * Math.PI - Math.PI / 2,
           });
         }
         this.onCollide(car, 'feathers', 'car');
-        return;
       }
     }
   };

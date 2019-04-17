@@ -4,36 +4,36 @@ export default {
     name: 'Chicken',
     id: 'chicken',
   },
-  android_robot: {
-    index: 1,
-    name: 'Android',
-    id: 'android_robot',
-  },
-  big_fat_pig: {
-    index: 2,
-    name: 'Big Fat Pig',
-    id: 'big_fat_pig',
-  },
-  poopy_pigeon: {
-    index: 3,
-    name: 'Poopy Pigeon',
-    id: 'poopy_pigeon',
-  },
-  tree_frog: {
-    index: 4,
-    name: 'Tree Frog',
-    id: 'tree_frog',
-  },
-  emo_goose: {
-    index: 5,
-    name: 'Emo Goose',
-    id: 'emo_goose',
-  },
-  the_dark_lord: {
-    index: 6,
-    name: 'The Dark Lord',
-    id: 'the_dark_lord',
-  },
+  // android_robot: {
+  //   index: 1,
+  //   name: "Android",
+  //   id: "android_robot"
+  // },
+  // big_fat_pig: {
+  //   index: 2,
+  //   name: "Big Fat Pig",
+  //   id: "big_fat_pig"
+  // },
+  // poopy_pigeon: {
+  //   index: 3,
+  //   name: "Poopy Pigeon",
+  //   id: "poopy_pigeon"
+  // },
+  // tree_frog: {
+  //   index: 4,
+  //   name: "Tree Frog",
+  //   id: "tree_frog"
+  // },
+  // emo_goose: {
+  //   index: 5,
+  //   name: "Emo Goose",
+  //   id: "emo_goose"
+  // },
+  // the_dark_lord: {
+  //   index: 6,
+  //   name: "The Dark Lord",
+  //   id: "the_dark_lord"
+  // },
   // celebrity: {
   //   index: 7,
   //   name: "Celebrity",
@@ -109,44 +109,44 @@ export default {
   //   name: "Kangaroo",
   //   id: "kangaroo"
   // },
-  bacon: {
-    index: 22,
-    name: 'Bacon',
-    id: 'bacon',
-  },
-  hipster_whale: {
-    index: 23,
-    name: 'Hipster Whale',
-    id: 'hipster_whale',
-  },
+  // bacon: {
+  //   index: 22,
+  //   name: "Bacon",
+  //   id: "bacon"
+  // },
+  // hipster_whale: {
+  //   index: 23,
+  //   name: "Hipster Whale",
+  //   id: "hipster_whale"
+  // },
   // floppy_fish: {
   //   index: 24,
   //   name: "Floppy Fish",
   //   id: "floppy_fish"
   // },
-  doge: {
-    index: 25,
-    name: 'Doge',
-    id: 'doge',
-  },
+  // doge: {
+  //   index: 25,
+  //   name: "Doge",
+  //   id: "doge"
+  // },
   // crazy_ol_ben: {
   //   index: 26,
   //   name: "Crazy Ol' Ben",
   //   id: "crazy_ol_ben"
   // },
-  nikki: {
-    index: 27,
-    name: 'Nikki',
-    id: 'nikki',
-  },
-  ide: {
-    index: 28,
-    name: 'Ide',
-    id: 'ide',
-  },
-  brent: {
-    index: 29,
-    name: 'Brent',
-    id: 'brent',
-  },
+  // nikki: {
+  //   index: 27,
+  //   name: "Nikki",
+  //   id: "nikki"
+  // },
+  // ide: {
+  //   index: 28,
+  //   name: "Ide",
+  //   id: "ide"
+  // },
+  // brent: {
+  //   index: 29,
+  //   name: "Brent",
+  //   id: "brent"
+  // },
 };

@@ -1,4 +1,6 @@
 node_modules/**/*
-.expo/*
-.babelrc
-npm-debug.*
+.expo/**/*
+ExpoParty/Secret.js
+release/builds
+.vscode
+/web-build/

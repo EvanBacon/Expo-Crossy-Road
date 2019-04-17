@@ -1,5 +1,4 @@
-import React, { Component } from 'react';
-import { THREE } from 'expo-three';
+import * as THREE from 'three';
 
 import Generic from './Generic';
 
@@ -37,7 +36,9 @@ export default class Train extends Generic {
   };
 
   setup = async () => {
-    const { vehicles: { train } } = this.globalModels;
+    const {
+      vehicles: { train },
+    } = this.globalModels;
 
     const front = await this._download({
       ...train[`front`],
@@ -49,11 +50,7 @@ export default class Train extends Generic {
       receiveShadow: true,
       castShadow: true,
     });
-    const back = await this._download({
-      ...train[`back`],
-      receiveShadow: true,
-      castShadow: true,
-    });
+    const back = await this._download({ ...train[`back`], receiveShadow: true, castShadow: true });
 
     // await Promise.all([
     //   front,

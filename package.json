@@ -2,24 +2,33 @@
   "name": "Crossy-Road",
   "version": "0.0.0",
   "description": "The endless arcade hopper you'll never want to put down",
-  "author": null,
-  "private": true,
+  "author": "Evan Bacon",
+  "private": false,
+  "scripts": {
+    "serve": "serve ./web-build",
+    "deploy:web": "netlify deploy"
+  },
+  "devDependencies": {
+    "babel-preset-expo": "^5.0.0",
+    "serve": "^11.0.0"
+  },
   "main": "node_modules/expo/AppEntry.js",
   "dependencies": {
-    "expo": "^30.0.0",
-    "expo-three": "^1.0.4",
-    "expo-three-orbit-controls": "^1.0.1",
-    "gsap": "^1.19.1",
-    "ndarray": "^1.0.18",
-    "react": "16.6.0",
-    "react-native": "https://github.com/expo/react-native/archive/sdk-30.0.0.tar.gz",
-    "react-native-swipe-gestures": "^1.0.2",
-    "react-navigation": "^1.0.0-beta.9",
-    "react-redux": "^5.0.7",
+    "@react-navigation/web": "^1.0.0-alpha.7",
+    "@rematch/core": "^1.0.6",
+    "@rematch/persist": "^1.1.5",
+    "@tweenjs/tween.js": "^17.2.0",
+    "expo": "^33.0.0-alpha.web.0",
+    "expo-three": "^3.0.0-alpha.6",
+    "gsap": "^2.0.2",
+    "react": "16.5.0",
+    "react-dom": "^16.8.4",
+    "react-native": "0.57.1",
+    "react-native-web": "^0.11.1",
+    "react-navigation": "^3.8.1",
+    "react-redux": "^6.0.0",
     "redux": "^4.0.1",
-    "redux-logger": "^3.0.6",
-    "redux-persist": "^4.8.0",
-    "redux-thunk": "^2.3.0",
-    "three": "^0.85.2"
+    "redux-persist": "^5.5.0",
+    "three": "^0.88.0"
   }
 }

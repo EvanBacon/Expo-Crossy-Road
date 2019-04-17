@@ -1,14 +1,15 @@
-import Expo from 'expo';
-import { TweenLite } from 'gsap';
-import React, { Component } from 'react';
-import { THREE } from 'expo-three';
+import { TweenMax } from 'gsap';
+import * as THREE from 'three';
 
-import AudioFiles from '../../Audio';
-import { groundLevel } from '../Game';
+import AudioManager from '../../AudioManager';
 import ModelLoader from '../../ModelLoader';
+import { groundLevel } from '../GameSettings';
 
+const IS_MUTED = true;
 export default class RailRoad extends THREE.Object3D {
   active = false;
+
+  top = 0.5;
 
   getWidth = mesh => {
     let box3 = new THREE.Box3();
@@ -20,7 +21,7 @@ export default class RailRoad extends THREE.Object3D {
     super();
     this.heroWidth = heroWidth;
     this.onCollide = onCollide;
-    const { _railroad, _trainLight, _train } = ModelLoader.shared;
+    const { _railroad, _trainLight, _train } = ModelLoader;
 
     this.railRoad = _railroad.getNode();
 
@@ -74,15 +75,14 @@ export default class RailRoad extends THREE.Object3D {
     if (train.mesh.position.x > offset && train.speed > 0) {
       train.mesh.position.x = -offset;
       this.startRingingLight();
-      this.playSound(AudioFiles.train.move['0']);
-
+      AudioManager.playAsync(AudioManager.sounds.train.move['0']);
       if (train === hitByTrain) {
         player.hitByTrain = null;
       }
     } else if (train.mesh.position.x < -offset && train.speed < 0) {
       train.mesh.position.x = offset;
       this.startRingingLight();
-      this.playSound(AudioFiles.train.move['0']);
+      AudioManager.playAsync(AudioManager.sounds.train.move['0']);
       if (train === hitByTrain) {
         player.hitByTrain = null;
       }
@@ -111,7 +111,7 @@ export default class RailRoad extends THREE.Object3D {
             y: 1.5,
             z: 0.2,
           });
-          TweenLite.to(player.rotation, 0.3, {
+          TweenMax.to(player.rotation, 0.3, {
             z: Math.random() * Math.PI - Math.PI / 2,
           });
 
@@ -124,11 +124,11 @@ export default class RailRoad extends THREE.Object3D {
           // this._hero.rotation.y = (Math.random() * Math.PI) - Math.PI/2;
           player.position.y = groundLevel;
 
-          TweenLite.to(player.scale, 0.3, {
+          TweenMax.to(player.scale, 0.3, {
             y: 0.2,
             x: 1.5,
           });
-          TweenLite.to(player.rotation, 0.3, {
+          TweenMax.to(player.rotation, 0.3, {
             y: Math.random() * Math.PI - Math.PI / 2,
           });
         }
@@ -141,16 +141,9 @@ export default class RailRoad extends THREE.Object3D {
     this.lightRinging = true;
     this.ringCount = 0;
     this.ringLight();
-    this.playSound(AudioFiles.trainAlarm);
-  };
-  playSound = async audioFile => {
-    const soundObject = new Expo.Audio.Sound();
-    try {
-      await soundObject.loadAsync(audioFile);
-      await soundObject.playAsync();
-    } catch (error) {
-      console.warn('sound error', { error });
-    }
+    //  AudioManager.playAsync(
+    //   AudioManager.sounds.trainAlarm
+    // );
   };
 
   ringLight = () => {

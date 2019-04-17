@@ -1,25 +1,28 @@
-import { Bounce, Power2, TweenLite } from 'gsap';
-import React, { Component } from 'react';
+import { Bounce, Power2, TweenMax } from 'gsap';
+import * as THREE from 'three';
 
-import { THREE } from 'expo-three';
-//// TODO: use vertices
-export default class Foam {
+const size = 0.6;
+
+const material = new THREE.MeshPhongMaterial({
+  color: 0xffffff,
+  flatShading: true,
+  side: THREE.DoubleSide,
+});
+const geometry = new THREE.PlaneBufferGeometry(size, size, 1);
+
+export default class Foam extends THREE.Object3D {
+  parts = [];
+
   constructor(direction) {
+    super();
     this.direction = direction;
-    this.waterMat = new THREE.MeshPhongMaterial({
-      color: 0xffffff,
-      flatShading: true,
-      side: THREE.DoubleSide,
-    });
-    this.mesh = new THREE.Group();
-    const size = 0.6;
-    var bigParticleGeom = new THREE.PlaneGeometry(size, size, 1);
-    this.parts = [];
-    for (var i = 0; i < 6; i++) {
-      var particle = new THREE.Mesh(bigParticleGeom, this.waterMat);
+
+    for (let i = 0; i < 6; i++) {
+      const particle = new THREE.Mesh(geometry, material);
       particle.rotation.x = Math.PI / 2;
+      particle.position.set(0, 0, 0);
       this.parts.push(particle);
-      this.mesh.add(particle);
+      this.add(particle);
     }
   }
 
@@ -27,7 +30,7 @@ export default class Foam {
     const rand = ({ min = 0, max = 1 }) => Math.random() * (max - min) + min;
 
     const scale = (scale, node, duration, delay = 0) =>
-      TweenLite.to(node.scale, duration, {
+      TweenMax.to(node.scale, duration, {
         x: scale,
         y: scale,
         z: scale,
@@ -35,16 +38,11 @@ export default class Foam {
         // ease: Bounce.easeOut,
       });
 
-    var explosionSpeed = 0.3;
-
-    const removeParticle = p => {
-      p.visible = false;
-    };
     const setup = (n, i) => {
       n.position.set(
         rand({ min: -0.1, max: 0.1 }),
         0,
-        0.6 / this.parts.length * i + 0.2,
+        (0.6 / this.parts.length) * i + 0.2,
       );
       n.visible = true;
 
@@ -61,7 +59,7 @@ export default class Foam {
 
       /// Every other particle starts mid way through the first particles animation.
       const startDelay = totalDuration * 0.2 * i;
-      TweenLite.to(n.scale, mDuration, {
+      TweenMax.to(n.scale, mDuration, {
         x: mScale,
         y: mScale,
         z: mScale,
@@ -76,9 +74,9 @@ export default class Foam {
             ease: Power2.easeIn,
           });
 
-          TweenLite.to(n.position, lDuration, {
+          TweenMax.to(n.position, lDuration, {
             x: n.position.x + rand({ min: 0.2, max: 1.0 }) * this.direction,
-            onComplete: _ => runAnimation(n, i),
+            onComplete: () => runAnimation(n, i),
           });
         },
       });
@@ -89,9 +87,8 @@ export default class Foam {
       animate(n, i);
     };
 
-    for (var i = 0; i < this.parts.length; i++) {
-      let m = direction < 0 ? -1 : 1;
-      var p = this.parts[i];
+    for (let i = 0; i < this.parts.length; i++) {
+      let p = this.parts[i];
       runAnimation(p, i);
     }
   };

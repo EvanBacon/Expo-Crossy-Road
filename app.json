@@ -4,21 +4,34 @@
     "description": "The endless arcade hopper you'll never want to put down",
     "slug": "crossy-road",
     "privacy": "public",
-    "sdkVersion": "30.0.0",
+    "sdkVersion": "32.0.0",
     "version": "1.0.0",
     "orientation": "portrait",
-    "primaryColor": "#cccccc",
+    "primaryColor": "#69CEED",
     "icon": "./assets/icons/app.png",
-    "loading": {
-      "backgroundColor": "#6dceea",
-      "icon": "./assets/icons/loading.png",
-      "hideExponentText": false
+    "platforms": ["android", "ios", "web"],
+    "splash": {
+      "image": "./assets/icons/loading.png",
+      "resizeMode": "cover"
     },
     "packagerOpts": {
-      "assetExts": ["ttf", "mp4", "mp3", "obj", "wav"]
+      "assetExts": ["ttf", "mp4", "mp3", "obj", "wav", "mtl"]
     },
     "ios": {
-      "supportsTablet": true
+      "icon": "./assets/icons/app.png",
+      "supportsTablet": true,
+      "bundleIdentifier": "com.hipsterwhale.crossy",
+      "buildNumber": "0.0.0",
+      "appStoreUrl": "https://itunes.apple.com/us/app/crossy-road/id924373886?mt=8"
+    },
+    "android": {
+      "icon": "./assets/icons/app.png",
+      "package": "com.yodo1.crossyroad",
+      "versionCode": 1
+    },
+    "web": {
+      "shortName": "Crossy",
+      "display": "fullscreen"
     }
   }
 }

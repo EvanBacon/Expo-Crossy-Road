@@ -1,14 +1,16 @@
-import { Power2, TweenLite } from 'gsap';
-import React, { Component } from 'react';
-import { THREE } from 'expo-three';
+import { Power2, TweenMax } from 'gsap';
+import * as THREE from 'three';
 
-import { groundLevel } from '../Game';
-import Foam from '../Particles/Foam';
 import ModelLoader from '../../ModelLoader';
+import * as Settings from '../GameSettings';
+import Foam from '../Particles/Foam';
 
 export default class Water extends THREE.Object3D {
   active = false;
   entities = [];
+  sineCount = 0;
+  sineInc = Math.PI / 50;
+  top = 0.25;
 
   getWidth = mesh => {
     let box3 = new THREE.Box3();
@@ -26,7 +28,7 @@ export default class Water extends THREE.Object3D {
 
     if (this.isStaticRow(this.position.z | 0)) {
       this.generateStatic();
-    } else {
+    } else if (!Settings.disableDriftwood) {
       this.generateDynamic();
     }
   };
@@ -36,14 +38,15 @@ export default class Water extends THREE.Object3D {
     // Number of cars: 1 through 3
     let numItems = Math.floor(Math.random() * 2) + 2;
 
-    let xPos = Math.random() * 2 - 4;
+    let xPos = Math.floor(Math.random() * 2 - 4);
 
     for (let x = 0; x < numItems; x++) {
       if (this.entities.length - 1 < x) {
-        let mesh = ModelLoader.shared._lilyPad.getRandom();
+        let mesh = ModelLoader._lilyPad.getRandom();
         const width = this.getWidth(mesh);
         this.entities.push({
-          mesh: mesh,
+          mesh,
+          top: 0.2,
           min: 0.01,
           mid: 0.125,
           dir: 0,
@@ -53,18 +56,18 @@ export default class Water extends THREE.Object3D {
         this.floor.add(mesh);
       }
 
-      this.entities[x].mesh.position.set(xPos + 0.4, 0.125, 0);
+      this.entities[x].mesh.position.set(xPos, 0.125, 0);
       this.entities[x].speed = 0;
       // this.entities[x].mesh.rotation.y = (Math.PI / 2) * xDir;
 
-      TweenLite.to(this.entities[x].mesh.rotation, Math.random() * 2 + 2, {
+      TweenMax.to(this.entities[x].mesh.rotation, Math.random() * 2 + 2, {
         y: Math.random() * 1.5 + 0.5,
         yoyo: true,
         repeat: -1,
         ease: Power2.easeInOut,
       });
 
-      xPos += Math.random() * 2 + 1;
+      xPos += Math.floor(Math.random() * 2 + 1);
     }
   };
 
@@ -79,15 +82,16 @@ export default class Water extends THREE.Object3D {
       xDir = -1;
     }
 
-    xPos = -6 * xDir;
+    let xPos = -6 * xDir;
 
     for (let x = 0; x < numItems; x++) {
       if (this.entities.length - 1 < x) {
-        let mesh = ModelLoader.shared._log.getRandom();
+        let mesh = ModelLoader._log.getRandom();
         const width = this.getWidth(mesh);
 
         this.entities.push({
-          mesh: mesh,
+          mesh,
+          top: 0.3,
           min: -0.3,
           mid: -0.1,
           dir: xDir,
@@ -118,12 +122,12 @@ export default class Water extends THREE.Object3D {
       delay: timing,
     });
 
-    TweenLite.to(player.position, timing * 0.9, {
-      y: groundLevel + -0.1,
+    TweenMax.to(player.position, timing * 0.9, {
+      y: entity.top + entity.min,
     });
 
-    TweenLite.to(player.position, timing, {
-      y: groundLevel,
+    TweenMax.to(player.position, timing, {
+      y: entity.top + entity.mid,
       delay: timing,
     });
   };
@@ -132,21 +136,21 @@ export default class Water extends THREE.Object3D {
     super();
     this.heroWidth = heroWidth;
     this.onCollide = onCollide;
-    const { _river } = ModelLoader.shared;
+    const { _river } = ModelLoader;
 
     this.floor = _river.getNode();
     this.add(this.floor);
 
-    let foam = new Foam(1);
-    foam.mesh.position.set(4.5, 0.2, -0.5);
-    foam.mesh.visible = true;
+    const foam = new Foam(1);
+    foam.position.set(4.5, 0.2, -0.5);
+    foam.visible = true;
     foam.run();
-    this.floor.add(foam.mesh);
+    this.add(foam);
   }
 
   ///Is Lily
   isStaticRow = index => {
-    return index % 2 == 0; //&& (Math.random() * 2 == 0)
+    return index % 2 === 0; //&& (Math.random() * 2 == 0)
   };
 
   update = (dt, player) => {
@@ -164,7 +168,6 @@ export default class Water extends THREE.Object3D {
   };
 
   move = ({ dt, player, entity }) => {
-    const { position, ridingOn, moving } = player;
     const offset = 11;
 
     entity.mesh.position.x += entity.speed;
@@ -177,16 +180,30 @@ export default class Water extends THREE.Object3D {
     }
   };
 
-  sineCount = 0;
-  sineInc = Math.PI / 50;
+  getRidableForPosition = position => {
+    if (Math.round(position.z) !== this.position.z) {
+      return null;
+    }
+    const log = this.getCollisionLog(position);
+    return log;
+  };
+
+  // When the player jumps onto a lily or log we want it to be smooth, predict the position ahead of time.
+  getPlayerLowerBouncePositionForEntity = entity => {
+    return entity.top + entity.mid;
+  };
+
+  getPlayerSunkenPosition = () => {
+    return Math.sin(this.sineCount) * 0.08 - 0.2;
+  };
 
   shouldCheckHazardCollision = ({ player }) => {
-    if (Math.round(player.position.z) == this.position.z && !player.moving) {
+    if (Math.round(player.position.z) === this.position.z && !player.moving) {
       if (!player.ridingOn) {
         if (player.isAlive) {
           this.onCollide(this.floor, 'water');
         } else {
-          let y = Math.sin(this.sineCount) * 0.08 - 0.2;
+          let y = this.getPlayerSunkenPosition();
           this.sineCount += this.sineInc;
           player.position.y = y;
           player.rotation.y += 0.01;
@@ -197,8 +214,30 @@ export default class Water extends THREE.Object3D {
     }
   };
 
+  getCollisionLog = position => {
+    for (const entity of this.entities) {
+      const log = this.willCollideWithLog2D({ position, entity });
+      if (log) {
+        return log;
+      }
+    }
+  };
+
+  willCollideWithLog2D = ({ position, entity }) => {
+    const { mesh, collisionBox } = entity;
+
+    if (
+      position.x < mesh.position.x + collisionBox &&
+      position.x > mesh.position.x - collisionBox
+    ) {
+      return entity;
+    }
+
+    return null;
+  };
+
   shouldCheckCollision = ({ player, entity }) => {
-    if (Math.round(player.position.z) == this.position.z && player.isAlive) {
+    if (Math.round(player.position.z) === this.position.z && player.isAlive) {
       const { mesh, collisionBox } = entity;
 
       if (
@@ -208,7 +247,6 @@ export default class Water extends THREE.Object3D {
         player.ridingOn = entity;
         player.ridingOnOffset = player.position.x - entity.mesh.position.x;
         this.bounce({ entity, player });
-        return;
       }
     }
   };

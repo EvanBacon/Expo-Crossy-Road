@@ -1,6 +1,6 @@
 //https://stackoverflow.com/questions/15248872/dynamically-create-2d-text-in-three-js
 import React, { Component } from 'react';
-import { THREE } from 'expo-three';
+import * as THREE from 'three';
 
 /*
 let mesh = new TextMesh('Harambe', {
@@ -35,10 +35,7 @@ export default class TextMesh {
       const parseFont = font => {
         console.log('Font Loaded', font);
         var textGeometry = new THREE.TextGeometry(this._text, this._options);
-        var textMaterial = new THREE.MeshPhongMaterial({
-          color: 0xff0000,
-          specular: 0xffffff,
-        });
+        var textMaterial = new THREE.MeshPhongMaterial({ color: 0xff0000, specular: 0xffffff });
 
         if (!this._mesh) {
           this._mesh = new THREE.Mesh(textGeometry, textMaterial);
