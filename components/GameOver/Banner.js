@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
   },
   container: {
     alignItems: 'center',
-    justifyContent: 'space-around',
+    justifyContent: 'center',
     flexDirection: 'row',
     backgroundColor: 'red',
     height: 56,
@@ -64,5 +64,6 @@ const styles = StyleSheet.create({
   },
   button: {
     height: 56,
+    marginLeft: 24,
   },
 });

@@ -16,17 +16,22 @@ import Hand from '../components/HandCTA';
 import State from '../state';
 
 // import { setGameState } from '../actions/game';
+
+let hasShownTitle = false;
 class Screen extends Component {
   animation = new Animated.Value(0);
   componentDidMount() {
-    InteractionManager.runAfterInteractions(_ => {
-      Animated.timing(this.animation, {
-        toValue: 1,
-        duration: 1000,
-        delay: 500,
-        easing: Easing.in(Easing.qubic),
-      }).start();
-    });
+    if (!hasShownTitle) {
+      hasShownTitle = true;
+      InteractionManager.runAfterInteractions(_ => {
+        Animated.timing(this.animation, {
+          toValue: 1,
+          duration: 800,
+          delay: 0,
+          easing: Easing.in(Easing.qubic),
+        }).start();
+      });
+    }
   }
   render() {
     const animatedTitleStyle = {
@@ -35,6 +40,12 @@ class Screen extends Component {
           translateX: this.animation.interpolate({
             inputRange: [0, 1],
             outputRange: [-Dimensions.get('window').width, 0],
+          }),
+        },
+        {
+          translateY: this.animation.interpolate({
+            inputRange: [0, 1],
+            outputRange: [-100, 0],
           }),
         },
       ],
@@ -48,32 +59,48 @@ class Screen extends Component {
             StyleSheet.absoluteFill,
             { justifyContent: 'center', alignItems: 'center' },
           ]}
-          onPress={_ => {
-            // this.props.setGameState(State.Game.playing);
+          onPress={() => {
+            Animated.timing(this.animation, {
+              toValue: 0,
+              duration: 400,
+              easing: Easing.in(Easing.qubic),
+              onComplete: ({ finished }) => {
+                if (finished) {
+                  this.props.onPlay();
+                }
+              },
+            }).start();
           }}
         >
           <Text style={styles.coins}>{this.props.coins}</Text>
-          {/* <AniamtedRetroText style={[styles.title, animatedTitleStyle]}>CROSSY ROAD</AniamtedRetroText> */}
+          <Animated.Image
+            source={require('../assets/images/title.png')}
+            style={[styles.title, animatedTitleStyle]}
+          />
 
           <View
             style={{
               justifyContent: 'center',
-              alignItems: 'center',
+              alignItems: 'stretch',
               position: 'absolute',
               bottom: 8,
               left: 8,
               right: 8,
             }}
           >
-            <Hand style={{ width: 36 }} />
+            <View
+              style={{ height: 64, marginBottom: 48, alignItems: 'center' }}
+            >
+              <Hand style={{ width: 36 }} />
+            </View>
             <Footer
-              style={{ height: 48 }}
-              onCharacterSelect={_ => {
+              style={{ height: 48, opacity: this.animation }}
+              onCharacterSelect={() => {
                 this.props.navigation.navigate('CharacterSelect', {});
               }}
-              onShop={_ => {}}
-              onMultiplayer={_ => {}}
-              onCamera={_ => {}}
+              onShop={() => {}}
+              onMultiplayer={() => {}}
+              onCamera={() => {}}
             />
           </View>
         </TouchableOpacity>
@@ -99,10 +126,14 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
   title: {
-    color: 'white',
-    fontSize: 48,
-    backgroundColor: 'transparent',
-    textAlign: 'center',
+    // color: 'white',
+    // fontSize: 48,
+    // backgroundColor: 'transparent',
+    // textAlign: 'center',
+    resizeMode: 'contain',
+    maxWidth: 600,
+    width: '80%',
+    height: 300,
   },
   coins: {
     fontFamily: 'retro',

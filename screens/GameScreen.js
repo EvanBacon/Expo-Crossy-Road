@@ -21,7 +21,7 @@ import Water from '../src/Particles/Water';
 import Rows from '../src/Row';
 import { Fill } from '../src/Row/Grass';
 import Score from '../components/ScoreText';
-
+import HomeScreen from './HomeScreen';
 const initialState = {
   id: Characters.chicken.id,
   name: Characters.chicken.name,
@@ -51,7 +51,7 @@ class Game extends Component {
     ready: false,
     score: 0,
     viewKey: 0,
-    gameState: State.Game.playing,
+    gameState: State.Game.none,
     // gameState: State.Game.gameOver
   };
 
@@ -78,30 +78,33 @@ class Game extends Component {
     if (gameState === this.state.gameState) {
       return;
     }
+    const lastState = this.state.gameState;
+
     this.setState({ gameState });
     this.gameState = gameState;
     const { playing, gameOver, paused, none } = State.Game;
     switch (gameState) {
       case playing:
-        Animated.timing(this.transitionScreensValue, {
-          toValue: 0,
-          duration: 200,
-          onComplete: ({ finished }) => {
-            this.setupGame();
-            this.stopIdle();
-            if (finished) {
-              Animated.timing(this.transitionScreensValue, {
-                toValue: 1,
-                duration: 300,
-                onComplete: ({ finished }) => {
-                  if (finished) {
-                    this.onSwipe(swipeDirections.SWIPE_UP);
-                  }
-                },
-              }).start();
-            }
-          },
-        }).start();
+        if (lastState !== none) {
+          Animated.timing(this.transitionScreensValue, {
+            toValue: 0,
+            duration: 200,
+            onComplete: ({ finished }) => {
+              this.setupGame();
+
+              if (finished) {
+                Animated.timing(this.transitionScreensValue, {
+                  toValue: 1,
+                  duration: 300,
+                }).start();
+              }
+            },
+          }).start();
+        } else {
+          // Coming straight from the menu.
+          this.stopIdle();
+          this.onSwipe(swipeDirections.SWIPE_UP);
+        }
 
         break;
       case gameOver:
@@ -723,13 +726,6 @@ class Game extends Component {
         break;
       case SWIPE_RIGHT:
         {
-          // targetRotation = calculateRotation(targetRotation, -Math.PI / 2);
-          console.log(
-            'before',
-            this.targetRotation,
-            -PI_2,
-            this.targetRotation === -PI_2,
-          );
           if (this.targetPosition === 0) {
             this.targetPosition = -PI_2;
           } else if (
@@ -738,7 +734,6 @@ class Game extends Component {
           ) {
             this.targetRotation = Math.PI + PI_2;
           }
-          console.log('after', this.targetRotation);
           velocity = { x: -1, z: 0 };
 
           this.targetPosition = {
@@ -834,7 +829,6 @@ class Game extends Component {
       const ridable = targetRow.entity.getRidableForPosition(
         this.targetPosition,
       );
-      console.log(ridable);
       if (!ridable) {
         finalY = targetRow.entity.getPlayerSunkenPosition();
       } else {
@@ -845,8 +839,6 @@ class Game extends Component {
     }
 
     this.targetPosition.y = finalY;
-
-    // console.log('MOVE TO: ', rowObject.type, finalY, rowObject.entity.top);
 
     let delta = {
       x: this.targetPosition.x - initialPosition.x,
@@ -866,7 +858,6 @@ class Game extends Component {
 
     const positionChangeAnimation = new TimelineMax({
       onComplete: () => {
-        console.log('Done', this._hero.position);
         this.doneMoving();
       },
     });
@@ -985,6 +976,23 @@ class Game extends Component {
       </View>
     );
   };
+
+  renderHomeScreen = () => {
+    if (this.state.gameState !== State.Game.none) {
+      return null;
+    }
+
+    return (
+      <View style={StyleSheet.absoluteFillObject}>
+        <HomeScreen
+          onPlay={() => {
+            this.updateWithGameState(State.Game.playing);
+          }}
+        />
+      </View>
+    );
+  };
+
   render() {
     return (
       <View
@@ -1005,6 +1013,8 @@ class Game extends Component {
           gameOver={this.state.gameState === State.Game.gameOver}
         />
         {this.renderGameOver()}
+
+        {this.renderHomeScreen()}
       </View>
     );
   }

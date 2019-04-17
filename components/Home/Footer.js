@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { LayoutAnimation, StyleSheet, View } from 'react-native';
+import { LayoutAnimation, Animated, StyleSheet, View } from 'react-native';
 
 import Images from '../../Images';
 import Button from '../Button';
@@ -11,23 +11,28 @@ export default class Footer extends Component {
     menuOpen: false,
   };
 
+  collapse = onPress => () => {
+    this.setState({ menuOpen: false });
+    onPress();
+  };
+
   renderMenu = () => {
     return (
       <View style={{ flexDirection: 'column' }}>
         <Button
-          onPress={this.props.onMultiplayer}
+          onPress={this.collapse(this.props.onMultiplayer)}
           style={[{ marginBottom: 8 }, imageStyle]}
           imageStyle={imageStyle}
           source={Images.button.controller}
         />
         <Button
-          onPress={this.props.onShop}
+          onPress={this.collapse(this.props.onShop)}
           style={[{ marginBottom: 8 }, imageStyle]}
           imageStyle={imageStyle}
           source={Images.button.shop}
         />
         <Button
-          onPress={this.props.onCamera}
+          onPress={this.collapse(this.props.onCamera)}
           style={[{ marginBottom: 8 }, imageStyle]}
           imageStyle={imageStyle}
           source={Images.button.camera}
@@ -38,7 +43,7 @@ export default class Footer extends Component {
 
   render() {
     return (
-      <View style={[styles.container, this.props.style]}>
+      <Animated.View style={[styles.container, this.props.style]}>
         <Button
           onPress={this.props.onCharacterSelect}
           imageStyle={imageStyle}
@@ -59,7 +64,7 @@ export default class Footer extends Component {
 
           {this.state.menuOpen && this.renderMenu()}
         </View>
-      </View>
+      </Animated.View>
     );
   }
 }

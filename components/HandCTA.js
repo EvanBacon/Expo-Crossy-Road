@@ -4,7 +4,7 @@ import { Image, StyleSheet } from 'react-native';
 import Images from '../Images';
 
 const sprite = Object.values(Images.hand);
-export default class Sprite extends Component {
+export default class HandCTA extends Component {
   interval = 400;
   index = 0;
   state = {

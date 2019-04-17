@@ -49,7 +49,7 @@ const banner = [
   },
   {
     color: '#d73a32',
-    title: '44 * To Go',
+    title: '44 Coins To Go',
   },
 ];
 
