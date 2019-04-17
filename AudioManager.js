@@ -3,11 +3,16 @@ import { Audio } from 'expo';
 // import Assets from './Assets';
 import AssetUtils from 'expo-asset-utils';
 import AudioFiles from './Audio';
+import { Platform } from 'react-native';
+
+// Web just can't seem to handle audio
+const MUTED = Platform.OS === 'web';
 
 class AudioManager {
   sounds = {};
 
   playAsync = async (soundObject, isLooping, startOver = true) => {
+    if (MUTED) return;
     // if (store.getState().muted) {
     //   return;
     // }
@@ -83,12 +88,6 @@ class AudioManager {
   }
 
   setupAudioAsync = async () => {
-    // const keys = Object.keys(this.assets || {});
-    // for (let key of keys) {
-    //   const item = this.assets[key];
-    //   const { sound } = await Audio.Sound.create(item);
-    //   this.sounds[key.substr(0, key.lastIndexOf('.'))] = sound;
-    // }
     this.sounds = await clone(this.assets);
     console.log('sounds', this.sounds);
   };
@@ -98,17 +97,23 @@ class AudioManager {
       files: [...AssetUtils.arrayFromObject(this.assets)],
     });
 
-  setupAsync = async () =>
-    Promise.all([
+  setupAsync = async () => {
+    if (MUTED) {
+      return this.setupAudioAsync();
+    }
+
+    return Promise.all([
       this.configureExperienceAudioAsync(),
       this.downloadAsync(),
       this.setupAudioAsync(),
     ]);
+  };
 }
 
 async function clone(obj) {
   if (obj === null || typeof obj !== 'object' || 'isActiveClone' in obj) {
     if (typeof obj === 'string' || typeof obj === 'number') {
+      if (MUTED) return null;
       const { sound } = await Audio.Sound.create(obj);
       return sound;
     }
