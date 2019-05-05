@@ -12,7 +12,8 @@
     "platforms": ["android", "ios", "web"],
     "splash": {
       "image": "./assets/icons/loading.png",
-      "resizeMode": "cover"
+      "resizeMode": "cover",
+      "backgroundColor": "#69CEED"
     },
     "packagerOpts": {
       "assetExts": ["ttf", "mp4", "mp3", "obj", "wav", "mtl"]
