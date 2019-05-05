@@ -35,14 +35,17 @@ export default class App extends React.Component {
       await Promise.all([
         AudioManager.setupAsync(),
         Font.loadAsync({ retro: require('./assets/fonts/retro.ttf') }),
-        ModelLoader.loadModels(),
       ]);
     } catch (e) {
       console.warn(e);
-    } finally {
+    }
+
+    try {
+      await ModelLoader.loadModels();
+    } catch (e) {
+    } finally { 
       this.setState({ appIsReady: true });
     }
-    this.setState({ appIsReady: true });
   }
 
   render() {
