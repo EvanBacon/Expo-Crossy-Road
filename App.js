@@ -4,8 +4,8 @@ import { Image } from 'react-native';
 import * as THREE from 'three';
 import AudioManager from './AudioManager';
 import ModelLoader from './ModelLoader';
-import AppNavigator from './navigation/AppNavigator';
-import GameScreen from './screens/GameScreen';
+// import AppNavigator from './navigation/AppNavigator';
+import AppNavigator from './screens/GameScreen';
 
 // import GameScreen from './screens/DebugScene';
 global.THREE = THREE;
@@ -42,7 +42,6 @@ export default class App extends React.Component {
     } finally {
       this.setState({ appIsReady: true });
     }
-    await ModelLoader.shared.load();
     this.setState({ appIsReady: true });
   }
 
