@@ -25,17 +25,13 @@ const swipeConfig = {
 export const keyMap = {
   Space: 'SWIPE_UP',
   ArrowUp: 'SWIPE_UP',
-  w: 'SWIPE_UP',
-  W: 'SWIPE_UP',
+  KeyW: 'SWIPE_UP',
   ArrowDown: 'SWIPE_DOWN',
-  s: 'SWIPE_DOWN',
-  S: 'SWIPE_DOWN',
+  KeyS: 'SWIPE_DOWN',
   ArrowLeft: 'SWIPE_LEFT',
-  a: 'SWIPE_LEFT',
-  A: 'SWIPE_LEFT',
+  KeyA: 'SWIPE_LEFT',
   ArrowRight: 'SWIPE_RIGHT',
-  d: 'SWIPE_RIGHT',
-  D: 'SWIPE_RIGHT',
+  KeyD: 'SWIPE_RIGHT',
 };
 
 function isValidSwipe(
