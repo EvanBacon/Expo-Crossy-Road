@@ -11,6 +11,7 @@ export default class Banner extends Component {
       onPress={onPress}
       imageStyle={[styles.button, style]}
       source={source}
+      style={{marginLeft: 8, width: 90, flex: undefined}}
     />
   );
 
@@ -41,7 +42,6 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 18,
     color: 'white',
-    flex: 2,
     fontFamily: 'retro',
     textAlign: 'center',
   },
