@@ -6,7 +6,8 @@
   "private": false,
   "scripts": {
     "serve": "serve ./web-build",
-    "deploy:web": "netlify deploy"
+    "start:web": "expo start --web --web-only",
+    "deploy:web": "netlify deploy --prod"
   },
   "devDependencies": {
     "babel-preset-expo": "^5.0.0",
