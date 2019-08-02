@@ -1,4 +1,5 @@
-import { Constants, Audio } from 'expo';
+import { Audio } from 'expo';
+import Constants from 'expo-constants';
 import React, { Component } from 'react';
 import {
   Alert,

@@ -1,20 +1,20 @@
+import Constants from 'expo-constants';
 import React, { Component } from 'react';
 import {
-  Text,
-  View,
+  Animated,
+  Dimensions,
   Easing,
   InteractionManager,
-  Dimensions,
-  Animated,
-  TouchableOpacity,
   StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from 'react-native';
-import { Constants } from 'expo';
-// import { connect } from 'react-redux';
-import Footer from '../components/Home/Footer';
-import Hand from '../components/HandCTA';
-import State from '../state';
 
+import Hand from '../components/HandCTA';
+import Footer from '../components/Home/Footer';
+
+// import { connect } from 'react-redux';
 // import { setGameState } from '../actions/game';
 
 let hasShownTitle = false;

@@ -1,4 +1,4 @@
-import { Constants } from 'expo';
+import Constants from 'expo-constants';
 import React, { Component } from 'react';
 import { Share, Text, StyleSheet, View } from 'react-native';
 import { connect } from 'react-redux';

@@ -10,8 +10,7 @@
     "deploy:web": "netlify deploy --prod"
   },
   "devDependencies": {
-    "babel-preset-expo": "^5.0.0",
-    "serve": "^11.0.0"
+    "babel-preset-expo": "^6.0.0"
   },
   "main": "node_modules/expo/AppEntry.js",
   "dependencies": {
@@ -19,17 +18,19 @@
     "@rematch/core": "^1.0.6",
     "@rematch/persist": "^1.1.5",
     "@tweenjs/tween.js": "^17.2.0",
-    "expo": "^33.0.0-alpha.web.0",
-    "expo-three": "^3.0.0-alpha.6",
+    "expo": "^34.0.3",
+    "expo-asset": "^6.0.0",
+    "expo-av": "^6.0.0",
+    "expo-constants": "^6.0.0",
+    "expo-gl": "^6.0.0",
+    "expo-three": "git://github.com/expo/expo-three.git#3b01f2dcad82aa43812ee3963aeac669ebfcb5ca",
     "gsap": "^2.0.2",
-    "react": "16.5.0",
+    "react": "^16.8.6",
     "react-dom": "^16.8.4",
-    "react-native": "0.57.1",
+    "react-native": "^0.59.0",
     "react-native-web": "^0.11.1",
     "react-navigation": "^3.8.1",
     "react-redux": "^6.0.0",
-    "redux": "^4.0.1",
-    "redux-persist": "^5.5.0",
-    "three": "^0.88.0"
+    "redux": "^4.0.1"
   }
 }

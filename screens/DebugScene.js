@@ -1,4 +1,4 @@
-import { GLView } from 'expo';
+import { GLView } from 'expo-gl';
 import React, { Component } from 'react';
 import * as THREE from 'three';
 

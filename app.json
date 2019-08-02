@@ -4,7 +4,7 @@
     "description": "The endless arcade hopper you'll never want to put down",
     "slug": "crossy-road",
     "privacy": "public",
-    "sdkVersion": "32.0.0",
+    "sdkVersion": "34.0.0",
     "version": "1.0.0",
     "orientation": "portrait",
     "primaryColor": "#69CEED",

@@ -1,4 +1,4 @@
-import { GLView } from 'expo';
+import { GLView } from 'expo-gl';
 import { Bounce, Power1, Power4, TimelineMax, TweenMax } from 'gsap';
 import React, { Component } from 'react';
 import {
@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import * as THREE from 'three';
 import Characters from '../Characters';
-import ExpoTHREE from '../ExpoTHREE';
+import * as ExpoTHREE from 'expo-three';
 import ModelLoader from '../ModelLoader';
 import State from '../state';
 import GameOverScreen from './GameOverScreen';
@@ -324,6 +324,7 @@ class Game extends Component {
     this.createLights();
 
     // Mesh
+    console.log('_hero', initialState.id);
     this._hero = this.hero.getNode(initialState.id);
     this._hero.moving = false;
     this._hero.hitBy = null;

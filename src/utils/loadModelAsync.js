@@ -1,39 +1,20 @@
-import { Asset } from 'expo';
-import * as THREE from 'three';
+import { Asset } from 'expo-asset';
+import * as ExpoTHREE, { THREE, loadOBJAsync } from 'expo-three';
+// import ExpoTHREE from '../../ExpoTHREE.web';
 
-import ExpoTHREE from '../../ExpoTHREE.web';
-
-function textureFromAsset(asset) {
-  if (!asset.localUri) {
-    throw new Error(
-      `Asset '${asset.name}' needs to be downloaded before ` +
-        `being used as an OpenGL texture.`,
-    );
-  }
-  const texture = new THREE.Texture();
-  texture.image = {
-    data: asset,
-    width: asset.width,
-    height: asset.height,
-  };
-  texture.needsUpdate = true;
-  texture.isDataTexture = true; // send to gl.texImage2D() verbatim
-  return texture;
-}
-
-async function loadOBJAsync(resource) {
-  const asset = Asset.fromModule(resource);
-  if (!asset.localUri) {
-    await asset.downloadAsync();
-  }
-  if (!THREE.OBJLoader) {
-    require('three/examples/js/loaders/OBJLoader');
-  }
-  const loader = new THREE.OBJLoader();
-  return await new Promise((resolve, reject) =>
-    loader.load(asset.localUri, resolve, () => {}, reject),
-  );
-}
+// async function loadOBJAsync(resource) {
+//   const asset = Asset.fromModule(resource);
+//   if (!asset.localUri) {
+//     await asset.downloadAsync();
+//   }
+//   if (!THREE.OBJLoader) {
+//     require('three/examples/js/loaders/OBJLoader');
+//   }
+//   const loader = new THREE.OBJLoader();
+//   return await new Promise((resolve, reject) =>
+//     loader.load(asset.localUri, resolve, () => {}, reject),
+//   );
+// }
 
 async function loadTextureAsync(resource) {
   const asset = Asset.fromModule(resource);
@@ -53,8 +34,9 @@ export default async function loadModelAsync({
   castShadow,
   receiveShadow,
 }) {
-  const _model = await loadOBJAsync(model);
-  const _texture = await loadTextureAsync(texture);
+  const _model = await ExpoTHREE.loadObjAsync({ asset: model });
+  console.log({texture});
+  const _texture = new THREE.TextureLoader().load(texture) // await ExpoTHREE.load loadTextureAsync(texture);
 
   _model.traverse(child => {
     if (child instanceof THREE.Mesh) {

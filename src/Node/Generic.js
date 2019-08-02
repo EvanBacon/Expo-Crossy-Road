@@ -1,5 +1,5 @@
-import { Asset } from 'expo';
-import * as THREE from 'three';
+import { Asset } from 'expo-asset';
+import { THREE, loadAsync } from 'expo-three';
 
 import ExpoTHREE from '../../ExpoTHREE.web';
 import Models from '../../Models';
@@ -45,10 +45,7 @@ export default class Generic {
       loader.load(Asset.fromModule(model).uri, resolve, () => {}, reject),
     );
 
-    const textureAsset = Asset.fromModule(texture);
-
-    await textureAsset.downloadAsync();
-    const _texture = ExpoTHREE.loadAsync(textureAsset); // textureFromAsset(textureAsset);
+    const _texture = await ExpoTHREE.loadAsync(texture);
 
     _texture.magFilter = THREE.NearestFilter;
     _texture.minFilter = THREE.NearestFilter;
@@ -86,10 +83,12 @@ export default class Generic {
     if (key in this.models) {
       return this.models[key].clone();
     } else {
-      console.warn(
-        `Node with Key ${key} does not exist in ${JSON.stringify(
+      throw new Error(
+        `Generic: Node with Key ${key} does not exist in ${JSON.stringify(
           Object.keys(this.models),
-        )}! Node/Generic`,
+          null,
+          2,
+        )}`,
       );
     }
   };

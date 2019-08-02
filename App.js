@@ -1,4 +1,4 @@
-import { Font } from 'expo';
+import * as Font from 'expo-font';
 import React from 'react';
 import { Image } from 'react-native';
 import * as THREE from 'three';
@@ -36,15 +36,16 @@ export default class App extends React.Component {
         AudioManager.setupAsync(),
         Font.loadAsync({ retro: require('./assets/fonts/retro.ttf') }),
       ]);
-    } catch (e) {
-      console.warn(e);
+    } catch ({ message }) {
+      console.error('App: Error loading assets: ' + message);
     }
 
     try {
       await ModelLoader.loadModels();
-    } catch (e) {
-    } finally { 
       this.setState({ appIsReady: true });
+    } catch (e) {
+      this.setState({ appFailed: true });
+    } finally {
     }
   }
 
@@ -53,6 +54,11 @@ export default class App extends React.Component {
       return <GameScreen />;
     }
 
+    if (this.state.appFailed) {
+      return (
+        <View style={[StyleSheet.absoluteFill, { backgroundColor: 'red' }]} />
+      );
+    }
     if (this.state.appIsReady) {
       return <AppNavigator />;
     }
