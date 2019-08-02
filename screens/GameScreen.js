@@ -1,27 +1,24 @@
 import { GLView } from 'expo-gl';
-import { Bounce, Power1, Power4, TimelineMax, TweenMax } from 'gsap';
-import React, { Component } from 'react';
-import {
-  Dimensions,
-  InteractionManager,
-  StyleSheet,
-  Animated,
-  Vibration,
-  View,
-} from 'react-native';
-import * as THREE from 'three';
-import Characters from '../Characters';
 import * as ExpoTHREE from 'expo-three';
-import ModelLoader from '../ModelLoader';
-import State from '../state';
-import GameOverScreen from './GameOverScreen';
+import { Bounce, Power1, TimelineMax, TweenMax } from 'gsap';
+import React, { Component } from 'react';
+import { Animated, Dimensions, StyleSheet, Vibration, View } from 'react-native';
+import * as THREE from 'three';
+
+import AudioManager from '../AudioManager';
+import Characters from '../Characters';
 import GestureRecognizer, { swipeDirections } from '../components/GestureView';
+import Score from '../components/ScoreText';
+import ModelLoader from '../ModelLoader';
+import { groundLevel, maxRows, sceneColor, startingRow } from '../src/GameSettings';
 import Feathers from '../src/Particles/Feathers';
 import Water from '../src/Particles/Water';
 import Rows from '../src/Row';
 import { Fill } from '../src/Row/Grass';
-import Score from '../components/ScoreText';
+import State from '../state';
+import GameOverScreen from './GameOverScreen';
 import HomeScreen from './HomeScreen';
+
 const initialState = {
   id: Characters.chicken.id,
   name: Characters.chicken.name,
@@ -36,14 +33,6 @@ const normalizeAngle = angle => {
 };
 
 const PI_2 = Math.PI * 0.5;
-import {
-  groundLevel,
-  maxRows,
-  sceneColor,
-  startingRow,
-} from '../src/GameSettings';
-import AudioManager from '../AudioManager';
-
 const DEBUG_CAMERA_CONTROLS = false;
 class Game extends Component {
   /// Reserve State for UI related updates...

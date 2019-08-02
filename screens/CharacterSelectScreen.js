@@ -1,15 +1,14 @@
 import Constants from 'expo-constants';
 import React, { Component } from 'react';
-import { Share, Text, StyleSheet, View } from 'react-native';
-import { connect } from 'react-redux';
+import { Share, StyleSheet, Text, View } from 'react-native';
 
 import Characters from '../Characters';
 import Colors from '../Colors';
-import Images from '../Images';
-// import connectCharacter from '../../utils/connectCharacter';
 import Button from '../components/Button';
 import Carousel from '../components/CharacterSelect/Carousel';
+import Images from '../Images';
 
+// import connectCharacter from '../../utils/connectCharacter';
 class CharacterSelect extends Component {
   state = {
     currentIndex: 0,

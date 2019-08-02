@@ -4,10 +4,9 @@ import * as THREE from 'three';
 
 import ExpoTHREE from '../ExpoTHREE';
 import { sceneColor } from '../src/GameSettings';
+import Foam from '../src/Particles/Foam';
 
 const DEBUG_CAMERA_CONTROLS = true;
-
-import Foam from '../src/Particles/Foam';
 
 class Game extends Component {
   _onGLContextCreate = async gl => {

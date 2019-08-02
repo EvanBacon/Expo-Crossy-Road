@@ -1,4 +1,3 @@
-import { Audio } from 'expo';
 import Constants from 'expo-constants';
 import React, { Component } from 'react';
 import {
@@ -9,16 +8,16 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
+
+import AudioManager from '../AudioManager';
+import Characters from '../Characters';
+import Banner from '../components/GameOver/Banner';
+import Footer from '../components/GameOver/Footer';
+import Images from '../Images';
+
 // import { connect } from 'react-redux';
 
 // import { setGameState } from '../../actions/game';
-import AudioFiles from '../Audio';
-import Characters from '../Characters';
-import Images from '../Images';
-import Banner from '../components/GameOver/Banner';
-import Footer from '../components/GameOver/Footer';
-import AudioManager from '../AudioManager';
-
 const { width } = Dimensions.get('window');
 
 //TODO: Make this dynamic
