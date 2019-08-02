@@ -2,7 +2,7 @@ import { GLView } from 'expo-gl';
 import React, { Component } from 'react';
 import * as THREE from 'three';
 
-import ExpoTHREE from '../ExpoTHREE';
+import * as ExpoTHREE from 'expo-three';
 import { sceneColor } from '../src/GameSettings';
 import Foam from '../src/Particles/Foam';
 

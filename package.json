@@ -23,7 +23,7 @@
     "expo-av": "^6.0.0",
     "expo-constants": "^6.0.0",
     "expo-gl": "^6.0.0",
-    "expo-three": "git://github.com/expo/expo-three.git#3b01f2dcad82aa43812ee3963aeac669ebfcb5ca",
+    "expo-three": "4.0.3",
     "gsap": "^2.0.2",
     "react": "^16.8.6",
     "react-dom": "^16.8.4",

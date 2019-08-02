@@ -1,7 +1,6 @@
 import { Asset } from 'expo-asset';
-import { THREE, loadAsync } from 'expo-three';
+import { THREE, loadTextureAsync, loadAsync, loadObjAsync } from 'expo-three';
 
-import ExpoTHREE from '../../ExpoTHREE.web';
 import Models from '../../Models';
 // import createTHREEViewClass from '../../utils/createTHREEViewClass';
 
@@ -41,11 +40,12 @@ export default class Generic {
       require('three/examples/js/loaders/OBJLoader');
     }
     const loader = new THREE.OBJLoader();
-    let _model = await new Promise((resolve, reject) =>
-      loader.load(Asset.fromModule(model).uri, resolve, () => {}, reject),
-    );
+    // let _model = await new Promise((resolve, reject) =>
+    //   loader.load(Asset.fromModule(model).uri, resolve, () => {}, reject),
+    // );
 
-    const _texture = await ExpoTHREE.loadAsync(texture);
+    const _model = await loadObjAsync({ asset: model });
+    const _texture = await loadTextureAsync({ asset: texture });
 
     _texture.magFilter = THREE.NearestFilter;
     _texture.minFilter = THREE.NearestFilter;

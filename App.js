@@ -1,6 +1,6 @@
 import * as Font from 'expo-font';
 import React from 'react';
-import { Image } from 'react-native';
+import { Image, View, Text, StyleSheet } from 'react-native';
 import * as THREE from 'three';
 import AudioManager from './AudioManager';
 import ModelLoader from './ModelLoader';
@@ -42,6 +42,7 @@ export default function App() {
         setReady(true);
       } catch (e) {
         setError(e);
+        throw e;
       } finally {
       }
     })();
