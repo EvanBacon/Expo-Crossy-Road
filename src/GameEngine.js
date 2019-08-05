@@ -42,6 +42,12 @@ const DEBUG_CAMERA_CONTROLS = false;
 class CrossyScene extends THREE.Scene {
   constructor({ hideShadows }) {
     super();
+
+    this.worldWithCamera = new THREE.Group();
+    this.world = new CrossyWorld();
+    this.worldWithCamera.add(this.world);
+    this.add(this.worldWithCamera);
+
     const light = new THREE.DirectionalLight(0xdfebff, 1.75);
     light.position.set(20, 30, 0.05);
     light.castShadow = !hideShadows;
@@ -64,6 +70,34 @@ class CrossyScene extends THREE.Scene {
     // let helper = new THREE.CameraHelper(light.shadow.camera);
     // this.add(helper);
   }
+
+  resetParticles = position => {
+    this.featherParticles.mesh.position.copy(position);
+    this.waterParticles.mesh.position.copy(position);
+    this.featherParticles.mesh.position.y = 0;
+    this.waterParticles.mesh.position.y = 0;
+  };
+
+  useParticle = (model, type, direction = 0) => {
+    requestAnimationFrame(async () => {
+      if (type === 'water') {
+        this.waterParticles.mesh.position.copy(model.position);
+        this.waterParticles.run(type);
+        await AudioManager.playAsync(AudioManager.sounds.water);
+      } else if (type === 'feathers') {
+        this.featherParticles.mesh.position.copy(model.position);
+        this.featherParticles.run(type, direction);
+      }
+    });
+  };
+
+  createParticles = () => {
+    this.waterParticles = new Water();
+    this.world.add(this.waterParticles.mesh);
+
+    this.featherParticles = new Feathers();
+    this.world.add(this.featherParticles.mesh);
+  };
 
   rumble = () => {
     Vibration.vibrate();
@@ -167,17 +201,14 @@ export default class Engine {
 
   setupGame = () => {
     this.scene = new CrossyScene({ hideShadows: this.hideShadows });
-    this.worldWithCamera = new THREE.Group();
-    this.world = new CrossyWorld();
-    this.scene.add(this.worldWithCamera);
-    this.worldWithCamera.add(this.world);
+
     this.camera = new CrossyCamera();
 
     if (DEBUG_CAMERA_CONTROLS) {
       // this.debugControls = new THREE.OrbitControls(this.camera);
     }
 
-    this.worldWithCamera.position.z = -startingRow;
+    this.scene.worldWithCamera.position.z = -startingRow;
 
     this.updateScale();
 
@@ -185,26 +216,6 @@ export default class Engine {
     // this.props.setGameState(State.Game.none)
   };
 
-  createParticles = () => {
-    this.waterParticles = new Water();
-    this.world.add(this.waterParticles.mesh);
-
-    this.featherParticles = new Feathers();
-    this.world.add(this.featherParticles.mesh);
-  };
-
-  useParticle = (model, type, direction = 0) => {
-    requestAnimationFrame(async () => {
-      if (type === 'water') {
-        this.waterParticles.mesh.position.copy(model.position);
-        this.waterParticles.run(type);
-        await AudioManager.playAsync(AudioManager.sounds.water);
-      } else if (type === 'feathers') {
-        this.featherParticles.mesh.position.copy(model.position);
-        this.featherParticles.run(type, direction);
-      }
-    });
-  };
   doneMoving = () => {
     this._hero.moving = false;
     this.updateScore();
@@ -257,7 +268,7 @@ export default class Engine {
     this.heroWidth = 0.7;
 
     this.loadModels();
-    this.createParticles();
+    this.scene.createParticles();
 
     // Mesh
     this._hero = this.hero.getNode(initialState.id);
@@ -265,7 +276,7 @@ export default class Engine {
     this._hero.hitBy = null;
     this._hero.ridingOn = null;
     this._hero.ridingOnOffset = null;
-    this.world.add(this._hero);
+    this.scene.world.add(this._hero);
 
     // Assign mesh to corresponding array
     // and add mesh to scene
@@ -274,10 +285,10 @@ export default class Engine {
       this.water[i] = new Rows.Water(this.heroWidth, this.onCollide);
       this.road[i] = new Rows.Road(this.heroWidth, this.onCollide);
       this.railRoads[i] = new Rows.RailRoad(this.heroWidth, this.onCollide);
-      this.world.add(this.grass[i]);
-      this.world.add(this.water[i]);
-      this.world.add(this.road[i]);
-      this.world.add(this.railRoads[i]);
+      this.scene.world.add(this.grass[i]);
+      this.scene.world.add(this.water[i]);
+      this.scene.world.add(this.road[i]);
+      this.scene.world.add(this.railRoads[i]);
     }
 
     this.init();
@@ -296,7 +307,7 @@ export default class Engine {
       this.playDeathSound();
     }
     this._hero.isAlive = false;
-    this.useParticle(this._hero, type, obstacle.speed);
+    this.scene.useParticle(this._hero, type, obstacle.speed);
     this.scene.rumble();
     this.gameOver();
   };
@@ -332,10 +343,7 @@ export default class Engine {
     this._hero.scale.set(1, 1, 1);
     this._hero.rotation.set(0, Math.PI, 0);
 
-    this.featherParticles.mesh.position.copy(this._hero.position);
-    this.waterParticles.mesh.position.copy(this._hero.position);
-    this.featherParticles.mesh.position.y = 0;
-    this.waterParticles.mesh.position.y = 0;
+    this.scene.resetParticles(this._hero.position);
 
     this.map = {};
     this.camCount = 0;
@@ -497,20 +505,21 @@ export default class Engine {
   // Move scene forward
   forwardScene = () => {
     const easing = 0.03;
-    this.world.position.z -=
-      (this._hero.position.z - startingRow + this.world.position.z) * easing;
-    this.world.position.x = -Math.min(
+    this.scene.world.position.z -=
+      (this._hero.position.z - startingRow + this.scene.world.position.z) *
+      easing;
+    this.scene.world.position.x = -Math.min(
       2,
       Math.max(
         -2,
-        this.world.position.x +
-          (this._hero.position.x - this.world.position.x) * easing,
+        this.scene.world.position.x +
+          (this._hero.position.x - this.scene.world.position.x) * easing,
       ),
     );
 
     // normal camera speed
-    if (-this.world.position.z - this.camCount > 1.0) {
-      this.camCount = -this.world.position.z;
+    if (-this.scene.world.position.z - this.camCount > 1.0) {
+      this.camCount = -this.scene.world.position.z;
       this.newRow();
     }
   };
