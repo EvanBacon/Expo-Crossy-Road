@@ -157,11 +157,41 @@ class CrossyRenderer extends ExpoTHREE.Renderer {
   }
 }
 
-export default class Engine {
+class GameMap {
   floorMap = {};
+
+  reset() {
+    this.floorMap = {};
+  }
+
+  getRow(index) {
+    return this.floorMap[`${index}`];
+  }
+  setRow(index, value) {
+    this.floorMap[`${index}`] = value;
+  }
+
+  // Detect collisions with trees/cars
+  treeCollision = position => {
+    const targetZ = `${position.z | 0}`;
+    if (targetZ in this.floorMap) {
+      const { type, entity } = this.floorMap[targetZ];
+      if (type === 'grass') {
+        const key = `${position.x | 0}`;
+        if (key in entity.obstacleMap) {
+          return true;
+        }
+      }
+    }
+
+    return false;
+  };
+}
+
+export default class Engine {
   targetRotation;
   audioFileMoveIndex = 0;
-
+  gameMap = new GameMap();
   updateScale = () => {
     const { width, height, scale } = Dimensions.get('window');
     if (this.camera) {
@@ -360,7 +390,7 @@ export default class Engine {
     this._hero.ridingOn = null;
     this._hero.ridingOnOffset = null;
     this.lastHeroZ = startingRow;
-    this.floorMap = {};
+    this.gameMap.reset();
     this._hero.isAlive = true;
 
     this.idle();
@@ -426,28 +456,28 @@ export default class Engine {
         this.grass[this.grassCount].generate(
           this.mapRowToObstacle(this.rowCount),
         );
-        this.floorMap[`${this.rowCount}`] = {
+        this.gameMap.setRow(this.rowCount, {
           type: 'grass',
           entity: this.grass[this.grassCount],
-        };
+        });
         this.grassCount++;
         break;
       case 'roadtype':
         if (((Math.random() * 4) | 0) === 0) {
           this.railRoads[this.railRoadCount].position.z = this.rowCount;
           this.railRoads[this.railRoadCount].active = true;
-          this.floorMap[`${this.rowCount}`] = {
+          this.gameMap.setRow(this.rowCount, {
             type: 'railRoad',
             entity: this.railRoads[this.railRoadCount],
-          };
+          });
           this.railRoadCount++;
         } else {
           this.road[this.roadCount].position.z = this.rowCount;
           this.road[this.roadCount].active = true;
-          this.floorMap[`${this.rowCount}`] = {
+          this.gameMap.setRow(this.rowCount, {
             type: 'road',
             entity: this.road[this.roadCount],
-          };
+          });
           this.roadCount++;
         }
         break;
@@ -455,31 +485,15 @@ export default class Engine {
         this.water[this.waterCount].position.z = this.rowCount;
         this.water[this.waterCount].active = true;
         this.water[this.waterCount].generate();
-        this.floorMap[`${this.rowCount}`] = {
+        this.gameMap.setRow(this.rowCount, {
           type: 'water',
           entity: this.water[this.waterCount],
-        };
+        });
         this.waterCount++;
         break;
     }
 
     this.rowCount++;
-  };
-
-  // Detect collisions with trees/cars
-  treeCollision = position => {
-    const targetZ = `${position.z | 0}`;
-    if (targetZ in this.floorMap) {
-      const { type, entity } = this.floorMap[targetZ];
-      if (type === 'grass') {
-        const key = `${position.x | 0}`;
-        if (key in entity.obstacleMap) {
-          return true;
-        }
-      }
-    }
-
-    return false;
   };
 
   moveUserOnEntity = () => {
@@ -673,7 +687,7 @@ export default class Engine {
       case SWIPE_UP:
         {
           this.targetRotation = 0;
-          let rowObject = this.floorMap[`${this.initialPosition.z}`] || {};
+          let rowObject = this.gameMap.getRow(this.initialPosition.z) || {};
           if (rowObject.type === 'road') {
             this.playPassiveCarSound();
           }
@@ -707,8 +721,7 @@ export default class Engine {
       case SWIPE_DOWN:
         {
           this.targetRotation = Math.PI;
-          const row = (this.floorMap[`${this.initialPosition.z - 1}`] || {})
-            .type;
+          const row = (this.gameMap(this.initialPosition.z) || {}).type;
           let shouldRound = true; //row !== 'water';
           velocity = { x: 0, z: -1 };
 
@@ -737,7 +750,7 @@ export default class Engine {
     let { targetPosition, initialPosition } = this;
 
     // Check collision using the computed movement.
-    if (this.treeCollision(this.targetPosition)) {
+    if (this.gameMap.treeCollision(this.targetPosition)) {
       // If we collide with an object, then reset the target position so the character just jumps up.
       this.targetPosition = {
         x: this.initialPosition.x,
@@ -748,7 +761,7 @@ export default class Engine {
     }
 
     const targetRow =
-      this.floorMap[`${this.initialPosition.z + velocity.z}`] || {};
+      this.gameMap.getRow(this.initialPosition.z + velocity.z) || {};
     let finalY = targetRow.entity.top || groundLevel;
     // If the next move is into the river, then we want to jump into it.
     if (targetRow.type === 'water') {
