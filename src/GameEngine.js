@@ -39,6 +39,49 @@ const normalizeAngle = angle => {
 const PI_2 = Math.PI * 0.5;
 const DEBUG_CAMERA_CONTROLS = false;
 
+class CrossyScene extends THREE.Scene {
+  constructor({ hideShadows }) {
+    super();
+    const light = new THREE.DirectionalLight(0xdfebff, 1.75);
+    light.position.set(20, 30, 0.05);
+    light.castShadow = !hideShadows;
+    light.shadow.mapSize.width = 1024 * 2;
+    light.shadow.mapSize.height = 1024 * 2;
+
+    const d = 15;
+    const v = 6;
+    light.shadow.camera.left = -d;
+    light.shadow.camera.right = 9;
+    light.shadow.camera.top = v;
+    light.shadow.camera.bottom = -v;
+    light.shadow.camera.far = 100;
+    light.shadow.bias = 0.0001;
+
+    this.add(light);
+
+    this.light = light;
+
+    // let helper = new THREE.CameraHelper(light.shadow.camera);
+    // this.add(helper);
+  }
+
+  rumble = () => {
+    Vibration.vibrate();
+
+    TweenMax.to(this.position, 0.2, {
+      x: 0,
+      y: 0,
+      z: 1,
+    });
+    TweenMax.to(this.position, 0.2, {
+      x: 0,
+      y: 0,
+      z: 0,
+      delay: 0.2,
+    });
+  };
+}
+
 class CrossyCamera extends THREE.OrthographicCamera {
   constructor() {
     super(-1, 1, 1, -1, -30, 30);
@@ -56,12 +99,34 @@ class CrossyCamera extends THREE.OrthographicCamera {
   };
 }
 
+class CrossyWorld extends THREE.Group {
+  constructor() {
+    super();
+    this.add(new THREE.AmbientLight(0x666666, 0.8));
+  }
+
+  createParticles = () => {
+    this.waterParticles = new Water();
+    this.add(this.waterParticles.mesh);
+
+    this.featherParticles = new Feathers();
+    this.add(this.featherParticles.mesh);
+  };
+}
+
+class CrossyRenderer extends ExpoTHREE.Renderer {
+  constructor(props) {
+    super(props);
+    this.gammaInput = true;
+    this.gammaOutput = true;
+    this.shadowMap.enabled = true;
+  }
+}
+
 export default class Engine {
   floorMap = {};
   targetRotation;
   audioFileMoveIndex = 0;
-
-  constructor() {}
 
   updateScale = () => {
     const { width, height, scale } = Dimensions.get('window');
@@ -101,9 +166,9 @@ export default class Engine {
   };
 
   setupGame = () => {
-    this.scene = new THREE.Scene();
+    this.scene = new CrossyScene({ hideShadows: this.hideShadows });
     this.worldWithCamera = new THREE.Group();
-    this.world = new THREE.Group();
+    this.world = new CrossyWorld();
     this.scene.add(this.worldWithCamera);
     this.worldWithCamera.add(this.world);
     this.camera = new CrossyCamera();
@@ -140,33 +205,6 @@ export default class Engine {
       }
     });
   };
-
-  createLights = () => {
-    this.world.add(new THREE.AmbientLight(0x666666, 0.8));
-
-    let light = new THREE.DirectionalLight(0xdfebff, 1.75);
-    light.position.set(20, 30, 0.05);
-    light.castShadow = !this.hideShadows;
-    light.shadow.mapSize.width = 1024 * 2;
-    light.shadow.mapSize.height = 1024 * 2;
-
-    let d = 15;
-    let v = 6;
-    light.shadow.camera.left = -d;
-    light.shadow.camera.right = 9;
-    light.shadow.camera.top = v;
-    light.shadow.camera.bottom = -v;
-    light.shadow.camera.far = 100;
-    light.shadow.bias = 0.0001;
-
-    this.scene.add(light);
-
-    this.light = light;
-
-    // let helper = new THREE.CameraHelper(light.shadow.camera);
-    // this.scene.add(helper);
-  };
-
   doneMoving = () => {
     this._hero.moving = false;
     this.updateScore();
@@ -220,10 +258,8 @@ export default class Engine {
 
     this.loadModels();
     this.createParticles();
-    this.createLights();
 
     // Mesh
-    console.log('_hero', initialState.id);
     this._hero = this.hero.getNode(initialState.id);
     this._hero.moving = false;
     this._hero.hitBy = null;
@@ -261,7 +297,7 @@ export default class Engine {
     }
     this._hero.isAlive = false;
     this.useParticle(this._hero, type, obstacle.speed);
-    this.rumbleScreen();
+    this.scene.rumble();
     this.gameOver();
   };
 
@@ -458,22 +494,6 @@ export default class Engine {
     if (this.initialPosition) this.initialPosition.x = target;
   };
 
-  rumbleScreen = () => {
-    Vibration.vibrate();
-
-    TweenMax.to(this.scene.position, 0.2, {
-      x: 0,
-      y: 0,
-      z: 1,
-    });
-    TweenMax.to(this.scene.position, 0.2, {
-      x: 0,
-      y: 0,
-      z: 0,
-      delay: 0.2,
-    });
-  };
-
   // Move scene forward
   forwardScene = () => {
     const easing = 0.03;
@@ -543,14 +563,14 @@ export default class Engine {
       return;
     }
     if (this._hero.position.z < this.camera.position.z - 1) {
-      this.rumbleScreen();
+      this.scene.rumble();
       this.gameOver();
       this.playDeathSound();
     }
 
     // Check if offscreen
     if (this._hero.position.x < -5 || this._hero.position.x > 5) {
-      this.rumbleScreen();
+      this.scene.rumble();
       this.gameOver();
       this.playDeathSound();
     }
@@ -818,12 +838,13 @@ export default class Engine {
     const { drawingBufferWidth: width, drawingBufferHeight: height } = gl;
 
     // NOTE: How to create an `GLView`-compatible THREE renderer
-    this.renderer = new ExpoTHREE.Renderer({ gl, antialias: true });
-    this.renderer.setSize(width, height);
-    this.renderer.setClearColor(sceneColor);
-    this.renderer.gammaInput = true;
-    this.renderer.gammaOutput = true;
-    this.renderer.shadowMap.enabled = true;
+    this.renderer = new CrossyRenderer({
+      gl,
+      antialias: true,
+      width,
+      height,
+      clearColor: sceneColor,
+    });
 
     const render = () => {
       requestAnimationFrame(render);
