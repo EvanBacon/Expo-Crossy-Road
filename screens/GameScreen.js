@@ -51,6 +51,7 @@ class Game extends Component {
       duration: 200,
       onComplete: ({ finished }) => {
         this.engine.setupGame();
+        this.engine.init();
 
         if (finished) {
           Animated.timing(this.transitionScreensValue, {
@@ -127,12 +128,13 @@ class Game extends Component {
       return this.state.gameState !== State.Game.playing;
     };
     this.engine.onGameReady = () => this.setState({ ready: true });
-    this.engine.setupGame();
     this.engine.onGameEnded = () => {
       setTimeout(() => {
         this.setState({ gameState: State.Game.gameOver });
       }, 300);
     };
+    this.engine.setupGame();
+    this.engine.init();
   }
 
   newScore = () => {

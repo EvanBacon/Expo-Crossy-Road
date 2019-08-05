@@ -188,10 +188,170 @@ class GameMap {
   };
 }
 
+class CrossyGameMap extends GameMap {
+  grass = [];
+  grassCount = 0;
+
+  water = [];
+  waterCount = 0;
+
+  road = [];
+  roadCount = 0;
+
+  railRoads = [];
+  railRoadCount = 0;
+
+  rowCount = 0;
+
+  constructor({ heroWidth, onCollide, scene }) {
+    super();
+
+    this.heroWidth = heroWidth;
+
+    // Assign mesh to corresponding array
+    // and add mesh to scene
+    for (let i = 0; i < maxRows; i++) {
+      this.grass[i] = new Rows.Grass(this.heroWidth);
+      this.water[i] = new Rows.Water(this.heroWidth, onCollide);
+      this.road[i] = new Rows.Road(this.heroWidth, onCollide);
+      this.railRoads[i] = new Rows.RailRoad(this.heroWidth, onCollide);
+      scene.world.add(this.grass[i]);
+      scene.world.add(this.water[i]);
+      scene.world.add(this.road[i]);
+      scene.world.add(this.railRoads[i]);
+    }
+  }
+
+  tick(dt, hero) {
+    for (const railRoad of this.railRoads) {
+      railRoad.update(dt, hero);
+    }
+    for (const road of this.road) {
+      road.update(dt, hero);
+    }
+    for (const water of this.water) {
+      water.update(dt, hero);
+    }
+  }
+
+  // Scene generators
+  newRow = rowKind => {
+    if (this.grassCount === maxRows) {
+      this.grassCount = 0;
+    }
+    if (this.roadCount === maxRows) {
+      this.roadCount = 0;
+    }
+    if (this.waterCount === maxRows) {
+      this.waterCount = 0;
+    }
+    if (this.railRoadCount === maxRows) {
+      this.railRoadCount = 0;
+    }
+    if (this.rowCount < 10) {
+      rowKind = 'grass';
+    }
+
+    const ROW_TYPES = ['grass', 'roadtype', 'water'];
+    if (rowKind == null) {
+      rowKind = ROW_TYPES[Math.floor(Math.random() * ROW_TYPES.length)];
+    }
+
+    switch (rowKind) {
+      case 'grass':
+        this.grass[this.grassCount].position.z = this.rowCount;
+        this.grass[this.grassCount].generate(
+          this.mapRowToObstacle(this.rowCount),
+        );
+        this.setRow(this.rowCount, {
+          type: 'grass',
+          entity: this.grass[this.grassCount],
+        });
+        this.grassCount++;
+        break;
+      case 'roadtype':
+        if (((Math.random() * 4) | 0) === 0) {
+          this.railRoads[this.railRoadCount].position.z = this.rowCount;
+          this.railRoads[this.railRoadCount].active = true;
+          this.setRow(this.rowCount, {
+            type: 'railRoad',
+            entity: this.railRoads[this.railRoadCount],
+          });
+          this.railRoadCount++;
+        } else {
+          this.road[this.roadCount].position.z = this.rowCount;
+          this.road[this.roadCount].active = true;
+          this.setRow(this.rowCount, {
+            type: 'road',
+            entity: this.road[this.roadCount],
+          });
+          this.roadCount++;
+        }
+        break;
+      case 'water':
+        this.water[this.waterCount].position.z = this.rowCount;
+        this.water[this.waterCount].active = true;
+        this.water[this.waterCount].generate();
+        this.setRow(this.rowCount, {
+          type: 'water',
+          entity: this.water[this.waterCount],
+        });
+        this.waterCount++;
+        break;
+    }
+
+    this.rowCount++;
+  };
+
+  reset() {
+    this.grassCount = 0;
+    this.waterCount = 0;
+    this.roadCount = 0;
+    this.railRoadCount = 0;
+
+    this.rowCount = 0;
+    super.reset();
+  }
+
+  // Setup initial scene
+  init = () => {
+    const offset = -30;
+
+    for (let i = 0; i < maxRows; i++) {
+      this.grass[i].position.z = offset;
+
+      this.water[i].position.z = offset;
+      this.water[i].active = false;
+      this.road[i].position.z = offset;
+      this.road[i].active = false;
+      this.railRoads[i].position.z = offset;
+      this.railRoads[i].active = false;
+    }
+
+    this.grass[this.grassCount].position.z = this.rowCount;
+    this.grass[this.grassCount].generate(this.mapRowToObstacle(this.rowCount));
+    this.grassCount++;
+    this.rowCount++;
+
+    for (let i = 0; i < maxRows + 3; i++) {
+      this.newRow();
+    }
+  };
+
+  mapRowToObstacle = row => {
+    if (this.rowCount < 5) {
+      return Fill.solid;
+    } else if (this.rowCount < 10) {
+      return Fill.empty;
+    }
+    return Fill.random;
+  };
+}
+
 export default class Engine {
   targetRotation;
   audioFileMoveIndex = 0;
-  gameMap = new GameMap();
+
   updateScale = () => {
     const { width, height, scale } = Dimensions.get('window');
     if (this.camera) {
@@ -242,7 +402,29 @@ export default class Engine {
 
     this.updateScale();
 
-    this.doGame();
+    this.gameMap = new CrossyGameMap({
+      heroWidth: 0.7,
+      scene: this.scene,
+      onCollide: this.onCollide,
+    });
+
+    this.timing = 0.1;
+    this.lastHeroZ = startingRow;
+    this.camCount = 0;
+
+    const { _hero } = ModelLoader;
+    this.hero = _hero;
+
+    // Mesh
+    this._hero = this.hero.getNode(initialState.id);
+    this._hero.moving = false;
+    this._hero.hitBy = null;
+    this._hero.ridingOn = null;
+    this._hero.ridingOnOffset = null;
+    this.scene.world.add(this._hero);
+
+    this.scene.createParticles();
+
     // this.props.setGameState(State.Game.none)
   };
 
@@ -260,68 +442,6 @@ export default class Engine {
     this._hero.lastPosition = this._hero.position;
 
     // this._hero.position.set(Math.round(this._hero.position.x), this._hero.position.y, Math.round(this._hero.position.z))
-  };
-
-  getWidth = mesh => {
-    let box3 = new THREE.Box3();
-    box3.setFromObject(mesh);
-    return Math.round(box3.max.x - box3.min.x);
-  };
-
-  getDepth = mesh => {
-    const box3 = new THREE.Box3();
-    box3.setFromObject(mesh);
-    return Math.round(box3.max.z - box3.min.z);
-  };
-
-  loadModels = () => {
-    const { _hero } = ModelLoader;
-
-    this.hero = _hero;
-  };
-
-  doGame = async () => {
-    this.timing = 0.1;
-
-    this.grass = [];
-    this.grassCount = 0;
-    this.water = [];
-    this.waterCount = 0;
-    this.road = [];
-    this.roadCount = 0;
-    this.railRoads = [];
-    this.railRoadCount = 0;
-    this.lastHeroZ = 8;
-    this.rowCount = 0;
-    this.camCount = 0;
-    this.camSpeed = 0.02;
-    this.heroWidth = 0.7;
-
-    this.loadModels();
-    this.scene.createParticles();
-
-    // Mesh
-    this._hero = this.hero.getNode(initialState.id);
-    this._hero.moving = false;
-    this._hero.hitBy = null;
-    this._hero.ridingOn = null;
-    this._hero.ridingOnOffset = null;
-    this.scene.world.add(this._hero);
-
-    // Assign mesh to corresponding array
-    // and add mesh to scene
-    for (let i = 0; i < maxRows; i++) {
-      this.grass[i] = new Rows.Grass(this.heroWidth);
-      this.water[i] = new Rows.Water(this.heroWidth, this.onCollide);
-      this.road[i] = new Rows.Road(this.heroWidth, this.onCollide);
-      this.railRoads[i] = new Rows.RailRoad(this.heroWidth, this.onCollide);
-      this.scene.world.add(this.grass[i]);
-      this.scene.world.add(this.water[i]);
-      this.scene.world.add(this.road[i]);
-      this.scene.world.add(this.railRoads[i]);
-    }
-
-    this.init();
   };
 
   onCollide = async (obstacle = {}, type = 'feathers', collision) => {
@@ -375,17 +495,10 @@ export default class Engine {
 
     this.scene.resetParticles(this._hero.position);
 
-    this.map = {};
     this.camCount = 0;
-    this.map[`${0},${groundLevel | 0},${startingRow | 0}`] = 'player';
     this.initialPosition = null;
     this.targetPosition = null;
-    this.grassCount = 0;
-    this.waterCount = 0;
-    this.roadCount = 0;
-    this.railRoadCount = 0;
 
-    this.rowCount = 0;
     this._hero.hitBy = null;
     this._hero.ridingOn = null;
     this._hero.ridingOnOffset = null;
@@ -394,106 +507,9 @@ export default class Engine {
     this._hero.isAlive = true;
 
     this.idle();
-
-    for (let i = 0; i < maxRows; i++) {
-      this.grass[i].position.z = offset;
-
-      this.water[i].position.z = offset;
-      this.water[i].active = false;
-      this.road[i].position.z = offset;
-      this.road[i].active = false;
-      this.railRoads[i].position.z = offset;
-      this.railRoads[i].active = false;
-    }
-
-    this.grass[this.grassCount].position.z = this.rowCount;
-    this.grass[this.grassCount].generate(this.mapRowToObstacle(this.rowCount));
-    this.grassCount++;
-    this.rowCount++;
-
-    for (let i = 0; i < maxRows + 3; i++) {
-      this.newRow();
-    }
+    this.gameMap.init();
 
     this.onGameReady();
-  };
-
-  mapRowToObstacle = row => {
-    if (this.rowCount < 5) {
-      return Fill.solid;
-    } else if (this.rowCount < 10) {
-      return Fill.empty;
-    }
-    return Fill.random;
-  };
-
-  // Scene generators
-  newRow = rowKind => {
-    if (this.grassCount === maxRows) {
-      this.grassCount = 0;
-    }
-    if (this.roadCount === maxRows) {
-      this.roadCount = 0;
-    }
-    if (this.waterCount === maxRows) {
-      this.waterCount = 0;
-    }
-    if (this.railRoadCount === maxRows) {
-      this.railRoadCount = 0;
-    }
-    if (this.rowCount < 10) {
-      rowKind = 'grass';
-    }
-
-    const ROW_TYPES = ['grass', 'roadtype', 'water'];
-    if (rowKind == null) {
-      rowKind = ROW_TYPES[Math.floor(Math.random() * ROW_TYPES.length)];
-    }
-
-    switch (rowKind) {
-      case 'grass':
-        this.grass[this.grassCount].position.z = this.rowCount;
-        this.grass[this.grassCount].generate(
-          this.mapRowToObstacle(this.rowCount),
-        );
-        this.gameMap.setRow(this.rowCount, {
-          type: 'grass',
-          entity: this.grass[this.grassCount],
-        });
-        this.grassCount++;
-        break;
-      case 'roadtype':
-        if (((Math.random() * 4) | 0) === 0) {
-          this.railRoads[this.railRoadCount].position.z = this.rowCount;
-          this.railRoads[this.railRoadCount].active = true;
-          this.gameMap.setRow(this.rowCount, {
-            type: 'railRoad',
-            entity: this.railRoads[this.railRoadCount],
-          });
-          this.railRoadCount++;
-        } else {
-          this.road[this.roadCount].position.z = this.rowCount;
-          this.road[this.roadCount].active = true;
-          this.gameMap.setRow(this.rowCount, {
-            type: 'road',
-            entity: this.road[this.roadCount],
-          });
-          this.roadCount++;
-        }
-        break;
-      case 'water':
-        this.water[this.waterCount].position.z = this.rowCount;
-        this.water[this.waterCount].active = true;
-        this.water[this.waterCount].generate();
-        this.gameMap.setRow(this.rowCount, {
-          type: 'water',
-          entity: this.water[this.waterCount],
-        });
-        this.waterCount++;
-        break;
-    }
-
-    this.rowCount++;
   };
 
   moveUserOnEntity = () => {
@@ -534,7 +550,7 @@ export default class Engine {
     // normal camera speed
     if (-this.scene.world.position.z - this.camCount > 1.0) {
       this.camCount = -this.scene.world.position.z;
-      this.newRow();
+      this.gameMap.newRow();
     }
   };
 
@@ -563,15 +579,7 @@ export default class Engine {
   tick = dt => {
     // this.drive();
 
-    for (const railRoad of this.railRoads) {
-      railRoad.update(dt, this._hero);
-    }
-    for (const road of this.road) {
-      road.update(dt, this._hero);
-    }
-    for (const water of this.water) {
-      water.update(dt, this._hero);
-    }
+    this.gameMap.tick(dt, this._hero);
 
     if (!this._hero.moving) {
       this.moveUserOnEntity();
@@ -721,7 +729,7 @@ export default class Engine {
       case SWIPE_DOWN:
         {
           this.targetRotation = Math.PI;
-          const row = (this.gameMap(this.initialPosition.z) || {}).type;
+          const row = (this.gameMap.getRow(this.initialPosition.z) || {}).type;
           let shouldRound = true; //row !== 'water';
           velocity = { x: 0, z: -1 };
 
