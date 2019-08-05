@@ -1,16 +1,27 @@
 import { GLView } from 'expo-gl';
 import * as ExpoTHREE from 'expo-three';
+import { THREE } from 'expo-three';
 import { Bounce, Power1, TimelineMax, TweenMax } from 'gsap';
 import React, { Component } from 'react';
-import { Animated, Dimensions, StyleSheet, Vibration, View } from 'react-native';
-import * as THREE from 'three';
+import {
+  Animated,
+  Dimensions,
+  StyleSheet,
+  Vibration,
+  View,
+} from 'react-native';
 
 import AudioManager from '../AudioManager';
 import Characters from '../Characters';
 import GestureRecognizer, { swipeDirections } from '../components/GestureView';
 import Score from '../components/ScoreText';
 import ModelLoader from '../ModelLoader';
-import { groundLevel, maxRows, sceneColor, startingRow } from '../src/GameSettings';
+import {
+  groundLevel,
+  maxRows,
+  sceneColor,
+  startingRow,
+} from '../src/GameSettings';
 import Feathers from '../src/Particles/Feathers';
 import Water from '../src/Particles/Water';
 import Rows from '../src/Row';
@@ -34,82 +45,28 @@ const normalizeAngle = angle => {
 
 const PI_2 = Math.PI * 0.5;
 const DEBUG_CAMERA_CONTROLS = false;
-class Game extends Component {
-  /// Reserve State for UI related updates...
-  state = {
-    ready: false,
-    score: 0,
-    viewKey: 0,
-    gameState: State.Game.none,
-    // gameState: State.Game.gameOver
-  };
 
+class Engine {
   floorMap = {};
+  targetRotation;
+  audioFileMoveIndex = 0;
 
-  transitionScreensValue = new Animated.Value(1);
+  constructor() {}
 
-  componentWillReceiveProps(nextProps, nextState) {
-    if (nextState.gameState !== this.state.gameState) {
-      this.updateWithGameState(nextState.gameState, this.state.gameState);
+  updateScale = () => {
+    const { width, height, scale } = Dimensions.get('window');
+    if (this.camera) {
+      this.camera.left = -(width * scale);
+      this.camera.right = width * scale;
+      this.camera.top = height * scale;
+      this.camera.bottom = -(height * scale);
+      this.camera.zoom = 300;
+      this.camera.updateProjectionMatrix();
     }
-    // if (nextProps.character.id !== this.props.character.id) {
-    //   (async () => {
-    //     this.world.remove(this._hero);
-    //     this._hero = this.hero.getNode(nextProps.character.id);
-    //     this.world.add(this._hero);
-    //     this._hero.position.set(0, groundLevel, startingRow);
-    //     this._hero.scale.set(1, 1, 1);
-    //     this.init();
-    //   })();
-    // }
-  }
-  updateWithGameState = (gameState, previousGameState) => {
-    if (gameState === this.state.gameState) {
-      return;
-    }
-    const lastState = this.state.gameState;
-
-    this.setState({ gameState });
-    this.gameState = gameState;
-    const { playing, gameOver, paused, none } = State.Game;
-    switch (gameState) {
-      case playing:
-        if (lastState !== none) {
-          Animated.timing(this.transitionScreensValue, {
-            toValue: 0,
-            duration: 200,
-            onComplete: ({ finished }) => {
-              this.setupGame();
-
-              if (finished) {
-                Animated.timing(this.transitionScreensValue, {
-                  toValue: 1,
-                  duration: 300,
-                }).start();
-              }
-            },
-          }).start();
-        } else {
-          // Coming straight from the menu.
-          this.stopIdle();
-          this.onSwipe(swipeDirections.SWIPE_UP);
-        }
-
-        break;
-      case gameOver:
-        break;
-      case paused:
-        break;
-      case none:
-        this.newScore();
-
-        break;
-      default:
-        break;
+    if (this.renderer) {
+      this.renderer.setSize(width * scale, height * scale);
     }
   };
-
-  audioFileMoveIndex = 0;
 
   playMoveSound = async () => {
     await AudioManager.playAsync(
@@ -137,48 +94,6 @@ class Game extends Component {
       AudioManager.sounds.car.die[`${Math.floor(Math.random() * 2)}`],
     );
   };
-
-  async componentDidMount() {
-    // AudioManager.sounds.bg_music.setVolumeAsync(0.05);
-    // await AudioManager.playAsync(
-    //   AudioManager.sounds.bg_music, true
-    // );
-
-    Dimensions.addEventListener('change', this.onScreenResize);
-  }
-
-  onScreenResize = ({ window }) => {
-    this.updateScale();
-  };
-
-  componentWillUnmount() {
-    Dimensions.removeEventListener('change', this.onScreenResize);
-  }
-
-  updateScale = () => {
-    const { width, height, scale } = Dimensions.get('window');
-    if (this.camera) {
-      this.camera.left = -(width * scale);
-      this.camera.right = width * scale;
-      this.camera.top = height * scale;
-      this.camera.bottom = -(height * scale);
-      this.camera.zoom = 300;
-      this.camera.updateProjectionMatrix();
-    }
-    if (this.scene) {
-      // const scale = width / 400;
-      // this.scene.scale.set(scale, scale, scale);
-      // this.camera.lookAt(this.scene.position);
-      // this.renderer.setPixelRatio(scale);
-    }
-    if (this.renderer) {
-      this.renderer.setSize(width * scale, height * scale);
-    }
-  };
-
-  componentWillMount() {
-    this.setupGame();
-  }
 
   setupGame = () => {
     this.scene = new THREE.Scene();
@@ -228,7 +143,7 @@ class Game extends Component {
 
     let light = new THREE.DirectionalLight(0xdfebff, 1.75);
     light.position.set(20, 30, 0.05);
-    light.castShadow = !this.props.hideShadows;
+    light.castShadow = !this.hideShadows;
     light.shadow.mapSize.width = 1024 * 2;
     light.shadow.mapSize.height = 1024 * 2;
 
@@ -247,14 +162,6 @@ class Game extends Component {
 
     // let helper = new THREE.CameraHelper(light.shadow.camera);
     // this.scene.add(helper);
-  };
-
-  newScore = () => {
-    Vibration.cancel();
-
-    // this.props.setGameState(State.Game.playing);
-    this.setState({ score: 0 });
-    this.init();
   };
 
   doneMoving = () => {
@@ -338,7 +245,7 @@ class Game extends Component {
   };
 
   onCollide = async (obstacle = {}, type = 'feathers', collision) => {
-    if (this.state.gameState !== State.Game.playing) {
+    if (this.isGameEnded()) {
       return;
     }
     this.stopIdle();
@@ -378,8 +285,9 @@ class Game extends Component {
 
   // Setup initial scene
   init = () => {
+    this.onGameInit();
     const offset = -30;
-    this.setState({ score: 0 });
+
     this.camera.position.z = 1;
     this._hero.position.set(0, groundLevel, startingRow);
     this._hero.scale.set(1, 1, 1);
@@ -430,7 +338,7 @@ class Game extends Component {
       this.newRow();
     }
 
-    this.setState({ ready: true });
+    this.onGameReady();
   };
 
   mapRowToObstacle = row => {
@@ -595,10 +503,9 @@ class Game extends Component {
       val = null;
     });
     this.heroAnimations = [];
+    this.onGameEnded();
     // this.gameState = State.Game.gameOver;
-    setTimeout(() => {
-      this.setState({ gameState: State.Game.gameOver });
-    }, 300);
+
     // this.props.setGameState(this.gameState);
 
     // InteractionManager.runAfterInteractions(_ => {
@@ -629,7 +536,7 @@ class Game extends Component {
   };
 
   checkIfUserHasFallenOutOfFrame = () => {
-    if (this.state.gameState !== State.Game.playing) {
+    if (this.isGameEnded()) {
       return;
     }
     if (this._hero.position.z < this.camera.position.z - 1) {
@@ -648,14 +555,11 @@ class Game extends Component {
 
   updateScore = () => {
     const position = Math.max(Math.floor(this._hero.position.z) - 8, 0);
-    if (this.state.score < position) {
-      this.setState({ score: position });
-    }
+    this.onUpdateScore(position);
   };
 
-  targetRotation;
   moveWithDirection = direction => {
-    if (this.state.gameState !== State.Game.playing) {
+    if (this.isGameEnded()) {
       return;
     }
 
@@ -894,7 +798,7 @@ class Game extends Component {
   };
 
   beginMoveWithDirection = direction => {
-    if (this.state.gameState !== State.Game.playing) {
+    if (this.isGameEnded()) {
       return;
     }
     this.stopIdle();
@@ -905,27 +809,6 @@ class Game extends Component {
       z: 1,
       // ease: Bounce.easeOut,
     });
-  };
-
-  onSwipe = gestureName => this.moveWithDirection(gestureName);
-
-  renderGame = () => {
-    if (!this.state.ready) {
-      return;
-    }
-
-    return (
-      <GestureView
-        pointerEvents={DEBUG_CAMERA_CONTROLS ? 'none' : undefined}
-        onStartGesture={this.beginMoveWithDirection}
-        onSwipe={this.onSwipe}
-      >
-        <GLView
-          style={{ flex: 1, height: '100%', overflow: 'hidden' }}
-          onContextCreate={this._onGLContextCreate}
-        />
-      </GestureView>
-    );
   };
 
   _onGLContextCreate = async gl => {
@@ -949,6 +832,149 @@ class Game extends Component {
       gl.endFrameEXP();
     };
     render();
+  };
+}
+
+class Game extends Component {
+  /// Reserve State for UI related updates...
+  state = {
+    ready: false,
+    score: 0,
+    viewKey: 0,
+    gameState: State.Game.none,
+    // gameState: State.Game.gameOver
+  };
+
+  transitionScreensValue = new Animated.Value(1);
+
+  componentWillReceiveProps(nextProps, nextState) {
+    if (nextState.gameState !== this.state.gameState) {
+      this.updateWithGameState(nextState.gameState, this.state.gameState);
+    }
+    // if (nextProps.character.id !== this.props.character.id) {
+    //   (async () => {
+    //     this.world.remove(this._hero);
+    //     this._hero = this.hero.getNode(nextProps.character.id);
+    //     this.world.add(this._hero);
+    //     this._hero.position.set(0, groundLevel, startingRow);
+    //     this._hero.scale.set(1, 1, 1);
+    //     this.init();
+    //   })();
+    // }
+  }
+
+  updateWithGameState = (gameState, previousGameState) => {
+    if (gameState === this.state.gameState) {
+      return;
+    }
+    const lastState = this.state.gameState;
+
+    this.setState({ gameState });
+    this.engine.gameState = gameState;
+    const { playing, gameOver, paused, none } = State.Game;
+    switch (gameState) {
+      case playing:
+        if (lastState !== none) {
+          Animated.timing(this.transitionScreensValue, {
+            toValue: 0,
+            duration: 200,
+            onComplete: ({ finished }) => {
+              this.engine.setupGame();
+
+              if (finished) {
+                Animated.timing(this.transitionScreensValue, {
+                  toValue: 1,
+                  duration: 300,
+                }).start();
+              }
+            },
+          }).start();
+        } else {
+          // Coming straight from the menu.
+          this.engine.stopIdle();
+          this.onSwipe(swipeDirections.SWIPE_UP);
+        }
+
+        break;
+      case gameOver:
+        break;
+      case paused:
+        break;
+      case none:
+        this.newScore();
+
+        break;
+      default:
+        break;
+    }
+  };
+
+  async componentDidMount() {
+    // AudioManager.sounds.bg_music.setVolumeAsync(0.05);
+    // await AudioManager.playAsync(
+    //   AudioManager.sounds.bg_music, true
+    // );
+
+    Dimensions.addEventListener('change', this.onScreenResize);
+  }
+
+  onScreenResize = ({ window }) => {
+    this.engine.updateScale();
+  };
+
+  componentWillUnmount() {
+    Dimensions.removeEventListener('change', this.onScreenResize);
+  }
+
+  componentWillMount() {
+    this.engine = new Engine();
+    this.engine.hideShadows = this.hideShadows;
+    this.engine.onUpdateScore = position => {
+      if (this.state.score < position) {
+        this.setState({ score: position });
+      }
+    };
+    this.engine.onGameInit = () => {
+      this.setState({ score: 0 });
+    };
+    this.engine.isGameEnded = () => {
+      return this.state.gameState !== State.Game.playing;
+    };
+    this.engine.onGameReady = () => this.setState({ ready: true });
+    this.engine.setupGame();
+    this.engine.onGameEnded = () => {
+      setTimeout(() => {
+        this.setState({ gameState: State.Game.gameOver });
+      }, 300);
+    };
+  }
+
+  newScore = () => {
+    Vibration.cancel();
+    // this.props.setGameState(State.Game.playing);
+    this.setState({ score: 0 });
+    this.engine.init();
+  };
+
+  onSwipe = gestureName => this.engine.moveWithDirection(gestureName);
+
+  renderGame = () => {
+    if (!this.state.ready) {
+      return;
+    }
+
+    return (
+      <GestureView
+        pointerEvents={DEBUG_CAMERA_CONTROLS ? 'none' : undefined}
+        onStartGesture={this.engine.beginMoveWithDirection}
+        onSwipe={this.onSwipe}
+      >
+        <GLView
+          style={{ flex: 1, height: '100%', overflow: 'hidden' }}
+          onContextCreate={this.engine._onGLContextCreate}
+        />
+      </GestureView>
+    );
   };
 
   renderGameOver = () => {
