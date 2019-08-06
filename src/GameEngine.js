@@ -36,6 +36,21 @@ const initialState = {
 
 const { width, height } = Dimensions.get('window');
 
+const calculateRotation = (currrent, target) => {
+  if (target !== currrent) {
+    let _target = target; //+ Math.PI;
+    if (_target % currrent === 0) {
+      _target = currrent;
+    } else if (_target > 0) {
+      _target += currrent / 2;
+    } else {
+      _target -= currrent / 2;
+    }
+    return _target; // - Math.PI;
+  }
+  return target;
+};
+
 const normalizeAngle = angle => {
   return Math.atan2(Math.sin(angle), Math.cos(angle));
 };
@@ -277,6 +292,52 @@ class CrossyPlayer extends THREE.Group {
     this.ridingOn = null;
     this.ridingOnOffset = null;
     this.isAlive = true;
+  }
+
+  skipPendingMovement() {
+    if (!this.moving) {
+      return;
+    }
+    this.position.set(
+      this.targetPosition.x,
+      this.targetPosition.y,
+      this.targetPosition.z,
+    );
+    if (this.targetRotation) {
+      this.rotation.y = normalizeAngle(this.targetRotation);
+    }
+    // return
+  }
+
+  finishedMovingAnimation() {
+    this.moving = false;
+    if (IDLE_DURING_GAME_PLAY) {
+      if (this.idleAnimation) {
+        this.idleAnimation.play();
+      } else {
+        this.idle();
+      }
+    }
+    this.lastPosition = this.position;
+
+    // this._hero.position.set(Math.round(this._hero.position.x), this._hero.position.y, Math.round(this._hero.position.z))
+  }
+
+  stopIdle() {
+    if (this.idleAnimation && this.idleAnimation.pause) {
+      this.idleAnimation.pause();
+    }
+    this.idleAnimation = null;
+    this.scale.set(1, 1, 1);
+  }
+
+  idle() {
+    if (this.idleAnimation) {
+      return;
+    }
+    this.stopIdle();
+
+    this.idleAnimation = new PlayerIdleAnimation(this);
   }
 }
 
@@ -541,25 +602,15 @@ export default class Engine {
   };
 
   doneMoving = () => {
-    this._hero.moving = false;
+    this._hero.finishedMovingAnimation();
     this.updateScore();
-    if (IDLE_DURING_GAME_PLAY) {
-      if (this.idleAnimation) {
-        this.idleAnimation.play();
-      } else {
-        this.idle();
-      }
-    }
-    this._hero.lastPosition = this._hero.position;
-
-    // this._hero.position.set(Math.round(this._hero.position.x), this._hero.position.y, Math.round(this._hero.position.z))
   };
 
   onCollide = async (obstacle = {}, type = 'feathers', collision) => {
     if (this.isGameEnded()) {
       return;
     }
-    this.stopIdle();
+    this._hero.stopIdle();
     if (collision === 'car') {
       this.playCarHitSound();
       this.playDeathSound();
@@ -571,23 +622,6 @@ export default class Engine {
     this.scene.useParticle(this._hero, type, obstacle.speed);
     this.scene.rumble();
     this.gameOver();
-  };
-
-  stopIdle = () => {
-    if (this.idleAnimation && this.idleAnimation.pause) {
-      this.idleAnimation.pause();
-    }
-    this.idleAnimation = null;
-    this._hero.scale.set(1, 1, 1);
-  };
-
-  idle = () => {
-    if (this.idleAnimation) {
-      return;
-    }
-    this.stopIdle();
-
-    this.idleAnimation = new PlayerIdleAnimation(this._hero);
   };
 
   // Setup initial scene
@@ -603,7 +637,7 @@ export default class Engine {
 
     this.gameMap.reset();
 
-    this.idle();
+    this._hero.idle();
     this.gameMap.init();
 
     this.onGameReady();
@@ -716,32 +750,7 @@ export default class Engine {
       this._hero.targetPosition = this._hero.initialPosition;
     }
 
-    if (this._hero.moving) {
-      this._hero.position.set(
-        this._hero.targetPosition.x,
-        this._hero.targetPosition.y,
-        this._hero.targetPosition.z,
-      );
-      if (this._hero.targetRotation) {
-        this._hero.rotation.y = normalizeAngle(this._hero.targetRotation);
-      }
-      // return
-    }
-
-    const calculateRotation = (currrent, target) => {
-      if (target !== currrent) {
-        let _target = target; //+ Math.PI;
-        if (_target % currrent === 0) {
-          _target = currrent;
-        } else if (_target > 0) {
-          _target += currrent / 2;
-        } else {
-          _target -= currrent / 2;
-        }
-        return _target; // - Math.PI;
-      }
-      return target;
-    };
+    this._hero.skipPendingMovement();
 
     let velocity = { x: 0, z: 0 };
 
@@ -921,7 +930,7 @@ export default class Engine {
     if (this.isGameEnded()) {
       return;
     }
-    this.stopIdle();
+    this._hero.stopIdle();
 
     TweenMax.to(this._hero.scale, 0.2, {
       x: 1.2,
