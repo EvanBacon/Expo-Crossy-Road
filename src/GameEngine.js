@@ -120,6 +120,29 @@ class CrossyScene extends THREE.Scene {
   };
 }
 
+class PlayerScaleAnimation extends TimelineMax {
+  constructor(player) {
+    super();
+
+    this.to(player.scale, BASE_ANIMATION_TIME, {
+      x: 1,
+      y: 1.2,
+      z: 1,
+    })
+      .to(player.scale, BASE_ANIMATION_TIME, {
+        x: 1.0,
+        y: 0.8,
+        z: 1,
+      })
+      .to(player.scale, BASE_ANIMATION_TIME, {
+        x: 1,
+        y: 1,
+        z: 1,
+        ease: Bounce.easeOut,
+      });
+  }
+}
+
 class CrossyCamera extends THREE.OrthographicCamera {
   constructor() {
     super(-1, 1, 1, -1, -30, 30);
@@ -813,28 +836,9 @@ export default class Engine {
         z: this.targetPosition.z,
       });
 
-    const scaleChangeAnimation = new TimelineMax();
-    scaleChangeAnimation
-      .to(this._hero.scale, BASE_ANIMATION_TIME, {
-        x: 1,
-        y: 1.2,
-        z: 1,
-      })
-      .to(this._hero.scale, BASE_ANIMATION_TIME, {
-        x: 1.0,
-        y: 0.8,
-        z: 1,
-      })
-      .to(this._hero.scale, BASE_ANIMATION_TIME, {
-        x: 1,
-        y: 1,
-        z: 1,
-        ease: Bounce.easeOut,
-      });
-
     this.heroAnimations = [
       positionChangeAnimation,
-      scaleChangeAnimation,
+      new PlayerScaleAnimation(this._hero),
       TweenMax.to(this._hero.rotation, BASE_ANIMATION_TIME, {
         y: this.targetRotation,
         ease: Power1.easeInOut,
