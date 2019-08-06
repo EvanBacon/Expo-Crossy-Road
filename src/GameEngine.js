@@ -339,6 +339,47 @@ class CrossyPlayer extends THREE.Group {
 
     this.idleAnimation = new PlayerIdleAnimation(this);
   }
+
+  createPositionAnimation({ onComplete }) {
+    return new PlayerPositionAnimation(this, {
+      onComplete: () => {
+        this.finishedMovingAnimation();
+        onComplete();
+      },
+      targetPosition: this.targetPosition,
+      initialPosition: this.initialPosition,
+    });
+  }
+
+  commitMovementAnimations({ onComplete }) {
+    const positionChangeAnimation = this.createPositionAnimation({
+      onComplete,
+    });
+
+    this.animations = [
+      positionChangeAnimation,
+      new PlayerScaleAnimation(this),
+      TweenMax.to(this.rotation, BASE_ANIMATION_TIME, {
+        y: this.targetRotation,
+        ease: Power1.easeInOut,
+        // Reset angle when finished
+        onComplete: () => (this.rotation.y = normalizeAngle(this.rotation.y)),
+      }),
+    ];
+
+    this.initialPosition = this.targetPosition;
+  }
+
+  runPosieAnimation() {
+    this.stopIdle();
+
+    TweenMax.to(this.scale, 0.2, {
+      x: 1.2,
+      y: 0.75,
+      z: 1,
+      // ease: Bounce.easeOut,
+    });
+  }
 }
 
 class GameMap {
@@ -601,10 +642,10 @@ export default class Engine {
     // this.props.setGameState(State.Game.none)
   };
 
-  doneMoving = () => {
-    this._hero.finishedMovingAnimation();
-    this.updateScore();
-  };
+  //   doneMoving = () => {
+  //     this._hero.finishedMovingAnimation();
+  //     this.updateScore();
+  //   };
 
   onCollide = async (obstacle = {}, type = 'feathers', collision) => {
     if (this.isGameEnded()) {
@@ -642,26 +683,6 @@ export default class Engine {
 
     this.onGameReady();
   };
-
-  //   moveUserOnEntity = () => {
-  //     if (!this._hero.ridingOn) {
-  //       return;
-  //     }
-
-  //     // let target = this._hero.ridingOn.mesh.position.x + this._hero.ridingOnOffset;
-  //     this._hero.position.x += this._hero.ridingOn.speed;
-  //     this.initialPosition.x = this._hero.position.x;
-  //   };
-
-  //   moveUserOnCar = () => {
-  //     if (!this._hero.hitBy) {
-  //       return;
-  //     }
-
-  //     let target = this._hero.hitBy.mesh.position.x;
-  //     this._hero.position.x += this._hero.hitBy.speed;
-  //     if (this.initialPosition) this.initialPosition.x = target;
-  //   };
 
   // Move scene forward
   forwardScene = () => {
@@ -902,42 +923,20 @@ export default class Engine {
       }
     }
 
-    this._hero.targetPosition.y = finalY;
-
     this.playMoveSound();
 
-    const positionChangeAnimation = new PlayerPositionAnimation(this._hero, {
-      onComplete: this.doneMoving,
-      targetPosition: this._hero.targetPosition,
-      initialPosition: this._hero.initialPosition,
+    this._hero.targetPosition.y = finalY;
+
+    this._hero.commitMovementAnimations({
+      onComplete: () => this.updateScore(),
     });
-
-    this._hero.animations = [
-      positionChangeAnimation,
-      new PlayerScaleAnimation(this._hero),
-      TweenMax.to(this._hero.rotation, BASE_ANIMATION_TIME, {
-        y: this._hero.targetRotation,
-        ease: Power1.easeInOut,
-        onComplete: () =>
-          (this._hero.rotation.y = normalizeAngle(this._hero.rotation.y)),
-      }),
-    ];
-
-    this._hero.initialPosition = this._hero.targetPosition;
   };
 
   beginMoveWithDirection = direction => {
     if (this.isGameEnded()) {
       return;
     }
-    this._hero.stopIdle();
-
-    TweenMax.to(this._hero.scale, 0.2, {
-      x: 1.2,
-      y: 0.75,
-      z: 1,
-      // ease: Bounce.easeOut,
-    });
+    this._hero.runPosieAnimation();
   };
 
   _onGLContextCreate = async gl => {
