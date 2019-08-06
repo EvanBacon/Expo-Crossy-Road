@@ -1,21 +1,12 @@
-import * as ExpoTHREE from 'expo-three';
 import { THREE } from 'expo-three';
 import { Bounce, Power1, TimelineMax, TweenMax } from 'gsap';
-import { Animated, Dimensions, View } from 'react-native';
-
-import { groundLevel, maxRows, sceneColor, startingRow } from './GameSettings';
-import Feathers from './Particles/Feathers';
-import Water from './Particles/Water';
-import Rows from './Row';
-import { Fill } from './Row/Grass';
-import State from '../state';
-
-const BASE_ANIMATION_TIME = 0.1;
-const IDLE_DURING_GAME_PLAY = false;
-const PI_2 = Math.PI * 0.5;
-const PLAYER_IDLE_SCALE = 0.8;
-
-const { width, height } = Dimensions.get('window');
+import {
+  BASE_ANIMATION_TIME,
+  IDLE_DURING_GAME_PLAY,
+  PLAYER_IDLE_SCALE,
+  groundLevel,
+  startingRow,
+} from './GameSettings';
 
 const normalizeAngle = angle => {
   return Math.atan2(Math.sin(angle), Math.cos(angle));
@@ -94,7 +85,7 @@ export default class CrossyPlayer extends THREE.Group {
     this.reset();
   }
 
-  moveOnEntity = () => {
+  moveOnEntity() {
     if (!this.ridingOn) {
       return;
     }
@@ -102,9 +93,9 @@ export default class CrossyPlayer extends THREE.Group {
     // let target = this._hero.ridingOn.mesh.position.x + this._hero.ridingOnOffset;
     this.position.x += this.ridingOn.speed;
     this.initialPosition.x = this.position.x;
-  };
+  }
 
-  moveOnCar = () => {
+  moveOnCar() {
     if (!this.hitBy) {
       return;
     }
@@ -112,7 +103,7 @@ export default class CrossyPlayer extends THREE.Group {
     let target = this.hitBy.mesh.position.x;
     this.position.x += this.hitBy.speed;
     if (this.initialPosition) this.initialPosition.x = target;
-  };
+  }
 
   stopAnimations() {
     this.animations.map(val => {

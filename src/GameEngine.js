@@ -11,9 +11,14 @@ import {
   CrossyScene,
 } from './CrossyGame';
 import CrossyPlayer from './CrossyPlayer';
-import { groundLevel, sceneColor, startingRow } from './GameSettings';
-
-const CAMERA_EASING = 0.03;
+import {
+  CAMERA_EASING,
+  DEBUG_CAMERA_CONTROLS,
+  groundLevel,
+  PI_2,
+  sceneColor,
+  startingRow,
+} from './GameSettings';
 
 const initialState = {
   id: Characters.chicken.id,
@@ -25,13 +30,7 @@ const normalizeAngle = angle => {
   return Math.atan2(Math.sin(angle), Math.cos(angle));
 };
 
-const PI_2 = Math.PI * 0.5;
-const DEBUG_CAMERA_CONTROLS = false;
-
 export default class Engine {
-  targetRotation;
-  audioFileMoveIndex = 0;
-
   updateScale = () => {
     const { width, height, scale } = Dimensions.get('window');
     if (this.camera) {
@@ -40,33 +39,6 @@ export default class Engine {
     if (this.renderer) {
       this.renderer.setSize(width * scale, height * scale);
     }
-  };
-
-  playMoveSound = async () => {
-    await AudioManager.playAsync(
-      AudioManager.sounds.chicken.move[`${this.audioFileMoveIndex}`],
-    );
-    this.audioFileMoveIndex =
-      (this.audioFileMoveIndex + 1) %
-      Object.keys(AudioManager.sounds.chicken.move).length;
-  };
-
-  playPassiveCarSound = async () => {
-    if (Math.floor(Math.random() * 2) === 0) {
-      await AudioManager.playAsync(AudioManager.sounds.car.passive[`1`]);
-    }
-  };
-
-  playDeathSound = async () => {
-    await AudioManager.playAsync(
-      AudioManager.sounds.chicken.die[`${Math.floor(Math.random() * 2)}`],
-    );
-  };
-
-  playCarHitSound = async () => {
-    await AudioManager.playAsync(
-      AudioManager.sounds.car.die[`${Math.floor(Math.random() * 2)}`],
-    );
   };
 
   setupGame = () => {
@@ -104,11 +76,11 @@ export default class Engine {
     }
     this._hero.stopIdle();
     if (collision === 'car') {
-      this.playCarHitSound();
-      this.playDeathSound();
+      AudioManager.playCarHitSound();
+      AudioManager.playDeathSound();
     } else if (collision === 'train') {
       await AudioManager.playAsync(AudioManager.sounds.train.die[`0`]);
-      this.playDeathSound();
+      AudioManager.playDeathSound();
     }
     this._hero.isAlive = false;
     this.scene.useParticle(this._hero, type, obstacle.speed);
@@ -192,14 +164,14 @@ export default class Engine {
     if (this._hero.position.z < this.camera.position.z - 1) {
       this.scene.rumble();
       this.gameOver();
-      this.playDeathSound();
+      AudioManager.playDeathSound();
     }
 
     // Check if offscreen
     if (this._hero.position.x < -5 || this._hero.position.x > 5) {
       this.scene.rumble();
       this.gameOver();
-      this.playDeathSound();
+      AudioManager.playDeathSound();
     }
   };
 
@@ -269,7 +241,7 @@ export default class Engine {
           let rowObject =
             this.gameMap.getRow(this._hero.initialPosition.z) || {};
           if (rowObject.type === 'road') {
-            this.playPassiveCarSound();
+            AudioManager.playPassiveCarSound();
           }
 
           let shouldRound = true; // rowObject.type !== 'water';
@@ -344,7 +316,6 @@ export default class Engine {
         }
         break;
     }
-    let { targetPosition, initialPosition } = this._hero;
 
     // Check collision using the computed movement.
     if (this.gameMap.treeCollision(this._hero.targetPosition)) {
@@ -374,7 +345,7 @@ export default class Engine {
       }
     }
 
-    this.playMoveSound();
+    AudioManager.playMoveSound();
 
     this._hero.targetPosition.y = finalY;
 
@@ -383,7 +354,7 @@ export default class Engine {
     });
   };
 
-  beginMoveWithDirection = direction => {
+  beginMoveWithDirection = () => {
     if (this.isGameEnded()) {
       return;
     }
@@ -393,7 +364,6 @@ export default class Engine {
   _onGLContextCreate = async gl => {
     const { drawingBufferWidth: width, drawingBufferHeight: height } = gl;
 
-    // NOTE: How to create an `GLView`-compatible THREE renderer
     this.renderer = new CrossyRenderer({
       gl,
       antialias: true,

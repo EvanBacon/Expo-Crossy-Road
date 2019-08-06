@@ -4,13 +4,12 @@ import { TweenMax } from 'gsap';
 import { Vibration } from 'react-native';
 
 import AudioManager from '../AudioManager';
-import { maxRows } from './GameSettings';
+import { maxRows, MAP_OFFSET } from './GameSettings';
 import Feathers from './Particles/Feathers';
 import Water from './Particles/Water';
 import Rows from './Row';
 import { Fill } from './Row/Grass';
 
-const MAP_OFFSET = -30;
 export class CrossyScene extends THREE.Scene {
   constructor({ hideShadows }) {
     super();

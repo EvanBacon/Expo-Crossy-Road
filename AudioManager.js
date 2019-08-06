@@ -11,6 +11,35 @@ const MUTED = Platform.OS === 'web';
 class AudioManager {
   sounds = {};
 
+  audioFileMoveIndex = 0;
+
+  playMoveSound = async () => {
+    await this.playAsync(
+      this.sounds.chicken.move[`${this.audioFileMoveIndex}`],
+    );
+    this.audioFileMoveIndex =
+      (this.audioFileMoveIndex + 1) %
+      Object.keys(this.sounds.chicken.move).length;
+  };
+
+  playPassiveCarSound = async () => {
+    if (Math.floor(Math.random() * 2) === 0) {
+      await this.playAsync(this.sounds.car.passive[`1`]);
+    }
+  };
+
+  playDeathSound = async () => {
+    await this.playAsync(
+      this.sounds.chicken.die[`${Math.floor(Math.random() * 2)}`],
+    );
+  };
+
+  playCarHitSound = async () => {
+    await this.playAsync(
+      this.sounds.car.die[`${Math.floor(Math.random() * 2)}`],
+    );
+  };
+
   playAsync = async (soundObject, isLooping, startOver = true) => {
     if (MUTED) return;
     // if (store.getState().muted) {
