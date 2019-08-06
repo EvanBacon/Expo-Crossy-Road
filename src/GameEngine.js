@@ -23,13 +23,17 @@ import Rows from './Row';
 import { Fill } from './Row/Grass';
 import State from '../state';
 
+const CAMERA_EASING = 0.03;
+const MAP_OFFSET = -30;
+const BASE_ANIMATION_TIME = 0.1;
+const IDLE_DURING_GAME_PLAY = false;
+
 const initialState = {
   id: Characters.chicken.id,
   name: Characters.chicken.name,
   index: Characters.chicken.index,
 };
 
-const IDLE_DURING_GAME_PLAY = false;
 const { width, height } = Dimensions.get('window');
 
 const normalizeAngle = angle => {
@@ -188,19 +192,16 @@ class GameMap {
   };
 }
 
+class EntityContainer {
+  items = [];
+  count = 0;
+}
+
 class CrossyGameMap extends GameMap {
-  grass = [];
-  grassCount = 0;
-
-  water = [];
-  waterCount = 0;
-
-  road = [];
-  roadCount = 0;
-
-  railRoads = [];
-  railRoadCount = 0;
-
+  grasses = new EntityContainer();
+  water = new EntityContainer();
+  roads = new EntityContainer();
+  railRoads = new EntityContainer();
   rowCount = 0;
 
   constructor({ heroWidth, onCollide, scene }) {
@@ -211,42 +212,42 @@ class CrossyGameMap extends GameMap {
     // Assign mesh to corresponding array
     // and add mesh to scene
     for (let i = 0; i < maxRows; i++) {
-      this.grass[i] = new Rows.Grass(this.heroWidth);
-      this.water[i] = new Rows.Water(this.heroWidth, onCollide);
-      this.road[i] = new Rows.Road(this.heroWidth, onCollide);
-      this.railRoads[i] = new Rows.RailRoad(this.heroWidth, onCollide);
-      scene.world.add(this.grass[i]);
-      scene.world.add(this.water[i]);
-      scene.world.add(this.road[i]);
-      scene.world.add(this.railRoads[i]);
+      this.grasses.items[i] = new Rows.Grass(this.heroWidth);
+      this.water.items[i] = new Rows.Water(this.heroWidth, onCollide);
+      this.roads.items[i] = new Rows.Road(this.heroWidth, onCollide);
+      this.railRoads.items[i] = new Rows.RailRoad(this.heroWidth, onCollide);
+      scene.world.add(this.grasses.items[i]);
+      scene.world.add(this.water.items[i]);
+      scene.world.add(this.roads.items[i]);
+      scene.world.add(this.railRoads.items[i]);
     }
   }
 
   tick(dt, hero) {
-    for (const railRoad of this.railRoads) {
+    for (const railRoad of this.railRoads.items) {
       railRoad.update(dt, hero);
     }
-    for (const road of this.road) {
+    for (const road of this.roads.items) {
       road.update(dt, hero);
     }
-    for (const water of this.water) {
+    for (const water of this.water.items) {
       water.update(dt, hero);
     }
   }
 
   // Scene generators
   newRow = rowKind => {
-    if (this.grassCount === maxRows) {
-      this.grassCount = 0;
+    if (this.grasses.count === maxRows) {
+      this.grasses.count = 0;
     }
-    if (this.roadCount === maxRows) {
-      this.roadCount = 0;
+    if (this.roads.count === maxRows) {
+      this.roads.count = 0;
     }
-    if (this.waterCount === maxRows) {
-      this.waterCount = 0;
+    if (this.water.count === maxRows) {
+      this.water.count = 0;
     }
-    if (this.railRoadCount === maxRows) {
-      this.railRoadCount = 0;
+    if (this.railRoads.count === maxRows) {
+      this.railRoads.count = 0;
     }
     if (this.rowCount < 10) {
       rowKind = 'grass';
@@ -259,44 +260,44 @@ class CrossyGameMap extends GameMap {
 
     switch (rowKind) {
       case 'grass':
-        this.grass[this.grassCount].position.z = this.rowCount;
-        this.grass[this.grassCount].generate(
+        this.grasses.items[this.grasses.count].position.z = this.rowCount;
+        this.grasses.items[this.grasses.count].generate(
           this.mapRowToObstacle(this.rowCount),
         );
         this.setRow(this.rowCount, {
           type: 'grass',
-          entity: this.grass[this.grassCount],
+          entity: this.grasses.items[this.grasses.count],
         });
-        this.grassCount++;
+        this.grasses.count++;
         break;
       case 'roadtype':
         if (((Math.random() * 4) | 0) === 0) {
-          this.railRoads[this.railRoadCount].position.z = this.rowCount;
-          this.railRoads[this.railRoadCount].active = true;
+          this.railRoads.items[this.railRoads.count].position.z = this.rowCount;
+          this.railRoads.items[this.railRoads.count].active = true;
           this.setRow(this.rowCount, {
             type: 'railRoad',
-            entity: this.railRoads[this.railRoadCount],
+            entity: this.railRoads.items[this.railRoads.count],
           });
-          this.railRoadCount++;
+          this.railRoads.count++;
         } else {
-          this.road[this.roadCount].position.z = this.rowCount;
-          this.road[this.roadCount].active = true;
+          this.roads.items[this.roads.count].position.z = this.rowCount;
+          this.roads.items[this.roads.count].active = true;
           this.setRow(this.rowCount, {
             type: 'road',
-            entity: this.road[this.roadCount],
+            entity: this.roads.items[this.roads.count],
           });
-          this.roadCount++;
+          this.roads.count++;
         }
         break;
       case 'water':
-        this.water[this.waterCount].position.z = this.rowCount;
-        this.water[this.waterCount].active = true;
-        this.water[this.waterCount].generate();
+        this.water.items[this.water.count].position.z = this.rowCount;
+        this.water.items[this.water.count].active = true;
+        this.water.items[this.water.count].generate();
         this.setRow(this.rowCount, {
           type: 'water',
-          entity: this.water[this.waterCount],
+          entity: this.water.items[this.water.count],
         });
-        this.waterCount++;
+        this.water.count++;
         break;
     }
 
@@ -304,10 +305,10 @@ class CrossyGameMap extends GameMap {
   };
 
   reset() {
-    this.grassCount = 0;
-    this.waterCount = 0;
-    this.roadCount = 0;
-    this.railRoadCount = 0;
+    this.grasses.count = 0;
+    this.water.count = 0;
+    this.roads.count = 0;
+    this.railRoads.count = 0;
 
     this.rowCount = 0;
     super.reset();
@@ -315,22 +316,22 @@ class CrossyGameMap extends GameMap {
 
   // Setup initial scene
   init = () => {
-    const offset = -30;
-
     for (let i = 0; i < maxRows; i++) {
-      this.grass[i].position.z = offset;
+      this.grasses.items[i].position.z = MAP_OFFSET;
 
-      this.water[i].position.z = offset;
-      this.water[i].active = false;
-      this.road[i].position.z = offset;
-      this.road[i].active = false;
-      this.railRoads[i].position.z = offset;
-      this.railRoads[i].active = false;
+      this.water.items[i].position.z = MAP_OFFSET;
+      this.water.items[i].active = false;
+      this.roads.items[i].position.z = MAP_OFFSET;
+      this.roads.items[i].active = false;
+      this.railRoads.items[i].position.z = MAP_OFFSET;
+      this.railRoads.items[i].active = false;
     }
 
-    this.grass[this.grassCount].position.z = this.rowCount;
-    this.grass[this.grassCount].generate(this.mapRowToObstacle(this.rowCount));
-    this.grassCount++;
+    this.grasses.items[this.grasses.count].position.z = this.rowCount;
+    this.grasses.items[this.grasses.count].generate(
+      this.mapRowToObstacle(this.rowCount),
+    );
+    this.grasses.count++;
     this.rowCount++;
 
     for (let i = 0; i < maxRows + 3; i++) {
@@ -408,7 +409,6 @@ export default class Engine {
       onCollide: this.onCollide,
     });
 
-    this.timing = 0.1;
     this.lastHeroZ = startingRow;
     this.camCount = 0;
 
@@ -486,7 +486,6 @@ export default class Engine {
   // Setup initial scene
   init = () => {
     this.onGameInit();
-    const offset = -30;
 
     this.camera.position.z = 1;
     this._hero.position.set(0, groundLevel, startingRow);
@@ -534,16 +533,15 @@ export default class Engine {
 
   // Move scene forward
   forwardScene = () => {
-    const easing = 0.03;
     this.scene.world.position.z -=
       (this._hero.position.z - startingRow + this.scene.world.position.z) *
-      easing;
+      CAMERA_EASING;
     this.scene.world.position.x = -Math.min(
       2,
       Math.max(
         -2,
         this.scene.world.position.x +
-          (this._hero.position.x - this.scene.world.position.x) * easing,
+          (this._hero.position.x - this.scene.world.position.x) * CAMERA_EASING,
       ),
     );
 
@@ -795,8 +793,6 @@ export default class Engine {
 
     this.playMoveSound();
 
-    const { timing } = this;
-
     const inAirPosition = {
       x: this.initialPosition.x + delta.x * 0.75,
       y: this.targetPosition.y + 0.5,
@@ -810,8 +806,8 @@ export default class Engine {
     });
 
     positionChangeAnimation
-      .to(this._hero.position, timing, { ...inAirPosition })
-      .to(this._hero.position, timing, {
+      .to(this._hero.position, BASE_ANIMATION_TIME, { ...inAirPosition })
+      .to(this._hero.position, BASE_ANIMATION_TIME, {
         x: this.targetPosition.x,
         y: this.targetPosition.y,
         z: this.targetPosition.z,
@@ -819,17 +815,17 @@ export default class Engine {
 
     const scaleChangeAnimation = new TimelineMax();
     scaleChangeAnimation
-      .to(this._hero.scale, timing, {
+      .to(this._hero.scale, BASE_ANIMATION_TIME, {
         x: 1,
         y: 1.2,
         z: 1,
       })
-      .to(this._hero.scale, timing, {
+      .to(this._hero.scale, BASE_ANIMATION_TIME, {
         x: 1.0,
         y: 0.8,
         z: 1,
       })
-      .to(this._hero.scale, timing, {
+      .to(this._hero.scale, BASE_ANIMATION_TIME, {
         x: 1,
         y: 1,
         z: 1,
@@ -839,7 +835,7 @@ export default class Engine {
     this.heroAnimations = [
       positionChangeAnimation,
       scaleChangeAnimation,
-      TweenMax.to(this._hero.rotation, timing, {
+      TweenMax.to(this._hero.rotation, BASE_ANIMATION_TIME, {
         y: this.targetRotation,
         ease: Power1.easeInOut,
         onComplete: () =>
