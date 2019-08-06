@@ -78,7 +78,7 @@ class Game extends Component {
           this.transitionToGamePlayingState();
         } else {
           // Coming straight from the menu.
-          this.engine.stopIdle();
+          this.engine._hero.stopIdle();
           this.onSwipe(swipeDirections.SWIPE_UP);
         }
 
