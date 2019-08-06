@@ -226,13 +226,34 @@ class CrossyRenderer extends ExpoTHREE.Renderer {
 }
 
 class CrossyPlayer extends THREE.Group {
+  animations = [];
+
   constructor(node) {
     super();
     this.add(node);
     this.node = node;
+    this.reset();
   }
 
-  animations = [];
+  moveOnEntity = () => {
+    if (!this.ridingOn) {
+      return;
+    }
+
+    // let target = this._hero.ridingOn.mesh.position.x + this._hero.ridingOnOffset;
+    this.position.x += this.ridingOn.speed;
+    this.initialPosition.x = this.position.x;
+  };
+
+  moveOnCar = () => {
+    if (!this.hitBy) {
+      return;
+    }
+
+    let target = this.hitBy.mesh.position.x;
+    this.position.x += this.hitBy.speed;
+    if (this.initialPosition) this.initialPosition.x = target;
+  };
 
   stopAnimations() {
     this.animations.map(val => {
@@ -244,24 +265,19 @@ class CrossyPlayer extends THREE.Group {
     this.animations = [];
   }
 
-  //   get position() {
-  //     return this.node.position;
-  //   }
-  //   set position(position) {
-  //     this.node.position.set(position);
-  //   }
-  //   get rotation() {
-  //     return this.node.rotation;
-  //   }
-  //   set rotation(rotation) {
-  //     this.node.rotation.set(rotation);
-  //   }
-  //   get scale() {
-  //     return this.node.scale;
-  //   }
-  //   set rotation(scale) {
-  //     this.node.scale.set(scale);
-  //   }
+  reset() {
+    this.position.set(0, groundLevel, startingRow);
+    this.scale.set(1, 1, 1);
+    this.rotation.set(0, Math.PI, 0);
+
+    this.initialPosition = null;
+    this.targetPosition = null;
+    this.moving = false;
+    this.hitBy = null;
+    this.ridingOn = null;
+    this.ridingOnOffset = null;
+    this.isAlive = true;
+  }
 }
 
 class GameMap {
@@ -512,7 +528,6 @@ export default class Engine {
       onCollide: this.onCollide,
     });
 
-    this.lastHeroZ = startingRow;
     this.camCount = 0;
 
     // Mesh
@@ -535,7 +550,6 @@ export default class Engine {
         this.idle();
       }
     }
-    this.lastHeroZ = this._hero.position.z;
     this._hero.lastPosition = this._hero.position;
 
     // this._hero.position.set(Math.round(this._hero.position.x), this._hero.position.y, Math.round(this._hero.position.z))
@@ -581,22 +595,13 @@ export default class Engine {
     this.onGameInit();
 
     this.camera.position.z = 1;
-    this._hero.position.set(0, groundLevel, startingRow);
-    this._hero.scale.set(1, 1, 1);
-    this._hero.rotation.set(0, Math.PI, 0);
+    this._hero.reset();
 
     this.scene.resetParticles(this._hero.position);
 
     this.camCount = 0;
-    this.initialPosition = null;
-    this.targetPosition = null;
 
-    this._hero.hitBy = null;
-    this._hero.ridingOn = null;
-    this._hero.ridingOnOffset = null;
-    this.lastHeroZ = startingRow;
     this.gameMap.reset();
-    this._hero.isAlive = true;
 
     this.idle();
     this.gameMap.init();
@@ -604,25 +609,25 @@ export default class Engine {
     this.onGameReady();
   };
 
-  moveUserOnEntity = () => {
-    if (!this._hero.ridingOn) {
-      return;
-    }
+  //   moveUserOnEntity = () => {
+  //     if (!this._hero.ridingOn) {
+  //       return;
+  //     }
 
-    // let target = this._hero.ridingOn.mesh.position.x + this._hero.ridingOnOffset;
-    this._hero.position.x += this._hero.ridingOn.speed;
-    this.initialPosition.x = this._hero.position.x;
-  };
+  //     // let target = this._hero.ridingOn.mesh.position.x + this._hero.ridingOnOffset;
+  //     this._hero.position.x += this._hero.ridingOn.speed;
+  //     this.initialPosition.x = this._hero.position.x;
+  //   };
 
-  moveUserOnCar = () => {
-    if (!this._hero.hitBy) {
-      return;
-    }
+  //   moveUserOnCar = () => {
+  //     if (!this._hero.hitBy) {
+  //       return;
+  //     }
 
-    let target = this._hero.hitBy.mesh.position.x;
-    this._hero.position.x += this._hero.hitBy.speed;
-    if (this.initialPosition) this.initialPosition.x = target;
-  };
+  //     let target = this._hero.hitBy.mesh.position.x;
+  //     this._hero.position.x += this._hero.hitBy.speed;
+  //     if (this.initialPosition) this.initialPosition.x = target;
+  //   };
 
   // Move scene forward
   forwardScene = () => {
@@ -667,8 +672,8 @@ export default class Engine {
     this.gameMap.tick(dt, this._hero);
 
     if (!this._hero.moving) {
-      this.moveUserOnEntity();
-      this.moveUserOnCar();
+      this._hero.moveOnEntity();
+      this._hero.moveOnCar();
       this.checkIfUserHasFallenOutOfFrame();
     }
     this.forwardScene();
@@ -706,19 +711,19 @@ export default class Engine {
 
     this._hero.ridingOn = null;
 
-    if (!this.initialPosition) {
-      this.initialPosition = this._hero.position;
-      this.targetPosition = this.initialPosition;
+    if (!this._hero.initialPosition) {
+      this._hero.initialPosition = this._hero.position;
+      this._hero.targetPosition = this._hero.initialPosition;
     }
 
     if (this._hero.moving) {
       this._hero.position.set(
-        this.targetPosition.x,
-        this.targetPosition.y,
-        this.targetPosition.z,
+        this._hero.targetPosition.x,
+        this._hero.targetPosition.y,
+        this._hero.targetPosition.z,
       );
-      if (this.targetRotation) {
-        this._hero.rotation.y = normalizeAngle(this.targetRotation);
+      if (this._hero.targetRotation) {
+        this._hero.rotation.y = normalizeAngle(this._hero.targetRotation);
       }
       // return
     }
@@ -740,47 +745,48 @@ export default class Engine {
 
     let velocity = { x: 0, z: 0 };
 
-    this.targetRotation = normalizeAngle(this._hero.rotation.y);
+    this._hero.targetRotation = normalizeAngle(this._hero.rotation.y);
     // const normalizedRotation = normalizeAngle(this._hero.rotation.y)
     switch (direction) {
       case SWIPE_LEFT:
         {
-          this.targetRotation = PI_2; // calculateRotation(targetRotation, Math.PI / 2);
+          this._hero.targetRotation = PI_2; // calculateRotation(targetRotation, Math.PI / 2);
 
           velocity = { x: 1, z: 0 };
 
-          this.targetPosition = {
-            x: this.initialPosition.x + 1,
-            y: this.initialPosition.y,
-            z: this.initialPosition.z,
+          this._hero.targetPosition = {
+            x: this._hero.initialPosition.x + 1,
+            y: this._hero.initialPosition.y,
+            z: this._hero.initialPosition.z,
           };
           this._hero.moving = true;
         }
         break;
       case SWIPE_RIGHT:
         {
-          if (this.targetPosition === 0) {
-            this.targetPosition = -PI_2;
+          if (this._hero.targetPosition === 0) {
+            this._hero.targetPosition = -PI_2;
           } else if (
-            (this.targetRotation | 0) !== -(PI_2 | 0) &&
-            (this.targetRotation | 0) !== ((Math.PI + PI_2) | 0)
+            (this._hero.targetRotation | 0) !== -(PI_2 | 0) &&
+            (this._hero.targetRotation | 0) !== ((Math.PI + PI_2) | 0)
           ) {
-            this.targetRotation = Math.PI + PI_2;
+            this._hero.targetRotation = Math.PI + PI_2;
           }
           velocity = { x: -1, z: 0 };
 
-          this.targetPosition = {
-            x: this.initialPosition.x - 1,
-            y: this.initialPosition.y,
-            z: this.initialPosition.z,
+          this._hero.targetPosition = {
+            x: this._hero.initialPosition.x - 1,
+            y: this._hero.initialPosition.y,
+            z: this._hero.initialPosition.z,
           };
           this._hero.moving = true;
         }
         break;
       case SWIPE_UP:
         {
-          this.targetRotation = 0;
-          let rowObject = this.gameMap.getRow(this.initialPosition.z) || {};
+          this._hero.targetRotation = 0;
+          let rowObject =
+            this.gameMap.getRow(this._hero.initialPosition.z) || {};
           if (rowObject.type === 'road') {
             this.playPassiveCarSound();
           }
@@ -788,22 +794,30 @@ export default class Engine {
           let shouldRound = true; // rowObject.type !== 'water';
           velocity = { x: 0, z: 1 };
 
-          this.targetPosition = {
-            x: this.initialPosition.x,
-            y: this.initialPosition.y,
-            z: this.initialPosition.z + 1,
+          this._hero.targetPosition = {
+            x: this._hero.initialPosition.x,
+            y: this._hero.initialPosition.y,
+            z: this._hero.initialPosition.z + 1,
           };
 
           if (shouldRound) {
-            this.targetPosition.x = Math.round(this.targetPosition.x);
+            this._hero.targetPosition.x = Math.round(
+              this._hero.targetPosition.x,
+            );
             const { ridingOn } = this._hero;
             if (ridingOn && ridingOn.dir) {
               if (ridingOn.dir < 0) {
-                this.targetPosition.x = Math.floor(this.targetPosition.x);
+                this._hero.targetPosition.x = Math.floor(
+                  this._hero.targetPosition.x,
+                );
               } else if (ridingOn.dir > 0) {
-                this.targetPosition.x = Math.ceil(this.targetPosition.x);
+                this._hero.targetPosition.x = Math.ceil(
+                  this._hero.targetPosition.x,
+                );
               } else {
-                this.targetPosition.x = Math.round(this.targetPosition.x);
+                this._hero.targetPosition.x = Math.round(
+                  this._hero.targetPosition.x,
+                );
               }
             }
           }
@@ -813,26 +827,35 @@ export default class Engine {
         break;
       case SWIPE_DOWN:
         {
-          this.targetRotation = Math.PI;
-          const row = (this.gameMap.getRow(this.initialPosition.z) || {}).type;
+          this._hero.targetRotation = Math.PI;
+          const row = (this.gameMap.getRow(this._hero.initialPosition.z) || {})
+            .type;
           let shouldRound = true; //row !== 'water';
           velocity = { x: 0, z: -1 };
 
-          this.targetPosition = {
-            x: this.initialPosition.x,
-            y: this.initialPosition.y,
-            z: this.initialPosition.z - 1,
+          this._hero.targetPosition = {
+            x: this._hero.initialPosition.x,
+            y: this._hero.initialPosition.y,
+            z: this._hero.initialPosition.z - 1,
           };
           if (shouldRound) {
-            this.targetPosition.x = Math.round(this.targetPosition.x);
+            this._hero.targetPosition.x = Math.round(
+              this._hero.targetPosition.x,
+            );
             const { ridingOn } = this._hero;
             if (ridingOn && ridingOn.dir) {
               if (ridingOn.dir < 0) {
-                this.targetPosition.x = Math.floor(this.targetPosition.x);
+                this._hero.targetPosition.x = Math.floor(
+                  this._hero.targetPosition.x,
+                );
               } else if (ridingOn.dir > 0) {
-                this.targetPosition.x = Math.ceil(this.targetPosition.x);
+                this._hero.targetPosition.x = Math.ceil(
+                  this._hero.targetPosition.x,
+                );
               } else {
-                this.targetPosition.x = Math.round(this.targetPosition.x);
+                this._hero.targetPosition.x = Math.round(
+                  this._hero.targetPosition.x,
+                );
               }
             }
           }
@@ -840,26 +863,26 @@ export default class Engine {
         }
         break;
     }
-    let { targetPosition, initialPosition } = this;
+    let { targetPosition, initialPosition } = this._hero;
 
     // Check collision using the computed movement.
-    if (this.gameMap.treeCollision(this.targetPosition)) {
+    if (this.gameMap.treeCollision(this._hero.targetPosition)) {
       // If we collide with an object, then reset the target position so the character just jumps up.
-      this.targetPosition = {
-        x: this.initialPosition.x,
-        y: this.initialPosition.y,
-        z: this.initialPosition.z,
+      this._hero.targetPosition = {
+        x: this._hero.initialPosition.x,
+        y: this._hero.initialPosition.y,
+        z: this._hero.initialPosition.z,
       };
       this._hero.moving = false;
     }
 
     const targetRow =
-      this.gameMap.getRow(this.initialPosition.z + velocity.z) || {};
+      this.gameMap.getRow(this._hero.initialPosition.z + velocity.z) || {};
     let finalY = targetRow.entity.top || groundLevel;
     // If the next move is into the river, then we want to jump into it.
     if (targetRow.type === 'water') {
       const ridable = targetRow.entity.getRidableForPosition(
-        this.targetPosition,
+        this._hero.targetPosition,
       );
       if (!ridable) {
         finalY = targetRow.entity.getPlayerSunkenPosition();
@@ -870,28 +893,28 @@ export default class Engine {
       }
     }
 
-    this.targetPosition.y = finalY;
+    this._hero.targetPosition.y = finalY;
 
     this.playMoveSound();
 
     const positionChangeAnimation = new PlayerPositionAnimation(this._hero, {
       onComplete: this.doneMoving,
-      targetPosition: this.targetPosition,
-      initialPosition: this.initialPosition,
+      targetPosition: this._hero.targetPosition,
+      initialPosition: this._hero.initialPosition,
     });
 
     this._hero.animations = [
       positionChangeAnimation,
       new PlayerScaleAnimation(this._hero),
       TweenMax.to(this._hero.rotation, BASE_ANIMATION_TIME, {
-        y: this.targetRotation,
+        y: this._hero.targetRotation,
         ease: Power1.easeInOut,
         onComplete: () =>
           (this._hero.rotation.y = normalizeAngle(this._hero.rotation.y)),
       }),
     ];
 
-    this.initialPosition = this.targetPosition;
+    this._hero.initialPosition = this._hero.targetPosition;
   };
 
   beginMoveWithDirection = direction => {
