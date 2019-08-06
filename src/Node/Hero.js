@@ -19,4 +19,15 @@ export default class Hero extends Generic {
     }
     return this.models;
   };
+
+  getNode(key) {
+    const node = super.getNode(key);
+
+    node.moving = false;
+    node.hitBy = null;
+    node.ridingOn = null;
+    node.ridingOnOffset = null;
+
+    return node;
+  }
 }

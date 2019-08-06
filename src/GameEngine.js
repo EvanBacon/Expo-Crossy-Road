@@ -225,6 +225,45 @@ class CrossyRenderer extends ExpoTHREE.Renderer {
   }
 }
 
+class CrossyPlayer extends THREE.Group {
+  constructor(node) {
+    super();
+    this.add(node);
+    this.node = node;
+  }
+
+  animations = [];
+
+  stopAnimations() {
+    this.animations.map(val => {
+      if (val.pause) {
+        val.pause();
+      }
+      val = null;
+    });
+    this.animations = [];
+  }
+
+  //   get position() {
+  //     return this.node.position;
+  //   }
+  //   set position(position) {
+  //     this.node.position.set(position);
+  //   }
+  //   get rotation() {
+  //     return this.node.rotation;
+  //   }
+  //   set rotation(rotation) {
+  //     this.node.rotation.set(rotation);
+  //   }
+  //   get scale() {
+  //     return this.node.scale;
+  //   }
+  //   set rotation(scale) {
+  //     this.node.scale.set(scale);
+  //   }
+}
+
 class GameMap {
   floorMap = {};
 
@@ -476,15 +515,9 @@ export default class Engine {
     this.lastHeroZ = startingRow;
     this.camCount = 0;
 
-    const { _hero } = ModelLoader;
-    this.hero = _hero;
-
     // Mesh
-    this._hero = this.hero.getNode(initialState.id);
-    this._hero.moving = false;
-    this._hero.hitBy = null;
-    this._hero.ridingOn = null;
-    this._hero.ridingOnOffset = null;
+    this._hero = new CrossyPlayer(ModelLoader._hero.getNode(initialState.id));
+
     this.scene.world.add(this._hero);
 
     this.scene.createParticles();
@@ -615,14 +648,8 @@ export default class Engine {
   // Reset variables, restart game
   gameOver = () => {
     this._hero.moving = false;
-    /// Stop player from finishing a movement
-    this.heroAnimations.map(val => {
-      if (val.pause) {
-        val.pause();
-      }
-      val = null;
-    });
-    this.heroAnimations = [];
+    // Stop player from finishing a movement
+    this._hero.stopAnimations();
     this.onGameEnded();
     // this.gameState = State.Game.gameOver;
 
@@ -853,7 +880,7 @@ export default class Engine {
       initialPosition: this.initialPosition,
     });
 
-    this.heroAnimations = [
+    this._hero.animations = [
       positionChangeAnimation,
       new PlayerScaleAnimation(this._hero),
       TweenMax.to(this._hero.rotation, BASE_ANIMATION_TIME, {

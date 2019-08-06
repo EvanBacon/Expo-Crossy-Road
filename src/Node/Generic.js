@@ -79,7 +79,7 @@ export default class Generic {
     return this.models[keys[(keys.length * Math.random()) << 0]].clone();
   };
 
-  getNode = (key = '0') => {
+  getNode(key = '0') {
     if (key in this.models) {
       return this.models[key].clone();
     } else {
@@ -91,7 +91,7 @@ export default class Generic {
         )}`,
       );
     }
-  };
+  }
 
   _download = async props => {
     return await this._downloadAssets(props);
