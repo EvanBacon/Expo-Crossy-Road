@@ -143,6 +143,35 @@ class PlayerScaleAnimation extends TimelineMax {
   }
 }
 
+class PlayerPositionAnimation extends TimelineMax {
+  constructor(player, { targetPosition, initialPosition, onComplete }) {
+    super({
+      onComplete: () => onComplete(),
+    });
+
+    const delta = {
+      x: targetPosition.x - initialPosition.x,
+      z: targetPosition.z - initialPosition.z,
+    };
+
+    const inAirPosition = {
+      x: initialPosition.x + delta.x * 0.75,
+      y: targetPosition.y + 0.5,
+      z: initialPosition.z + delta.z * 0.75,
+    };
+
+    this.to(player.position, BASE_ANIMATION_TIME, { ...inAirPosition }).to(
+      player.position,
+      BASE_ANIMATION_TIME,
+      {
+        x: targetPosition.x,
+        y: targetPosition.y,
+        z: targetPosition.z,
+      },
+    );
+  }
+}
+
 class CrossyCamera extends THREE.OrthographicCamera {
   constructor() {
     super(-1, 1, 1, -1, -30, 30);
@@ -808,33 +837,13 @@ export default class Engine {
 
     this.targetPosition.y = finalY;
 
-    let delta = {
-      x: this.targetPosition.x - initialPosition.x,
-      y: this.targetPosition.y,
-      z: this.targetPosition.z - initialPosition.z,
-    };
-
     this.playMoveSound();
 
-    const inAirPosition = {
-      x: this.initialPosition.x + delta.x * 0.75,
-      y: this.targetPosition.y + 0.5,
-      z: this.initialPosition.z + delta.z * 0.75,
-    };
-
-    const positionChangeAnimation = new TimelineMax({
-      onComplete: () => {
-        this.doneMoving();
-      },
+    const positionChangeAnimation = new PlayerPositionAnimation(this._hero, {
+      onComplete: this.doneMoving,
+      targetPosition: this.targetPosition,
+      initialPosition: this.initialPosition,
     });
-
-    positionChangeAnimation
-      .to(this._hero.position, BASE_ANIMATION_TIME, { ...inAirPosition })
-      .to(this._hero.position, BASE_ANIMATION_TIME, {
-        x: this.targetPosition.x,
-        y: this.targetPosition.y,
-        z: this.targetPosition.z,
-      });
 
     this.heroAnimations = [
       positionChangeAnimation,
