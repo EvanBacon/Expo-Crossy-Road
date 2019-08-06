@@ -143,6 +143,18 @@ class PlayerScaleAnimation extends TimelineMax {
   }
 }
 
+const PLAYER_IDLE_SCALE = 0.8;
+class PlayerIdleAnimation extends TimelineMax {
+  constructor(player) {
+    super({ repeat: -1 });
+
+    this.to(player.scale, 0.3, {
+      y: PLAYER_IDLE_SCALE,
+      ease: Power1.easeIn,
+    }).to(player.scale, 0.3, { y: 1, ease: Power1.easeOut });
+  }
+}
+
 class PlayerPositionAnimation extends TimelineMax {
   constructor(player, { targetPosition, initialPosition, onComplete }) {
     super({
@@ -528,11 +540,7 @@ export default class Engine {
     }
     this.stopIdle();
 
-    const s = 0.8;
-    this.idleAnimation = new TimelineMax({ repeat: -1 });
-    this.idleAnimation
-      .to(this._hero.scale, 0.3, { y: s, ease: Power1.easeIn })
-      .to(this._hero.scale, 0.3, { y: 1, ease: Power1.easeOut });
+    this.idleAnimation = new PlayerIdleAnimation(this._hero);
   };
 
   // Setup initial scene
