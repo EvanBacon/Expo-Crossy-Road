@@ -1,4 +1,4 @@
-Expo Crossy Platform clone
+Crossy Road
 ========
 [![Twitter](https://img.shields.io/badge/twitter-@baconbrix-55acee.svg?maxAge=2592000)](http://twitter.com/baconbrix)
 [![Medium](https://img.shields.io/badge/Medium-@BaconBrix-1C9963.svg?maxAge=2592000)](https://medium.com/@Baconbrix)
