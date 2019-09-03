@@ -24,4 +24,4 @@ This is strictly for educational purposes only. If you plan on using this projec
 
 I am in no way associated with Hipster Whale.
 
-I am using this copyrighted work under the [fair use/educational purpose doctrine](http://fairuse.stanford.edu/overview/academic-and-educational-permissions/non-coursepack/). For free community education.
+I am using this copyrighted work under the [fair use/educational purpose doctrine](http://fairuse.stanford.edu/overview/academic-and-educational-permissions/non-coursepack/). For **free** community education.
