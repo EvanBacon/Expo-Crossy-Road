@@ -61,7 +61,7 @@ The game's source code is made available under the [MIT license](LICENSE). Some 
 
 <p>
     <a aria-label="sponsored by my mommy" href="http://expo.io">
-        <img src="https://img.shields.io/badge/Sponsored_by-My%20Kitten-4630EB.svg?style=for-the-badge&logo=BITCOIN&labelColor=000&logoColor=fff" target="_blank" />
+        <img src="https://img.shields.io/badge/Sponsored_by-My%20Kitten-4630EB.svg?style=for-the-badge&logo=GITHUB&labelColor=000&logoColor=fff" target="_blank" />
     </a>
     <a aria-label="expo-crossy-road is free to use" href="/LICENSE" target="_blank">
         <img align="right" alt="License: MIT" src="https://img.shields.io/badge/License-MIT-success.svg?style=for-the-badge&color=33CC12" target="_blank" />
