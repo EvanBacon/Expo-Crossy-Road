@@ -231,12 +231,15 @@ export default class CrossyPlayer extends THREE.Group {
   }
 
   getRunOverByCar(road, car) {
-    this.position.y = groundLevel;
-    TweenLite.to(this.scale, 0.3, {
-      y: 0.2,
-      x: 1.5,
+
+    this.position.y = (road.top - 0.05);
+
+    TweenLite.to(this.scale, 0.2, {
+      y: 0.05,
+      x: 1.7,
+      z: 1.7,
     });
-    TweenMax.to(this.rotation, 0.3, {
+    TweenMax.to(this.rotation, 0.2, {
       y: Math.random() * Math.PI - Math.PI / 2,
     });
   }
