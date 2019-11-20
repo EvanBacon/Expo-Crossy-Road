@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 
 import Colors from '../../src/Colors';
-import Images from '../../Images';
+import Images from '../../src/Images';
 import State from '../../state';
 import Button from '../Button';
 

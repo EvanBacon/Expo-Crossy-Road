@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Image, StyleSheet } from 'react-native';
 
-import Images from '../Images';
+import Images from '../src/Images';
 
 const sprite = Object.values(Images.hand);
 export default class HandCTA extends Component {

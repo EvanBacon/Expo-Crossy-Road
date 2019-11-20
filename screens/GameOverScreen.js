@@ -13,7 +13,7 @@ import AudioManager from '../src/AudioManager';
 import Characters from '../src/Characters';
 import Banner from '../components/GameOver/Banner';
 import Footer from '../components/GameOver/Footer';
-import Images from '../Images';
+import Images from '../src/Images';
 
 // import { connect } from 'react-redux';
 

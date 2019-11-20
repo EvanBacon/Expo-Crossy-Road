@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { LayoutAnimation, Animated, StyleSheet, View } from 'react-native';
 
-import Images from '../../Images';
+import Images from '../../src/Images';
 import Button from '../Button';
 
 const imageStyle = { width: 60, height: 48 };

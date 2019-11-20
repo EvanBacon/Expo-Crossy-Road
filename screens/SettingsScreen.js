@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import Characters from '../src/Characters';
 import Colors from '../src/Colors';
 import Button from '../components/Button';
-import Images from '../Images';
+import Images from '../src/Images';
 
 // import Footer from './Footer';
 
