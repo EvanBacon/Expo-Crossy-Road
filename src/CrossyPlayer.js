@@ -215,4 +215,44 @@ export default class CrossyPlayer extends THREE.Group {
       // ease: Bounce.easeOut,
     });
   }
+
+  hitBy = null;
+  moving = false;
+
+  collideWithCar(road, car) {
+    if (
+      this.moving &&
+      Math.abs(this.position.z - Math.round(this.position.z)) > 0.1
+    ) {
+      this.getHitByCar(road, car);
+    } else {
+      this.getRunOverByCar(road, car);
+    }
+  }
+
+  getRunOverByCar(road, car) {
+    this.position.y = groundLevel;
+    TweenLite.to(this.scale, 0.3, {
+      y: 0.2,
+      x: 1.5,
+    });
+    TweenMax.to(this.rotation, 0.3, {
+      y: Math.random() * Math.PI - Math.PI / 2,
+    });
+  }
+
+  getHitByCar(road, car) {
+    this.hitBy = car;
+
+    const forward = this.position.z - Math.round(this.position.z) > 0;
+    this.position.z = road.position.z + (forward ? 0.52 : -0.52);
+
+    TweenLite.to(this.scale, 0.3, {
+      y: 1.5,
+      z: 0.2,
+    });
+    TweenMax.to(this.rotation, 0.3, {
+      z: Math.random() * Math.PI - Math.PI / 2,
+    });
+  }
 }

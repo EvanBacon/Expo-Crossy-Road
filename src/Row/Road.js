@@ -107,32 +107,7 @@ export default class Road extends THREE.Object3D {
         player.position.x < mesh.position.x + collisionBox &&
         player.position.x > mesh.position.x - collisionBox
       ) {
-        if (
-          player.moving &&
-          Math.abs(player.position.z - Math.round(player.position.z)) > 0.1
-        ) {
-          player.hitBy = car;
-
-          const forward = player.position.z - Math.round(player.position.z) > 0;
-          player.position.z = this.position.z + (forward ? 0.52 : -0.52);
-
-          TweenLite.to(player.scale, 0.3, {
-            y: 1.5,
-            z: 0.2,
-          });
-          TweenMax.to(player.rotation, 0.3, {
-            z: Math.random() * Math.PI - Math.PI / 2,
-          });
-        } else {
-          player.position.y = groundLevel;
-          TweenLite.to(player.scale, 0.3, {
-            y: 0.2,
-            x: 1.5,
-          });
-          TweenMax.to(player.rotation, 0.3, {
-            y: Math.random() * Math.PI - Math.PI / 2,
-          });
-        }
+        player.collideWithCar(this, car);
         this.onCollide(car, 'feathers', 'car');
       }
     }
