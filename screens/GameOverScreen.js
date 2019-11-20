@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 
 import AudioManager from '../src/AudioManager';
-import Characters from '../Characters';
+import Characters from '../src/Characters';
 import Banner from '../components/GameOver/Banner';
 import Footer from '../components/GameOver/Footer';
 import Images from '../Images';

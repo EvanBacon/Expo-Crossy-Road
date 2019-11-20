@@ -9,7 +9,7 @@ import {
   View,
 } from 'react-native';
 
-import Characters from '../../Characters';
+import Characters from '../../src/Characters';
 import CharacterCard from './CharacterCard';
 
 // .map(val => Characters[val])

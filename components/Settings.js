@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { Share, Text, StyleSheet, View } from 'react-native';
 import { connect } from 'react-redux';
 
-import Characters from '../Characters';
+import Characters from '../src/Characters';
 import Colors from '../src/Colors';
 import Images from '../Images';
 import Button from './Button';

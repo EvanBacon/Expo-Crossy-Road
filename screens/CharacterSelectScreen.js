@@ -2,7 +2,7 @@ import Constants from 'expo-constants';
 import React, { Component } from 'react';
 import { Share, StyleSheet, Text, View } from 'react-native';
 
-import Characters from '../Characters';
+import Characters from '../src/Characters';
 import Colors from '../src/Colors';
 import Button from '../components/Button';
 import Carousel from '../components/CharacterSelect/Carousel';
