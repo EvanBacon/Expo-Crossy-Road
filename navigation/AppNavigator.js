@@ -1,12 +1,13 @@
 import { createBrowserApp } from '@react-navigation/web';
-import { createAppContainer } from 'react-navigation';
 import { Platform } from 'react-native';
+import { createAppContainer } from 'react-navigation';
 
-const createApp =  Platform.select({
+import createApp from './createApp';
+import MainNavigator from './MainNavigator';
+
+const createApp = Platform.select({
     web: createBrowserApp,
     default: createAppContainer,
 })
-
-import MainNavigator from './MainNavigator';
 
 export default createApp(MainNavigator);
