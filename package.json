@@ -10,7 +10,7 @@
     "deploy:web": "netlify deploy --prod --dir web-build"
   },
   "devDependencies": {
-    "babel-preset-expo": "^6.0.0"
+    "babel-preset-expo": "^7.1.0"
   },
   "dependencies": {
     "@react-navigation/web": "^1.0.0-alpha.7",
@@ -22,7 +22,7 @@
     "expo-av": "^6.0.0",
     "expo-constants": "^6.0.0",
     "expo-gl": "^6.0.0",
-    "expo-three": "4.0.3",
+    "expo-three": "5.2.0",
     "gsap": "^2.0.2",
     "react": "^16.8.6",
     "react-dom": "^16.8.4",
@@ -30,6 +30,7 @@
     "react-native-web": "^0.11.1",
     "react-navigation": "^3.8.1",
     "react-redux": "^6.0.0",
-    "redux": "^4.0.1"
+    "redux": "^4.0.1",
+    "three": "^0.110.0"
   }
 }
