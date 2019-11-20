@@ -1,31 +1,24 @@
-import React, { Component } from 'react';
+import * as React from 'react';
 import { Image, StyleSheet } from 'react-native';
 
 import Images from '../src/Images';
 
 const sprite = Object.values(Images.hand);
-export default class HandCTA extends Component {
-  interval = 400;
-  index = 0;
-  state = {
-    image: sprite[0],
-  };
 
-  componentDidMount() {
-    this.timer = setInterval(this.updateSprite, this.interval);
-  }
+const INTERVAL = 400;
 
-  componentWillUnmount() {
-    clearInterval(this.timer);
-  }
+export default function HandCTA({ style }) {
+  const [index, setIndex] = React.useState(0)
 
-  updateSprite = () => {
-    this.setState({ image: sprite[this.index++ % sprite.length] });
-  };
+  React.useEffect(() => {
+    const interval = setInterval(() => {
+      setIndex((prevIndex) => (prevIndex + 1) % sprite.length)
+    }, INTERVAL);
 
-  render = () => (
-    <Image source={this.state.image} style={[styles.image, this.props.style]} />
-  );
+    return () => clearInterval(interval);
+  }, []);
+
+  return <Image source={sprite[index]} style={[styles.image, style]} />
 }
 
 const styles = StyleSheet.create({
