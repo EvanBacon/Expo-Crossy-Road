@@ -26,7 +26,7 @@ export default class Road extends THREE.Object3D {
 
     // Speeds: .01 through .08
     // Number of cars: 1 through 3
-    let speed = Math.random() * 0.07 + 0.01;
+    let speed = Math.random() * 0.06 + 0.02;
     let numCars = Math.floor(Math.random() * 2) + 1;
     let xDir = 1;
 
