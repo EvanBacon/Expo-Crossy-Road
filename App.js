@@ -1,12 +1,13 @@
 import * as Font from 'expo-font';
 import React from 'react';
-import { Image, View, Text, StyleSheet } from 'react-native';
+import { Image, ScrollView, StyleSheet, Text, View } from 'react-native';
 import * as THREE from 'three';
+
+import AppNavigator from './screens/GameScreen';
 import AudioManager from './src/AudioManager';
 import ModelLoader from './src/ModelLoader';
-// import AppNavigator from './navigation/AppNavigator';
-import AppNavigator from './screens/GameScreen';
 
+// import AppNavigator from './navigation/AppNavigator';
 // import GameScreen from './screens/DebugScene';
 global.THREE = THREE;
 
@@ -29,6 +30,8 @@ export default function App() {
       return;
     }
     (async () => {
+      // Test error screen
+      // setError(new Error('testing screen'));
       try {
         await Promise.all([
           AudioManager.setupAsync(),
@@ -41,8 +44,8 @@ export default function App() {
         await ModelLoader.loadModels();
         setReady(true);
       } catch (e) {
+        console.error(e);
         setError(e);
-        throw e;
       }
     })();
   }, []);
@@ -53,17 +56,55 @@ export default function App() {
 
   if (error) {
     return (
-      <View style={[StyleSheet.absoluteFill, { backgroundColor: 'red' }]} />
+      <ErrorScreen message={error.message} stack={error.stack} />
     );
   }
   if (appIsReady) {
     return <AppNavigator />;
   }
 
-  return (
-    <Image
-      style={{ backgroundColor: '#69CEED', flex: 1, resizeMode: 'cover' }}
-      source={require('./assets/icons/loading.png')}
-    />
-  );
+  return (<SplashScreen />);
 }
+
+const ErrorScreen = ({ message, stack }) => (
+  <View style={styles.errorContainer}>
+    <ScrollView style={styles.error} contentContainerStyle={{}}>
+      <Text style={styles.errorTitle}>This is a fatal error 👋 </Text>
+      <Text style={styles.errorText}>{message}</Text>
+      {stack && <Text style={[styles.errorText, { fontSize: 12, opacity: 0.8, marginTop: 4 }]}>{stack}</Text>}
+    </ScrollView>
+  </View>
+)
+
+const SplashScreen = () => (
+  <Image
+    style={styles.splash}
+    source={require('./assets/icons/loading.png')}
+  />
+)
+
+const styles = StyleSheet.create({
+  splash: {
+    backgroundColor: '#69CEED', flex: 1, resizeMode: 'cover'
+  },
+  errorContainer: {
+    ...StyleSheet.absoluteFillObject,
+    flex: 1, backgroundColor: 'black', justifyContent: "center", alignItems: "center",
+  },
+  error: {
+    maxWidth: 300,
+    maxHeight: '50%',
+    borderRadius: 8,
+    paddingVertical: 16,
+    paddingHorizontal: 24,
+    backgroundColor: '#9e0000',
+  },
+  errorTitle: {
+    fontSize: 30, color: 'white', fontWeight: 'bold',
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomColor: 'rgba(0,0,0,0.1)'
+  },
+  errorText: {
+    fontSize: 24, color: 'white'
+  }
+})
