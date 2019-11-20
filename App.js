@@ -43,7 +43,6 @@ export default function App() {
       } catch (e) {
         setError(e);
         throw e;
-      } finally {
       }
     })();
   }, []);
