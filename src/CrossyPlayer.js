@@ -250,11 +250,11 @@ export default class CrossyPlayer extends THREE.Group {
     const forward = this.position.z - Math.round(this.position.z) > 0;
     this.position.z = road.position.z + (forward ? 0.52 : -0.52);
 
-    TweenLite.to(this.scale, 0.3, {
+    TweenLite.to(this.scale, 0.15, {
       y: 1.5,
       z: 0.2,
     });
-    TweenMax.to(this.rotation, 0.3, {
+    TweenMax.to(this.rotation, 0.15, {
       z: Math.random() * Math.PI - Math.PI / 2,
     });
   }

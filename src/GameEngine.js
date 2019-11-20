@@ -70,10 +70,15 @@ export default class Engine {
     this.scene.createParticles();
   };
 
+  isGameEnded() {
+    return !this._hero.isAlive || this._isGameStateEnded()
+  }
+
   onCollide = async (obstacle = {}, type = 'feathers', collision) => {
     if (this.isGameEnded()) {
       return;
     }
+    this._hero.isAlive = false;
     this._hero.stopIdle();
     if (collision === 'car') {
       AudioManager.playCarHitSound();
@@ -82,7 +87,6 @@ export default class Engine {
       await AudioManager.playAsync(AudioManager.sounds.train.die[`0`]);
       AudioManager.playDeathSound();
     }
-    this._hero.isAlive = false;
     this.scene.useParticle(this._hero, type, obstacle.speed);
     this.scene.rumble();
     this.gameOver();

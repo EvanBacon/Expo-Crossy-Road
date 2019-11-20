@@ -124,14 +124,12 @@ class Game extends Component {
     this.engine.onGameInit = () => {
       this.setState({ score: 0 });
     };
-    this.engine.isGameEnded = () => {
+    this.engine._isGameStateEnded = () => {
       return this.state.gameState !== State.Game.playing;
     };
     this.engine.onGameReady = () => this.setState({ ready: true });
     this.engine.onGameEnded = () => {
-      setTimeout(() => {
-        this.setState({ gameState: State.Game.gameOver });
-      }, 300);
+      this.setState({ gameState: State.Game.gameOver });
     };
     this.engine.setupGame();
     this.engine.init();
