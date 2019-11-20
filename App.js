@@ -2,7 +2,7 @@ import * as Font from 'expo-font';
 import React from 'react';
 import { Image, View, Text, StyleSheet } from 'react-native';
 import * as THREE from 'three';
-import AudioManager from './AudioManager';
+import AudioManager from './src/AudioManager';
 import ModelLoader from './ModelLoader';
 // import AppNavigator from './navigation/AppNavigator';
 import AppNavigator from './screens/GameScreen';

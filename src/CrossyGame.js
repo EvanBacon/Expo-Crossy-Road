@@ -3,7 +3,7 @@ import { THREE } from 'expo-three';
 import { TweenMax } from 'gsap';
 import { Vibration } from 'react-native';
 
-import AudioManager from '../AudioManager';
+import AudioManager from '../src/AudioManager';
 import { maxRows, MAP_OFFSET } from './GameSettings';
 import Feathers from './Particles/Feathers';
 import Water from './Particles/Water';

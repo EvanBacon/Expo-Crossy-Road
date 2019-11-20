@@ -5,7 +5,7 @@ import {
   TouchableOpacity as TouchableBounce,
 } from 'react-native';
 
-import AudioManager from '../../AudioManager';
+import AudioManager from '../../src/AudioManager';
 
 export default class Button extends Component {
   state = { soundReady: false };

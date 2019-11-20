@@ -9,7 +9,7 @@ import {
   View,
 } from 'react-native';
 
-import AudioManager from '../AudioManager';
+import AudioManager from '../src/AudioManager';
 import Characters from '../Characters';
 import Banner from '../components/GameOver/Banner';
 import Footer from '../components/GameOver/Footer';

@@ -1,7 +1,7 @@
 import { TweenMax } from 'gsap';
 import * as THREE from 'three';
 
-import AudioManager from '../../AudioManager';
+import AudioManager from '../../src/AudioManager';
 import ModelLoader from '../../ModelLoader';
 import { groundLevel } from '../GameSettings';
 

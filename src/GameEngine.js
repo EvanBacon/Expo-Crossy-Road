@@ -1,6 +1,6 @@
 import { Dimensions } from 'react-native';
 
-import AudioManager from '../AudioManager';
+import AudioManager from '../src/AudioManager';
 import Characters from '../Characters';
 import { swipeDirections } from '../components/GestureView';
 import ModelLoader from '../ModelLoader';
