@@ -5,14 +5,13 @@
   "author": "Evan Bacon",
   "private": false,
   "scripts": {
-    "serve": "serve ./web-build",
-    "start:web": "expo start --web --web-only",
-    "deploy:web": "netlify deploy --prod"
+    "serve": "npx serve ./web-build",
+    "start:web": "expo start:web",
+    "deploy:web": "netlify deploy --prod --dir web-build"
   },
   "devDependencies": {
     "babel-preset-expo": "^6.0.0"
   },
-  "main": "node_modules/expo/AppEntry.js",
   "dependencies": {
     "@react-navigation/web": "^1.0.0-alpha.7",
     "@rematch/core": "^1.0.6",
