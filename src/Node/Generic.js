@@ -1,7 +1,7 @@
 import { Asset } from 'expo-asset';
 import { THREE, loadTextureAsync, loadAsync, loadObjAsync } from 'expo-three';
 
-import Models from '../../Models';
+import Models from '../../src/Models';
 // import createTHREEViewClass from '../../utils/createTHREEViewClass';
 
 // const THREEView = createTHREEViewClass(THREE);
@@ -10,7 +10,7 @@ function textureFromAsset(asset) {
   if (!asset.localUri) {
     throw new Error(
       `Asset '${asset.name}' needs to be downloaded before ` +
-        `being used as an OpenGL texture.`,
+      `being used as an OpenGL texture.`,
     );
   }
   const texture = new THREE.Texture();
@@ -97,5 +97,5 @@ export default class Generic {
     return await this._downloadAssets(props);
   };
 
-  setup = async () => {};
+  setup = async () => { };
 }

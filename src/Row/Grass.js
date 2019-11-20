@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 
-import ModelLoader from '../../ModelLoader';
+import ModelLoader from '../../src/ModelLoader';
 import { groundLevel } from '../GameSettings';
 
 export const Fill = {

@@ -3,7 +3,7 @@ import { Dimensions } from 'react-native';
 import AudioManager from '../src/AudioManager';
 import Characters from '../Characters';
 import { swipeDirections } from '../components/GestureView';
-import ModelLoader from '../ModelLoader';
+import ModelLoader from '../src/ModelLoader';
 import {
   CrossyCamera,
   CrossyGameMap,
@@ -117,7 +117,7 @@ export default class Engine {
       Math.max(
         -2,
         this.scene.world.position.x +
-          (this._hero.position.x - this.scene.world.position.x) * CAMERA_EASING,
+        (this._hero.position.x - this.scene.world.position.x) * CAMERA_EASING,
       ),
     );
 

@@ -3,7 +3,7 @@ import React from 'react';
 import { Image, View, Text, StyleSheet } from 'react-native';
 import * as THREE from 'three';
 import AudioManager from './src/AudioManager';
-import ModelLoader from './ModelLoader';
+import ModelLoader from './src/ModelLoader';
 // import AppNavigator from './navigation/AppNavigator';
 import AppNavigator from './screens/GameScreen';
 

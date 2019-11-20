@@ -1,7 +1,7 @@
 import { Power2, TweenMax } from 'gsap';
 import * as THREE from 'three';
 
-import ModelLoader from '../../ModelLoader';
+import ModelLoader from '../../src/ModelLoader';
 import * as Settings from '../GameSettings';
 import Foam from '../Particles/Foam';
 

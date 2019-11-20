@@ -1,15 +1,15 @@
-import Hero from './src/Node/Hero';
-import Car from './src/Node/Car';
-import Log from './src/Node/Log';
-import Road from './src/Node/Road';
-import Grass from './src/Node/Grass';
-import River from './src/Node/River';
-import Tree from './src/Node/Tree';
-import Train from './src/Node/Train';
-import Boulder from './src/Node/Boulder';
-import RailRoad from './src/Node/RailRoad';
-import TrainLight from './src/Node/TrainLight';
-import LilyPad from './src/Node/LilyPad';
+import Hero from './Node/Hero';
+import Car from './Node/Car';
+import Log from './Node/Log';
+import Road from './Node/Road';
+import Grass from './Node/Grass';
+import River from './Node/River';
+import Tree from './Node/Tree';
+import Train from './Node/Train';
+import Boulder from './Node/Boulder';
+import RailRoad from './Node/RailRoad';
+import TrainLight from './Node/TrainLight';
+import LilyPad from './Node/LilyPad';
 
 class ModelLoader {
   loadModels = async () => {

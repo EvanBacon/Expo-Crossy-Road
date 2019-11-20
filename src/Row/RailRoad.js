@@ -2,7 +2,7 @@ import { TweenMax } from 'gsap';
 import * as THREE from 'three';
 
 import AudioManager from '../../src/AudioManager';
-import ModelLoader from '../../ModelLoader';
+import ModelLoader from '../../src/ModelLoader';
 import { groundLevel } from '../GameSettings';
 
 const IS_MUTED = true;

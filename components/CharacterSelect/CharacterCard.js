@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { StyleSheet, View } from 'react-native';
 import * as THREE from 'three';
 
-// import ModelLoader from '../../ModelLoader';
+// import ModelLoader from '../../src/ModelLoader';
 
 const size = 150;
 
