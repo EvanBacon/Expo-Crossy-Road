@@ -1,28 +1,6 @@
-import { Asset } from 'expo-asset';
-import { THREE, loadTextureAsync, loadAsync, loadObjAsync } from 'expo-three';
+import { loadObjAsync, loadTextureAsync, THREE } from 'expo-three';
 
 import Models from '../../src/Models';
-// import createTHREEViewClass from '../../utils/createTHREEViewClass';
-
-// const THREEView = createTHREEViewClass(THREE);
-
-function textureFromAsset(asset) {
-  if (!asset.localUri) {
-    throw new Error(
-      `Asset '${asset.name}' needs to be downloaded before ` +
-      `being used as an OpenGL texture.`,
-    );
-  }
-  const texture = new THREE.Texture();
-  texture.image = {
-    data: asset,
-    width: asset.width,
-    height: asset.height,
-  };
-  texture.needsUpdate = true;
-  texture.isDataTexture = true; // send to gl.texImage2D() verbatim
-  return texture;
-}
 
 export default class Generic {
   models = {};
