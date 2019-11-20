@@ -4,7 +4,7 @@ import { Share, Text, StyleSheet, View } from 'react-native';
 import { connect } from 'react-redux';
 
 import Characters from '../Characters';
-import Colors from '../Colors';
+import Colors from '../src/Colors';
 import Images from '../Images';
 import Button from './Button';
 
@@ -107,55 +107,55 @@ class Settings extends Component {
         text: 'Language',
         source: Images.button.language,
         imageStyle,
-        onPress: _ => {},
+        onPress: _ => { },
       },
       {
         text: 'Restore\nPurchases',
         source: Images.button.purchase,
         imageStyle,
-        onPress: _ => {},
+        onPress: _ => { },
       },
       {
         text: 'Credits',
         source: Images.button.credits,
         imageStyle,
-        onPress: _ => {},
+        onPress: _ => { },
       },
       {
         text: 'Conserve\nBattery',
         source: Images.button.conserve_battery,
         imageStyle,
-        onPress: _ => {},
+        onPress: _ => { },
       },
       {
         text: 'Mute',
         source: Images.button.mute,
         imageStyle,
-        onPress: _ => {},
+        onPress: _ => { },
       },
       {
         text: 'No Shadows',
         source: Images.button.shadows,
         imageStyle,
-        onPress: _ => {},
+        onPress: _ => { },
       },
       {
         text: 'Reminders',
         source: Images.button.alerts,
         imageStyle,
-        onPress: _ => {},
+        onPress: _ => { },
       },
       {
         text: 'Disable\nVideo\nAds',
         source: Images.button.video_ads,
         imageStyle,
-        onPress: _ => {},
+        onPress: _ => { },
       },
       {
         text: 'Save Your Figurines',
         source: Images.button.facebook,
         imageStyle: { width: 120, height: 48 },
-        onPress: _ => {},
+        onPress: _ => { },
       },
     ];
 
