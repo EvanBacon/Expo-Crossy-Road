@@ -22,6 +22,7 @@
     "expo-av": "^6.0.0",
     "expo-constants": "^6.0.0",
     "expo-gl": "^6.0.0",
+    "expo-sharing": "^7.0.0",
     "expo-three": "5.2.0",
     "gsap": "^2.0.2",
     "react": "^16.8.6",
