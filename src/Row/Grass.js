@@ -59,7 +59,7 @@ export default class Grass extends THREE.Object3D {
   treeGen = type => {
     // 0 - 8
     let _rowCount = 0;
-    const count = Math.random() * 3 + 1;
+    const count = Math.round(Math.random() * 2) + 1;
     for (let x = -3; x < 12; x++) {
       const _x = x - 4;
       if (type === Fill.solid) {
@@ -78,11 +78,8 @@ export default class Grass extends THREE.Object3D {
       if (HAS_OBSTACLES) {
         if (_rowCount < count) {
           if (_x !== 0 && Math.random() > 0.6) {
-            if (type == Fill.empty && _x == 0) {
-            } else {
-              this.addObstacle(_x);
-              _rowCount++;
-            }
+            this.addObstacle(_x);
+            _rowCount++;
           }
         }
       }
