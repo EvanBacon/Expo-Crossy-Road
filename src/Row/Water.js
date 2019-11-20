@@ -39,8 +39,8 @@ export default class Water extends THREE.Object3D {
     let numItems = Math.floor(Math.random() * 2) + 2;
 
     let xPos = Math.floor(Math.random() * 2 - 4);
-
-    for (let x = 0; x < numItems; x++) {
+    let x = 0;
+    while (x < numItems) {
       if (this.entities.length - 1 < x) {
         let mesh = ModelLoader._lilyPad.getRandom();
         const width = this.getWidth(mesh);
@@ -67,7 +67,8 @@ export default class Water extends THREE.Object3D {
         ease: Power2.easeInOut,
       });
 
-      xPos += Math.floor(Math.random() * 2 + 1);
+      xPos += Math.floor(Math.random() * 2 + 2);
+      x++
     }
   };
 
