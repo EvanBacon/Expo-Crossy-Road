@@ -75,7 +75,7 @@ export default class Water extends THREE.Object3D {
   generateDynamic = () => {
     // Speeds: .01 through .08
     // Number of cars: 1 through 3
-    let speed = Math.random() * 0.07 + 0.01;
+    let speed = Math.random() * 0.05 + 0.02;
     let numItems = Math.floor(Math.random() * 2) + 2;
     let xDir = 1;
 
