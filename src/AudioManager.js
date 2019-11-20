@@ -118,7 +118,7 @@ class AudioManager {
 
   setupAudioAsync = async () => {
     this.sounds = await clone(this.assets);
-    console.log('sounds', this.sounds);
+    // console.log('sounds', this.sounds);
   };
 
   downloadAsync = async () =>
