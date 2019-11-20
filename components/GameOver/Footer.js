@@ -1,83 +1,71 @@
-import React, { Component } from 'react';
-import {
-  Dimensions,
-  LayoutAnimation,
-  Share,
-  StyleSheet,
-  View,
-} from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { LayoutAnimation, Share, StyleSheet, View } from 'react-native';
+import * as Sharing from 'expo-sharing';
 
 import Colors from '../../src/Colors';
 import Images from '../../src/Images';
 import State from '../../src/state';
 import Button from '../Button';
 
-const { width } = Dimensions.get('window');
-export default class Footer extends Component {
-  renderButton = ({ onPress, source, style }, key) => (
-    <Button
-      key={key}
-      onPress={onPress}
-      imageStyle={[styles.button, style]}
-      source={source}
-    />
+async function shareAsync() {
+  await Share.share(
+    {
+      message: `Check out not-crossy-road by @baconbrix`,
+      url: 'https://crossyroad.netlify.com',
+      title: 'Not Crossy Road',
+    },
+    {
+      dialogTitle: 'Share Not Crossy Road',
+      excludedActivityTypes: [
+        'com.apple.UIKit.activity.AirDrop', // This speeds up showing the share sheet by a lot
+        'com.apple.UIKit.activity.AddToReadingList', // This is just lame :)
+      ],
+      tintColor: Colors.blue,
+    },
+  );
+}
+
+export default function Footer({ style, setGameState, navigation }) {
+
+  const [canShare, setCanShare] = useState(true);
+
+  useEffect(() => {
+    Sharing.isAvailableAsync().then(setCanShare).catch(() => { });
+  }, []);
+
+  LayoutAnimation.easeInEaseOut();
+
+  return (
+    <View style={[styles.container, style]}>
+      <Button
+        onPress={() => {
+          navigation.navigate('Settings', {});
+        }}
+        imageStyle={[styles.button, { aspectRatio: 1.25 }]}
+        source={Images.button.settings}
+      />
+      {canShare && <Button
+        onPress={shareAsync}
+        imageStyle={[styles.button, { aspectRatio: 1.9 }]}
+        source={Images.button.share}
+      />}
+      <Button
+        onPress={() => {
+          setGameState(State.Game.none);
+        }}
+        imageStyle={[styles.button, { aspectRatio: 1.9 }]}
+        source={Images.button.long_play}
+      />
+      <Button
+        onPress={() => {
+          console.log('Game Center'); //TODO: Add GC
+        }}
+        imageStyle={[styles.button, { aspectRatio: 1.25 }]}
+        source={Images.button.rank}
+      />
+    </View>
   );
 
-  render() {
-    LayoutAnimation.easeInEaseOut();
-    const buttons = [
-      {
-        onPress: () => {
-          // this.props.navigation.navigate('Settings', {});
-        },
-        source: Images.button.settings,
-        style: { aspectRatio: 1.25 },
-      },
-      {
-        onPress: this.share,
-        source: Images.button.share,
-        style: { aspectRatio: 1.9 },
-      },
-      {
-        onPress: () => {
-          // this.props.navigation.goBack();
-          this.props.setGameState(State.Game.none);
-        },
-        source: Images.button.long_play,
-        style: { aspectRatio: 1.9 },
-      },
-      {
-        onPress: _ => {
-          console.log('Game Center'); //TODO: Add GC
-        },
-        source: Images.button.rank,
-        style: { aspectRatio: 1.25 },
-      },
-    ];
-    return (
-      <View style={[styles.container, this.props.style]}>
-        {buttons.map((value, index) => this.renderButton(value, index))}
-      </View>
-    );
-  }
-
-  share = () => {
-    Share.share(
-      {
-        message: `Check out not-crossy-road by @baconbrix`,
-        url: 'https://crossyroad.netlify.com',
-        title: 'Not Crossy Road',
-      },
-      {
-        dialogTitle: 'Share Not Crossy Road',
-        excludedActivityTypes: [
-          'com.apple.UIKit.activity.AirDrop', // This speeds up showing the share sheet by a lot
-          'com.apple.UIKit.activity.AddToReadingList', // This is just lame :)
-        ],
-        tintColor: Colors.blue,
-      },
-    );
-  };
 }
 
 const styles = StyleSheet.create({
@@ -85,11 +73,11 @@ const styles = StyleSheet.create({
     alignItems: 'stretch',
     justifyContent: 'space-around',
     flexDirection: 'row',
-    maxHeight: 56,
     paddingHorizontal: 4,
-    height: 56,
-    width,
-    maxWidth: width,
+    minHeight: 56,
+    maxHeight: 56,
+    minWidth: '100%',
+    maxWidth: '100%',
     flex: 1,
   },
   button: {
