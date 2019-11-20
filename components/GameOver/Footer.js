@@ -9,7 +9,7 @@ import {
 
 import Colors from '../../src/Colors';
 import Images from '../../src/Images';
-import State from '../../state';
+import State from '../../src/state';
 import Button from '../Button';
 
 const { width } = Dimensions.get('window');

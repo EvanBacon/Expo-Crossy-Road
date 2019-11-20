@@ -11,7 +11,7 @@ import {
 import GestureRecognizer, { swipeDirections } from '../components/GestureView';
 import Score from '../components/ScoreText';
 import Engine from '../src/GameEngine';
-import State from '../state';
+import State from '../src/state';
 import GameOverScreen from './GameOverScreen';
 import HomeScreen from './HomeScreen';
 
