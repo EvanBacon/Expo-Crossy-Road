@@ -91,7 +91,7 @@ class GameOver extends Component {
       playBannerSound();
       setTimeout(() => playBannerSound(), 300);
       setTimeout(() => playBannerSound(), 600);
-    }, 300);
+    }, 600);
   }
 
   _animateBanners = () => {
