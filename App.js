@@ -3,11 +3,11 @@ import React from 'react';
 import { Image, ScrollView, StyleSheet, Text, View } from 'react-native';
 import * as THREE from 'three';
 
-import AppNavigator from './screens/GameScreen';
+// import AppNavigator from './screens/GameScreen';
 import AudioManager from './src/AudioManager';
 import ModelLoader from './src/ModelLoader';
 
-// import AppNavigator from './navigation/AppNavigator';
+import AppNavigator from './navigation/AppNavigator';
 // import GameScreen from './screens/DebugScene';
 global.THREE = THREE;
 
