@@ -12,7 +12,7 @@ export default {
     },
     road: {
       '0': {
-        model: require('../assets/models/environment/road/0/0.obj'),
+        model: require('../assets/models/environment/road/1/0.obj'),
         texture: require('../assets/models/environment/road/0/0.png'),
       },
       '1': {
