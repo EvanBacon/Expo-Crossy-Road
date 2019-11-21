@@ -248,6 +248,9 @@ export class CrossyGameMap extends GameMap {
           this.railRoads.count++;
         } else {
           this.roads.items[this.roads.count].position.z = this.rowCount;
+
+          const previousRowType = (this.getRow(this.rowCount - 1) || {}).type;
+          this.roads.items[this.roads.count].isFirstLane(previousRowType !== 'road')
           this.roads.items[this.roads.count].active = true;
           this.setRow(this.rowCount, {
             type: 'road',

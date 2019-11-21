@@ -1,14 +1,21 @@
-import { TweenMax } from 'gsap';
 import * as THREE from 'three';
 
 import ModelLoader from '../../src/ModelLoader';
-import { groundLevel } from '../GameSettings';
+
 
 export default class Road extends THREE.Object3D {
   active = false;
   cars = [];
 
   top = 0.3;
+
+  isFirstLane(isFirst) {
+    if (isFirst) {
+      this.road.material = ModelLoader._road.models['1'].children[0].material;
+    } else {
+      this.road.material = ModelLoader._road.models['0'].children[0].material;
+    }
+  }
 
   getWidth = mesh => {
     let box3 = new THREE.Box3();
@@ -65,7 +72,7 @@ export default class Road extends THREE.Object3D {
     this.onCollide = onCollide;
     const { _road } = ModelLoader;
 
-    this.road = _road.getNode('0');
+    this.road = _road.models['1'].children[0].clone();
     this.add(this.road);
 
     this.carGen();
