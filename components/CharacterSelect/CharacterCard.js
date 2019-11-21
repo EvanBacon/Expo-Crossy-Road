@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { StyleSheet, View } from 'react-native';
-import * as THREE from 'three';
+import { Scene, AmbientLight, DirectionalLight, PerspectiveCamera } from 'three';
 
 // import ModelLoader from '../../src/ModelLoader';
 
@@ -13,7 +13,7 @@ export default class CharacterCard extends Component {
   };
 
   componentWillMount() {
-    this.scene = new THREE.Scene();
+    this.scene = new Scene();
 
     this.lights();
     this.camera();
@@ -23,13 +23,13 @@ export default class CharacterCard extends Component {
   }
 
   lights = () => {
-    this.scene.add(new THREE.AmbientLight(0xffffff, 0.9));
-    let shadowLight = new THREE.DirectionalLight(0xffffff, 1);
+    this.scene.add(new AmbientLight(0xffffff, 0.9));
+    let shadowLight = new DirectionalLight(0xffffff, 1);
     shadowLight.position.set(1, 1, 0); //default; light shining from top
     this.scene.add(shadowLight);
   };
   camera = () => {
-    this.camera = new THREE.PerspectiveCamera(75, 1, 0.1, 10);
+    this.camera = new PerspectiveCamera(75, 1, 0.1, 10);
     this.camera.position.z = 1;
     this.camera.position.y = 0.4;
     // this.camera.lookAt(0,0,0);

@@ -1,4 +1,4 @@
-import * as THREE from 'three';
+import { Object3D } from 'three';
 
 import ModelLoader from '../../src/ModelLoader';
 import { groundLevel } from '../GameSettings';
@@ -13,7 +13,7 @@ const HAS_WALLS = true;
 const HAS_OBSTACLES = true;
 const HAS_VARIETY = true;
 
-export default class Grass extends THREE.Object3D {
+export default class Grass extends Object3D {
   active = false;
   entities = [];
 

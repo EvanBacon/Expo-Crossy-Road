@@ -1,6 +1,6 @@
 //https://stackoverflow.com/questions/15248872/dynamically-create-2d-text-in-three-js
 import React, { Component } from 'react';
-import * as THREE from 'three';
+import { FontLoader, Mesh, MeshPhongMaterial, TextGeometry } from 'three';
 
 /*
 let mesh = new TextMesh('Harambe', {
@@ -34,11 +34,11 @@ export default class TextMesh {
     return new Promise((res, rej) => {
       const parseFont = font => {
         console.log('Font Loaded', font);
-        var textGeometry = new THREE.TextGeometry(this._text, this._options);
-        var textMaterial = new THREE.MeshPhongMaterial({ color: 0xff0000, specular: 0xffffff });
+        let textGeometry = new TextGeometry(this._text, this._options);
+        let textMaterial = new MeshPhongMaterial({ color: 0xff0000, specular: 0xffffff });
 
         if (!this._mesh) {
-          this._mesh = new THREE.Mesh(textGeometry, textMaterial);
+          this._mesh = new Mesh(textGeometry, textMaterial);
         } else {
           this._mesh.geometry = text;
           this._mesh.geometry.needsUpdate = true;
@@ -47,15 +47,15 @@ export default class TextMesh {
         return this._mesh;
       };
 
-      var loader = new THREE.FontLoader();
-      console.warn('loader', THREE.FontLoader.load, JSON.stringify(loader));
+      const loader = new FontLoader();
+      console.warn('loader', FontLoader.load, JSON.stringify(loader));
       loader.load(fontPath, parseFont).catch(rej);
     });
 
     //
     // // Example text options : {'font' : 'helvetiker','weight' : 'normal', 'style' : 'normal','size' : 100,'curveSegments' : 300};
-    // var textShapes = THREE.FontUtils.generateShapes( text, this._options );
-    // var text = new THREE.ShapeGeometry( textShapes );
+    // var textShapes = FontUtils.generateShapes( text, this._options );
+    // var text = new ShapeGeometry( textShapes );
     //
   };
 

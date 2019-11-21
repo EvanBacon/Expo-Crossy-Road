@@ -1,18 +1,18 @@
 import { TweenMax } from 'gsap';
-import * as THREE from 'three';
+import { CubeGeometry, Group, Mesh, MeshPhongMaterial } from 'three';
 
 const size = 0.1;
 export default class Feathers {
-  waterMat = new THREE.MeshPhongMaterial({
+  waterMat = new MeshPhongMaterial({
     color: 0xffffff,
     flatShading: true,
   });
-  mesh = new THREE.Group();
+  mesh = new Group();
   constructor() {
-    const bigParticleGeom = new THREE.CubeGeometry(size, size, 0.01, 1);
+    const bigParticleGeom = new CubeGeometry(size, size, 0.01, 1);
     this.parts = [];
     for (let i = 0; i < 20; i++) {
-      const partPink = new THREE.Mesh(bigParticleGeom, this.waterMat);
+      const partPink = new Mesh(bigParticleGeom, this.waterMat);
       this.parts.push(partPink);
       this.mesh.add(partPink);
     }

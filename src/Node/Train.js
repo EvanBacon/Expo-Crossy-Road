@@ -1,17 +1,17 @@
-import * as THREE from 'three';
+import { MeshPhongMaterial, Box3, CubeGeometry, Group, DoubleSide, Mesh, PlaneBufferGeometry, Object3D } from 'three';
 
 import Generic from './Generic';
 
 export default class Train extends Generic {
   getDepth = mesh => {
-    let box3 = new THREE.Box3();
+    let box3 = new Box3();
     box3.setFromObject(mesh);
 
     return Math.round(box3.max.x - box3.min.x);
   };
 
   withSize = (size = 2) => {
-    const _train = new THREE.Group();
+    const _train = new Group();
 
     const front = this.getNode('front');
     _train.add(front);

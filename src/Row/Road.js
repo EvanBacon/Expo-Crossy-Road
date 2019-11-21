@@ -1,9 +1,8 @@
-import * as THREE from 'three';
+import { Box3, Object3D } from 'three';
 
 import ModelLoader from '../../src/ModelLoader';
 
-
-export default class Road extends THREE.Object3D {
+export default class Road extends Object3D {
   active = false;
   cars = [];
 
@@ -18,7 +17,7 @@ export default class Road extends THREE.Object3D {
   }
 
   getWidth = mesh => {
-    let box3 = new THREE.Box3();
+    let box3 = new Box3();
     box3.setFromObject(mesh);
     // console.log( box.min, box.max, box.size() );
     return Math.round(box3.max.z - box3.min.z);

@@ -1,15 +1,13 @@
-import * as Font from 'expo-font';
+import { loadAsync } from 'expo-font';
 import React from 'react';
 import { Image, ScrollView, StyleSheet, Text, View } from 'react-native';
-import * as THREE from 'three';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
+import AppNavigator from './navigation/AppNavigator';
 import AudioManager from './src/AudioManager';
 import ModelLoader from './src/ModelLoader';
 
-import { SafeAreaProvider } from 'react-native-safe-area-context'
-import AppNavigator from './navigation/AppNavigator';
 // import GameScreen from './screens/DebugScene';
-global.THREE = THREE;
 
 // require('three/examples/js/controls/OrbitControls');
 
@@ -39,7 +37,7 @@ function AppLoading() {
       try {
         await Promise.all([
           AudioManager.setupAsync(),
-          Font.loadAsync({ retro: require('./assets/fonts/retro.ttf') }),
+          loadAsync({ retro: require('./assets/fonts/retro.ttf') }),
         ]);
       } catch ({ message }) {
         console.error('App: Error loading assets: ' + message);

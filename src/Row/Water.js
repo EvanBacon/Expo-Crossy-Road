@@ -1,11 +1,11 @@
 import { Power2, TweenMax } from 'gsap';
-import * as THREE from 'three';
+import { Object3D, Box3 } from 'three';
 
 import ModelLoader from '../../src/ModelLoader';
-import * as Settings from '../GameSettings';
+import { disableDriftwood } from '../GameSettings';
 import Foam from '../Particles/Foam';
 
-export default class Water extends THREE.Object3D {
+export default class Water extends Object3D {
   active = false;
   entities = [];
   sineCount = 0;
@@ -13,7 +13,7 @@ export default class Water extends THREE.Object3D {
   top = 0.25;
 
   getWidth = mesh => {
-    let box3 = new THREE.Box3();
+    let box3 = new Box3();
     box3.setFromObject(mesh);
     // console.log( box.min, box.max, box.size() );
     return Math.round(box3.max.x - box3.min.x);
@@ -28,7 +28,7 @@ export default class Water extends THREE.Object3D {
 
     if (this.isStaticRow(this.position.z | 0)) {
       this.generateStatic();
-    } else if (!Settings.disableDriftwood) {
+    } else if (!disableDriftwood) {
       this.generateDynamic();
     }
   };

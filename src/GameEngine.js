@@ -1,24 +1,12 @@
 import { Dimensions } from 'react-native';
 
-import AudioManager from '../src/AudioManager';
-import Characters from './Characters';
 import { swipeDirections } from '../components/GestureView';
+import AudioManager from '../src/AudioManager';
 import ModelLoader from '../src/ModelLoader';
-import {
-  CrossyCamera,
-  CrossyGameMap,
-  CrossyRenderer,
-  CrossyScene,
-} from './CrossyGame';
+import Characters from './Characters';
+import { CrossyCamera, CrossyGameMap, CrossyRenderer, CrossyScene } from './CrossyGame';
 import CrossyPlayer from './CrossyPlayer';
-import {
-  CAMERA_EASING,
-  DEBUG_CAMERA_CONTROLS,
-  groundLevel,
-  PI_2,
-  sceneColor,
-  startingRow,
-} from './GameSettings';
+import { CAMERA_EASING, DEBUG_CAMERA_CONTROLS, groundLevel, PI_2, sceneColor, startingRow } from './GameSettings';
 
 const initialState = {
   id: Characters.chicken.id,

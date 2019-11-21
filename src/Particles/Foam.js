@@ -1,16 +1,16 @@
 import { Bounce, Power2, TweenMax } from 'gsap';
-import * as THREE from 'three';
+import { MeshPhongMaterial, DoubleSide, Mesh, PlaneBufferGeometry, Object3D } from 'three';
 
 const size = 0.6;
 
-const material = new THREE.MeshPhongMaterial({
+const material = new MeshPhongMaterial({
   color: 0xffffff,
   flatShading: true,
-  side: THREE.DoubleSide,
+  side: DoubleSide,
 });
-const geometry = new THREE.PlaneBufferGeometry(size, size, 1);
+const geometry = new PlaneBufferGeometry(size, size, 1);
 
-export default class Foam extends THREE.Object3D {
+export default class Foam extends Object3D {
   parts = [];
 
   constructor(direction) {
@@ -18,7 +18,7 @@ export default class Foam extends THREE.Object3D {
     this.direction = direction;
 
     for (let i = 0; i < 6; i++) {
-      const particle = new THREE.Mesh(geometry, material);
+      const particle = new Mesh(geometry, material);
       particle.rotation.x = Math.PI / 2;
       particle.position.set(0, 0, 0);
       this.parts.push(particle);

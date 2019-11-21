@@ -1,21 +1,21 @@
 import { TweenMax } from 'gsap';
-import * as THREE from 'three';
+import { CubeGeometry, Group, Mesh, MeshPhongMaterial } from 'three';
 
 export default class Smoke {
   constructor() {
-    this.waterMat = new THREE.MeshPhongMaterial({
+    this.waterMat = new MeshPhongMaterial({
       color: 0x192b31,
-      // shading: THREE.FlatShading,
+      // shading: FlatShading,
       flatShading: true,
     });
-    this.mesh = new THREE.Group();
+    this.mesh = new Group();
     const size = 0.1;
-    let bigParticleGeom = new THREE.CubeGeometry(size, size, 0.01, 1);
-    // let smallParticleGeom = new THREE.CubeGeometry(0.1, 0.1, 0.1, 1);
+    let bigParticleGeom = new CubeGeometry(size, size, 0.01, 1);
+    // let smallParticleGeom = new CubeGeometry(0.1, 0.1, 0.1, 1);
     this.parts = [];
     for (let i = 0; i < 10; i++) {
-      let partPink = new THREE.Mesh(bigParticleGeom, this.waterMat);
-      // let partGreen = new THREE.Mesh(smallParticleGeom, this.waterMat);
+      let partPink = new Mesh(bigParticleGeom, this.waterMat);
+      // let partGreen = new Mesh(smallParticleGeom, this.waterMat);
       this.parts.push(partPink);
       this.mesh.add(partPink);
     }

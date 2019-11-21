@@ -1,18 +1,18 @@
 import { TweenMax } from 'gsap';
-import * as THREE from 'three';
+import { Object3D, Box3 } from 'three';
 
 import AudioManager from '../../src/AudioManager';
 import ModelLoader from '../../src/ModelLoader';
 import { groundLevel } from '../GameSettings';
 
 const IS_MUTED = true;
-export default class RailRoad extends THREE.Object3D {
+export default class RailRoad extends Object3D {
   active = false;
 
   top = 0.5;
 
   getWidth = mesh => {
-    let box3 = new THREE.Box3();
+    let box3 = new Box3();
     box3.setFromObject(mesh);
     return Math.round(box3.max.x - box3.min.x);
   };

@@ -1,5 +1,5 @@
 import { TextureLoader } from 'expo-three';
-import * as THREE from 'three';
+import { MeshPhongMaterial, NearestFilter } from 'three';
 
 const textureCache = {};
 
@@ -10,8 +10,8 @@ export function loadTexture(resource) {
 
     const texture = new TextureLoader().load(resource);
 
-    texture.magFilter = THREE.NearestFilter;
-    texture.minFilter = THREE.NearestFilter;
+    texture.magFilter = NearestFilter;
+    texture.minFilter = NearestFilter;
 
     textureCache[resource] = texture;
     return texture;
@@ -19,7 +19,7 @@ export function loadTexture(resource) {
 
 const materialCache = {};
 
-export default class CrossyMaterial extends THREE.MeshPhongMaterial {
+export default class CrossyMaterial extends MeshPhongMaterial {
 
     static loadTexture = loadTexture;
 
@@ -27,7 +27,7 @@ export default class CrossyMaterial extends THREE.MeshPhongMaterial {
         if (materialCache[resource]) {
             return materialCache[resource].clone();
         }
-        materialCache[resource] = new THREE.MeshPhongMaterial({
+        materialCache[resource] = new MeshPhongMaterial({
             map: loadTexture(resource),
             flatShading: true,
             emissiveIntensity: 0,

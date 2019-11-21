@@ -1,8 +1,8 @@
 import { GLView } from 'expo-gl';
+import { Renderer } from 'expo-three';
 import React, { Component } from 'react';
-import * as THREE from 'three';
+import { AmbientLight, Fog, GridHelper, OrbitControls, PerspectiveCamera, PointLight, Scene, SpotLight } from 'three';
 
-import * as ExpoTHREE from 'expo-three';
 import { sceneColor } from '../src/GameSettings';
 import Foam from '../src/Particles/Foam';
 
@@ -13,7 +13,7 @@ class Game extends Component {
     const { drawingBufferWidth: width, drawingBufferHeight: height } = gl;
 
     // NOTE: How to create an `GLView`-compatible THREE renderer
-    this.renderer = new ExpoTHREE.Renderer({ gl, antialias: true });
+    this.renderer = new Renderer({ gl, antialias: true });
     this.renderer.setSize(width, height);
     this.renderer.setClearColor(sceneColor);
     this.renderer.gammaInput = true;
@@ -39,7 +39,7 @@ class Game extends Component {
   };
 
   setupAsync = async renderer => {
-    const camera = new THREE.PerspectiveCamera(
+    const camera = new PerspectiveCamera(
       70,
       window.innerWidth / window.innerHeight,
       1,
@@ -47,25 +47,25 @@ class Game extends Component {
     );
     camera.position.z = 10;
     camera.position.y = 10;
-    const scene = new THREE.Scene();
-    scene.fog = new THREE.Fog(0xffffff, 1, 10000);
+    const scene = new Scene();
+    scene.fog = new Fog(0xffffff, 1, 10000);
 
     this.scene = scene;
     this.camera = camera;
     if (DEBUG_CAMERA_CONTROLS) {
-      this.debugControls = new THREE.OrbitControls(this.camera);
+      this.debugControls = new OrbitControls(this.camera);
     }
 
-    this.scene.add(new THREE.GridHelper(10, 10));
+    this.scene.add(new GridHelper(10, 10));
 
-    var ambientLight = new THREE.AmbientLight(0x101010);
+    var ambientLight = new AmbientLight(0x101010);
     scene.add(ambientLight);
 
-    var pointLight = new THREE.PointLight(0xffffff, 2, 1000, 1);
+    var pointLight = new PointLight(0xffffff, 2, 1000, 1);
     pointLight.position.set(0, 200, 200);
     scene.add(pointLight);
 
-    var spotLight = new THREE.SpotLight(0xffffff, 0.5);
+    var spotLight = new SpotLight(0xffffff, 0.5);
     spotLight.position.set(0, 500, 100);
     scene.add(spotLight);
     spotLight.lookAt(scene);

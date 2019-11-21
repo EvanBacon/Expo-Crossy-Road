@@ -1,21 +1,21 @@
 import { Bounce, TweenMax } from 'gsap';
+import { CubeGeometry, Group, Mesh, MeshPhongMaterial } from 'three';
 
-import * as THREE from 'three';
 export default class Water {
   constructor() {
-    this.waterMat = new THREE.MeshPhongMaterial({
+    this.waterMat = new MeshPhongMaterial({
       color: 0x71d7ff,
-      // shading: THREE.FlatShading,
+      // shading: FlatShading,
       flatShading: true,
     });
-    this.mesh = new THREE.Group();
+    this.mesh = new Group();
     const size = 0.2;
-    const bigParticleGeom = new THREE.CubeGeometry(size, size + 0.1, size, 1);
-    // var smallParticleGeom = new THREE.CubeGeometry(0.1, 0.1, 0.1, 1);
+    const bigParticleGeom = new CubeGeometry(size, size + 0.1, size, 1);
+    // var smallParticleGeom = new CubeGeometry(0.1, 0.1, 0.1, 1);
     this.parts = [];
     for (let i = 0; i < 15; i++) {
-      let partPink = new THREE.Mesh(bigParticleGeom, this.waterMat);
-      // var partGreen = new THREE.Mesh(smallParticleGeom, this.waterMat);
+      let partPink = new Mesh(bigParticleGeom, this.waterMat);
+      // var partGreen = new Mesh(smallParticleGeom, this.waterMat);
       this.parts.push(partPink);
       this.mesh.add(partPink);
     }

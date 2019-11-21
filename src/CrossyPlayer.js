@@ -1,12 +1,6 @@
-import { THREE } from 'expo-three';
-import { Bounce, Power1, TimelineMax, TweenMax } from 'gsap';
-import {
-  BASE_ANIMATION_TIME,
-  IDLE_DURING_GAME_PLAY,
-  PLAYER_IDLE_SCALE,
-  groundLevel,
-  startingRow,
-} from './GameSettings';
+import { Group } from 'three';
+
+import { BASE_ANIMATION_TIME, groundLevel, IDLE_DURING_GAME_PLAY, PLAYER_IDLE_SCALE, startingRow } from './GameSettings';
 
 const normalizeAngle = angle => {
   return Math.atan2(Math.sin(angle), Math.cos(angle));
@@ -75,7 +69,7 @@ class PlayerPositionAnimation extends TimelineMax {
   }
 }
 
-export default class CrossyPlayer extends THREE.Group {
+export default class CrossyPlayer extends Group {
   animations = [];
 
   constructor(node) {

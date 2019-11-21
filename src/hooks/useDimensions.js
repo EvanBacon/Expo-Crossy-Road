@@ -1,8 +1,8 @@
-import * as React from 'react';
+import { useEffect, useState } from 'react';
 import { Dimensions } from 'react-native';
 
 export default () => {
-  const [dimensions, setDimensions] = React.useState({
+  const [dimensions, setDimensions] = useState({
     window: Dimensions.get('window'),
     screen: Dimensions.get('screen'),
   });
@@ -11,7 +11,7 @@ export default () => {
     setDimensions({ window, screen });
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     Dimensions.addEventListener('change', onChange);
 
     return () => Dimensions.removeEventListener('change', onChange);

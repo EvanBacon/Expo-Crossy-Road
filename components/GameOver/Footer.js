@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { LayoutAnimation, Share, StyleSheet, View } from 'react-native';
-import * as Sharing from 'expo-sharing';
+import { isAvailableAsync } from 'expo-sharing';
 
 import Colors from '../../src/Colors';
 import Images from '../../src/Images';
@@ -30,7 +30,7 @@ export default function Footer({ style, showSettings, setGameState, navigation }
   const [canShare, setCanShare] = useState(true);
 
   useEffect(() => {
-    Sharing.isAvailableAsync().then(setCanShare).catch(() => { });
+    isAvailableAsync().then(setCanShare).catch(() => { });
   }, []);
 
   LayoutAnimation.easeInEaseOut();

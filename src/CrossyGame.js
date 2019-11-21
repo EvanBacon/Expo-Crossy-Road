@@ -1,25 +1,25 @@
-import * as ExpoTHREE from 'expo-three';
-import { THREE } from 'expo-three';
+import { Renderer } from 'expo-three';
 import { TweenMax } from 'gsap';
 import { Vibration } from 'react-native';
+import { AmbientLight, DirectionalLight, Group, OrthographicCamera, Scene } from 'three';
 
 import AudioManager from '../src/AudioManager';
-import { maxRows, MAP_OFFSET } from './GameSettings';
+import { MAP_OFFSET, maxRows } from './GameSettings';
 import Feathers from './Particles/Feathers';
 import Water from './Particles/Water';
 import Rows from './Row';
 import { Fill } from './Row/Grass';
 
-export class CrossyScene extends THREE.Scene {
+export class CrossyScene extends Scene {
   constructor({ hideShadows }) {
     super();
 
-    this.worldWithCamera = new THREE.Group();
+    this.worldWithCamera = new Group();
     this.world = new CrossyWorld();
     this.worldWithCamera.add(this.world);
     this.add(this.worldWithCamera);
 
-    const light = new THREE.DirectionalLight(0xdfebff, 1.75);
+    const light = new DirectionalLight(0xdfebff, 1.75);
     light.position.set(20, 30, 0.05);
     light.castShadow = !hideShadows;
     light.shadow.mapSize.width = 1024 * 2;
@@ -38,7 +38,7 @@ export class CrossyScene extends THREE.Scene {
 
     this.light = light;
 
-    // let helper = new THREE.CameraHelper(light.shadow.camera);
+    // let helper = new CameraHelper(light.shadow.camera);
     // this.add(helper);
   }
 
@@ -87,7 +87,7 @@ export class CrossyScene extends THREE.Scene {
   };
 }
 
-export class CrossyCamera extends THREE.OrthographicCamera {
+export class CrossyCamera extends OrthographicCamera {
   constructor() {
     super(-1, 1, 1, -1, -30, 30);
     this.position.set(-1, 2.8, -2.9); // Change -1 to -.02
@@ -104,10 +104,10 @@ export class CrossyCamera extends THREE.OrthographicCamera {
   };
 }
 
-export class CrossyWorld extends THREE.Group {
+export class CrossyWorld extends Group {
   constructor() {
     super();
-    this.add(new THREE.AmbientLight(0x666666, 0.8));
+    this.add(new AmbientLight(0x666666, 0.8));
   }
 
   createParticles = () => {
@@ -119,7 +119,7 @@ export class CrossyWorld extends THREE.Group {
   };
 }
 
-export class CrossyRenderer extends ExpoTHREE.Renderer {
+export class CrossyRenderer extends Renderer {
   constructor(props) {
     super(props);
     this.gammaInput = true;
