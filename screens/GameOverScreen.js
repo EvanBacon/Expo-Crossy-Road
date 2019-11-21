@@ -1,24 +1,16 @@
 import Constants from 'expo-constants';
 import React, { Component } from 'react';
-import {
-  Alert,
-  Animated,
-  Dimensions,
-  Easing,
-  StyleSheet,
-  View,
-} from 'react-native';
+import { Alert, Animated, Easing, StyleSheet, View } from 'react-native';
+import { useSafeArea } from 'react-native-safe-area-context';
 
-import AudioManager from '../src/AudioManager';
-import Characters from '../src/Characters';
 import Banner from '../components/GameOver/Banner';
 import Footer from '../components/GameOver/Footer';
+import AudioManager from '../src/AudioManager';
+import Characters from '../src/Characters';
+import useDimensions from '../src/hooks/useDimensions';
 import Images from '../src/Images';
 
-import { connect } from 'react-redux';
-
 // import { setGameState } from '../src/actions/game';
-const { width } = Dimensions.get('window');
 
 //TODO: Make this dynamic
 const banner = [
@@ -53,30 +45,30 @@ const banner = [
   },
 ];
 
-const AnimatedBanner = Animated.createAnimatedComponent(Banner);
-class GameOver extends Component {
-  state = {
-    currentIndex: 0,
-    characters: Object.keys(Characters).map(val => Characters[val]),
-    animations: banner.map(val => new Animated.Value(0)),
-  };
-  dismiss = () => {
-    // this.props.navigation.goBack();
-    this.props.onRestart();
+// const AnimatedBanner = Animated.createAnimatedComponent(Banner);
+
+function GameOver({ ...props }) {
+
+  const { window: { width } } = useDimensions();
+  const [currentIndex, setCurrentIndex] = React.useState(0);
+  const [characters, setCharacters] = React.useState(Object.keys(Characters).map(val => Characters[val]));
+  const [animations, setAnimations] = React.useState(banner.map(val => new Animated.Value(0)));
+
+  const dismiss = () => {
+    // props.navigation.goBack();
+    props.onRestart();
   };
 
-  pickRandom = () => {
-    const { characters } = this.state;
-
+  const pickRandom = () => {
     const randomIndex = Math.floor(Math.random() * (characters.length - 1));
     const randomCharacter = characters[randomIndex];
-    // this.props.setCharacter(randomCharacter);
-    this.dismiss();
+    // props.setCharacter(randomCharacter);
+    dismiss();
   };
 
-  componentDidMount() {
+  React.useEffect(() => {
     setTimeout(() => {
-      this._animateBanners();
+      _animateBanners();
 
       const playBannerSound = async () => {
         await AudioManager.playAsync(AudioManager.sounds.banner);
@@ -92,21 +84,20 @@ class GameOver extends Component {
       setTimeout(() => playBannerSound(), 300);
       setTimeout(() => playBannerSound(), 600);
     }, 600);
-  }
+  })
 
-  _animateBanners = () => {
-    const { timing } = Animated;
-    const animations = this.state.animations.map(animation =>
-      timing(animation, {
+  const _animateBanners = () => {
+    const _animations = animations.map(animation =>
+      Animated.timing(animation, {
         toValue: 1,
         duration: 1000,
         easing: Easing.elastic(),
       }),
     );
-    Animated.stagger(300, animations).start();
+    Animated.stagger(300, _animations).start();
   };
 
-  _showResult = result => {
+  const _showResult = result => {
     // if (result.action === Share.sharedAction) {
     //   if (result.activityType) {
     //     this.setState({result: 'shared with an activityType: ' + result.activityType});
@@ -118,74 +109,62 @@ class GameOver extends Component {
     // }
   };
 
-  select = () => {
-    const { characters, currentIndex } = this.state;
+  const select = () => {
 
-    // this.props.setCharacter(characters[currentIndex]);
-    this.dismiss();
+    // props.setCharacter(characters[currentIndex]);
+    dismiss();
   };
 
-  render() {
-    const imageStyle = { width: 60, height: 48 };
-    const { animations } = this.state;
+  const { top, bottom, left, right } = useSafeArea();
 
-    return (
-      <View style={[styles.container, this.props.style]}>
-        <View key="content" style={{ flex: 1, justifyContent: 'center' }}>
-          {banner.map((val, index) => (
-            <AnimatedBanner
-              animatedValue={animations[index].interpolate({
-                inputRange: [0.2, 1],
-                outputRange: [-width, 0],
-                extrapolate: 'clamp',
-              })}
-              key={index}
-              style={{
-                backgroundColor: val.color,
-                transform: [
-                  {
-                    scaleY: animations[index].interpolate({
-                      inputRange: [0, 0.2],
-                      outputRange: [0, 1],
-                      extrapolate: 'clamp',
-                    }),
-                  },
-                ],
-              }}
-              title={val.title}
-              button={val.button}
-            />
-          ))}
-        </View>
+  const imageStyle = { width: 60, height: 48 };
 
-        <Footer
-          showSettings={this.props.showSettings}
-          setGameState={this.props.setGameState}
-          navigation={this.props.navigation}
-        />
+  return (
+    <View style={[styles.container, { paddingTop: top || 12, paddingBottom: bottom || 8 }, props.style]}>
+      <View key="content" style={{ flex: 1, justifyContent: 'center' }}>
+        {banner.map((val, index) => (
+          <Banner
+            animatedValue={animations[index].interpolate({
+              inputRange: [0.2, 1],
+              outputRange: [-width, 0],
+              extrapolate: 'clamp',
+            })}
+            key={index}
+            style={{
+              backgroundColor: val.color,
+              transform: [
+                {
+                  scaleY: animations[index].interpolate({
+                    inputRange: [0, 0.2],
+                    outputRange: [0, 1],
+                    extrapolate: 'clamp',
+                  }),
+                },
+              ],
+            }}
+            title={val.title}
+            button={val.button}
+          />
+        ))}
       </View>
-    );
-  }
+
+      <Footer
+        style={{ paddingLeft: left || 4, paddingRight: right || 4 }}
+        showSettings={props.showSettings}
+        setGameState={props.setGameState}
+        navigation={props.navigation}
+      />
+    </View>
+  );
 }
 
-// export default connect(
-//   state => ({}),
-//   { setGameState }
-// )(GameOver);
-
 export default GameOver;
-
-GameOver.defaultProps = {
-  coins: 0,
-};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    paddingTop: Constants.statusBarHeight,
-    paddingBottom: 8,
-    backgroundColor: 'rgba(105, 201, 230, 0.0)',
+    backgroundColor: 'transparent',
   },
   paragraph: {
     margin: 24,

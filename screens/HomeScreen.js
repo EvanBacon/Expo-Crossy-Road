@@ -1,4 +1,3 @@
-import Constants from 'expo-constants';
 import React, { Component } from 'react';
 import {
   Animated,
@@ -10,6 +9,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import { useSafeArea } from 'react-native-safe-area-context';
 
 import Hand from '../components/HandCTA';
 import Footer from '../components/Home/Footer';
@@ -18,13 +18,16 @@ import Footer from '../components/Home/Footer';
 // import { setGameState } from '../actions/game';
 
 let hasShownTitle = false;
-class Screen extends Component {
-  animation = new Animated.Value(0);
-  componentDidMount() {
+
+function Screen(props) {
+
+  const animation = new Animated.Value(0);
+
+  React.useEffect(() => {
     if (!hasShownTitle) {
       hasShownTitle = true;
       InteractionManager.runAfterInteractions(_ => {
-        Animated.timing(this.animation, {
+        Animated.timing(animation, {
           toValue: 1,
           duration: 800,
           delay: 0,
@@ -32,81 +35,85 @@ class Screen extends Component {
         }).start();
       });
     }
-  }
-  render() {
-    const animatedTitleStyle = {
-      transform: [
-        {
-          translateX: this.animation.interpolate({
-            inputRange: [0, 1],
-            outputRange: [-Dimensions.get('window').width, 0],
-          }),
-        },
-        {
-          translateY: this.animation.interpolate({
-            inputRange: [0, 1],
-            outputRange: [-100, 0],
-          }),
-        },
-      ],
-    };
-    // console.log(this.props);
-    return (
-      <View style={styles.container}>
-        <TouchableOpacity
-          activeOpacity={0.9}
-          style={[
-            StyleSheet.absoluteFill,
-            { justifyContent: 'center', alignItems: 'center' },
-          ]}
-          onPress={() => {
-            Animated.timing(this.animation, {
-              toValue: 0,
-              duration: 400,
-              easing: Easing.in(Easing.qubic),
-              onComplete: ({ finished }) => {
-                if (finished) {
-                  this.props.onPlay();
-                }
-              },
-            }).start();
+
+  }, []);
+
+
+  const { top, bottom, left, right } = useSafeArea();
+
+  const animatedTitleStyle = {
+    transform: [
+      {
+        translateX: animation.interpolate({
+          inputRange: [0, 1],
+          outputRange: [-Dimensions.get('window').width, 0],
+        }),
+      },
+      {
+        translateY: animation.interpolate({
+          inputRange: [0, 1],
+          outputRange: [-100, 0],
+        }),
+      },
+    ],
+  };
+  // console.log(props);
+  return (
+    <View style={[styles.container, { paddingTop: top, paddingBottom: bottom, paddingLeft: left, paddingRight: right }]}>
+      <TouchableOpacity
+        activeOpacity={0.9}
+        style={[
+          StyleSheet.absoluteFill,
+          { justifyContent: 'center', alignItems: 'center' },
+        ]}
+        onPress={() => {
+          Animated.timing(animation, {
+            toValue: 0,
+            duration: 400,
+            easing: Easing.in(Easing.qubic),
+            onComplete: ({ finished }) => {
+              if (finished) {
+                props.onPlay();
+              }
+            },
+          }).start();
+        }}
+      >
+        <Text style={styles.coins}>{props.coins}</Text>
+        <Animated.Image
+          source={require('../assets/images/title.png')}
+          style={[styles.title, animatedTitleStyle]}
+        />
+
+        <View
+          style={{
+            justifyContent: 'center',
+            alignItems: 'stretch',
+            position: 'absolute',
+            bottom: 8,
+            left: 8,
+            right: 8,
           }}
         >
-          <Text style={styles.coins}>{this.props.coins}</Text>
-          <Animated.Image
-            source={require('../assets/images/title.png')}
-            style={[styles.title, animatedTitleStyle]}
-          />
-
           <View
-            style={{
-              justifyContent: 'center',
-              alignItems: 'stretch',
-              position: 'absolute',
-              bottom: 8,
-              left: 8,
-              right: 8,
-            }}
+            style={{ height: 64, marginBottom: 48, alignItems: 'center' }}
           >
-            <View
-              style={{ height: 64, marginBottom: 48, alignItems: 'center' }}
-            >
-              <Hand style={{ width: 36 }} />
-            </View>
-            <Footer
-              style={{ height: 48, opacity: this.animation }}
-              onCharacterSelect={() => {
-                this.props.navigation.navigate('CharacterSelect', {});
-              }}
-              onShop={() => {}}
-              onMultiplayer={() => {}}
-              onCamera={() => {}}
-            />
+            <Hand style={{ width: 36 }} />
           </View>
-        </TouchableOpacity>
-      </View>
-    );
-  }
+          <Footer
+            style={{ height: 48, opacity: animation }}
+            onCharacterSelect={() => {
+              props.navigation.navigate('CharacterSelect', {});
+            }}
+            onShop={() => { }}
+            onMultiplayer={() => { }}
+            onCamera={() => { }}
+          />
+        </View>
+      </TouchableOpacity>
+    </View>
+  );
+
 }
 // export default connect(
 //   state => ({
@@ -122,7 +129,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingTop: Constants.statusBarHeight,
     backgroundColor: 'transparent',
   },
   title: {
@@ -138,7 +144,6 @@ const styles = StyleSheet.create({
   coins: {
     fontFamily: 'retro',
     position: 'absolute',
-    top: Constants.statusBarHeight,
     right: 8,
     color: '#f8e84d',
     fontSize: 36,

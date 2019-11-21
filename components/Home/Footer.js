@@ -6,33 +6,31 @@ import Button from '../Button';
 
 const imageStyle = { width: 60, height: 48 };
 
-export default class Footer extends Component {
-  state = {
-    menuOpen: false,
-  };
+export default function Footer(props) {
+  const [menuOpen, setMenuOpen] = React.useState(false);
 
-  collapse = onPress => () => {
-    this.setState({ menuOpen: false });
+  const collapse = onPress => () => {
+    setMenuOpen(false)
     onPress();
   };
 
-  renderMenu = () => {
+  const renderMenu = () => {
     return (
       <View style={{ flexDirection: 'column' }}>
         <Button
-          onPress={this.collapse(this.props.onMultiplayer)}
+          onPress={collapse(props.onMultiplayer)}
           style={[{ marginBottom: 8 }, imageStyle]}
           imageStyle={imageStyle}
           source={Images.button.controller}
         />
         <Button
-          onPress={this.collapse(this.props.onShop)}
+          onPress={collapse(props.onShop)}
           style={[{ marginBottom: 8 }, imageStyle]}
           imageStyle={imageStyle}
           source={Images.button.shop}
         />
         <Button
-          onPress={this.collapse(this.props.onCamera)}
+          onPress={collapse(props.onCamera)}
           style={[{ marginBottom: 8 }, imageStyle]}
           imageStyle={imageStyle}
           source={Images.button.camera}
@@ -41,32 +39,32 @@ export default class Footer extends Component {
     );
   };
 
-  render() {
-    return (
-      <Animated.View style={[styles.container, this.props.style]}>
+
+  return (
+    <Animated.View style={[styles.container, props.style]}>
+      <Button
+        onPress={props.onCharacterSelect}
+        imageStyle={imageStyle}
+        source={Images.button.character}
+      />
+
+      <View style={{ flex: 1 }} />
+
+      <View style={{ flexDirection: 'column-reverse' }}>
         <Button
-          onPress={this.props.onCharacterSelect}
+          onPress={() => {
+            setState(!menuOpen);
+          }}
+          style={[{ opacity: menuOpen ? 0.8 : 1.0 }, imageStyle]}
           imageStyle={imageStyle}
-          source={Images.button.character}
+          source={Images.button.menu}
         />
 
-        <View style={{ flex: 1 }} />
+        {menuOpen && renderMenu()}
+      </View>
+    </Animated.View>
+  );
 
-        <View style={{ flexDirection: 'column-reverse' }}>
-          <Button
-            onPress={() => {
-              this.setState({ menuOpen: !this.state.menuOpen });
-            }}
-            style={[{ opacity: this.state.menuOpen ? 0.8 : 1.0 }, imageStyle]}
-            imageStyle={imageStyle}
-            source={Images.button.menu}
-          />
-
-          {this.state.menuOpen && this.renderMenu()}
-        </View>
-      </Animated.View>
-    );
-  }
 }
 
 const styles = StyleSheet.create({

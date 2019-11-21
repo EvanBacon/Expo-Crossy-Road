@@ -1,41 +1,40 @@
-import React, { Component } from 'react';
-import { Animated, Dimensions, StyleSheet, Text, View } from 'react-native';
+import React from 'react';
+import { Animated, StyleSheet, Text, View } from 'react-native';
 
+import useDimensions from '../../src/hooks/useDimensions';
 import Button from '../Button';
 
-const { width } = Dimensions.get('window');
-export default class Banner extends Component {
-  renderButton = ({ onPress, source, style }, key) => (
+export default function Banner(props) {
+  const renderButton = ({ onPress, source, style }, key) => (
     <Button
       key={key}
       onPress={onPress}
       imageStyle={[styles.button, style]}
       source={source}
-      style={{marginLeft: 8, width: 90, flex: undefined}}
+      style={{ marginLeft: 8, width: 90, flex: undefined }}
     />
   );
 
-  render() {
-    const { animatedValue, style } = this.props;
+  const { animatedValue, style } = props;
+  const { window: { width } } = useDimensions()
+  return (
+    <Animated.View style={[styles.container, { minWidth: width, maxWidth: width }, style]}>
+      <Animated.View
+        style={[
+          styles.banner,
+          {
+            transform: [{ translateX: animatedValue }],
+          },
+        ]}
+      >
+        <Text style={styles.text} numberOfLines={2}>
+          {props.title}
+        </Text>
+        {props.button && renderButton(props.button, 0)}
+      </Animated.View>
+    </Animated.View>
+  );
 
-    return (
-      <View style={[styles.container, style]}>
-        <Animated.View
-          style={[
-            styles.banner,
-            {
-              transform: [{ translateX: animatedValue }],
-            },
-          ]}
-        >
-          <Text style={styles.text} numberOfLines={2}>
-            {this.props.title}
-          </Text>
-          {this.props.button && this.renderButton(this.props.button, 0)}
-        </Animated.View>
-      </View>
-    );
-  }
 }
 
 const styles = StyleSheet.create({
@@ -58,9 +57,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'red',
     height: 56,
     paddingHorizontal: 8,
-    width,
     marginVertical: 8,
-    maxWidth: width,
   },
   button: {
     height: 56,

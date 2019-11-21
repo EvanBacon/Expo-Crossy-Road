@@ -31,8 +31,7 @@
       "versionCode": 1
     },
     "web": {
-      "shortName": "Crossy",
-      "display": "fullscreen"
+      "shortName": "Crossy"
     }
   }
 }

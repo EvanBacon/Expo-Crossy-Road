@@ -6,6 +6,7 @@ import * as THREE from 'three';
 import AudioManager from './src/AudioManager';
 import ModelLoader from './src/ModelLoader';
 
+import { SafeAreaProvider } from 'react-native-safe-area-context'
 import AppNavigator from './navigation/AppNavigator';
 // import GameScreen from './screens/DebugScene';
 global.THREE = THREE;
@@ -21,6 +22,10 @@ console.ignoredYellowBox = [
 const DEBUG_DONT_LOAD_ASSETS = false;
 
 export default function App() {
+  return (<SafeAreaProvider><AppLoading /></SafeAreaProvider>)
+}
+
+function AppLoading() {
   const [appIsReady, setReady] = React.useState(DEBUG_DONT_LOAD_ASSETS);
   const [error, setError] = React.useState(null);
 
