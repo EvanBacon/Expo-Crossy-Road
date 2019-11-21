@@ -1,5 +1,5 @@
 import { loadObjAsync, loadTextureAsync, THREE } from 'expo-three';
-
+import CrossyMaterial from '../CrossyMaterial';
 import Models from '../../src/Models';
 
 export default class Generic {
@@ -23,18 +23,7 @@ export default class Generic {
     // );
 
     const _model = await loadObjAsync({ asset: model });
-    const _texture = await loadTextureAsync({ asset: texture });
-
-    _texture.magFilter = THREE.NearestFilter;
-    _texture.minFilter = THREE.NearestFilter;
-
-    const material = new THREE.MeshPhongMaterial({
-      map: _texture,
-      flatShading: true,
-      emissiveIntensity: 0,
-      shininess: 0,
-      reflectivity: 0,
-    });
+    const material = CrossyMaterial.load(texture)
 
     _model.traverse(child => {
       if (child instanceof THREE.Mesh) {
