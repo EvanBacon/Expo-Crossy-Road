@@ -46,14 +46,14 @@ export default function Footer({ style, showSettings, setGameState, navigation }
       />
       {canShare && <Button
         onPress={shareAsync}
-        imageStyle={[styles.button, { aspectRatio: 1.9 }]}
+        imageStyle={[styles.button, { marginRight: 4, aspectRatio: 1.9 }]}
         source={Images.button.share}
       />}
       <Button
         onPress={() => {
           setGameState(State.Game.playing);
         }}
-        imageStyle={[styles.button, { aspectRatio: 1.9 }]}
+        imageStyle={[styles.button, { marginLeft: canShare ? 4 : 0, aspectRatio: 1.9 }]}
         source={Images.button.long_play}
       />
       <Button
