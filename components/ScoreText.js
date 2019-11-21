@@ -1,25 +1,27 @@
 import React from 'react';
 import { View, Text } from 'react-native';
+import { useSafeArea } from 'react-native-safe-area-context';
 
 // import { setHighScore } from '../../actions/game';
 
-class Score extends React.Component {
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.gameOver != this.props.gameOver && nextProps.gameOver) {
-      this.updateHighScore(nextProps.score, nextProps.highScore);
-    }
-  }
+function Score({ gameOver, score, highScore, ...props }) {
 
-  updateHighScore = (score, highScore) => {
-    if (score > highScore) {
-      this.props.setHighScore(score);
-    }
-  };
+  React.useEffect(() => {
+    if (gameOver) {
+      if (score > highScore) {
+        // setHighScore(score);
+      }
 
-  render = () => (
-    <View style={{ position: 'absolute', top: 15, left: 8 }}>
+
+    }
+  }, [gameOver])
+
+
+  const { top, left } = useSafeArea();
+
+  return (
+    <View pointerEvents="none" style={{ position: 'absolute', top: Math.max(top, 16), left: Math.max(left, 8) }}>
       <Text
-        pointerEvents={'none'}
         style={{
           color: 'white',
           fontFamily: 'retro',
@@ -27,12 +29,11 @@ class Score extends React.Component {
           backgroundColor: 'transparent',
         }}
       >
-        {this.props.score}
+        {score}
       </Text>
 
-      {this.props.highScore && (
+      {highScore && (
         <Text
-          pointerEvents={'none'}
           style={{
             color: 'white',
             fontFamily: 'retro',
@@ -41,11 +42,11 @@ class Score extends React.Component {
             backgroundColor: 'transparent',
           }}
         >
-          TOP {this.props.highScore}
+          TOP {highScore}
         </Text>
       )}
     </View>
-  );
+  )
 }
 
 export default Score;
