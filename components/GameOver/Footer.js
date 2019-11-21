@@ -25,7 +25,7 @@ async function shareAsync() {
   );
 }
 
-export default function Footer({ style, setGameState, navigation }) {
+export default function Footer({ style, showSettings, setGameState, navigation }) {
 
   const [canShare, setCanShare] = useState(true);
 
@@ -39,7 +39,7 @@ export default function Footer({ style, setGameState, navigation }) {
     <View style={[styles.container, style]}>
       <Button
         onPress={() => {
-          navigation.navigate('Settings', {});
+          showSettings()
         }}
         imageStyle={[styles.button, { aspectRatio: 1.25 }]}
         source={Images.button.settings}
@@ -51,7 +51,7 @@ export default function Footer({ style, setGameState, navigation }) {
       />}
       <Button
         onPress={() => {
-          setGameState(State.Game.none);
+          setGameState(State.Game.playing);
         }}
         imageStyle={[styles.button, { aspectRatio: 1.9 }]}
         source={Images.button.long_play}

@@ -14,6 +14,7 @@ import Engine from '../src/GameEngine';
 import State from '../src/state';
 import GameOverScreen from './GameOverScreen';
 import HomeScreen from './HomeScreen';
+import SettingsScreen from './SettingsScreen';
 
 const DEBUG_CAMERA_CONTROLS = false;
 
@@ -24,6 +25,7 @@ class Game extends Component {
     score: 0,
     viewKey: 0,
     gameState: State.Game.none,
+    showSettings: false
     // gameState: State.Game.gameOver
   };
 
@@ -130,6 +132,7 @@ class Game extends Component {
     this.engine.onGameReady = () => this.setState({ ready: true });
     this.engine.onGameEnded = () => {
       this.setState({ gameState: State.Game.gameOver });
+      // this.props.navigation.navigate('GameOver')
     };
     this.engine.setupGame();
     this.engine.init();
@@ -169,8 +172,11 @@ class Game extends Component {
     return (
       <View style={StyleSheet.absoluteFillObject}>
         <GameOverScreen
-          onRestart={() => {
-            this.updateWithGameState(State.Game.playing);
+          showSettings={() => {
+            this.setState({ showSettings: true })
+          }}
+          setGameState={(state) => {
+            this.updateWithGameState(state);
           }}
         />
       </View>
@@ -192,6 +198,16 @@ class Game extends Component {
       </View>
     );
   };
+
+  renderSettingsScreen() {
+    return (
+      <View style={StyleSheet.absoluteFillObject}>
+        <SettingsScreen
+          goBack={() => this.setState({ showSettings: false })}
+        />
+      </View>
+    );
+  }
 
   render() {
     return (
@@ -215,6 +231,8 @@ class Game extends Component {
         {this.renderGameOver()}
 
         {this.renderHomeScreen()}
+
+        {this.state.showSettings && this.renderSettingsScreen()}
       </View>
     );
   }

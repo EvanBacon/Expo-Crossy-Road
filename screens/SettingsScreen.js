@@ -41,7 +41,7 @@ class Settings extends Component {
     characters: Object.keys(Characters).map(val => Characters[val]),
   };
   dismiss = () => {
-    this.props.navigation.goBack();
+    this.props.goBack();
   };
 
   pickRandom = () => {
@@ -201,11 +201,11 @@ class Settings extends Component {
     );
   }
 }
-
-export default connect(
-  state => ({}),
-  {},
-)(Settings);
+export default Settings
+// export default connect(
+//   state => ({}),
+//   {},
+// )(Settings);
 
 Settings.defaultProps = {
   coins: 0,
@@ -215,8 +215,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    paddingTop: Constants.statusBarHeight,
     backgroundColor: 'rgba(105, 201, 230, 0.8)',
+    flexWrap: 'wrap',
+    maxWidth: '100%',
   },
   paragraph: {
     margin: 24,

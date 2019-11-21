@@ -15,9 +15,9 @@ import Banner from '../components/GameOver/Banner';
 import Footer from '../components/GameOver/Footer';
 import Images from '../src/Images';
 
-// import { connect } from 'react-redux';
+import { connect } from 'react-redux';
 
-// import { setGameState } from '../../actions/game';
+// import { setGameState } from '../src/actions/game';
 const { width } = Dimensions.get('window');
 
 //TODO: Make this dynamic
@@ -159,13 +159,15 @@ class GameOver extends Component {
         </View>
 
         <Footer
-          setGameState={this.props.onRestart}
+          showSettings={this.props.showSettings}
+          setGameState={this.props.setGameState}
           navigation={this.props.navigation}
         />
       </View>
     );
   }
 }
+
 // export default connect(
 //   state => ({}),
 //   { setGameState }

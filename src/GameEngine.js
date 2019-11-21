@@ -141,11 +141,6 @@ export default class Engine {
     // this.gameState = State.Game.gameOver;
 
     // this.props.setGameState(this.gameState);
-
-    // InteractionManager.runAfterInteractions(_ => {
-    // this.props.navigation.dispatch(NavigationActions.navigate({ routeName: 'GameOver' }));
-    // });
-    // this.props.nav.navigation.navigate('GameOver', {})
   };
 
   tick = dt => {
