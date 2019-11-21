@@ -90,9 +90,9 @@ function Screen(props) {
             justifyContent: 'center',
             alignItems: 'stretch',
             position: 'absolute',
-            bottom: 8,
-            left: 8,
-            right: 8,
+            bottom: Math.max(bottom, 8),
+            left: Math.max(left, 8),
+            right: Math.max(right, 8),
           }}
         >
           <View
