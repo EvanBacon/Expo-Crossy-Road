@@ -1,4 +1,3 @@
-import Constants from 'expo-constants';
 import React, { Component } from 'react';
 import { Alert, Animated, Easing, StyleSheet, View } from 'react-native';
 import { useSafeArea } from 'react-native-safe-area-context';

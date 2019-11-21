@@ -1,5 +1,5 @@
 // import { store } from './rematch/Gate';
-import { Audio } from 'expo';
+import { Audio } from 'expo-av';
 // import Assets from './Assets';
 import AssetUtils from 'expo-asset-utils';
 import AudioFiles from './Audio';

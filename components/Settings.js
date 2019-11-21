@@ -1,4 +1,3 @@
-import Constants from 'expo-constants';
 import React, { Component } from 'react';
 import { Share, Text, StyleSheet, View } from 'react-native';
 import { connect } from 'react-redux';
@@ -223,7 +222,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    paddingTop: Constants.statusBarHeight,
     backgroundColor: 'rgba(105, 201, 230, 0.8)',
   },
   paragraph: {

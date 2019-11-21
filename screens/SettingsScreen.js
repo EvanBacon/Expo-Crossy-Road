@@ -1,11 +1,9 @@
-import Constants from 'expo-constants';
 import React, { Component } from 'react';
 import { Share, StyleSheet, Text, View } from 'react-native';
-import { connect } from 'react-redux';
 
+import Button from '../components/Button';
 import Characters from '../src/Characters';
 import Colors from '../src/Colors';
-import Button from '../components/Button';
 import Images from '../src/Images';
 
 // import Footer from './Footer';

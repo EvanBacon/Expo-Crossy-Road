@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "description": "The endless arcade hopper you'll never want to put down",
   "author": "Evan Bacon",
+  "sideEffects": false,
   "private": false,
   "scripts": {
     "serve": "npx serve ./web-build",
@@ -10,17 +11,16 @@
     "deploy:web": "netlify deploy --prod --dir web-build"
   },
   "devDependencies": {
+    "@expo/webpack-config": "^0.10.1",
     "babel-preset-expo": "^7.1.0"
   },
   "dependencies": {
-    "@react-navigation/web": "^1.0.0-alpha.7",
     "@rematch/core": "^1.0.6",
     "@rematch/persist": "^1.1.5",
     "@tweenjs/tween.js": "^17.2.0",
     "expo": "^35.0.1",
     "expo-asset": "^7.0.0",
     "expo-av": "^7.0.0",
-    "expo-constants": "^7.0.0",
     "expo-gl": "^7.0.0",
     "expo-sharing": "^7.0.0",
     "expo-three": "5.2.0",
@@ -28,11 +28,8 @@
     "react": "^16.8.6",
     "react-dom": "^16.8.4",
     "react-native": "^0.59.0",
-    "react-native-gesture-handler": "^1.5.0",
     "react-native-safe-area-context": "^0.6.0",
     "react-native-web": "^0.11.1",
-    "react-navigation": "^4.0.10",
-    "react-navigation-stack": "^1.10.3",
     "react-redux": "^6.0.0",
     "redux": "^4.0.1",
     "three": "^0.110.0"

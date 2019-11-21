@@ -3,11 +3,9 @@ import React from 'react';
 import { Image, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
-import AppNavigator from './navigation/AppNavigator';
+import AppNavigator from './screens/GameScreen';
 import AudioManager from './src/AudioManager';
 import ModelLoader from './src/ModelLoader';
-
-// import GameScreen from './screens/DebugScene';
 
 // require('three/examples/js/controls/OrbitControls');
 
