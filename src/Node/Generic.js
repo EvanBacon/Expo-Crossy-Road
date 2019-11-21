@@ -1,6 +1,7 @@
-import { loadObjAsync, loadTextureAsync, THREE } from 'expo-three';
-import CrossyMaterial from '../CrossyMaterial';
+import { loadObjAsync, THREE } from 'expo-three';
+
 import Models from '../../src/Models';
+import CrossyMaterial from '../CrossyMaterial';
 
 export default class Generic {
   models = {};
@@ -14,21 +15,11 @@ export default class Generic {
   };
 
   _downloadAssets = async ({ model, texture, castShadow, receiveShadow }) => {
-    // if (!THREE.OBJLoader) {
-    //   require('three/examples/js/loaders/OBJLoader');
-    // }
-    // const loader = new THREE.OBJLoader();
-    // let _model = await new Promise((resolve, reject) =>
-    //   loader.load(Asset.fromModule(model).uri, resolve, () => {}, reject),
-    // );
-
     const _model = await loadObjAsync({ asset: model });
     const material = CrossyMaterial.load(texture)
 
     _model.traverse(child => {
       if (child instanceof THREE.Mesh) {
-        // child.material.flatShading = true;
-        // child.material.emissive = 0x111111;
         child.material = material;
         child.castShadow = castShadow;
         child.receiveShadow = receiveShadow;
