@@ -2,22 +2,22 @@ export default {
   environment: {
     grass: {
       '0': {
-        model: require('../assets/models/environment/grass/0/0.obj'),
-        texture: require('../assets/models/environment/grass/0/0.png'),
+        model: require('../assets/models/environment/grass/model.obj'),
+        texture: require('../assets/models/environment/grass/light-grass.png'),
       },
       '1': {
-        model: require('../assets/models/environment/grass/1/0.obj'),
-        texture: require('../assets/models/environment/grass/1/0.png'),
+        model: require('../assets/models/environment/grass/model.obj'),
+        texture: require('../assets/models/environment/grass/dark-grass.png'),
       },
     },
     road: {
       '0': {
-        model: require('../assets/models/environment/road/1/0.obj'),
-        texture: require('../assets/models/environment/road/0/0.png'),
+        model: require('../assets/models/environment/road/model.obj'),
+        texture: require('../assets/models/environment/road/stripes-texture.png'),
       },
       '1': {
-        model: require('../assets/models/environment/road/1/0.obj'),
-        texture: require('../assets/models/environment/road/1/0.png'),
+        model: require('../assets/models/environment/road/model.obj'),
+        texture: require('../assets/models/environment/road/blank-texture.png'),
       },
     },
     log: {
