@@ -210,12 +210,13 @@ class Game extends Component {
   }
 
   render() {
+    const { isDarkMode } = this.props;
     return (
       <View
         pointerEvents="box-none"
         style={[
           StyleSheet.absoluteFill,
-          { flex: 1, position: 'fixed', backgroundColor: '#6dceea' },
+          { flex: 1, position: 'fixed', backgroundColor: '#56C7F9' },
           this.props.style,
         ]}
       >
@@ -262,4 +263,13 @@ const GestureView = ({ onStartGesture, onSwipe, ...props }) => {
   );
 };
 
-export default Game;
+
+import { useColorScheme } from 'react-native-appearance'
+
+function GameScreen(props) {
+  const scheme = useColorScheme();
+
+
+  return <Game {...props} isDarkMode={scheme === 'dark'} />
+}
+export default GameScreen;

@@ -856,10 +856,10 @@
     text-encoding "^0.7.0"
     xmldom-qsa "^1.0.3"
 
-"@expo/config@^2.5.0":
-  version "2.5.0"
-  resolved "https://registry.yarnpkg.com/@expo/config/-/config-2.5.0.tgz#e2d750007f639da8c078bb5c0108d872bb8218b5"
-  integrity sha512-eLKo9mjfjvplX88LNpIndHUJWrCSW+QBdEsODVHouGIwXRlihR1a4ytPi381s11X2z+Ab0iabwfW0lIVid4cTA==
+"@expo/config@^2.5.1":
+  version "2.5.1"
+  resolved "https://registry.yarnpkg.com/@expo/config/-/config-2.5.1.tgz#467733b18d9c26601785a4d3c261edd5e1fba6c0"
+  integrity sha512-MyIGtj917uPHiJJL0mP7A6vDxqgH/z7MqOa18UAz4NfGfCrMKetf/yAk6bQ/rcGBJeNyDSOOXwAOErFSQtBGfg==
   dependencies:
     "@expo/json-file" "^8.2.1"
     "@types/invariant" "^2.2.30"
@@ -905,15 +905,15 @@
   dependencies:
     lodash "^4.17.4"
 
-"@expo/webpack-config@^0.10.1":
-  version "0.10.1"
-  resolved "https://registry.yarnpkg.com/@expo/webpack-config/-/webpack-config-0.10.1.tgz#003b2b41deb0b2d89c74c24e36966efe643ae501"
-  integrity sha512-eDDe2m9nJZamYzhUTc6zVLsXwcVTzVKtYMmEDEo/9z8Gl2ZQbV5ggJm1rf8SN1DATAXS6RYJW+OVvS8eLp7Upg==
+"@expo/webpack-config@^0.10.4":
+  version "0.10.4"
+  resolved "https://registry.yarnpkg.com/@expo/webpack-config/-/webpack-config-0.10.4.tgz#dcd03b94ef3cbfcc1e690909fcddeac7cecc409c"
+  integrity sha512-8fRMoo0bO8U8TZbN1itlzOilnfhjNxmshV5BGNkGi4yby+Mjev8CkDgTrsBISyWcNPr1XHO5NYbqN1VdqpjD0w==
   dependencies:
     "@babel/core" "^7.0.0"
     "@babel/runtime" "^7.3.4"
-    "@expo/config" "^2.5.0"
-    "@expo/webpack-pwa-manifest-plugin" "^1.2.10"
+    "@expo/config" "^2.5.1"
+    "@expo/webpack-pwa-manifest-plugin" "^1.2.13"
     "@types/yup" "^0.26.24"
     babel-loader "8.0.6"
     babel-preset-expo "^7.0.0"
@@ -948,12 +948,12 @@
     workbox-webpack-plugin "^3.6.3"
     yup "^0.27.0"
 
-"@expo/webpack-pwa-manifest-plugin@^1.2.10":
-  version "1.2.10"
-  resolved "https://registry.yarnpkg.com/@expo/webpack-pwa-manifest-plugin/-/webpack-pwa-manifest-plugin-1.2.10.tgz#5b6222a1dc25021b92b473de6fef07cbd713f5f1"
-  integrity sha512-K1YVk0sYhaLiwe6FroE4JiLQkPD187ViaAOhXCL5/V10yREwvqxyjFaF4z7UnWPWOpg7lnz8C2PwsbsVuUv8JA==
+"@expo/webpack-pwa-manifest-plugin@^1.2.13":
+  version "1.2.13"
+  resolved "https://registry.yarnpkg.com/@expo/webpack-pwa-manifest-plugin/-/webpack-pwa-manifest-plugin-1.2.13.tgz#28c9bcc06af4b36c1f66e4abda1061c8dcbdffa3"
+  integrity sha512-gldJe4/Wj6pcC2bi8VynE0MQyww9Dyaizfeb+jJHZxHyAnpoWlh30WaYH8eXr/HFvPbm+5vnRjslFRQdMjObDQ==
   dependencies:
-    "@expo/config" "^2.5.0"
+    "@expo/config" "^2.5.1"
     "@expo/image-utils" "^0.2.8"
     is-color "^1.0.2"
     mime "^2.4.0"
@@ -3511,10 +3511,10 @@ expo-sqlite@~7.0.0:
     "@types/websql" "^0.0.27"
     lodash "^4.17.15"
 
-expo-three@5.2.0:
-  version "5.2.0"
-  resolved "https://registry.yarnpkg.com/expo-three/-/expo-three-5.2.0.tgz#af792eda7561f4508f2d4e9b08fcaa17be34ebe0"
-  integrity sha512-oKh6vU3uGndrpx+/9b9U2EYztzR8YLRs4FvcgQRyqUIYVdbqTXW7Jk8fx2x1fFT984TNgJvh4iDNG4D1e7cscw==
+expo-three@5.3.0:
+  version "5.3.0"
+  resolved "https://registry.yarnpkg.com/expo-three/-/expo-three-5.3.0.tgz#e568658e4d7186fdc330479304c5613d7b4ae436"
+  integrity sha512-aNwV4Y3vGoYxHgzllZC4nOQpTUE9sMb8qjohrSfgwHUHI4GC96xruSEdpojtUEssnogGFf85R7oA/gjHxzPAqA==
   dependencies:
     "@expo/browser-polyfill" "^0.1.0"
     color-temperature "0.2.7"
@@ -7376,6 +7376,15 @@ react-is@^16.7.0, react-is@^16.8.1, react-is@^16.8.2:
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.8.6.tgz#5bbc1e2d29141c9fbdfed456343fe2bc430a6a16"
   integrity sha512-aUk3bHfZ2bRSVFFbbeVS4i+lNPZr3/WM5jT2J5omUVV1zzcs1nAaf3l51ctA5FFvCRbhrH0bdAsRRQddFJZPtA==
 
+react-native-appearance@^0.3.1:
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/react-native-appearance/-/react-native-appearance-0.3.1.tgz#f8120222131767e9227c2c7ba3a9478f4c6a5ab7"
+  integrity sha512-humg0ddjWjMfiSQCjsAcJk5o/jLJVy7aDEJuqN29ypQTfEfMKC3kVZP7dgb5lhAfJT3gquvDlT9IalZ2B7n6CQ==
+  dependencies:
+    fbemitter "^2.1.1"
+    invariant "^2.2.4"
+    use-subscription "^1.0.0"
+
 react-native-branch@~3.0.1:
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/react-native-branch/-/react-native-branch-3.0.1.tgz#5b07b61cbd290168cd3c3662e017ebe0f356d2ca"
@@ -8950,6 +8959,13 @@ url@^0.11.0:
   dependencies:
     punycode "1.3.2"
     querystring "0.2.0"
+
+use-subscription@^1.0.0:
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/use-subscription/-/use-subscription-1.3.0.tgz#3df13a798e826c8d462899423293289a3362e4e6"
+  integrity sha512-buZV7FUtnbOr+65dN7PHK7chHhQGfk/yjgqfpRLoWuHIAc4klAD/rdot2FsPNtFthN1ZydvA8tR/mWBMQ+/fDQ==
+  dependencies:
+    object-assign "^4.1.1"
 
 use@^3.1.0:
   version "3.1.1"
