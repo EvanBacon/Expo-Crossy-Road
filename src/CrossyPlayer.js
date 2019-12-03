@@ -6,6 +6,13 @@ const normalizeAngle = angle => {
   return Math.atan2(Math.sin(angle), Math.cos(angle));
 };
 
+
+const HIT_BY_CAR_SCALE = {
+  x: 1.2,
+  y: 0.7,
+  z: 1.1,
+}
+
 class PlayerScaleAnimation extends TimelineMax {
   constructor(player) {
     super();
@@ -202,12 +209,7 @@ export default class CrossyPlayer extends Group {
   runPosieAnimation() {
     this.stopIdle();
 
-    TweenMax.to(this.scale, 0.2, {
-      x: 1.2,
-      y: 0.75,
-      z: 1,
-      // ease: Bounce.easeOut,
-    });
+    TweenMax.to(this.scale, 0.2, HIT_BY_CAR_SCALE);
   }
 
   hitBy = null;
@@ -229,8 +231,8 @@ export default class CrossyPlayer extends Group {
     this.position.y = (road.top - 0.05);
 
     TweenLite.to(this.scale, 0.2, {
+      x: 1.1,
       y: 0.05,
-      x: 1.7,
       z: 1.7,
     });
     TweenMax.to(this.rotation, 0.2, {

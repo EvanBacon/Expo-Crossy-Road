@@ -56,6 +56,8 @@ export default class Engine {
     this.scene.world.add(this._hero);
 
     this.scene.createParticles();
+
+    // this.scene.printChildren()
   };
 
   isGameEnded() {

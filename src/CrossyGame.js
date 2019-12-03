@@ -1,7 +1,7 @@
 import { Renderer } from 'expo-three';
 import { TweenMax } from 'gsap';
 import { Vibration } from 'react-native';
-import { AmbientLight, DirectionalLight, Group, OrthographicCamera, Scene } from 'three';
+import { AmbientLight, BasicShadowMap, DirectionalLight, Group, OrthographicCamera, Scene } from 'three';
 
 import AudioManager from '../src/AudioManager';
 import { MAP_OFFSET, maxRows } from './GameSettings';
@@ -11,6 +11,16 @@ import Rows from './Row';
 import { Fill } from './Row/Grass';
 
 export class CrossyScene extends Scene {
+
+  printChildren = () => {
+    function printGraph(obj) {
+      console.group(` <${obj.type}> ${obj.name}`);
+      obj.children.forEach(printGraph);
+      console.groupEnd();
+    }
+    printGraph(this);
+  };
+
   constructor({ hideShadows }) {
     super();
 
@@ -125,6 +135,7 @@ export class CrossyRenderer extends Renderer {
     this.gammaInput = true;
     this.gammaOutput = true;
     this.shadowMap.enabled = true;
+    this.shadowMap.type = BasicShadowMap;
   }
 }
 
