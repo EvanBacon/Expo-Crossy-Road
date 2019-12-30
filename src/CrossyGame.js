@@ -10,6 +10,50 @@ import Water from './Particles/Water';
 import Rows from './Row';
 import { Fill } from './Row/Grass';
 
+
+class CrossySun extends DirectionalLight {
+  constructor({ hideShadows }) {
+    super(0xdfebff, 1.75);
+    this.position.set(20, 30, 0.05);
+    this.castShadow = !hideShadows;
+
+    if (this.castShadow) {
+      // 512
+      this.shadow.mapSize.width = 1024 * 2;
+      this.shadow.mapSize.height = this.shadow.mapSize.width;
+
+      const d = 15;
+      const v = 6;
+      this.shadow.camera.left = -d;
+      this.shadow.camera.right = 9;
+      this.shadow.camera.top = v;
+      this.shadow.camera.bottom = -v;
+      this.shadow.bias = 0.0001; //-0.02
+
+      this.shadow.camera.near = 0;
+
+      this.shadow.camera.far = 100;// 15
+      this.updateShadowPosition({ force: true });
+    }
+  }
+
+  updateShadowPosition({ z, force }) {
+    const stepsToUpdateShadow = 4;
+    const shadowZOffset = 1;
+
+    if (force || this.target.position.z - z + shadowZOffset > stepsToUpdateShadow) {
+      this.target.position.set(this.target.position.x, 0, Math.round(z) - shadowZOffset);
+      this.position.set(this.target.position.x - 5.0, 10.0, this.target.position.z);
+    }
+  }
+}
+
+// class World {
+//   constructor({ scene }) {
+//     this.ambientLight.color = new THREE.Color(0.5, 0.5, 0.7);
+//   }
+// }
+
 export class CrossyScene extends Scene {
 
   printChildren = () => {
@@ -29,25 +73,16 @@ export class CrossyScene extends Scene {
     this.worldWithCamera.add(this.world);
     this.add(this.worldWithCamera);
 
-    const light = new DirectionalLight(0xdfebff, 1.75);
-    light.position.set(20, 30, 0.05);
-    light.castShadow = !hideShadows;
-    light.shadow.mapSize.width = 1024 * 2;
-    light.shadow.mapSize.height = 1024 * 2;
-
-    const d = 15;
-    const v = 6;
-    light.shadow.camera.left = -d;
-    light.shadow.camera.right = 9;
-    light.shadow.camera.top = v;
-    light.shadow.camera.bottom = -v;
-    light.shadow.camera.far = 100;
-    light.shadow.bias = 0.0001;
+    const light = new CrossySun({ hideShadows });
 
     this.add(light);
+    this.add(light.target);
 
     this.light = light;
 
+    // TODO: Different worlds effect color
+    this.ambient = new THREE.AmbientLight(new THREE.Color(0.5, 0.5, 0.7))
+    this.add(this.ambient);
     // let helper = new CameraHelper(light.shadow.camera);
     // this.add(helper);
   }
@@ -103,6 +138,57 @@ export class CrossyCamera extends OrthographicCamera {
     this.position.set(-1, 2.8, -2.9); // Change -1 to -.02
     this.lookAt(0, 0, 0);
   }
+
+  // somn({ width, height, state, player }) {
+
+  //   let zoomFactor;
+
+  //   const gameAspect = width / height;
+  //   const edge = 3.6;
+  //   const thinZoom = 2 / 3;
+  //   const wideZoom = 1;
+  //   const thinCamX = 1;
+  //   const wideCamX = 0.3;
+  //   const thinCamY = 2.2;
+  //   const wideCamY = .5;
+
+  //   if (gameAspect < 0.75) {
+  //     zoomFactor = thinZoom;
+  //     cameraShiftX = thinCamX;
+  //     cameraShiftY = thinCamY;
+  //   } else if (gameAspect > 1.25) {
+  //     zoomFactor = wideZoom;
+  //     cameraShiftX = wideCamX;
+  //     cameraShiftY = wideCamY;
+  //   } else {
+  //     const delta = (gameAspect - 0.75) * 2;
+  //     zoomFactor = thinZoom + delta * (wideZoom - thinZoom);
+  //     cameraShiftX = thinCamX + delta * (wideCamX - thinCamX);
+  //     cameraShiftY = thinCamY + delta * (wideCamY - thinCamY);
+  //   }
+  //   let camX = cameraBaseX + cameraShiftX;
+  //   const camY = cameraBaseY + cameraShiftY;
+  //   let camZ = cameraBaseZ + cameraShiftZ;
+  //   if (state === 'main' || state === 'death') {
+  //     if (player) {
+  //       camX += player.position.x;
+  //       camZ += player.position.z;
+  //     }
+  //     if (!player || !player.isDead) {
+  //       this.position.set(camX, camY, camZ);
+  //       this.zoom = zoomFactor;
+  //     }
+  //     this.rotation.set(-Math.PI / 4, Math.PI / 9, 0, 'YXZ');
+  //   }
+  //   this.aspect = Game.canvas.width / Game.canvas.height;
+  //   this.left = -edge * this.aspect;
+  //   this.right = edge * this.aspect;
+  //   this.top = edge;
+  //   this.bottom = -edge;
+  //   this.near = -10;
+  //   this.far = 25;
+  //   this.updateProjectionMatrix();
+  // }
 
   updateScale = ({ width, height, scale }) => {
     this.left = -(width * scale);

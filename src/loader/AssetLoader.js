@@ -1,25 +1,36 @@
 const isIE11 = !!window.MSInputMethodContext && !!document.documentMode;
-const AssetLoader = {};
-AssetLoader.assetProgress = {};
-AssetLoader.loadedAssets = {};
-AssetLoader.queue = [];
-AssetLoader.queueIdx = 0;
-AssetLoader.loader = {};
-AssetLoader.maxConcurrency = Infinity;
-AssetLoader.assetsLoading = [];
-AssetLoader.lastRequestedWorld = null;
-AssetLoader.lastRequestedCharacters = null;
-AssetLoader.load = callback => {
-    AssetLoader.asyncQueue(AssetLoader.queue, () => {
-        AssetLoader.queue = [];
-        AssetLoader.assetProgress = {};
-        AssetLoader.progressListeners.forEach(callback => callback(1));
+import * THREE from 'three';
+
+export let assetProgress = {};
+export let loadedAssets = {};
+export let queue = [];
+export let queueIdx = 0;
+export let loader = {};
+export let maxConcurrency = Infinity;
+export let assetsLoading = [];
+export let lastRequestedWorld = null;
+export let lastRequestedCharacters = null;
+export let load = callback => {
+    asyncQueue(queue, () => {
+        queue = [];
+        assetProgress = {};
+        progressListeners.forEach(callback => callback(1));
         if (typeof callback === 'function') {
             callback();
         }
     });
 };
-AssetLoader.worlds = {
+export const loadAsync = () => {
+    return new Promise((resolve) => {
+        asyncQueue(queue, () => {
+            queue = [];
+            assetProgress = {};
+            progressListeners.forEach(callback => callback(1));
+            resolve();
+        });
+    })
+};
+export let worlds = {
     original_cast: {
         loaded: false,
         loading: false
@@ -33,7 +44,7 @@ AssetLoader.worlds = {
         loading: false
     }
 };
-AssetLoader.characters = {
+export let characters = {
     original_cast: {
         loaded: false,
         loading: false
@@ -43,89 +54,96 @@ AssetLoader.characters = {
         loading: false
     }
 };
-AssetLoader.isWorldLoaded = world => {
-    if (!world || !AssetLoader.worlds[world]) {
+export const isWorldLoaded = world => {
+    if (!world || !worlds[world]) {
         return false;
     }
-    return AssetLoader.worlds[world].loaded || AssetLoader.worlds[world].loading;
+    return worlds[world].loaded || worlds[world].loading;
 };
-AssetLoader.areCharactersLoaded = world => {
-    if (!world || !AssetLoader.characters[world]) {
+export const areCharactersLoaded = world => {
+    if (!world || !characters[world]) {
         return false;
     }
-    return AssetLoader.characters[world].loaded || AssetLoader.characters[world].loading;
+    return characters[world].loaded || characters[world].loading;
 };
-AssetLoader.loadCharacters = (world, callback) => {
-    AssetLoader.add.json(`models/${world}-char.json`);
-    AssetLoader.characters[world].loading = true;
-    AssetLoader.load(callback);
+export const loadCharacters = (world, callback) => {
+    add.json(`models/${world}-char.json`);
+    characters[world].loading = true;
+    load(callback);
 };
-AssetLoader.queueNext = () => {
-    AssetLoader.queueIdx++;
+export const loadCharactersAsync = (world, callback) => {
+    add.json(`models/${world}-char.json`);
+    characters[world].loading = true;
+    return new Promise((resolve) => {
+        load(resolve);
+    })
 };
-AssetLoader.done = (key, asset) => {
-    AssetLoader.loadedAssets[key] = asset;
-    AssetLoader.updateAssetProgress(key, 1, 1);
-    AssetLoader.assetsLoading.pop(key);
+export const queueNext = () => {
+    queueIdx++;
+};
+export const doneLoading = (key, asset) => {
+    loadedAssets[key] = asset;
+    updateAssetProgress(key, 1, 1);
+    assetsLoading.pop(key);
     console.log(`loaded: ${key}`);
     switch (key) {
         case 'models/original_cast-world.json':
-            AssetLoader.worlds.original_cast.loaded = true;
+            worlds.original_cast.loaded = true;
             break;
         case 'models/space-world.json':
-            AssetLoader.worlds.space.loaded = true;
+            worlds.space.loaded = true;
             break;
         case 'models/common-world.json':
-            AssetLoader.worlds.common.loaded = true;
+            worlds.common.loaded = true;
             break;
         case 'models/original_cast-char.json':
-            AssetLoader.characters.original_cast.loaded = true;
+            characters.original_cast.loaded = true;
             break;
         case 'models/space-char.json':
-            AssetLoader.characters.space.loaded = true;
+            characters.space.loaded = true;
             break;
     }
 };
-AssetLoader.push = func => {
-    if (typeof AssetLoader.queue[AssetLoader.queueIdx] === 'undefined') {
-        AssetLoader.queue[AssetLoader.queueIdx] = [];
+export const push = func => {
+    if (typeof queue[queueIdx] === 'undefined') {
+        queue[queueIdx] = [];
     }
-    AssetLoader.queue[AssetLoader.queueIdx].push(func);
+    queue[queueIdx].push(func);
 };
-AssetLoader.progressListeners = [];
-AssetLoader.getProgress = () => {
-    if (AssetLoader.queue.length <= 0) {
+export let progressListeners = [];
+export const getProgress = () => {
+    if (queue.length <= 0) {
         return 1;
     }
     let total = 0;
-    Object.keys(AssetLoader.assetProgress).forEach(asset => {
-        total += AssetLoader.assetProgress[asset];
+    Object.keys(assetProgress).forEach(asset => {
+        total += assetProgress[asset];
     });
     let totalLoaders = 0;
-    AssetLoader.queue.forEach(({ length }) => {
+    queue.forEach(({ length }) => {
         totalLoaders += length;
     });
     return total / totalLoaders;
 };
-AssetLoader.updateAssetProgress = (asset, done, total) => {
-    if (AssetLoader.assetProgress[asset] === 1 || total < done || total <= 0) {
+export const updateAssetProgress = (asset, done, total) => {
+    if (assetProgress[asset] === 1 || total < done || total <= 0) {
         return;
     }
     let progress = 1;
     if (typeof done !== 'undefined' && typeof total !== 'undefined') {
         progress = done / total;
     }
-    AssetLoader.assetProgress[asset] = progress;
-    if (AssetLoader.progressListeners.length > 0) {
-        AssetLoader.progressListeners.forEach(callback => callback(AssetLoader.getProgress()));
+    assetProgress[asset] = progress;
+    if (progressListeners.length > 0) {
+        progressListeners.forEach(callback => callback(getProgress()));
     }
 };
-AssetLoader.getAssetById = id => AssetLoader.loadedAssets[id];
-AssetLoader.asyncQueue = (queue, callback) => {
+export const getAssetById = id => loadedAssets[id];
+export const asyncQueue = (queue, callback) => {
     const workingQueue = queue.slice();
     const next = function next() {
         const collection = workingQueue.shift();
-        AssetLoader.asyncCollection(collection, () => {
+        asyncCollection(collection, () => {
             if (workingQueue.length > 0) {
                 next();
             } else {
@@ -135,9 +153,9 @@ AssetLoader.asyncQueue = (queue, callback) => {
     };
     next();
 };
-AssetLoader.asyncCollection = (collection, callback) => {
+export const asyncCollection = (collection, callback) => {
     var collection = collection.slice();
-    let numLoading = Math.min(AssetLoader.maxConcurrency, collection.length);
+    let numLoading = Math.min(maxConcurrency, collection.length);
     const loadAndContinue = function loadAndContinue(func) {
         func(() => {
             numLoading--;
@@ -149,80 +167,80 @@ AssetLoader.asyncCollection = (collection, callback) => {
             }
         });
     };
-    collection.splice(0, AssetLoader.maxConcurrency).forEach(loadAndContinue);
+    collection.splice(0, maxConcurrency).forEach(loadAndContinue);
 };
-AssetLoader.add = asset => {
+export const add = asset => {
     const fileType = asset.split('.').pop();
     if (fileType === 'png') {
-        AssetLoader.add.image(asset);
+        add.image(asset);
     } else if (fileType === 'json') {
-        AssetLoader.add.json(asset);
+        add.json(asset);
     } else if (fileType === 'css') {
-        AssetLoader.add.css(asset);
+        add.css(asset);
     } else {
         throw new Error(`Unsupported file-type (${fileType}) passed to AssetLoader.add.`);
     }
 };
-AssetLoader.add.image = asset => {
-    AssetLoader.assetsLoading.push(asset);
-    AssetLoader.push(done => {
+add.image = asset => {
+    assetsLoading.push(asset);
+    push(done => {
         const img = new Image();
         img.onload = () => {
-            AssetLoader.done(asset, img);
-            AssetLoader.updateAssetProgress(asset, 1, 1);
+            doneLoading(asset, img);
+            updateAssetProgress(asset, 1, 1);
             done();
         };
         img.crossOrigin = "Anonymous";
         img.src = asset;
     });
 };
-AssetLoader.setupAudioLoader = () => {
+export const setupAudioLoader = () => {
     if (isIE11) {
         return;
     }
-    AssetLoader.audioLoader = AssetLoader.audioLoader || new THREE.AudioLoader();
+    audioLoader = audioLoader || new THREE.AudioLoader();
 };
-AssetLoader.setupFontLoader = () => {
-    AssetLoader.fontLoader = AssetLoader.fontLoader || new THREE.FontLoader();
+export const setupFontLoader = () => {
+    fontLoader = fontLoader || new THREE.FontLoader();
 };
-AssetLoader.add.audio = filename => {
+add.audio = filename => {
     if (isIE11) {
         return;
     }
-    AssetLoader.setupAudioLoader();
-    AssetLoader.push(done => {
-        AssetLoader.audioLoader.load(filename, buffer => {
-            AssetLoader.done(filename, buffer);
+    setupAudioLoader();
+    push(done => {
+        audioLoader.load(filename, buffer => {
+            doneLoading(filename, buffer);
             done();
         });
     });
 };
-AssetLoader.add.threeFont = filename => {
-    AssetLoader.setupFontLoader();
-    AssetLoader.fontLoader.load(filename, font => {
-        AssetLoader.done(filename, font);
+add.threeFont = filename => {
+    setupFontLoader();
+    fontLoader.load(filename, font => {
+        doneLoading(filename, font);
     });
 };
-AssetLoader.add.plainAudio = asset => {
+add.plainAudio = asset => {
     if (isIE11) {
         return;
     }
-    AssetLoader.push(done => {
+    push(done => {
         const audio = new Audio(asset);
-        AssetLoader.done(asset, audio);
+        doneLoading(asset, audio);
         done();
     });
 };
-AssetLoader.add.spriteSheet = (image, json) => {
-    AssetLoader.add.image(image);
-    AssetLoader.add.json(json);
+add.spriteSheet = (image, json) => {
+    add.image(image);
+    add.json(json);
 };
-AssetLoader.add.bitmapText = (image, json) => {
-    AssetLoader.add.image(image);
-    AssetLoader.add.json(json);
+add.bitmapText = (image, json) => {
+    add.image(image);
+    add.json(json);
 };
-AssetLoader.add.webFont = (fontFamily, css) => {
-    AssetLoader.add.css(css);
+add.webFont = (fontFamily, css) => {
+    add.css(css);
     const el = document.createElement('div');
     el.innerText = `Loading ${fontFamily}`;
     el.style.fontFamily = fontFamily;
@@ -231,55 +249,55 @@ AssetLoader.add.webFont = (fontFamily, css) => {
     el.style.overflow = 'hidden';
     document.body.appendChild(el);
 };
-AssetLoader.add.json = asset => {
-    AssetLoader.assetsLoading.push(asset);
+add.json = asset => {
+    assetsLoading.push(asset);
     console.log(`LOADING ASSET JSON ${asset}`);
-    AssetLoader.push(done => {
+    push(done => {
         loadJSON(asset, response => {
-            AssetLoader.done(asset, response);
+            doneLoading(asset, response);
             done();
         });
     });
 };
-AssetLoader.add.script = asset => {
-    AssetLoader.assetsLoading.push(asset);
-    AssetLoader.push(done => {
-        AssetLoader.loader.script(asset, () => {
-            AssetLoader.done(asset, asset);
+add.script = asset => {
+    assetsLoading.push(asset);
+    push(done => {
+        loader.script(asset, () => {
+            doneLoading(asset, asset);
             done();
         });
     });
 };
-AssetLoader.loader.script = (asset, callback) => {
+loader.script = (asset, callback) => {
     const el = document.createElement('script');
     el.src = asset;
     el.onload = callback;
     document.head.appendChild(el);
 };
-AssetLoader.add.css = asset => {
-    AssetLoader.assetsLoading.push(asset);
-    AssetLoader.push(done => {
+add.css = asset => {
+    assetsLoading.push(asset);
+    push(done => {
         const el = document.createElement('link');
         el.type = 'text/css';
         el.rel = 'stylesheet';
         el.href = asset;
         el.onload = () => {
-            AssetLoader.done(asset, el);
+            doneLoading(asset, el);
             done();
         };
         document.head.appendChild(el);
     });
 };
-AssetLoader.add.text = asset => {
-    AssetLoader.assetsLoading.push(asset);
-    AssetLoader.push(done => {
+add.text = asset => {
+    assetsLoading.push(asset);
+    push(done => {
         loadJSON(asset, response => {
-            AssetLoader.done(asset, response);
+            doneLoading(asset, response);
             done();
         });
     });
 };
-const loadGeneric = function loadGeneric(url, callback) {
+export const loadGeneric = function loadGeneric(url, callback) {
     const xhr = new XMLHttpRequest();
     xhr.open('GET', url, true);
     if (url.includes('.zip')) {
@@ -295,20 +313,33 @@ const loadGeneric = function loadGeneric(url, callback) {
     xhr.onload = readyCallback;
     xhr.onreadystatechange = readyCallback;
     xhr.onprogress = ({ loaded, total }) => {
-        AssetLoader.updateAssetProgress(url, loaded, total);
+        updateAssetProgress(url, loaded, total);
     };
     xhr.onerror = error => {
         throw new Error(`Error during XHR: ${error}`);
     };
     xhr.send();
 };
-AssetLoader.loadGeneric = loadGeneric;
+
+
+
+export async function receivedWorldSwitchAsync(world) {
+    lastRequestedWorld = world;
+    if (!isWorldLoaded(world)) {
+        add.json(`models/${world}-world.json`);
+        worlds[world].loading = true;
+        await loadAsync();
+        if (!areCharactersLoaded(world)) {
+            await loadCharactersAsync(world)
+        }
+    } else if (!areCharactersLoaded(world)) {
+        await loadCharactersAsync(world);
+    }
+}
+
 
 const loadJSON = (url, callback) => {
     loadGeneric(url, response => {
         callback(JSON.parse(response));
     });
 };
-
-window.AssetLoader = AssetLoader;
-export default AssetLoader;
