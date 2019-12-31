@@ -35,6 +35,10 @@ class Game extends Component {
     if (nextState.gameState !== this.state.gameState) {
       this.updateWithGameState(nextState.gameState, this.state.gameState);
     }
+    if (nextProps.isPaused != this.props.isPaused) {
+      this.setState({ gameState: nextProps.isPaused ? State.Game.paused : State.Game.playing })
+    }
+    
     // if (nextProps.character.id !== this.props.character.id) {
     //   (async () => {
     //     this.world.remove(this._hero);
@@ -76,7 +80,9 @@ class Game extends Component {
     const { playing, gameOver, paused, none } = State.Game;
     switch (gameState) {
       case playing:
-        if (lastState !== none) {
+        if (lastState === paused) {
+          this.engine.unpause();
+        } else if (lastState !== none) {
           this.transitionToGamePlayingState();
         } else {
           // Coming straight from the menu.
@@ -88,6 +94,7 @@ class Game extends Component {
       case gameOver:
         break;
       case paused:
+        this.engine.pause();
         break;
       case none:
         this.newScore();
@@ -271,8 +278,6 @@ import { useColorScheme } from 'react-native-appearance'
 function GameScreen(props) {
   const scheme = useColorScheme();
   const appState = useAppState();
-
-  console.log('fappState', appState)
   return <Game {...props} isPaused={appState !== 'active'} isDarkMode={scheme === 'dark'} />
 }
 export default GameScreen;

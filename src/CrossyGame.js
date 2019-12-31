@@ -122,6 +122,7 @@ export class CrossyWorld extends Group {
 export class CrossyRenderer extends Renderer {
   constructor(props) {
     super(props);
+    this.__gl = props.gl
     this.gammaInput = true;
     this.gammaOutput = true;
     this.shadowMap.enabled = true;

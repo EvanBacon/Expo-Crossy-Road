@@ -348,6 +348,22 @@ export default class Engine {
     this._hero.runPosieAnimation();
   };
 
+  pause() {
+    cancelAnimationFrame(this.raf);
+  }
+  unpause() {
+    const render = () => {
+      this.raf = requestAnimationFrame(render);
+      const time = Date.now();
+      this.tick(time);
+      this.renderer.render(this.scene, this.camera);
+
+      // NOTE: At the end of each frame, notify `Expo.GLView` with the below
+      this.renderer.__gl.endFrameEXP();
+    };
+    render();
+  }
+
   _onGLContextCreate = async gl => {
     const { drawingBufferWidth: width, drawingBufferHeight: height } = gl;
 
@@ -359,15 +375,7 @@ export default class Engine {
       clearColor: sceneColor,
     });
 
-    const render = () => {
-      requestAnimationFrame(render);
-      const time = Date.now();
-      this.tick(time);
-      this.renderer.render(this.scene, this.camera);
+    this.unpause();
 
-      // NOTE: At the end of each frame, notify `Expo.GLView` with the below
-      gl.endFrameEXP();
-    };
-    render();
   };
 }

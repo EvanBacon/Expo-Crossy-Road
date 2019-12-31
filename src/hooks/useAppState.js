@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { AppState, AppStateStatus } from 'react-native'
+import { AppState, Platform, AppStateStatus } from 'react-native'
 
 export default function useAppState() {
   const currentState = AppState.currentState
@@ -11,7 +11,11 @@ export default function useAppState() {
 
   useEffect(() => {
     AppState.addEventListener('change', onChange)
-
+    if (Platform.OS === 'web') {
+        window.onfocus = () => onChange('active')
+        window.onblur = () => onChange('background')
+    }
+    
     return () => {
       AppState.removeEventListener('change', onChange)
     }
