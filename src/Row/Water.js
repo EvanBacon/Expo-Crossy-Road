@@ -159,6 +159,11 @@ export default class Water extends Object3D {
       return;
     }
     this.entities.map(entity => this.move({ dt, player, entity }));
+    this.entities.map(entity => {
+      if (entity.tick) {
+        entity.tick(dt);
+      }
+    });
 
     if (!player.moving && !player.ridingOn) {
       this.entities.map(entity =>

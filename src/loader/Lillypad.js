@@ -53,8 +53,7 @@ class Lillypad {
     };
 
     static Get = (x, y, z) => {
-        let lillyPad;
-        lillyPad = new Lillypad();
+        const lillyPad = new Lillypad();
         lillyPad.setup(x, y, z);
         return lillyPad;
     };
