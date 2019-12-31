@@ -118,7 +118,7 @@ class CharacterSelect extends Component {
             }}
           />
         </View>
-        <Text
+        {false && <Text
           style={{
             fontFamily: 'retro',
             position: 'absolute',
@@ -129,7 +129,7 @@ class CharacterSelect extends Component {
           }}
         >
           4/ 8
-        </Text>
+        </Text>}
       </View>
     );
   }
@@ -149,6 +149,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
+    alignItems: 'stretch',
     backgroundColor: 'rgba(105, 201, 230, 0.8)',
   },
   paragraph: {

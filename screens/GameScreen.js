@@ -105,6 +105,10 @@ class Game extends Component {
     }
   };
 
+  componentWillUnmount() {
+    cancelAnimationFrame(this.engine.raf);
+  }
+
   async componentDidMount() {
     // AudioManager.sounds.bg_music.setVolumeAsync(0.05);
     // await AudioManager.playAsync(

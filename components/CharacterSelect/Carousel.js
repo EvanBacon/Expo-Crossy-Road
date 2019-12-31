@@ -1,52 +1,20 @@
 import React, { Component } from 'react';
-import {
-  Animated,
-  Text,
-  Dimensions,
-  FlatList,
-  InteractionManager,
-  StyleSheet,
-  View,
-} from 'react-native';
+import { Animated, Dimensions, StyleSheet, Text, View } from 'react-native';
 
 import Characters from '../../src/Characters';
+import ViewPager from '../ViewPager';
 import CharacterCard from './CharacterCard';
-
-// .map(val => Characters[val])
-const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 
 const width = 150;
 const AnimatedText = Animated.createAnimatedComponent(Text);
 
-export let scrollOffset = 0;
-
+const keys = Object.keys(Characters);
 export default class Carousel extends Component {
   scroll = new Animated.Value(0);
 
-  _scrollSink = Animated.event(
-    [{ nativeEvent: { contentOffset: { x: this.scroll } } }],
-    {
-      useNativeDriver: true,
-    },
-  );
   state = {
-    keys: [],
-    selected: 0,
+    index: 0,
   };
-  componentWillMount() {
-    this.listener = this.scroll.addListener(this.onAnimationUpdate);
-  }
-  componentWillUnmount() {
-    this.scroll.removeListener(this.listener);
-  }
-  onAnimationUpdate = ({ value }) => (scrollOffset = value);
-
-  componentDidMount() {
-    InteractionManager.runAfterInteractions(_ => {
-      const keys = Object.keys(Characters);
-      this.setState({ keys });
-    });
-  }
 
   renderItem = ({ item, index }) => {
     const inset = width * 0.75;
@@ -96,16 +64,11 @@ export default class Carousel extends Component {
     );
   };
 
-  momentumScrollEnd = () => {
-    const selected = Math.floor(scrollOffset / width);
-    this.setState({ selected });
-    this.props.onCurrentIndexChange(selected);
-  };
 
   render() {
-    const { keys, selected } = this.state;
+    const { index } = this.state;
 
-    let key = keys[selected];
+    let key = keys[index];
     let character;
 
     if (key) {
@@ -114,22 +77,34 @@ export default class Carousel extends Component {
 
     return (
       <View style={{ flex: 1 }}>
-        <AnimatedText style={styles.text}>{character}</AnimatedText>
-        <AnimatedFlatList
+        <AnimatedText style={styles.text}>{character || '???'}</AnimatedText>
+        <ViewPager
+        ref={ref => (this.viewPager = ref)}
+
           style={styles.container}
           horizontal
           showsHorizontalScrollIndicator={false}
-          horizontal
           contentContainerStyle={{
             paddingHorizontal: (Dimensions.get('window').width - width) / 2,
           }}
-          directionalLockEnabled
           snapToInterval={width}
           onMomentumScrollEnd={this.momentumScrollEnd}
-          onScroll={this._scrollSink}
-          decelerationRate={0}
-          keyExtractor={(item, index) => index}
+          onScroll={({ value }) => {
+            if (!this.viewPager) {
+              return;
+            }
+            const { index } = this.viewPager;
+            if (this.state.index !== index) {
+              this.setState({ index }, () => {
+                // this.props.onIndexChange(index, this.state.index);
+              });
+            }
+          }}
+          scroll={this.scroll}
+          keyExtractor={(item, index) => `-${index}`}
           data={keys}
+          size={width}
+
           renderItem={this.renderItem}
           scrollEventThrottle={1}
         />
@@ -148,6 +123,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     textAlign: 'center',
     color: 'white',
-    fontSize: 24,
+    fontSize: '2rem',
   },
 });

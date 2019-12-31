@@ -191,10 +191,10 @@ export default {
       // model: require('../assets/models/characters/floppy_fish/0.obj'),
       // texture: require('../assets/models/characters/floppy_fish/0.png'),
     },
-    // android_robot: {
-    //   model: require('../assets/models/characters/android_robot/0.obj'),
-    //   texture: require('../assets/models/characters/android_robot/0.png'),
-    // },
+    android_robot: {
+      model: require('../assets/models/characters/android_robot/0.obj'),
+      texture: require('../assets/models/characters/android_robot/0.png'),
+    },
     // big_fat_pig: {
     // },
     // poopy_pigeon: {
@@ -266,14 +266,14 @@ export default {
     //   model: require('../assets/models/characters/pew_die_pug/0.obj'),
     //   texture: require('../assets/models/characters/pew_die_pug/0.png'),
     // },
-    // penguin: {
-    //   model: require('../assets/models/characters/penguin/0.obj'),
-    //   texture: require('../assets/models/characters/penguin/0.png'),
-    // },
-    // mallard: {
-    //   model: require('../assets/models/characters/mallard/0.obj'),
-    //   texture: require('../assets/models/characters/mallard/0.png'),
-    // },
+    penguin: {
+      model: require('../assets/models/characters/penguin/0.obj'),
+      texture: require('../assets/models/characters/penguin/0.png'),
+    },
+    mallard: {
+      model: require('../assets/models/characters/mallard/0.obj'),
+      texture: require('../assets/models/characters/mallard/0.png'),
+    },
     // vampire: {
     //   model: require('../assets/models/characters/vampire/0.obj'),
     //   texture: require('../assets/models/characters/vampire/0.png'),

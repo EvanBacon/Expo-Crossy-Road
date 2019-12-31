@@ -4,11 +4,11 @@ export default {
     name: 'Chicken',
     id: 'chicken',
   },
-  // android_robot: {
-  //   index: 1,
-  //   name: "Android",
-  //   id: "android_robot"
-  // },
+  android_robot: {
+    index: 1,
+    name: "Android",
+    id: "android_robot"
+  },
   // big_fat_pig: {
   //   index: 2,
   //   name: "Big Fat Pig",
@@ -64,16 +64,16 @@ export default {
   //   name: "Vampire",
   //   id: "vampire"
   // },
-  // mallard: {
-  //   index: 13,
-  //   name: "Mallard",
-  //   id: "mallard"
-  // },
-  // penguin: {
-  //   index: 14,
-  //   name: "Penguin",
-  //   id: "penguin"
-  // },
+  mallard: {
+    index: 13,
+    name: "Mallard",
+    id: "mallard"
+  },
+  penguin: {
+    index: 14,
+    name: "Penguin",
+    id: "penguin"
+  },
   // pew_die_pug: {
   //   index: 15,
   //   name: "Pew Die Pug",
