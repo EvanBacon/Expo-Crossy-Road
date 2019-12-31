@@ -6,7 +6,7 @@ export default class Grass extends Generic {
       environment: { tree },
     } = this.globalModels;
     for (let i = 0; i < 4; i++) {
-      this.models[`${i}`] = await this._download({
+      await this._register(`${i}`, {
         ...tree[`${i}`],
         castShadow: true,
         receiveShadow: false,

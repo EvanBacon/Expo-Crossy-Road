@@ -46,7 +46,8 @@ export default class Generic {
 
   getRandom = () => {
     let keys = Object.keys(this.models);
-    return this.models[keys[(keys.length * Math.random()) << 0]].clone();
+    const key = keys[(keys.length * Math.random()) << 0];
+    return this.models[key].clone();
   };
 
   getNode(key = '0') {
@@ -66,6 +67,10 @@ export default class Generic {
   _download = async props => {
     return await this._downloadAssets(props);
   };
+  
+  _register = async (key, props) => {
+    return this.models[key] = await this._download(props)
+  }
 
   setup = async () => { };
 }

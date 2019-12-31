@@ -9,7 +9,7 @@ export default class Hero extends Generic {
       if (id in Characters) {
         let character = Characters[id];
         const { model, texture } = characters[character.id];
-        this.models[character.id] = await this._download({
+        await this._register(character.id, {
           model,
           texture,
           receiveShadow: true,
