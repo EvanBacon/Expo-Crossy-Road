@@ -52,7 +52,7 @@ function Screen(props) {
       {
         translateY: animation.interpolate({
           inputRange: [0, 1],
-          outputRange: [-100, 0],
+          outputRange: [-200, 0],
         }),
       },
     ],

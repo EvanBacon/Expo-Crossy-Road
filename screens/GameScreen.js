@@ -7,7 +7,7 @@ import {
   Vibration,
   View,
 } from 'react-native';
-
+import useAppState from '../src/hooks/useAppState'
 import GestureRecognizer, { swipeDirections } from '../components/GestureView';
 import Score from '../components/ScoreText';
 import Engine from '../src/GameEngine';
@@ -210,7 +210,7 @@ class Game extends Component {
   }
 
   render() {
-    const { isDarkMode } = this.props;
+    const { isDarkMode, isPaused } = this.props;
     return (
       <View
         pointerEvents="box-none"
@@ -234,6 +234,8 @@ class Game extends Component {
         {this.renderHomeScreen()}
 
         {this.state.showSettings && this.renderSettingsScreen()}
+
+        {isPaused && <View style={[StyleSheet.absoluteFill, { backgroundColor: 'rgba(105, 201, 230, 0.8)', justifyContent: 'center', alignItems: 'center'}]}/>}
       </View>
     );
   }
@@ -268,8 +270,9 @@ import { useColorScheme } from 'react-native-appearance'
 
 function GameScreen(props) {
   const scheme = useColorScheme();
+  const appState = useAppState();
 
-
-  return <Game {...props} isDarkMode={scheme === 'dark'} />
+  console.log('fappState', appState)
+  return <Game {...props} isPaused={appState !== 'active'} isDarkMode={scheme === 'dark'} />
 }
 export default GameScreen;
