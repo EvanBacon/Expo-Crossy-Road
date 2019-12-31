@@ -40,7 +40,7 @@ This is strictly for educational purposes only. If you plan on using this projec
 
 ## Stack:
 
-- [Expo](http://expo.io)
+- [Expo](http://expo.io) (ios, android, web)
 - [THREE.js](https://threejs.org/)
 - [GSAP](https://greensock.com/)
 
