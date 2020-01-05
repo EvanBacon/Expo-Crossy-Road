@@ -30,7 +30,7 @@
 
 **[Try it in the browser!](https://crossyroad.netlify.com)**
 
-This is strictly for educational purposes only. If you plan on using this project be sure to use all of your own assets. I recommend using Magica Voxel. The Bacon, Ide, Brent, and Nikki models are not in the original game Crossy Road, so feel free to use those.
+This is **strictly** for educational purposes only. If you plan on using this project be sure to use all of your own assets. I recommend using Magica Voxel. The Bacon, Ide, Brent, and Nikki models are not in the original game Crossy Road, so feel free to use those.
 
 <!-- Expo: https://exp.host/@bacon/crossy-road -->
 
