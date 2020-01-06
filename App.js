@@ -8,7 +8,7 @@ import AppNavigator from './screens/GameScreen';
 import AudioManager from './src/AudioManager';
 import ModelLoader from './src/ModelLoader';
 
-// require('three/examples/js/controls/OrbitControls');
+/// require('three/examples/js/controls/OrbitControls');
 
 console.ignoredYellowBox = [
   'WebGL',
