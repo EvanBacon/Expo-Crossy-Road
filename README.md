@@ -41,8 +41,8 @@ This is **strictly** for educational purposes only. If you plan on using this pr
 ## Stack:
 
 - [Expo](http://expo.io) (ios, android, web)
-- [THREE.js](https://threejs.org/)
-- [GSAP](https://greensock.com/)
+- [THREE.js](https://threejs.org/) for rendering
+- [GSAP](https://greensock.com/) for animating
 
 ## Disclaimer
 
