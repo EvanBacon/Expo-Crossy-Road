@@ -7,12 +7,14 @@
   "private": false,
   "scripts": {
     "serve": "npx serve ./web-build",
+    "build:web": "expo build:web",
     "start:web": "expo start:web",
     "deploy:web": "netlify deploy --prod --dir web-build"
   },
   "devDependencies": {
     "@expo/webpack-config": "^0.10.4",
-    "babel-preset-expo": "^7.1.0"
+    "babel-preset-expo": "^7.1.0",
+    "expo-cli": "^3.11.3"
   },
   "dependencies": {
     "@rematch/core": "^1.0.6",
