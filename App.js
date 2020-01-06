@@ -2,6 +2,7 @@ import { loadAsync } from 'expo-font';
 import React from 'react';
 import { Image, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { AppearanceProvider } from 'react-native-appearance';
 
 import AppNavigator from './screens/GameScreen';
 import AudioManager from './src/AudioManager';
@@ -18,7 +19,7 @@ console.ignoredYellowBox = [
 const DEBUG_DONT_LOAD_ASSETS = false;
 
 export default function App() {
-  return (<SafeAreaProvider><AppLoading /></SafeAreaProvider>)
+  return (<AppearanceProvider><SafeAreaProvider><AppLoading /></SafeAreaProvider></AppearanceProvider>)
 }
 
 function AppLoading() {
