@@ -1,7 +1,6 @@
 {
   "expo": {
     "name": "Crossy Road",
-    "description": "The endless arcade hopper you'll never want to put down",
     "slug": "crossy-road",
     "privacy": "public",
     "orientation": "portrait",
@@ -14,7 +13,7 @@
       "backgroundColor": "#69CEED"
     },
     "packagerOpts": {
-      "assetExts": ["ttf", "mp4", "mp3", "obj", "wav", "mtl"]
+      "assetExts": ["ttf", "mp4", "mp3", "obj", "wav"]
     },
     "ios": {
       "icon": "./assets/icons/app.png",
@@ -27,9 +26,6 @@
       "icon": "./assets/icons/app.png",
       "package": "com.yodo1.crossyroad",
       "versionCode": 1
-    },
-    "web": {
-      "shortName": "Crossy"
     }
   }
 }
