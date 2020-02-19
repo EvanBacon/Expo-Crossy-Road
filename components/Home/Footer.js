@@ -42,18 +42,18 @@ export default function Footer(props) {
 
   return (
     <Animated.View style={[styles.container, props.style]}>
-      <Button
+      {false && <Button
         onPress={props.onCharacterSelect}
         imageStyle={imageStyle}
         source={Images.button.character}
-      />
+      />}
 
       <View style={{ flex: 1 }} />
 
       <View style={{ flexDirection: 'column-reverse' }}>
         <Button
           onPress={() => {
-            setState(!menuOpen);
+            setMenuOpen(!menuOpen);
           }}
           style={[{ opacity: menuOpen ? 0.8 : 1.0 }, imageStyle]}
           imageStyle={imageStyle}

@@ -103,7 +103,7 @@ function Screen(props) {
           <Footer
             style={{ height: 48, opacity: animation }}
             onCharacterSelect={() => {
-              props.navigation.navigate('CharacterSelect', {});
+              // TODO(Bacon): Create a character select page 
             }}
             onShop={() => { }}
             onMultiplayer={() => { }}

@@ -1,12 +1,7 @@
 import { GLView } from 'expo-gl';
 import React, { Component } from 'react';
-import {
-  Animated,
-  Dimensions,
-  StyleSheet,
-  Vibration,
-  View,
-} from 'react-native';
+import { Animated, Dimensions, StyleSheet, Vibration, View } from 'react-native';
+import { useColorScheme } from 'react-native-appearance';
 
 import GestureRecognizer, { swipeDirections } from '../components/GestureView';
 import Score from '../components/ScoreText';
@@ -263,13 +258,9 @@ const GestureView = ({ onStartGesture, onSwipe, ...props }) => {
   );
 };
 
-
-import { useColorScheme } from 'react-native-appearance'
-
 function GameScreen(props) {
   const scheme = useColorScheme();
-
-
   return <Game {...props} isDarkMode={scheme === 'dark'} />
 }
+
 export default GameScreen;

@@ -50,10 +50,3 @@ function Score({ gameOver, score, highScore, ...props }) {
 }
 
 export default Score;
-
-// export default connect(
-//   state => ({
-//     highScore: state.game.highScore,
-//   }),
-//   { setHighScore }
-// )(Score);

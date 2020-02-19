@@ -4,11 +4,9 @@ import { Image, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { AppearanceProvider } from 'react-native-appearance';
 
-import AppNavigator from './screens/GameScreen';
+import GameScreen from './screens/GameScreen';
 import AudioManager from './src/AudioManager';
 import ModelLoader from './src/ModelLoader';
-
-/// require('three/examples/js/controls/OrbitControls');
 
 console.ignoredYellowBox = [
   'WebGL',
@@ -61,7 +59,7 @@ function AppLoading() {
     );
   }
   if (appIsReady) {
-    return <AppNavigator />;
+    return <GameScreen />;
   }
 
   return (<SplashScreen />);
