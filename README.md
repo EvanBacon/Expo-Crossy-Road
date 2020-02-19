@@ -5,11 +5,11 @@
 <p align="center"> 
   <a aria-label="Expo Crossy Road is free to use" href="/LICENSE" target="_blank">
     <img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-success.svg?style=flat-square&color=33CC12" target="_blank" />
-
   </a>
-<a aria-label="instagram" href="https://www.instagram.com/baconbrix/" target="_blank">
+
+  <a aria-label="instagram" href="https://www.instagram.com/baconbrix/" target="_blank">
     <img alt="Follow @baconbrix" src="https://img.shields.io/twitter/follow/baconbrix.svg?style=flat-square&label=Follow%20%40baconbrix&logo=INSTAGRAM&logoColor=FFFFFF&labelColor=000&logoWidth=15&color=lightgray" />
-</a>  
+  </a>
 </p>
 
 <p align="center">
