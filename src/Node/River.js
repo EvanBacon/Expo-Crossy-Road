@@ -5,8 +5,7 @@ export default class River extends Generic {
     const {
       environment: { river },
     } = this.globalModels;
-    let model = await this._download({ ...river, castShadow: false, receiveShadow: true });
-    this.models[`${0}`] = model;
-    return model;
+    await this._register(`0`, { ...river, castShadow: false, receiveShadow: true });
+    return this.models;
   };
 }
