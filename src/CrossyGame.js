@@ -11,8 +11,9 @@ import Rows from './Row';
 import { Fill } from './Row/Grass';
 
 export class CrossyScene extends Scene {
-  constructor({ hideShadows }) {
+  constructor({ hideShadows, gl }) {
     super();
+    this.__gl = gl
 
     this.worldWithCamera = new Group();
     this.world = new CrossyWorld();
@@ -122,6 +123,7 @@ export class CrossyWorld extends Group {
 export class CrossyRenderer extends Renderer {
   constructor(props) {
     super(props);
+    this.__gl = props.gl;
     this.gammaInput = true;
     this.gammaOutput = true;
     this.shadowMap.enabled = true;
