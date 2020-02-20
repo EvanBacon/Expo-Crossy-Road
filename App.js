@@ -3,6 +3,7 @@ import React from 'react';
 import { Image, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { AppearanceProvider } from 'react-native-appearance';
+import GameProvider from './context/GameProvider';
 
 import GameScreen from './screens/GameScreen';
 import AudioManager from './src/AudioManager';
@@ -17,7 +18,7 @@ console.ignoredYellowBox = [
 const DEBUG_DONT_LOAD_ASSETS = false;
 
 export default function App() {
-  return (<AppearanceProvider><SafeAreaProvider><AppLoading /></SafeAreaProvider></AppearanceProvider>)
+  return (<AppearanceProvider><SafeAreaProvider><GameProvider><AppLoading /></GameProvider></SafeAreaProvider></AppearanceProvider>)
 }
 
 function AppLoading() {
