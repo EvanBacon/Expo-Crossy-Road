@@ -2,6 +2,7 @@ import { GLView } from 'expo-gl';
 import React, { Component } from 'react';
 import { Animated, Dimensions, StyleSheet, Vibration, View } from 'react-native';
 import { useColorScheme } from 'react-native-appearance';
+import useAppState from '../src/hooks/useAppState'
 
 import GestureRecognizer, { swipeDirections } from '../components/GestureView';
 import Score from '../components/ScoreText';
@@ -29,6 +30,9 @@ class Game extends Component {
   componentWillReceiveProps(nextProps, nextState) {
     if (nextState.gameState !== this.state.gameState) {
       this.updateWithGameState(nextState.gameState, this.state.gameState);
+    }
+    if (nextProps.isPaused != this.props.isPaused) {
+      this.setState({ gameState: nextProps.isPaused ? State.Game.paused : State.Game.playing })
     }
     // if (nextProps.character.id !== this.props.character.id) {
     //   (async () => {
@@ -71,7 +75,9 @@ class Game extends Component {
     const { playing, gameOver, paused, none } = State.Game;
     switch (gameState) {
       case playing:
-        if (lastState !== none) {
+        if (lastState === paused) {
+          this.engine.unpause();
+        } else if (lastState !== none) {
           this.transitionToGamePlayingState();
         } else {
           // Coming straight from the menu.
@@ -83,6 +89,7 @@ class Game extends Component {
       case gameOver:
         break;
       case paused:
+        this.engine.pause();
         break;
       case none:
         this.newScore();
@@ -92,6 +99,10 @@ class Game extends Component {
         break;
     }
   };
+
+  componentWillUnmount() {
+    cancelAnimationFrame(this.engine.raf);
+  }
 
   async componentDidMount() {
     // AudioManager.sounds.bg_music.setVolumeAsync(0.05);
@@ -205,7 +216,8 @@ class Game extends Component {
   }
 
   render() {
-    const { isDarkMode } = this.props;
+    const { isDarkMode, isPaused } = this.props;
+
     return (
       <View
         pointerEvents="box-none"
@@ -229,6 +241,8 @@ class Game extends Component {
         {this.renderHomeScreen()}
 
         {this.state.showSettings && this.renderSettingsScreen()}
+
+        {isPaused && <View style={[StyleSheet.absoluteFill, { backgroundColor: 'rgba(105, 201, 230, 0.8)', justifyContent: 'center', alignItems: 'center'}]}/>}
       </View>
     );
   }
@@ -260,7 +274,9 @@ const GestureView = ({ onStartGesture, onSwipe, ...props }) => {
 
 function GameScreen(props) {
   const scheme = useColorScheme();
-  return <Game {...props} isDarkMode={scheme === 'dark'} />
+  const appState = useAppState();
+
+  return <Game {...props} isPaused={appState !== 'active'} isDarkMode={scheme === 'dark'} />
 }
 
 export default GameScreen;
