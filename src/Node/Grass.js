@@ -7,12 +7,11 @@ export default class Grass extends Generic {
     } = this.globalModels;
 
     for (let i = 0; i < 2; i++) {
-      const model = await this._download({
+      await this._register(`${i}`, {
         ...grass[`${i}`],
         castShadow: false,
         receiveShadow: true,
       });
-      this.models[`${i}`] = model;
     }
     return this.models;
   };
