@@ -162,6 +162,23 @@ export default class Engine {
     }
   };
 
+  pause() {
+    cancelAnimationFrame(this.raf);
+  }
+
+  unpause() {
+    const render = () => {
+      this.raf = requestAnimationFrame(render);
+      const time = Date.now();
+      this.tick(time);
+      this.renderer.render(this.scene, this.camera);
+
+      // NOTE: At the end of each frame, notify `Expo.GLView` with the below
+      this.renderer.__gl.endFrameEXP();
+    };
+    render();
+  }
+
   updateScore = () => {
     const position = Math.max(Math.floor(this._hero.position.z) - 8, 0);
     this.onUpdateScore(position);
@@ -359,15 +376,6 @@ export default class Engine {
       clearColor: sceneColor,
     });
 
-    const render = () => {
-      requestAnimationFrame(render);
-      const time = Date.now();
-      this.tick(time);
-      this.renderer.render(this.scene, this.camera);
-
-      // NOTE: At the end of each frame, notify `Expo.GLView` with the below
-      gl.endFrameEXP();
-    };
-    render();
+    this.unpause();
   };
 }
