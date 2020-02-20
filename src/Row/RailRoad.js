@@ -1,5 +1,5 @@
 import { TweenMax } from 'gsap';
-import { Object3D, Box3 } from 'three';
+import { Object3D, Box3, SpotLight, SpotLightHelper } from 'three';
 
 import AudioManager from '../../src/AudioManager';
 import ModelLoader from '../../src/ModelLoader';
@@ -54,6 +54,18 @@ export default class RailRoad extends Object3D {
   setupLight = light => {
     light.position.z = -0.5;
     light.rotation.y = Math.PI;
+    // Make train light shine a little red light down
+    // const spotLight = new SpotLight( 0xff0000 );
+    // // spotLight.rotation.x = Math.PI;
+    // spotLight.distance = 1;
+    // spotLight.position.z = -0.5;
+    // spotLight.target.position.z = -1;
+    // spotLight.castShadow = false;
+    // const spotLightHelper = new SpotLightHelper( spotLight );
+
+    // this.railRoad.add( spotLightHelper );
+    // this.railRoad.add( spotLight );
+    // this.railRoad.add( spotLight.target );
 
     this.railRoad.add(light);
   };
