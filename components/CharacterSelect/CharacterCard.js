@@ -103,7 +103,6 @@ export default class CharacterCard extends Component {
     });
 
     this.unpause();
-
   };
 
 
