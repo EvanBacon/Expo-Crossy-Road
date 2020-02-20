@@ -11,7 +11,7 @@ export default class Road extends Generic {
     } = this.globalModels;
 
     for (let i = 0; i < 2; i++) {
-      this.models[`${i}`] = await this._download({
+      await this._register(`${i}`, {
         ...road[`${i}`],
         castShadow: false,
         receiveShadow: true,
