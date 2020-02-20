@@ -5,8 +5,7 @@ export default class RailRoad extends Generic {
     const {
       environment: { railroad },
     } = this.globalModels;
-    const model = await this._download({ ...railroad, castShadow: false, receiveShadow: true });
-    this.models[`${0}`] = model;
+    await this._register(`0`, { ...railroad, castShadow: false, receiveShadow: true });
     return this.models;
   };
 }
