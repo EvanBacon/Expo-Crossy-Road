@@ -51,7 +51,7 @@ export default function Footer({ style, showSettings, setGameState, navigation }
       />}
       <Button
         onPress={() => {
-          setGameState(State.Game.playing);
+          setGameState(State.Game.none);
         }}
         imageStyle={[styles.button, { marginLeft: canShare ? 4 : 0, aspectRatio: 1.9 }]}
         source={Images.button.long_play}
