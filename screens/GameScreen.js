@@ -13,7 +13,6 @@ import HomeScreen from './HomeScreen';
 import SettingsScreen from './SettingsScreen';
 
 const DEBUG_CAMERA_CONTROLS = false;
-
 class Game extends Component {
   /// Reserve State for UI related updates...
   state = {
@@ -31,9 +30,9 @@ class Game extends Component {
     if (nextState.gameState !== this.state.gameState) {
       this.updateWithGameState(nextState.gameState, this.state.gameState);
     }
-    if (nextProps.isPaused != this.props.isPaused) {
-      this.setState({ gameState: nextProps.isPaused ? State.Game.paused : State.Game.playing })
-    }
+    // if ((this.state.gameState === State.Game.playing || this.state.gameState === State.Game.paused) && nextProps.isPaused !== this.props.isPaused) {
+    //   this.setState({ gameState: nextProps.isPaused ? State.Game.paused : State.Game.playing })
+    // }
     // if (nextProps.character.id !== this.props.character.id) {
     //   (async () => {
     //     this.world.remove(this._hero);
@@ -64,7 +63,9 @@ class Game extends Component {
     }).start();
   };
 
-  updateWithGameState = (gameState, previousGameState) => {
+  updateWithGameState = (gameState) => {
+    console.log('updateWithGameState:  ', gameState, this.state.gameState)
+
     if (gameState === this.state.gameState) {
       return;
     }
@@ -92,6 +93,9 @@ class Game extends Component {
         this.engine.pause();
         break;
       case none:
+        if (lastState === gameOver) {
+          this.transitionToGamePlayingState();
+        } 
         this.newScore();
 
         break;
@@ -274,9 +278,9 @@ const GestureView = ({ onStartGesture, onSwipe, ...props }) => {
 
 function GameScreen(props) {
   const scheme = useColorScheme();
-  const appState = useAppState();
+  // const appState = useAppState();
 
-  return <Game {...props} isPaused={appState !== 'active'} isDarkMode={scheme === 'dark'} />
+  return <Game {...props}  isDarkMode={scheme === 'dark'} />
 }
 
 export default GameScreen;
