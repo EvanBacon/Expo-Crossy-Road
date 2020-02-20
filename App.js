@@ -5,7 +5,8 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { AppearanceProvider } from 'react-native-appearance';
 
 import CharacterSelectScreen from './screens/CharacterSelectScreen';
-import GameScreen from './screens/GameScreen';
+import GameScreen from './screens/CharacterSelectScreen';
+// import GameScreen from './screens/GameScreen';
 import AudioManager from './src/AudioManager';
 import ModelLoader from './src/ModelLoader';
 

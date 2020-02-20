@@ -77,9 +77,9 @@ export default class Carousel extends Component {
 
     return (
       <View style={{ flex: 1 }}>
-        <AnimatedText style={styles.text}>{character || '???'}</AnimatedText>
+        <AnimatedText style={styles.text}>{character || 'null l0l'}</AnimatedText>
         <ViewPager
-        ref={ref => (this.viewPager = ref)}
+          ref={ref => (this.viewPager = ref)}
 
           style={styles.container}
           horizontal
