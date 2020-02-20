@@ -1,11 +1,12 @@
-import { loadObjAsync, THREE } from 'expo-three';
+import { loadObjAsync } from 'expo-three';
+import { Mesh, Box3 } from 'three';
 
 import Models from '../../src/Models';
 import CrossyMaterial from '../CrossyMaterial';
 
 function setShadows(mesh, { castShadow, receiveShadow }) {
   mesh.traverse(child => {
-    if (child instanceof THREE.Mesh) {
+    if (child instanceof Mesh) {
       child.castShadow = castShadow;
       child.receiveShadow = receiveShadow;
     }
@@ -20,12 +21,12 @@ export default class Generic {
   globalModels = Models;
 
   getSize = mesh => {
-    let box = new THREE.Box3().setFromObject(mesh);
+    let box = new Box3().setFromObject(mesh);
     // console.log( box.min, box.max, box.size() );
     return box.size();
   };
   getWidth = mesh => {
-    let box = new THREE.Box3().setFromObject(mesh);
+    let box = new Box3().setFromObject(mesh);
     // console.log( box.min, box.max, box.size() );
     return box.size().width;
   };
@@ -35,7 +36,7 @@ export default class Generic {
     const _model = await loadObjAsync({ asset: model });
 
     _model.traverse(child => {
-      if (child instanceof THREE.Mesh) {
+      if (child instanceof Mesh) {
         child.material = material;
       }
     });
