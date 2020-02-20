@@ -40,25 +40,18 @@ export default class Train extends Generic {
       vehicles: { train },
     } = this.globalModels;
 
-    const front = await this._download({
+    await this._register('front', {
       ...train[`front`],
       receiveShadow: true,
       castShadow: true,
     });
-    const middle = await this._download({
+    await this._register('middle', {
       ...train[`middle`],
       receiveShadow: true,
       castShadow: true,
     });
-    const back = await this._download({ ...train[`back`], receiveShadow: true, castShadow: true });
+    await this._register('back', { ...train[`back`], receiveShadow: true, castShadow: true });
 
-    // await Promise.all([
-    //   front,
-    //   middle,
-    //   back
-    // ]);
-
-    this.models = { front, middle, back };
     return this.models;
   };
 }
