@@ -14,14 +14,26 @@ import { useSafeArea } from 'react-native-safe-area-context';
 import Hand from '../components/HandCTA';
 import Footer from '../components/Home/Footer';
 
-// import { connect } from 'react-redux';
-// import { setGameState } from '../actions/game';
-
 let hasShownTitle = false;
 
 function Screen(props) {
 
   const animation = new Animated.Value(0);
+
+  React.useEffect(() => {
+    function onKeyUp({ keyCode }) {
+      // Space
+      if (keyCode === 32) {
+        props.onPlay();
+      }
+    };
+    
+    window.addEventListener('keyup', onKeyUp, false);
+    return () => {
+      window.removeEventListener('keyup', onKeyUp);
+    }
+  }, []);
+
 
   React.useEffect(() => {
     if (!hasShownTitle) {
@@ -101,7 +113,7 @@ function Screen(props) {
             <Hand style={{ width: 36 }} />
           </View>
           <Footer
-            style={{ height: 48, opacity: animation }}
+            style={{ height: 48 }}
             onCharacterSelect={() => {
               // TODO(Bacon): Create a character select page 
             }}
@@ -113,14 +125,7 @@ function Screen(props) {
       </TouchableOpacity>
     </View>
   );
-
 }
-// export default connect(
-//   state => ({
-//     coins: state.game.coins,
-//   }),
-//   { setGameState }
-// )(Screen);
 
 export default Screen;
 
