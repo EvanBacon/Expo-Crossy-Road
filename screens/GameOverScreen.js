@@ -20,7 +20,7 @@ const banner = [
       onPress: _ => {
         Alert.alert(
           'Subscribe to our mailing list',
-          'Join our mailing list and discover the latest news from Hipster Whale and Crossy Road.\n\n Read our privacy policy on crossyroad.com/privacy',
+          'Join our mailing list and discover the latest news from Expo and Evan Bacon.\n\n Read our privacy policy on https://github.com/EvanBacon/Expo-Crossy-Road/privacy.md',
           [
             { text: 'Cancel', onPress: () => console.log('Cancel Pressed!') },
             { text: 'OK', onPress: () => console.log('OK Pressed!') },

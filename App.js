@@ -79,13 +79,13 @@ const ErrorScreen = ({ message, stack }) => (
 const SplashScreen = () => (
   <Image
     style={styles.splash}
-    source={require('./assets/icons/loading.png')}
+    source={require('./assets/icons/app.png')}
   />
 )
 
 const styles = StyleSheet.create({
   splash: {
-    backgroundColor: '#69CEED', flex: 1, resizeMode: 'cover'
+    backgroundColor: '#87C6FF', flex: 1, resizeMode: 'cover'
   },
   errorContainer: {
     ...StyleSheet.absoluteFillObject,

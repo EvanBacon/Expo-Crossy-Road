@@ -1,16 +1,15 @@
 {
   "expo": {
-    "name": "Crossy Road",
-    "slug": "crossy-road",
+    "name": "Bouncy Bacon",
+    "slug": "bouncy-bacon",
     "privacy": "public",
     "orientation": "portrait",
-    "primaryColor": "#69CEED",
+    "primaryColor": "#87C6FF",
     "icon": "./assets/icons/app.png",
-    "platforms": ["android", "ios", "web"],
     "splash": {
-      "image": "./assets/icons/loading.png",
+      "image": "./assets/icons/app.png",
       "resizeMode": "cover",
-      "backgroundColor": "#69CEED"
+      "backgroundColor": "#87C6FF"
     },
     "packagerOpts": {
       "assetExts": ["ttf", "mp4", "mp3", "obj", "wav"]
@@ -18,13 +17,10 @@
     "ios": {
       "icon": "./assets/icons/app.png",
       "supportsTablet": true,
-      "bundleIdentifier": "com.hipsterwhale.crossy",
-      "buildNumber": "0.0.0",
-      "appStoreUrl": "https://itunes.apple.com/us/app/crossy-road/id924373886?mt=8"
+      "buildNumber": "0.0.0"
     },
     "android": {
       "icon": "./assets/icons/app.png",
-      "package": "com.yodo1.crossyroad",
       "versionCode": 1
     }
   }
