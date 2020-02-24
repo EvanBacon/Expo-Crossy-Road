@@ -8,7 +8,7 @@ import GameContext from './GameContext';
 const STORAGE_KEY = '@BouncyBacon:Character';
 const SHOULD_REHYDRATE = true;
 
-const defaultState = { character: 'chicken', highscore: 0 };
+const defaultState = { character: 'bacon', highscore: 0 };
 
 async function cacheAsync(value) {
     await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(value));
