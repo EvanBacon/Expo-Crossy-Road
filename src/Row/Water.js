@@ -147,6 +147,11 @@ export default class Water extends Object3D {
     foam.visible = true;
     foam.run();
     this.add(foam);
+    const foamRight = new Foam(-1);
+    foamRight.position.set(-4.5, 0.2, -0.5);
+    foamRight.visible = true;
+    foamRight.run();
+    this.add(foamRight);
   }
 
   ///Is Lily

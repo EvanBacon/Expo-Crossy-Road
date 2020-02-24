@@ -69,7 +69,6 @@ class Game extends Component {
 
   updateWithGameState = (gameState) => {
     if (!gameState) throw new Error('gameState cannot be undefined')
-    console.log('updateWithGameState:  ', gameState, this.state.gameState)
 
     if (gameState === this.state.gameState) {
       return;
