@@ -14,8 +14,8 @@ function Screen(props) {
 
   React.useEffect(() => {
     function onKeyUp({ keyCode }) {
-      // Space
-      if (keyCode === 32) {
+      // Space, up-arrow
+      if ([32, 38].includes(keyCode)) {
         props.onPlay();
       }
     };
