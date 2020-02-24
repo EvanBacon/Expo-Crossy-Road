@@ -1,5 +1,5 @@
 import { Group } from 'three';
-
+import { utils } from 'expo-three';
 import { BASE_ANIMATION_TIME, groundLevel, IDLE_DURING_GAME_PLAY, PLAYER_IDLE_SCALE, startingRow } from './GameSettings';
 import ModelLoader from '../src/ModelLoader';
 
@@ -83,6 +83,9 @@ export default class CrossyPlayer extends Group {
     if (this.node) {
       this.remove(this.node);
     }
+
+    utils.scaleLongestSideToSize(node, 1);
+    utils.alignMesh(node, { x: 0.5, z: 0.5, y: 1.0})
     this.node = node;
     this.add(node);
   }
