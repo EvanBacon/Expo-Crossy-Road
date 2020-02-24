@@ -14,7 +14,7 @@ import Images from '../src/Images';
 //TODO: Make this dynamic
 const banner = [
   {
-    color: '#f6c62b',
+    color: '#3640eb',
     title: 'Get Updates Subscribe Now',
     button: {
       onPress: _ => {
@@ -35,11 +35,11 @@ const banner = [
     },
   },
   {
-    color: '#f8602c',
+    color: '#368FEB',
     title: 'Free Gift in 2h 51m',
   },
   {
-    color: '#d73a32',
+    color: '#36D6EB',
     title: '44 Coins To Go',
   },
 ];
