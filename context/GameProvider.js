@@ -8,13 +8,13 @@ import GameContext from './GameContext';
 const STORAGE_KEY = '@BouncyBacon:Character';
 const SHOULD_REHYDRATE = true;
 
-const defaultState = { character: 'chicken' };
+const defaultState = { character: 'chicken', highscore: 0 };
 
 async function cacheAsync(value) {
     await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(value));
 }
 
-async function rehydrateModules() {
+async function rehydrateAsync() {
     if (!SHOULD_REHYDRATE || !AsyncStorage) {
         return defaultState;
     }
@@ -32,12 +32,16 @@ export default function GameProvider({ children }) {
     const [character, setCharacter] = React.useState(
         defaultState.character
     );
+    const [highscore, setHighscore] = React.useState(
+        defaultState.highscore
+    );
 
     React.useEffect(() => {
         const parseModulesAsync = async () => {
             try {
-                const { character } = await rehydrateModules();
+                const { character, highscore } = await rehydrateAsync();
                 setCharacter(character);
+                setHighscore(highscore);
             } catch (ignored) { }
             //   setLoaded(true);
         };
@@ -51,7 +55,12 @@ export default function GameProvider({ children }) {
                 character,
                 setCharacter: character => {
                     setCharacter(character);
-                    cacheAsync({ character });
+                    cacheAsync({ character, highscore });
+                },
+                highscore,
+                setHighscore: highscore => {
+                    setHighscore(highscore);
+                    cacheAsync({ character, highscore });
                 },
             }}
         >
