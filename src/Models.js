@@ -150,9 +150,29 @@ export default {
       model: require('../assets/models/characters/brent/0.obj'),
       texture: require('../assets/models/characters/brent/0.png'),
     },
-    chicken: {
-      model: require('../assets/models/characters/chicken/0.obj'),
-      texture: require('../assets/models/characters/chicken/0.png'),
+    // chicken: {
+    //   model: require('../assets/models/characters/chicken/0.obj'),
+    //   texture: require('../assets/models/characters/chicken/0.png'),
+    // },
+    avocoder: {
+      model: require('../assets/models/characters/avocoder/avocoder.obj'),
+      texture: require('../assets/models/characters/avocoder/avocoder.png'),
+    },
+    bacon: {
+      model: require('../assets/models/characters/bacon/bacon.obj'),
+      texture: require('../assets/models/characters/bacon/bacon.png'),
+    },
+    wheeler: {
+      model: require('../assets/models/characters/wheeler/wheeler.obj'),
+      texture: require('../assets/models/characters/wheeler/wheeler.png'),
+    },
+    palmer: {
+      model: require('../assets/models/characters/palmer/palmer.obj'),
+      texture: require('../assets/models/characters/palmer/palmer.png'),
+    },
+    juwan: {
+      model: require('../assets/models/characters/juwan/juwan.obj'),
+      texture: require('../assets/models/characters/juwan/juwan.png'),
     },
   }
 }
