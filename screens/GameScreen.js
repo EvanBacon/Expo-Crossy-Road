@@ -11,6 +11,7 @@ import State from '../src/state';
 import GameOverScreen from './GameOverScreen';
 import HomeScreen from './HomeScreen';
 import SettingsScreen from './SettingsScreen';
+import GameContext from '../context/GameContext';
 
 const DEBUG_CAMERA_CONTROLS = false;
 class Game extends Component {
@@ -27,8 +28,11 @@ class Game extends Component {
   transitionScreensValue = new Animated.Value(1);
 
   componentWillReceiveProps(nextProps, nextState) {
-    if (nextState.gameState !== this.state.gameState) {
+    if (nextState.gameState && (nextState.gameState !== this.state.gameState)) {
       this.updateWithGameState(nextState.gameState, this.state.gameState);
+    }
+    if (this.engine && nextProps.character !== this.props.character) {
+      this.engine._hero.setCharacter(nextProps.character);
     }
     // if ((this.state.gameState === State.Game.playing || this.state.gameState === State.Game.paused) && nextProps.isPaused !== this.props.isPaused) {
     //   this.setState({ gameState: nextProps.isPaused ? State.Game.paused : State.Game.playing })
@@ -50,7 +54,7 @@ class Game extends Component {
       toValue: 0,
       duration: 200,
       onComplete: ({ finished }) => {
-        this.engine.setupGame();
+        this.engine.setupGame(this.props.character);
         this.engine.init();
 
         if (finished) {
@@ -64,6 +68,7 @@ class Game extends Component {
   };
 
   updateWithGameState = (gameState) => {
+    if (!gameState) throw new Error('gameState cannot be undefined')
     console.log('updateWithGameState:  ', gameState, this.state.gameState)
 
     if (gameState === this.state.gameState) {
@@ -127,7 +132,7 @@ class Game extends Component {
 
   componentWillMount() {
     this.engine = new Engine();
-    this.engine.hideShadows = this.hideShadows;
+    // this.engine.hideShadows = this.hideShadows;
     this.engine.onUpdateScore = position => {
       if (this.state.score < position) {
         this.setState({ score: position });
@@ -144,7 +149,7 @@ class Game extends Component {
       this.setState({ gameState: State.Game.gameOver });
       // this.props.navigation.navigate('GameOver')
     };
-    this.engine.setupGame();
+    this.engine.setupGame(this.props.character);
     this.engine.init();
   }
 
@@ -278,9 +283,11 @@ const GestureView = ({ onStartGesture, onSwipe, ...props }) => {
 
 function GameScreen(props) {
   const scheme = useColorScheme();
+  const { character } = React.useContext(GameContext)
+
   // const appState = useAppState();
 
-  return <Game {...props}  isDarkMode={scheme === 'dark'} />
+  return <Game {...props} character={character} isDarkMode={scheme === 'dark'} />
 }
 
 export default GameScreen;

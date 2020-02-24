@@ -1,6 +1,7 @@
 import { Group } from 'three';
 
 import { BASE_ANIMATION_TIME, groundLevel, IDLE_DURING_GAME_PLAY, PLAYER_IDLE_SCALE, startingRow } from './GameSettings';
+import ModelLoader from '../src/ModelLoader';
 
 const normalizeAngle = angle => {
   return Math.atan2(Math.sin(angle), Math.cos(angle));
@@ -72,10 +73,25 @@ class PlayerPositionAnimation extends TimelineMax {
 export default class CrossyPlayer extends Group {
   animations = [];
 
-  constructor(node) {
-    super();
-    this.add(node);
+  _character;
+
+  setCharacter(character) {
+    if (this._character === character) return;
+
+    this._character = character;
+    const node = ModelLoader._hero.getNode(character);
+    if (!node) throw new Error(`Failed to get node for character: ${character}`);
+    console.log('setCharacter', character, node);
+    if (this.node) {
+      this.remove(this.node);
+    }
     this.node = node;
+    this.add(node);
+  }
+
+  constructor(character) {
+    super();
+    this.setCharacter(character);
     this.reset();
   }
 

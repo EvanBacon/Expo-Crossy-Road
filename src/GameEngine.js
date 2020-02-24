@@ -29,8 +29,8 @@ export default class Engine {
     }
   };
 
-  setupGame = () => {
-    this.scene = new CrossyScene({ hideShadows: this.hideShadows });
+  setupGame = (character) => {
+    this.scene = new CrossyScene({ });
 
     this.camera = new CrossyCamera();
 
@@ -51,7 +51,7 @@ export default class Engine {
     this.camCount = 0;
 
     // Mesh
-    this._hero = new CrossyPlayer(ModelLoader._hero.getNode(initialState.id));
+    this._hero = new CrossyPlayer(character);
 
     this.scene.world.add(this._hero);
 
