@@ -77,11 +77,9 @@ export default class CrossyPlayer extends Group {
 
   setCharacter(character) {
     if (this._character === character) return;
-
     this._character = character;
     const node = ModelLoader._hero.getNode(character);
     if (!node) throw new Error(`Failed to get node for character: ${character}`);
-    console.log('setCharacter', character, node);
     if (this.node) {
       this.remove(this.node);
     }
