@@ -8,7 +8,7 @@
     "icon": "./assets/icons/app.png",
     "splash": {
       "image": "./assets/icons/loading.png",
-      "resizeMode": "cover",
+      "resizeMode": "contain",
       "backgroundColor": "#87C6FF"
     },
     "packagerOpts": {
