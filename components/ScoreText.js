@@ -16,7 +16,6 @@ export default function Score({ gameOver, score, ...props }) {
 
   React.useEffect(() => {
     if (gameOver) {
-      console.log('game over, ', score, highscore)
       if (score > highscore) {
         setHighscore(score);
       }
