@@ -1,23 +1,15 @@
 import React, { Component } from 'react';
-import {
-  Animated,
-  Dimensions,
-  Easing,
-  InteractionManager,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { Animated, Dimensions, Easing, InteractionManager, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useSafeArea } from 'react-native-safe-area-context';
 
 import Hand from '../components/HandCTA';
 import Footer from '../components/Home/Footer';
+import GameContext from '../context/GameContext';
 
 let hasShownTitle = false;
 
 function Screen(props) {
-
+  const { setCharacter, character } = React.useContext(GameContext)
   const animation = new Animated.Value(0);
 
   React.useEffect(() => {
@@ -110,7 +102,7 @@ function Screen(props) {
           <View
             style={{ height: 64, marginBottom: 48, alignItems: 'center' }}
           >
-            <Hand style={{ width: 36 }} />
+            {!__DEV__ && <Hand style={{ width: 36 }} />}
           </View>
           <Footer
             style={{ height: 48 }}
@@ -119,7 +111,8 @@ function Screen(props) {
             }}
             onShop={() => { }}
             onMultiplayer={() => { }}
-            onCamera={() => { }}
+            onCamera={() => { 
+            }}
           />
         </View>
       </TouchableOpacity>
