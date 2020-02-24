@@ -79,7 +79,7 @@ const ErrorScreen = ({ message, stack }) => (
 const SplashScreen = () => (
   <Image
     style={styles.splash}
-    source={require('./assets/icons/app.png')}
+    source={require('./assets/icons/loading.png')}
   />
 )
 
