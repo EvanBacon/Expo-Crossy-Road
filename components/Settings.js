@@ -209,10 +209,7 @@ class Settings extends Component {
   }
 }
 
-export default connect(
-  state => ({}),
-  {},
-)(Settings);
+export default Settings;
 
 Settings.defaultProps = {
   coins: 0,
