@@ -65,12 +65,12 @@ function Screen(props) {
   return (
     <View style={[styles.container, { paddingTop: top, paddingBottom: bottom, paddingLeft: left, paddingRight: right }]}>
       <TouchableOpacity
-        activeOpacity={0.9}
+        activeOpacity={1.0}
         style={[
           StyleSheet.absoluteFill,
           { justifyContent: 'center', alignItems: 'center' },
         ]}
-        onPress={() => {
+        onPressIn={() => {
           Animated.timing(animation, {
             toValue: 0,
             duration: 400,

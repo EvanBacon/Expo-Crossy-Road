@@ -1,6 +1,6 @@
 'use strict';
 import React, { Component } from 'react';
-import { PanResponder, View, StyleSheet } from 'react-native';
+import { PanResponder, View, StyleSheet, TouchableWithoutFeedback } from 'react-native';
 import { findDOMNode } from 'react-dom';
 
 const getElement = component => {
@@ -54,7 +54,9 @@ class GestureView extends Component {
     super(props, context);
     this.swipeConfig = Object.assign(swipeConfig, props.config);
     this._panResponder = PanResponder.create({
-      onResponderGrant: props.onResponderGrant,
+      onPanResponderStart: () => {
+        this.props.onResponderGrant()
+      },
       onStartShouldSetPanResponder: this._handleShouldSetPanResponder,
       onMoveShouldSetPanResponder: this._handleShouldSetPanResponder,
       onPanResponderRelease: this._handlePanResponderEnd,
@@ -68,7 +70,7 @@ class GestureView extends Component {
   }
   componentWillUnmount() {
     if (this.view) {
-      this.view.removeEventListener('touchstart', freezeBody, false);
+      this.view.removeEventListener('touchstart', this.touchStart, false);
       this.view.removeEventListener('touchmove', freezeBody, false);
     }
     window.removeEventListener('keydown', this.onKeyDown);
@@ -161,21 +163,27 @@ class GestureView extends Component {
     return isValidSwipe(vy, velocityThreshold, dx, directionalOffsetThreshold);
   };
 
+  touchStart = (evt) => {
+    console.log('touch start')
+    // evt.preventDefault();
+    this.props.onResponderGrant();
+  }
+
   render() {
-    const { style = {}, ...props } = this.props;
+    const { style, ...props } = this.props;
 
     return (
       <View
-        style={StyleSheet.flatten([{ flex: 1, cursor: 'pointer' }, style])}
+        style={[{ flex: 1, cursor: 'pointer' }, style]}
         tabIndex="0"
         ref={view => {
           const nextView = getElement(view);
           if (nextView && nextView.addEventListener) {
-            nextView.addEventListener('touchstart', freezeBody, false);
+            nextView.addEventListener('touchstart', this.touchStart, false);
             nextView.addEventListener('touchmove', freezeBody, false);
           }
           if (this.view && this.view.removeEventListener) {
-            this.view.removeEventListener('touchstart', freezeBody, false);
+            this.view.removeEventListener('touchstart', this.touchStart, false);
             this.view.removeEventListener('touchmove', freezeBody, false);
           }
           this.view = nextView;

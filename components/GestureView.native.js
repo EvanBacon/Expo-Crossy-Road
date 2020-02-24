@@ -30,7 +30,7 @@ class GestureView extends Component {
     super(props, context);
     this.swipeConfig = Object.assign(swipeConfig, props.config);
     this._panResponder = PanResponder.create({
-      onResponderGrant: props.onResponderGrant,
+      onResponderGrant: () => this.props.onResponderGrant(),
       onStartShouldSetPanResponder: this._handleShouldSetPanResponder,
       onMoveShouldSetPanResponder: this._handleShouldSetPanResponder,
       onPanResponderRelease: this._handlePanResponderEnd,
