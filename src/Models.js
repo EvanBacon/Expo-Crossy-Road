@@ -146,10 +146,10 @@ export default {
     },
   },
   characters: {
-    // brent: {
-    //   model: require('../assets/models/characters/brent/0.obj'),
-    //   texture: require('../assets/models/characters/brent/0.png'),
-    // },
+    brent: {
+      model: require('../assets/models/characters/brent/0.obj'),
+      texture: require('../assets/models/characters/brent/0.png'),
+    },
     chicken: {
       model: require('../assets/models/characters/chicken/0.obj'),
       texture: require('../assets/models/characters/chicken/0.png'),

@@ -4,9 +4,9 @@ export default {
     name: 'Chicken',
     id: 'chicken',
   },
-  // brent: {
-  //   index: 1,
-  //   name: "Brent",
-  //   id: "brent"
-  // },
+  brent: {
+    index: 1,
+    name: "Brent",
+    id: "brent"
+  },
 };
