@@ -10,8 +10,12 @@ import Water from './Particles/Water';
 import Rows from './Row';
 import { Fill } from './Row/Grass';
 
+// TODO Add to state - disable/enable when battery is low
+const useParticles = true;
+const useShadows = true;
+
 export class CrossyScene extends Scene {
-  constructor({ hideShadows, gl }) {
+  constructor({ gl }) {
     super();
     this.__gl = gl
 
@@ -22,7 +26,7 @@ export class CrossyScene extends Scene {
 
     const light = new DirectionalLight(0xdfebff, 1.75);
     light.position.set(20, 30, 0.05);
-    light.castShadow = !hideShadows;
+    light.castShadow = useShadows;
     light.shadow.mapSize.width = 1024 * 2;
     light.shadow.mapSize.height = 1024 * 2;
 
@@ -43,7 +47,12 @@ export class CrossyScene extends Scene {
     // this.add(helper);
   }
 
+  setShadowsEnabled(enabled) {
+    this.light.castShadow = enabled;
+  }
+
   resetParticles = position => {
+    if (!useParticles) return;
     this.featherParticles.mesh.position.copy(position);
     this.waterParticles.mesh.position.copy(position);
     this.featherParticles.mesh.position.y = 0;
@@ -51,6 +60,7 @@ export class CrossyScene extends Scene {
   };
 
   useParticle = (model, type, direction = 0) => {
+    if (!useParticles) return;
     requestAnimationFrame(async () => {
       if (type === 'water') {
         this.waterParticles.mesh.position.copy(model.position);
@@ -64,6 +74,8 @@ export class CrossyScene extends Scene {
   };
 
   createParticles = () => {
+    if (!useParticles) return;
+
     this.waterParticles = new Water();
     this.world.add(this.waterParticles.mesh);
 
@@ -124,9 +136,13 @@ export class CrossyRenderer extends Renderer {
   constructor(props) {
     super(props);
     this.__gl = props.gl;
-    this.gammaInput = true;
-    this.gammaOutput = true;
-    this.shadowMap.enabled = true;
+    this.setShadowsEnabled(useShadows);
+  }
+
+  setShadowsEnabled(enabled) {
+    this.gammaInput = enabled;
+    this.gammaOutput = enabled;
+    this.shadowMap.enabled = enabled;
   }
 }
 
