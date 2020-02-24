@@ -9,9 +9,9 @@ import CrossyPlayer from './CrossyPlayer';
 import { CAMERA_EASING, DEBUG_CAMERA_CONTROLS, groundLevel, PI_2, sceneColor, startingRow } from './GameSettings';
 
 const initialState = {
-  id: Characters.chicken.id,
-  name: Characters.chicken.name,
-  index: Characters.chicken.index,
+  id: Characters.bacon.id,
+  name: Characters.bacon.name,
+  index: Characters.bacon.index,
 };
 
 const normalizeAngle = angle => {
