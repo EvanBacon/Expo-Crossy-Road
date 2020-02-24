@@ -136,12 +136,6 @@ class Settings extends Component {
         onPress: _ => { },
       },
       {
-        text: 'Disable\nVideo\nAds',
-        source: Images.button.video_ads,
-        imageStyle: imageStyle,
-        onPress: _ => { },
-      },
-      {
         text: 'Save Your Figurines',
         source: Images.button.facebook,
         imageStyle: { width: 120, height: 48 },
