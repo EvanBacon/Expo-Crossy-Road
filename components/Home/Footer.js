@@ -3,6 +3,7 @@ import { LayoutAnimation, Animated, StyleSheet, View } from 'react-native';
 
 import Images from '../../src/Images';
 import Button from '../Button';
+import CharacterPicker from '../CharacterPicker';
 
 const imageStyle = { width: 60, height: 48 };
 
@@ -47,6 +48,7 @@ export default function Footer(props) {
         imageStyle={imageStyle}
         source={Images.button.character}
       />}
+      <CharacterPicker />
 
       <View style={{ flex: 1 }} />
 
