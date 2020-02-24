@@ -85,7 +85,7 @@ const SplashScreen = () => (
 
 const styles = StyleSheet.create({
   splash: {
-    backgroundColor: '#87C6FF', flex: 1, resizeMode: 'cover'
+    backgroundColor: '#87C6FF', flex: 1, resizeMode: 'contain'
   },
   errorContainer: {
     ...StyleSheet.absoluteFillObject,
