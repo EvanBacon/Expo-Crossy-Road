@@ -6,7 +6,7 @@ export default {
   },
   brent: {
     index: 1,
-    name: "Brent",
+    name: "Brent Vatne",
     id: "brent"
   },
 };

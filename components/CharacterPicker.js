@@ -27,7 +27,12 @@ export default function CharacterPicker(props) {
 
 const styles = StyleSheet.create({
     picker: { 
-        height: 48, minWidth: 100, borderWidth: 2, borderColor: 'white', backgroundColor: '#75C5F4', color: 'white', 
-        // fontFamily: 'retro' 
+        height: 48, 
+        minWidth: 100, 
+        borderWidth: 2, 
+        borderColor: 'white', 
+        backgroundColor: '#75C5F4', 
+        color: 'white', 
+        fontFamily: 'retro' 
     }
 });
