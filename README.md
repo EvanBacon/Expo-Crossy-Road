@@ -29,9 +29,22 @@
   
 ---
 
-**[Try it in the browser!](https://crossyroad.netlify.com)**
+This is **strictly** for educational purposes only. (plz don't sue me)
 
-This is **strictly** for educational purposes only. If you plan on using this project be sure to use all of your own assets. I recommend using Magica Voxel. The Bacon, Avocoder, Wheeler, Palmer, Brent, and Juwan models are not in the original game, so feel free to use those.
+## Models
+
+I created the models using the open source project [MagicaVoxel](https://ephtracy.github.io/). 
+
+All of the characters are based on other open source developers:
+
+- Wheeler: [Ken Wheeler](https://twitter.com/ken_wheeler)
+- Avocoder: [Lydia Hallie](https://twitter.com/lydiahallie)
+- Palmer: [Jared Palmer](https://twitter.com/jaredpalmer)
+- Brent: [Brent Vatne](https://twitter.com/notbrent)
+- Juwan: [Juwan Wheatley](https://twitter.com/FiberJW)
+- Bacon: [Evan Bacon](https://twitter.com/baconbrix)
+
+If you'd like to see someone else in the game, please open an issue!
 
 <!-- Expo: https://exp.host/@bacon/crossy-road -->
 
@@ -46,8 +59,11 @@ Learn about how I made this game perform well in the browser: [performance](perf
 ## Stack
 
 - [Expo](http://expo.io) (ios, android, web)
+- [React Native for web](https://baconbrix.gitbook.io/react-native-web/) (web)
+- [React Native](http://reactnative.dev/) (ios, android)
 - [THREE.js](https://threejs.org/) for rendering
 - [GSAP](https://greensock.com/) for animating
+- [Webpack](https://www.npmjs.com/package/@expo/webpack-config)
 
 ## Disclaimer
 
@@ -65,7 +81,7 @@ The game's source code is made available under the [MIT license](LICENSE). Some 
 
 <p>
     <a aria-label="sponsored by my mommy" href="http://expo.io">
-        <img src="https://img.shields.io/badge/Sponsored_by-My%20Kitten-4630EB.svg?style=for-the-badge&logo=GITHUB&labelColor=000&logoColor=fff" target="_blank" />
+        <img src="https://img.shields.io/badge/I_EAT-SOYLENT-4630EB.svg?style=for-the-badge&logo=GITHUB&labelColor=000&logoColor=fff" target="_blank" />
     </a>
     <a aria-label="expo-crossy-road is free to use" href="/LICENSE" target="_blank">
         <img align="right" alt="License: MIT" src="https://img.shields.io/badge/License-MIT-success.svg?style=for-the-badge&color=33CC12" target="_blank" />
