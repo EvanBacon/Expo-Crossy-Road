@@ -1,9 +1,6 @@
 # How I debugged performance
 
-- `expo customize:web` -> select `webpack.config.js`
-- in `webpack.config.js` add `report: env.mode === 'production'` to the `env` object.
-  - this will generate a `web-report` when you run `expo build:web`
-- you can use the web report with open `web-report/report.html`
+- enable [webpack bundle analyzer](https://docs.expo.io/versions/latest/guides/web-performance/#-what-makes-my-app-large)
 - from here you can see which packages are causing trouble (the biggest ones)
   - in my case `text-encoding` was the problem
 - to find where `text-encoding` was being used I did a quick search through my codebase
