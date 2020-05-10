@@ -1,6 +1,6 @@
 import Generic from './Generic';
 
-export default class Grass extends Generic {
+export default class Tree extends Generic {
   setup = async () => {
     const {
       environment: { tree },
