@@ -1,3 +1,5 @@
+[![Run on Repl.it](https://repl.it/badge/github/EvanBacon/Expo-Crossy-Road)](https://repl.it/github/EvanBacon/Expo-Crossy-Road)
+
 <!-- Banner Image -->
 
 [![Expo](/.style/header.png)](https://crossyroad.netlify.com/)
