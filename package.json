@@ -23,7 +23,7 @@
     "expo-gl": "^7.0.0",
     "expo-sharing": "^7.0.0",
     "expo-three": "5.4.0",
-    "gsap": "^2.0.2",
+    "gsap": "^3.6.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.4",
     "react-native": "^0.59.0",
