@@ -26,7 +26,7 @@
     "gsap": "^2.0.2",
     "react": "^16.8.6",
     "react-dom": "^16.8.4",
-    "react-native": "^0.59.0",
+    "react-native": "^0.62.3",
     "react-native-appearance": "^0.3.1",
     "react-native-safe-area-context": "^0.6.0",
     "react-native-web": "^0.11.1",
