@@ -333,7 +333,7 @@ export default class Engine {
     }
 
     const targetRow =
-      this.gameMap.getRow(this._hero.initialPosition.z + velocity.z) || {};
+      this.gameMap.getRow(this._hero.initialPosition.z + velocity.z) || {entity:{}};
     let finalY = targetRow.entity.top || groundLevel;
     // If the next move is into the river, then we want to jump into it.
     if (targetRow.type === 'water') {

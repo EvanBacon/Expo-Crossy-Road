@@ -49,11 +49,11 @@ class AudioManager {
     //   const soundObject = this.sounds[name];
     try {
       if (startOver) {
-        await soundObject.setPositionAsync(0);
+        // await soundObject.setPositionAsync(0);
       }
 
-      await soundObject.setIsLoopingAsync(isLooping);
-      await soundObject.playAsync();
+      // await soundObject.setIsLoopingAsync(isLooping);
+      // await soundObject.playAsync();
     } catch (error) {
       console.warn('Error playing audio', { error });
     }
@@ -142,7 +142,7 @@ async function clone(obj) {
   if (obj === null || typeof obj !== 'object' || 'isActiveClone' in obj) {
     if (typeof obj === 'string' || typeof obj === 'number') {
       if (MUTED) return null;
-      const { sound } = await Audio.Sound.create(obj);
+      const { sound } = await Audio.Sound.createAsync(obj);
       return sound;
     }
     return obj;

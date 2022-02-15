@@ -6,6 +6,8 @@ import Hand from '../components/HandCTA';
 import Footer from '../components/Home/Footer';
 import GameContext from '../context/GameContext';
 
+const USE_NATIVE_DRIVER = true;
+
 let hasShownTitle = false;
 
 function Screen(props) {
@@ -19,7 +21,7 @@ function Screen(props) {
         props.onPlay();
       }
     };
-    
+
     window.addEventListener('keyup', onKeyUp, false);
     return () => {
       window.removeEventListener('keyup', onKeyUp);
@@ -32,6 +34,7 @@ function Screen(props) {
       hasShownTitle = true;
       InteractionManager.runAfterInteractions(_ => {
         Animated.timing(animation, {
+          useNativeDriver: USE_NATIVE_DRIVER,
           toValue: 1,
           duration: 800,
           delay: 0,
@@ -72,6 +75,7 @@ function Screen(props) {
         ]}
         onPressIn={() => {
           Animated.timing(animation, {
+            useNativeDriver: USE_NATIVE_DRIVER,
             toValue: 0,
             duration: 400,
             easing: Easing.in(Easing.qubic),
@@ -107,11 +111,11 @@ function Screen(props) {
           <Footer
             style={{ height: 48 }}
             onCharacterSelect={() => {
-              // TODO(Bacon): Create a character select page 
+              // TODO(Bacon): Create a character select page
             }}
             onShop={() => { }}
             onMultiplayer={() => { }}
-            onCamera={() => { 
+            onCamera={() => {
             }}
           />
         </View>

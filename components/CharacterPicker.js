@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { Picker, StyleSheet, TouchableWithoutFeedback } from 'react-native';
+import { StyleSheet, TouchableWithoutFeedback } from 'react-native';
+import {Picker} from '@react-native-picker/picker';
 
 import GameContext from '../context/GameContext';
 import Characters from '../src/Characters';
@@ -26,13 +27,13 @@ export default function CharacterPicker(props) {
 
 
 const styles = StyleSheet.create({
-    picker: { 
-        height: 48, 
-        minWidth: 100, 
-        borderWidth: 2, 
-        borderColor: 'white', 
-        backgroundColor: '#75C5F4', 
-        color: 'white', 
-        fontFamily: 'retro' 
+    picker: {
+        height: 48,
+        minWidth: 100,
+        borderWidth: 2,
+        borderColor: 'white',
+        backgroundColor: '#75C5F4',
+        color: 'white',
+        fontFamily: 'retro'
     }
 });

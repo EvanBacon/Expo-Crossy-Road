@@ -12,6 +12,7 @@ import GameOverScreen from './GameOverScreen';
 import HomeScreen from './HomeScreen';
 import SettingsScreen from './SettingsScreen';
 import GameContext from '../context/GameContext';
+import AudioManager from '../src/AudioManager';
 
 const DEBUG_CAMERA_CONTROLS = false;
 class Game extends Component {
@@ -27,7 +28,8 @@ class Game extends Component {
 
   transitionScreensValue = new Animated.Value(1);
 
-  componentWillReceiveProps(nextProps, nextState) {
+  // componentDidUpdate(nextProps, nextState) {
+  UNSAFE_componentWillReceiveProps(nextProps, nextState) {
     if (nextState.gameState && (nextState.gameState !== this.state.gameState)) {
       this.updateWithGameState(nextState.gameState, this.state.gameState);
     }
@@ -99,7 +101,7 @@ class Game extends Component {
       case none:
         if (lastState === gameOver) {
           this.transitionToGamePlayingState();
-        } 
+        }
         this.newScore();
 
         break;
@@ -129,7 +131,7 @@ class Game extends Component {
     Dimensions.removeEventListener('change', this.onScreenResize);
   }
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     this.engine = new Engine();
     // this.engine.hideShadows = this.hideShadows;
     this.engine.onUpdateScore = position => {

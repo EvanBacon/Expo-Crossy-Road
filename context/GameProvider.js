@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { StatusBar, AsyncStorage, View, Platform } from 'react-native';
+import { StatusBar, View, Platform } from 'react-native';
 
 import GameContext from './GameContext';
 
-// import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const STORAGE_KEY = '@BouncyBacon:Character';
 const SHOULD_REHYDRATE = true;

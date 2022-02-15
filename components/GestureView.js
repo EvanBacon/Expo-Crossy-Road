@@ -77,7 +77,8 @@ class GestureView extends Component {
     window.removeEventListener('keyup', this.onKeyUp);
   }
 
-  componentWillReceiveProps(props) {
+  UNSAFE_componentWillReceiveProps(props) {
+  // componentWillReceiveProps(props) {
     this.swipeConfig = Object.assign(swipeConfig, props.config);
   }
 

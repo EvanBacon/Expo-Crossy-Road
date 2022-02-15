@@ -38,7 +38,8 @@ class GestureView extends Component {
     });
   }
 
-  componentWillReceiveProps(props) {
+  UNSAFE_componentWillReceiveProps(props) {
+  // componentWillReceiveProps(props) {
     this.swipeConfig = Object.assign(swipeConfig, props.config);
   }
 
