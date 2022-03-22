@@ -1,5 +1,5 @@
-import { TweenMax } from 'gsap';
-import { CubeGeometry, Group, Mesh, MeshPhongMaterial } from 'three';
+import { TweenMax } from "gsap";
+import { BoxGeometry, Group, Mesh, MeshPhongMaterial } from "three";
 
 export default class Smoke {
   constructor() {
@@ -10,8 +10,8 @@ export default class Smoke {
     });
     this.mesh = new Group();
     const size = 0.1;
-    let bigParticleGeom = new CubeGeometry(size, size, 0.01, 1);
-    // let smallParticleGeom = new CubeGeometry(0.1, 0.1, 0.1, 1);
+    let bigParticleGeom = new BoxGeometry(size, size, 0.01, 1);
+    // let smallParticleGeom = new BoxGeometry(0.1, 0.1, 0.1, 1);
     this.parts = [];
     for (let i = 0; i < 10; i++) {
       let partPink = new Mesh(bigParticleGeom, this.waterMat);
@@ -33,7 +33,7 @@ export default class Smoke {
       let p = this.parts[i];
 
       const bezier = {
-        type: 'cubic',
+        type: "cubic",
         values: [
           { x: 0, y: 0, z: 0 },
           { x: tx * 0.25, y: ty * 0.25, z: tz * 0.25 },

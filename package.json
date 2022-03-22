@@ -28,6 +28,6 @@
     "react-native-appearance": "~0.3.3",
     "react-native-safe-area-context": "3.3.2",
     "react-native-web": "0.17.1",
-    "three": "^0.110.0"
+    "three": "^0.138.3"
   }
 }

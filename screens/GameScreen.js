@@ -4,11 +4,11 @@ import {
   Animated,
   Dimensions,
   StyleSheet,
+  Platform,
   Vibration,
   View,
 } from "react-native";
 import { useColorScheme } from "react-native-appearance";
-import useAppState from "../src/hooks/useAppState";
 
 import GestureRecognizer, { swipeDirections } from "../components/GestureView";
 import Score from "../components/ScoreText";
@@ -237,7 +237,11 @@ class Game extends Component {
         pointerEvents="box-none"
         style={[
           StyleSheet.absoluteFill,
-          { flex: 1, position: "fixed", backgroundColor: "#87C6FF" },
+          { flex: 1, backgroundColor: "#87C6FF" },
+          Platform.select({
+            web: { position: "fixed" },
+            default: { position: "absolute" },
+          }),
           this.props.style,
         ]}
       >

@@ -1,11 +1,12 @@
-import { loadObjAsync } from 'expo-three';
-import { Mesh, Box3 } from 'three';
+import { Asset } from "expo-asset";
+import { loadObjAsync } from "expo-three";
+import { Box3, Mesh } from "three";
 
-import Models from '../../src/Models';
-import CrossyMaterial from '../CrossyMaterial';
+import Models from "../../src/Models";
+import CrossyMaterial from "../CrossyMaterial";
 
 function setShadows(mesh, { castShadow, receiveShadow }) {
-  mesh.traverse(child => {
+  mesh.traverse((child) => {
     if (child instanceof Mesh) {
       child.castShadow = castShadow;
       child.receiveShadow = receiveShadow;
@@ -20,28 +21,35 @@ export default class Generic {
 
   globalModels = Models;
 
-  getSize = mesh => {
+  getSize = (mesh) => {
     let box = new Box3().setFromObject(mesh);
     // console.log( box.min, box.max, box.size() );
     return box.size();
   };
-  getWidth = mesh => {
+  getWidth = (mesh) => {
     let box = new Box3().setFromObject(mesh);
     // console.log( box.min, box.max, box.size() );
     return box.size().width;
   };
 
-  _downloadAssets = async ({ name, model, texture, castShadow, receiveShadow }) => {
-    const material = CrossyMaterial.load(texture)
+  _downloadAssets = async ({
+    name,
+    model,
+    texture,
+    castShadow,
+    receiveShadow,
+  }) => {
+    const material = CrossyMaterial.load(texture);
+
     const _model = await loadObjAsync({ asset: model });
 
-    _model.traverse(child => {
+    _model.traverse((child) => {
       if (child instanceof Mesh) {
         child.material = material;
       }
     });
 
-    setShadows(_model, { castShadow, receiveShadow })
+    // setShadows(_model, { castShadow, receiveShadow });
     return _model;
   };
 
@@ -51,7 +59,7 @@ export default class Generic {
     return this.models[key].clone();
   };
 
-  getNode(key = '0') {
+  getNode(key = "0") {
     if (key in this.models) {
       return this.models[key].clone();
     } else {
@@ -59,19 +67,19 @@ export default class Generic {
         `Generic: Node with Key ${key} does not exist in ${JSON.stringify(
           Object.keys(this.models),
           null,
-          2,
-        )}`,
+          2
+        )}`
       );
     }
   }
 
   _register = async (key, props) => {
-    return this.models[key] = await this._download(props)
-  }
+    return (this.models[key] = await this._download(props));
+  };
 
-  _download = async props => {
+  _download = async (props) => {
     return await this._downloadAssets(props);
   };
 
-  setup = async () => { };
+  setup = async () => {};
 }
