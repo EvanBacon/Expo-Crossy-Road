@@ -1,11 +1,11 @@
-import { Audio } from 'expo-av';
+import { Audio } from "expo-av";
 // import Assets from './Assets';
-import AssetUtils from 'expo-asset-utils';
-import AudioFiles from './Audio';
-import { Platform } from 'react-native';
+import AssetUtils from "expo-asset-utils";
+import AudioFiles from "./Audio";
+import { Platform } from "react-native";
 
 // Web just can't seem to handle audio
-const MUTED = Platform.OS === 'web';
+const MUTED = Platform.OS === "web";
 
 class AudioManager {
   sounds = {};
@@ -14,7 +14,7 @@ class AudioManager {
 
   playMoveSound = async () => {
     await this.playAsync(
-      this.sounds.chicken.move[`${this.audioFileMoveIndex}`],
+      this.sounds.chicken.move[`${this.audioFileMoveIndex}`]
     );
     this.audioFileMoveIndex =
       (this.audioFileMoveIndex + 1) %
@@ -29,13 +29,13 @@ class AudioManager {
 
   playDeathSound = async () => {
     await this.playAsync(
-      this.sounds.chicken.die[`${Math.floor(Math.random() * 2)}`],
+      this.sounds.chicken.die[`${Math.floor(Math.random() * 2)}`]
     );
   };
 
   playCarHitSound = async () => {
     await this.playAsync(
-      this.sounds.car.die[`${Math.floor(Math.random() * 2)}`],
+      this.sounds.car.die[`${Math.floor(Math.random() * 2)}`]
     );
   };
 
@@ -49,26 +49,26 @@ class AudioManager {
     //   const soundObject = this.sounds[name];
     try {
       if (startOver) {
-        await soundObject.setPositionAsync(0);
+        // await soundObject.setPositionAsync(0);
       }
 
-      await soundObject.setIsLoopingAsync(isLooping);
-      await soundObject.playAsync();
+      // await soundObject.setIsLoopingAsync(isLooping);
+      // await soundObject.playAsync();
     } catch (error) {
-      console.warn('Error playing audio', { error });
+      console.warn("Error playing audio", { error });
     }
     // } else {
     //   console.warn("Audio doesn't exist", name);
     //   console.log('Audio: Expected one of: ', this.sounds);
     // }
   };
-  stopAsync = async name => {
+  stopAsync = async (name) => {
     if (this.sounds.hasOwnProperty(name)) {
       const soundObject = this.sounds[name];
       try {
         await soundObject.stopAsync();
       } catch (error) {
-        console.warn('Error stopping audio', { error });
+        console.warn("Error stopping audio", { error });
       }
     } else {
       console.warn("Audio doesn't exist", name);
@@ -80,20 +80,20 @@ class AudioManager {
       try {
         await soundObject.setVolumeAsync(volume);
       } catch (error) {
-        console.warn('Error setting volume of audio', { error });
+        console.warn("Error setting volume of audio", { error });
       }
     } else {
       console.warn("Audio doesn't exist", name);
     }
   };
 
-  pauseAsync = async name => {
+  pauseAsync = async (name) => {
     if (this.sounds.hasOwnProperty(name)) {
       const soundObject = this.sounds[name];
       try {
         await soundObject.pauseAsync();
       } catch (error) {
-        console.warn('Error pausing audio', { error });
+        console.warn("Error pausing audio", { error });
       }
     } else {
       console.warn("Audio doesn't exist", name);
@@ -120,10 +120,11 @@ class AudioManager {
     // console.log('sounds', this.sounds);
   };
 
-  downloadAsync = async () =>
-    AssetUtils.cacheAssetsAsync({
-      files: [...AssetUtils.arrayFromObject(this.assets)],
-    });
+  downloadAsync = async () => {
+    // return AssetUtils.cacheAssetsAsync({
+    //   files: [...AssetUtils.arrayFromObject(this.assets)],
+    // });
+  };
 
   setupAsync = async () => {
     if (MUTED) {
@@ -139,10 +140,10 @@ class AudioManager {
 }
 
 async function clone(obj) {
-  if (obj === null || typeof obj !== 'object' || 'isActiveClone' in obj) {
-    if (typeof obj === 'string' || typeof obj === 'number') {
+  if (obj === null || typeof obj !== "object" || "isActiveClone" in obj) {
+    if (typeof obj === "string" || typeof obj === "number") {
       if (MUTED) return null;
-      const { sound } = await Audio.Sound.create(obj);
+      const { sound } = await Audio.Sound.createAsync(obj);
       return sound;
     }
     return obj;
@@ -156,9 +157,9 @@ async function clone(obj) {
 
   for (var key in obj) {
     if (Object.prototype.hasOwnProperty.call(obj, key)) {
-      obj['isActiveClone'] = null;
+      obj["isActiveClone"] = null;
       temp[key] = await clone(obj[key]);
-      delete obj['isActiveClone'];
+      delete obj["isActiveClone"];
     }
   }
   return temp;

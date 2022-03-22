@@ -1,33 +1,33 @@
-import React, { Component } from 'react';
-import { Alert, Animated, Easing, StyleSheet, View } from 'react-native';
-import { useSafeArea } from 'react-native-safe-area-context';
+import React, { Component } from "react";
+import { Alert, Animated, Easing, StyleSheet, View } from "react-native";
+import { useSafeArea } from "react-native-safe-area-context";
 
-import Banner from '../components/GameOver/Banner';
-import Footer from '../components/GameOver/Footer';
-import AudioManager from '../src/AudioManager';
-import Characters from '../src/Characters';
-import useDimensions from '../src/hooks/useDimensions';
-import Images from '../src/Images';
+import Banner from "../components/GameOver/Banner";
+import Footer from "../components/GameOver/Footer";
+import AudioManager from "../src/AudioManager";
+import Characters from "../src/Characters";
+import useDimensions from "../src/hooks/useDimensions";
+import Images from "../src/Images";
 
 // import { setGameState } from '../src/actions/game';
 
 //TODO: Make this dynamic
 const banner = [
   {
-    color: '#3640eb',
-    title: 'Get Updates Subscribe Now',
+    color: "#3640eb",
+    title: "Get Updates Subscribe Now",
     button: {
-      onPress: _ => {
+      onPress: (_) => {
         Alert.alert(
-          'Subscribe to our mailing list',
-          'Join our mailing list and discover the latest news from Expo and Evan Bacon.\n\n Read our privacy policy on https://github.com/EvanBacon/Expo-Crossy-Road/privacy.md',
+          "Subscribe to our mailing list",
+          "Join our mailing list and discover the latest news from Expo and Evan Bacon.\n\n Read our privacy policy on https://github.com/EvanBacon/Expo-Crossy-Road/privacy.md",
           [
-            { text: 'Cancel', onPress: () => console.log('Cancel Pressed!') },
-            { text: 'OK', onPress: () => console.log('OK Pressed!') },
+            { text: "Cancel", onPress: () => console.log("Cancel Pressed!") },
+            { text: "OK", onPress: () => console.log("OK Pressed!") },
           ],
           {
             cancelable: false,
-          },
+          }
         );
       },
       source: Images.button.mail,
@@ -35,23 +35,28 @@ const banner = [
     },
   },
   {
-    color: '#368FEB',
-    title: 'Free Gift in 2h 51m',
+    color: "#368FEB",
+    title: "Free Gift in 2h 51m",
   },
   {
-    color: '#36D6EB',
-    title: '44 Coins To Go',
+    color: "#36D6EB",
+    title: "44 Coins To Go",
   },
 ];
 
 // const AnimatedBanner = Animated.createAnimatedComponent(Banner);
 
 function GameOver({ ...props }) {
-
-  const { window: { width } } = useDimensions();
+  const {
+    window: { width },
+  } = useDimensions();
   const [currentIndex, setCurrentIndex] = React.useState(0);
-  const [characters, setCharacters] = React.useState(Object.keys(Characters).map(val => Characters[val]));
-  const [animations, setAnimations] = React.useState(banner.map(val => new Animated.Value(0)));
+  const [characters, setCharacters] = React.useState(
+    Object.keys(Characters).map((val) => Characters[val])
+  );
+  const [animations, setAnimations] = React.useState(
+    banner.map((val) => new Animated.Value(0))
+  );
 
   const dismiss = () => {
     // props.navigation.goBack();
@@ -83,20 +88,21 @@ function GameOver({ ...props }) {
       setTimeout(() => playBannerSound(), 300);
       setTimeout(() => playBannerSound(), 600);
     }, 600);
-  })
+  });
 
   const _animateBanners = () => {
-    const _animations = animations.map(animation =>
+    const _animations = animations.map((animation) =>
       Animated.timing(animation, {
+        useNativeDriver: true,
         toValue: 1,
         duration: 1000,
         easing: Easing.elastic(),
-      }),
+      })
     );
     Animated.stagger(300, _animations).start();
   };
 
-  const _showResult = result => {
+  const _showResult = (result) => {
     // if (result.action === Share.sharedAction) {
     //   if (result.activityType) {
     //     this.setState({result: 'shared with an activityType: ' + result.activityType});
@@ -109,7 +115,6 @@ function GameOver({ ...props }) {
   };
 
   const select = () => {
-
     // props.setCharacter(characters[currentIndex]);
     dismiss();
   };
@@ -119,14 +124,20 @@ function GameOver({ ...props }) {
   const imageStyle = { width: 60, height: 48 };
 
   return (
-    <View style={[styles.container, { paddingTop: top || 12, paddingBottom: bottom || 8 }, props.style]}>
-      <View key="content" style={{ flex: 1, justifyContent: 'center' }}>
+    <View
+      style={[
+        styles.container,
+        { paddingTop: top || 12, paddingBottom: bottom || 8 },
+        props.style,
+      ]}
+    >
+      <View key="content" style={{ flex: 1, justifyContent: "center" }}>
         {banner.map((val, index) => (
           <Banner
             animatedValue={animations[index].interpolate({
               inputRange: [0.2, 1],
               outputRange: [-width, 0],
-              extrapolate: 'clamp',
+              extrapolate: "clamp",
             })}
             key={index}
             style={{
@@ -136,7 +147,7 @@ function GameOver({ ...props }) {
                   scaleY: animations[index].interpolate({
                     inputRange: [0, 0.2],
                     outputRange: [0, 1],
-                    extrapolate: 'clamp',
+                    extrapolate: "clamp",
                   }),
                 },
               ],
@@ -162,14 +173,14 @@ export default GameOver;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    backgroundColor: 'transparent',
+    justifyContent: "center",
+    backgroundColor: "transparent",
   },
   paragraph: {
     margin: 24,
     fontSize: 18,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    color: '#34495e',
+    fontWeight: "bold",
+    textAlign: "center",
+    color: "#34495e",
   },
 });
