@@ -49,7 +49,7 @@ export default class Generic {
       }
     });
 
-    // setShadows(_model, { castShadow, receiveShadow });
+    setShadows(_model, { castShadow, receiveShadow });
     return _model;
   };
 
