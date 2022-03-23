@@ -1,17 +1,23 @@
-import { GLView } from 'expo-gl';
-import React, { Component } from 'react';
-import { Animated, Dimensions, StyleSheet, Vibration, View } from 'react-native';
-import { useColorScheme } from 'react-native-appearance';
-import useAppState from '../src/hooks/useAppState'
+import { GLView } from "expo-gl";
+import React, { Component } from "react";
+import {
+  Animated,
+  Dimensions,
+  StyleSheet,
+  Platform,
+  Vibration,
+  View,
+  useColorScheme,
+} from "react-native";
 
-import GestureRecognizer, { swipeDirections } from '../components/GestureView';
-import Score from '../components/ScoreText';
-import Engine from '../src/GameEngine';
-import State from '../src/state';
-import GameOverScreen from './GameOverScreen';
-import HomeScreen from './HomeScreen';
-import SettingsScreen from './SettingsScreen';
-import GameContext from '../context/GameContext';
+import GestureRecognizer, { swipeDirections } from "../components/GestureView";
+import Score from "../components/ScoreText";
+import Engine from "../src/GameEngine";
+import State from "../src/state";
+import GameOverScreen from "./GameOverScreen";
+import HomeScreen from "./HomeScreen";
+import SettingsScreen from "./SettingsScreen";
+import GameContext from "../context/GameContext";
 
 const DEBUG_CAMERA_CONTROLS = false;
 class Game extends Component {
@@ -21,14 +27,14 @@ class Game extends Component {
     score: 0,
     viewKey: 0,
     gameState: State.Game.none,
-    showSettings: false
+    showSettings: false,
     // gameState: State.Game.gameOver
   };
 
   transitionScreensValue = new Animated.Value(1);
 
-  componentWillReceiveProps(nextProps, nextState) {
-    if (nextState.gameState && (nextState.gameState !== this.state.gameState)) {
+  UNSAFE_componentWillReceiveProps(nextProps, nextState) {
+    if (nextState.gameState && nextState.gameState !== this.state.gameState) {
       this.updateWithGameState(nextState.gameState, this.state.gameState);
     }
     if (this.engine && nextProps.character !== this.props.character) {
@@ -52,6 +58,7 @@ class Game extends Component {
   transitionToGamePlayingState = () => {
     Animated.timing(this.transitionScreensValue, {
       toValue: 0,
+      useNativeDriver: true,
       duration: 200,
       onComplete: ({ finished }) => {
         this.engine.setupGame(this.props.character);
@@ -60,6 +67,7 @@ class Game extends Component {
         if (finished) {
           Animated.timing(this.transitionScreensValue, {
             toValue: 1,
+            useNativeDriver: true,
             duration: 300,
           }).start();
         }
@@ -68,7 +76,7 @@ class Game extends Component {
   };
 
   updateWithGameState = (gameState) => {
-    if (!gameState) throw new Error('gameState cannot be undefined')
+    if (!gameState) throw new Error("gameState cannot be undefined");
 
     if (gameState === this.state.gameState) {
       return;
@@ -99,7 +107,7 @@ class Game extends Component {
       case none:
         if (lastState === gameOver) {
           this.transitionToGamePlayingState();
-        } 
+        }
         this.newScore();
 
         break;
@@ -118,7 +126,7 @@ class Game extends Component {
     //   AudioManager.sounds.bg_music, true
     // );
 
-    Dimensions.addEventListener('change', this.onScreenResize);
+    Dimensions.addEventListener("change", this.onScreenResize);
   }
 
   onScreenResize = ({ window }) => {
@@ -126,13 +134,13 @@ class Game extends Component {
   };
 
   componentWillUnmount() {
-    Dimensions.removeEventListener('change', this.onScreenResize);
+    Dimensions.removeEventListener("change", this.onScreenResize);
   }
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     this.engine = new Engine();
     // this.engine.hideShadows = this.hideShadows;
-    this.engine.onUpdateScore = position => {
+    this.engine.onUpdateScore = (position) => {
       if (this.state.score < position) {
         this.setState({ score: position });
       }
@@ -159,19 +167,19 @@ class Game extends Component {
     this.engine.init();
   };
 
-  onSwipe = gestureName => this.engine.moveWithDirection(gestureName);
+  onSwipe = (gestureName) => this.engine.moveWithDirection(gestureName);
 
   renderGame = () => {
     if (!this.state.ready) return;
 
     return (
       <GestureView
-        pointerEvents={DEBUG_CAMERA_CONTROLS ? 'none' : undefined}
+        pointerEvents={DEBUG_CAMERA_CONTROLS ? "none" : undefined}
         onStartGesture={this.engine.beginMoveWithDirection}
         onSwipe={this.onSwipe}
       >
         <GLView
-          style={{ flex: 1, height: '100%', overflow: 'hidden' }}
+          style={{ flex: 1, height: "100%", overflow: "hidden" }}
           onContextCreate={this.engine._onGLContextCreate}
         />
       </GestureView>
@@ -187,7 +195,7 @@ class Game extends Component {
       <View style={StyleSheet.absoluteFillObject}>
         <GameOverScreen
           showSettings={() => {
-            this.setState({ showSettings: true })
+            this.setState({ showSettings: true });
           }}
           setGameState={(state) => {
             this.updateWithGameState(state);
@@ -216,9 +224,7 @@ class Game extends Component {
   renderSettingsScreen() {
     return (
       <View style={StyleSheet.absoluteFillObject}>
-        <SettingsScreen
-          goBack={() => this.setState({ showSettings: false })}
-        />
+        <SettingsScreen goBack={() => this.setState({ showSettings: false })} />
       </View>
     );
   }
@@ -231,7 +237,11 @@ class Game extends Component {
         pointerEvents="box-none"
         style={[
           StyleSheet.absoluteFill,
-          { flex: 1, position: 'fixed', backgroundColor: '#87C6FF' },
+          { flex: 1, backgroundColor: "#87C6FF" },
+          Platform.select({
+            web: { position: "fixed" },
+            default: { position: "absolute" },
+          }),
           this.props.style,
         ]}
       >
@@ -250,7 +260,18 @@ class Game extends Component {
 
         {this.state.showSettings && this.renderSettingsScreen()}
 
-        {isPaused && <View style={[StyleSheet.absoluteFill, { backgroundColor: 'rgba(105, 201, 230, 0.8)', justifyContent: 'center', alignItems: 'center'}]}/>}
+        {isPaused && (
+          <View
+            style={[
+              StyleSheet.absoluteFill,
+              {
+                backgroundColor: "rgba(105, 201, 230, 0.8)",
+                justifyContent: "center",
+                alignItems: "center",
+              },
+            ]}
+          />
+        )}
       </View>
     );
   }
@@ -267,7 +288,7 @@ const GestureView = ({ onStartGesture, onSwipe, ...props }) => {
       onResponderGrant={() => {
         onStartGesture();
       }}
-      onSwipe={direction => {
+      onSwipe={(direction) => {
         onSwipe(direction);
       }}
       config={config}
@@ -282,11 +303,13 @@ const GestureView = ({ onStartGesture, onSwipe, ...props }) => {
 
 function GameScreen(props) {
   const scheme = useColorScheme();
-  const { character } = React.useContext(GameContext)
+  const { character } = React.useContext(GameContext);
 
   // const appState = useAppState();
 
-  return <Game {...props} character={character} isDarkMode={scheme === 'dark'} />
+  return (
+    <Game {...props} character={character} isDarkMode={scheme === "dark"} />
+  );
 }
 
 export default GameScreen;

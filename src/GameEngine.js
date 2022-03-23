@@ -1,12 +1,24 @@
-import { Dimensions } from 'react-native';
+import { Dimensions } from "react-native";
 
-import { swipeDirections } from '../components/GestureView';
-import AudioManager from '../src/AudioManager';
-import ModelLoader from '../src/ModelLoader';
-import Characters from './Characters';
-import { CrossyCamera, CrossyGameMap, CrossyRenderer, CrossyScene } from './CrossyGame';
-import CrossyPlayer from './CrossyPlayer';
-import { CAMERA_EASING, DEBUG_CAMERA_CONTROLS, groundLevel, PI_2, sceneColor, startingRow } from './GameSettings';
+import { swipeDirections } from "../components/GestureView";
+import AudioManager from "../src/AudioManager";
+import ModelLoader from "../src/ModelLoader";
+import Characters from "./Characters";
+import {
+  CrossyCamera,
+  CrossyGameMap,
+  CrossyRenderer,
+  CrossyScene,
+} from "./CrossyGame";
+import CrossyPlayer from "./CrossyPlayer";
+import {
+  CAMERA_EASING,
+  DEBUG_CAMERA_CONTROLS,
+  groundLevel,
+  PI_2,
+  sceneColor,
+  startingRow,
+} from "./GameSettings";
 
 const initialState = {
   id: Characters.bacon.id,
@@ -14,13 +26,13 @@ const initialState = {
   index: Characters.bacon.index,
 };
 
-const normalizeAngle = angle => {
+const normalizeAngle = (angle) => {
   return Math.atan2(Math.sin(angle), Math.cos(angle));
 };
 
 export default class Engine {
   updateScale = () => {
-    const { width, height, scale } = Dimensions.get('window');
+    const { width, height, scale } = Dimensions.get("window");
     if (this.camera) {
       this.camera.updateScale({ width, height, scale });
     }
@@ -30,7 +42,7 @@ export default class Engine {
   };
 
   setupGame = (character) => {
-    this.scene = new CrossyScene({ });
+    this.scene = new CrossyScene({});
 
     this.camera = new CrossyCamera();
 
@@ -59,19 +71,19 @@ export default class Engine {
   };
 
   isGameEnded() {
-    return !this._hero.isAlive || this._isGameStateEnded()
+    return !this._hero.isAlive || this._isGameStateEnded();
   }
 
-  onCollide = async (obstacle = {}, type = 'feathers', collision) => {
+  onCollide = async (obstacle = {}, type = "feathers", collision) => {
     if (this.isGameEnded()) {
       return;
     }
     this._hero.isAlive = false;
     this._hero.stopIdle();
-    if (collision === 'car') {
+    if (collision === "car") {
       AudioManager.playCarHitSound();
       AudioManager.playDeathSound();
-    } else if (collision === 'train') {
+    } else if (collision === "train") {
       await AudioManager.playAsync(AudioManager.sounds.train.die[`0`]);
       AudioManager.playDeathSound();
     }
@@ -109,8 +121,8 @@ export default class Engine {
       Math.max(
         -2,
         this.scene.world.position.x +
-        (this._hero.position.x - this.scene.world.position.x) * CAMERA_EASING,
-      ),
+          (this._hero.position.x - this.scene.world.position.x) * CAMERA_EASING
+      )
     );
 
     // normal camera speed
@@ -131,7 +143,7 @@ export default class Engine {
     // this.props.setGameState(this.gameState);
   };
 
-  tick = dt => {
+  tick = (dt) => {
     // this.drive();
 
     this.gameMap.tick(dt, this._hero);
@@ -184,7 +196,7 @@ export default class Engine {
     this.onUpdateScore(position);
   };
 
-  moveWithDirection = direction => {
+  moveWithDirection = (direction) => {
     if (this.isGameEnded()) {
       return;
     }
@@ -244,7 +256,7 @@ export default class Engine {
           this._hero.targetRotation = 0;
           let rowObject =
             this.gameMap.getRow(this._hero.initialPosition.z) || {};
-          if (rowObject.type === 'road') {
+          if (rowObject.type === "road") {
             AudioManager.playPassiveCarSound();
           }
 
@@ -259,21 +271,21 @@ export default class Engine {
 
           if (shouldRound) {
             this._hero.targetPosition.x = Math.round(
-              this._hero.targetPosition.x,
+              this._hero.targetPosition.x
             );
             const { ridingOn } = this._hero;
             if (ridingOn && ridingOn.dir) {
               if (ridingOn.dir < 0) {
                 this._hero.targetPosition.x = Math.floor(
-                  this._hero.targetPosition.x,
+                  this._hero.targetPosition.x
                 );
               } else if (ridingOn.dir > 0) {
                 this._hero.targetPosition.x = Math.ceil(
-                  this._hero.targetPosition.x,
+                  this._hero.targetPosition.x
                 );
               } else {
                 this._hero.targetPosition.x = Math.round(
-                  this._hero.targetPosition.x,
+                  this._hero.targetPosition.x
                 );
               }
             }
@@ -297,21 +309,21 @@ export default class Engine {
           };
           if (shouldRound) {
             this._hero.targetPosition.x = Math.round(
-              this._hero.targetPosition.x,
+              this._hero.targetPosition.x
             );
             const { ridingOn } = this._hero;
             if (ridingOn && ridingOn.dir) {
               if (ridingOn.dir < 0) {
                 this._hero.targetPosition.x = Math.floor(
-                  this._hero.targetPosition.x,
+                  this._hero.targetPosition.x
                 );
               } else if (ridingOn.dir > 0) {
                 this._hero.targetPosition.x = Math.ceil(
-                  this._hero.targetPosition.x,
+                  this._hero.targetPosition.x
                 );
               } else {
                 this._hero.targetPosition.x = Math.round(
-                  this._hero.targetPosition.x,
+                  this._hero.targetPosition.x
                 );
               }
             }
@@ -336,16 +348,15 @@ export default class Engine {
       this.gameMap.getRow(this._hero.initialPosition.z + velocity.z) || {};
     let finalY = targetRow.entity.top || groundLevel;
     // If the next move is into the river, then we want to jump into it.
-    if (targetRow.type === 'water') {
+    if (targetRow.type === "water") {
       const ridable = targetRow.entity.getRidableForPosition(
-        this._hero.targetPosition,
+        this._hero.targetPosition
       );
       if (!ridable) {
         finalY = targetRow.entity.getPlayerSunkenPosition();
       } else {
-        finalY = targetRow.entity.getPlayerLowerBouncePositionForEntity(
-          ridable,
-        );
+        finalY =
+          targetRow.entity.getPlayerLowerBouncePositionForEntity(ridable);
       }
     }
 
@@ -365,7 +376,7 @@ export default class Engine {
     this._hero.runPosieAnimation();
   };
 
-  _onGLContextCreate = async gl => {
+  _onGLContextCreate = async (gl) => {
     const { drawingBufferWidth: width, drawingBufferHeight: height } = gl;
 
     this.renderer = new CrossyRenderer({

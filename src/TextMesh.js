@@ -1,6 +1,5 @@
 //https://stackoverflow.com/questions/15248872/dynamically-create-2d-text-in-three-js
-import React, { Component } from 'react';
-import { FontLoader, Mesh, MeshPhongMaterial, TextGeometry } from 'three';
+import { FontLoader, Mesh, MeshPhongMaterial, TextGeometry } from "three";
 
 /*
 let mesh = new TextMesh('Harambe', {
@@ -30,12 +29,15 @@ export default class TextMesh {
     // this._updateMesh();
   }
 
-  _updateMesh = fontPath => {
+  _updateMesh = (fontPath) => {
     return new Promise((res, rej) => {
-      const parseFont = font => {
-        console.log('Font Loaded', font);
+      const parseFont = (font) => {
+        console.log("Font Loaded", font);
         let textGeometry = new TextGeometry(this._text, this._options);
-        let textMaterial = new MeshPhongMaterial({ color: 0xff0000, specular: 0xffffff });
+        let textMaterial = new MeshPhongMaterial({
+          color: 0xff0000,
+          specular: 0xffffff,
+        });
 
         if (!this._mesh) {
           this._mesh = new Mesh(textGeometry, textMaterial);
@@ -48,7 +50,7 @@ export default class TextMesh {
       };
 
       const loader = new FontLoader();
-      console.warn('loader', FontLoader.load, JSON.stringify(loader));
+      console.warn("loader", FontLoader.load, JSON.stringify(loader));
       loader.load(fontPath, parseFont).catch(rej);
     });
 
@@ -60,7 +62,7 @@ export default class TextMesh {
   };
 
   constructor(text, options) {
-    this._text = text || '';
+    this._text = text || "";
     this._options = options || {};
     // this._updateMesh();
   }

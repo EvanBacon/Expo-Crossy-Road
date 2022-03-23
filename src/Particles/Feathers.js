@@ -1,5 +1,5 @@
-import { TweenMax } from 'gsap';
-import { CubeGeometry, Group, Mesh, MeshPhongMaterial } from 'three';
+import { TweenMax } from "gsap";
+import { BoxGeometry, Group, Mesh, MeshPhongMaterial } from "three";
 
 const size = 0.1;
 export default class Feathers {
@@ -9,7 +9,7 @@ export default class Feathers {
   });
   mesh = new Group();
   constructor() {
-    const bigParticleGeom = new CubeGeometry(size, size, 0.01, 1);
+    const bigParticleGeom = new BoxGeometry(size, size, 0.01, 1);
     this.parts = [];
     for (let i = 0; i < 20; i++) {
       const partPink = new Mesh(bigParticleGeom, this.waterMat);
@@ -21,7 +21,7 @@ export default class Feathers {
   run = (type, direction) => {
     const explosionSpeed = 0.3;
 
-    const removeParticle = p => {
+    const removeParticle = (p) => {
       p.visible = false;
     };
 
@@ -34,7 +34,7 @@ export default class Feathers {
       let p = this.parts[i];
 
       const bezier = {
-        type: 'cubic',
+        type: "cubic",
         values: [
           { x: 0, y: 0, z: 0 },
           { x: tx * 0.25, y: ty * 0.25, z: tz * 0.25 },

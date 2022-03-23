@@ -1,23 +1,26 @@
-import React, { Component } from 'react';
-import { LayoutAnimation, Animated, StyleSheet, View } from 'react-native';
+import React, { Component } from "react";
+import { LayoutAnimation, Animated, StyleSheet, View } from "react-native";
 
-import Images from '../../src/Images';
-import Button from '../Button';
-import CharacterPicker from '../CharacterPicker';
+import Images from "../../src/Images";
+import Button from "../Button";
+import CharacterPicker from "../CharacterPicker";
 
 const imageStyle = { width: 60, height: 48 };
 
 export default function Footer(props) {
   const [menuOpen, setMenuOpen] = React.useState(false);
 
-  const collapse = onPress => () => {
-    setMenuOpen(false)
-    onPress();
-  };
+  const collapse = React.useCallback(
+    (onPress) => () => {
+      setMenuOpen(false);
+      onPress();
+    },
+    [setMenuOpen]
+  );
 
-  const renderMenu = () => {
+  const renderMenu = React.useMemo(() => {
     return (
-      <View style={{ flexDirection: 'column' }}>
+      <View style={{ flexDirection: "column" }}>
         <Button
           onPress={collapse(props.onMultiplayer)}
           style={[{ marginBottom: 8 }, imageStyle]}
@@ -38,21 +41,22 @@ export default function Footer(props) {
         />
       </View>
     );
-  };
-
+  }, [collapse]);
 
   return (
     <Animated.View style={[styles.container, props.style]}>
-      {false && <Button
+      <Button
+        style={{ maxHeight: 48 }}
         onPress={props.onCharacterSelect}
         imageStyle={imageStyle}
         source={Images.button.character}
-      />}
-      <CharacterPicker />
+      />
+
+      {false && <CharacterPicker />}
 
       <View style={{ flex: 1 }} />
 
-      <View style={{ flexDirection: 'column-reverse' }}>
+      <View style={{ flexDirection: "column-reverse" }}>
         <Button
           onPress={() => {
             setMenuOpen(!menuOpen);
@@ -62,30 +66,29 @@ export default function Footer(props) {
           source={Images.button.menu}
         />
 
-        {menuOpen && renderMenu()}
+        {menuOpen && renderMenu}
       </View>
     </Animated.View>
   );
-
 }
 
 const styles = StyleSheet.create({
   container: {
-    alignItems: 'stretch',
-    justifyContent: 'center',
-    flexDirection: 'row',
-    maxHeight: 48,
+    alignItems: "flex-end",
+    justifyContent: "center",
+    flexDirection: "row",
+    // maxHeight: 48,
   },
   paragraph: {
     margin: 24,
     fontSize: 18,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    color: '#34495e',
+    fontWeight: "bold",
+    textAlign: "center",
+    color: "#34495e",
   },
   button: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
