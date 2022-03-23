@@ -1,6 +1,4 @@
 import { Audio } from "expo-av";
-// import Assets from './Assets';
-import AssetUtils from "expo-asset-utils";
 import AudioFiles from "./Audio";
 import { Platform } from "react-native";
 
@@ -8,11 +6,12 @@ import { Platform } from "react-native";
 const MUTED = Platform.OS === "web";
 
 class AudioManager {
-  sounds = {};
+  sounds = AudioFiles;
 
   audioFileMoveIndex = 0;
 
   playMoveSound = async () => {
+    console.log("move sound");
     await this.playAsync(
       this.sounds.chicken.move[`${this.audioFileMoveIndex}`]
     );
@@ -39,31 +38,48 @@ class AudioManager {
     );
   };
 
+  _soundCache = {};
+
+  getIdleSoundAsync = async (resourceId) => {
+    if (this._soundCache[resourceId]) {
+      for (const sound of this._soundCache[resourceId]) {
+        const status = await sound.getStatusAsync();
+        if (!status.isPlaying) {
+          return sound;
+        }
+      }
+    }
+    return null;
+  };
+
+  createIdleSoundAsync = async (resourceId) => {
+    if (!this._soundCache[resourceId]) {
+      this._soundCache[resourceId] = [];
+    }
+    const tag = "loaded-sound-" + resourceId;
+    console.time(tag);
+    const { sound } = await Audio.Sound.createAsync(resourceId);
+    console.timeEnd(tag);
+    this._soundCache[resourceId].push(sound);
+    return sound;
+  };
+
   playAsync = async (soundObject, isLooping, startOver = true) => {
     if (MUTED) return;
     // if (store.getState().muted) {
     //   return;
     // }
 
-    // if (this.sounds.hasOwnProperty(name)) {
-    //   const soundObject = this.sounds[name];
-    try {
-      if (startOver) {
-        // await soundObject.setPositionAsync(0);
-      }
-
-      // await soundObject.setIsLoopingAsync(isLooping);
-      // await soundObject.playAsync();
-    } catch (error) {
-      console.warn("Error playing audio", { error });
+    let sound = await this.getIdleSoundAsync(soundObject);
+    if (!sound) {
+      sound = await this.createIdleSoundAsync(soundObject);
+    } else {
+      await sound.setPositionAsync(0);
     }
-    // } else {
-    //   console.warn("Audio doesn't exist", name);
-    //   console.log('Audio: Expected one of: ', this.sounds);
-    // }
+    return await sound.playAsync();
   };
   stopAsync = async (name) => {
-    if (this.sounds.hasOwnProperty(name)) {
+    if (name in this.sounds) {
       const soundObject = this.sounds[name];
       try {
         await soundObject.stopAsync();
@@ -75,7 +91,7 @@ class AudioManager {
     }
   };
   volumeAsync = async (name, volume) => {
-    if (this.sounds.hasOwnProperty(name)) {
+    if (name in this.sounds) {
       const soundObject = this.sounds[name];
       try {
         await soundObject.setVolumeAsync(volume);
@@ -88,7 +104,7 @@ class AudioManager {
   };
 
   pauseAsync = async (name) => {
-    if (this.sounds.hasOwnProperty(name)) {
+    if (name in this.sounds) {
       const soundObject = this.sounds[name];
       try {
         await soundObject.pauseAsync();
@@ -100,69 +116,14 @@ class AudioManager {
     }
   };
 
-  configureExperienceAudioAsync = async () => {
-    await Audio.setIsEnabledAsync(true);
-    // await Audio.setAudioModeAsync({
-    //   allowsRecordingIOS: false,
-    //   interruptionModeIOS: Audio.INTERRUPTION_MODE_IOS_DO_NOT_MIX,
-    //   playsInSilentModeIOS: false,
-    //   shouldDuckAndroid: true,
-    //   interruptionModeAndroid: Audio.INTERRUPTION_MODE_ANDROID_DO_NOT_MIX,
-    // });
-  };
-
   get assets() {
     return AudioFiles;
   }
 
-  setupAudioAsync = async () => {
-    this.sounds = await clone(this.assets);
-    // console.log('sounds', this.sounds);
-  };
-
-  downloadAsync = async () => {
-    // return AssetUtils.cacheAssetsAsync({
-    //   files: [...AssetUtils.arrayFromObject(this.assets)],
-    // });
-  };
-
   setupAsync = async () => {
-    if (MUTED) {
-      return this.setupAudioAsync();
-    }
-
-    return Promise.all([
-      this.configureExperienceAudioAsync(),
-      this.downloadAsync(),
-      this.setupAudioAsync(),
-    ]);
+    // noop -- maybe preload some common sounds upfront
+    return true;
   };
-}
-
-async function clone(obj) {
-  if (obj === null || typeof obj !== "object" || "isActiveClone" in obj) {
-    if (typeof obj === "string" || typeof obj === "number") {
-      if (MUTED) return null;
-      const { sound } = await Audio.Sound.createAsync(obj);
-      return sound;
-    }
-    return obj;
-  }
-
-  if (obj instanceof Date) {
-    var temp = new obj.constructor(); //or new Date(obj);
-  } else {
-    var temp = obj.constructor();
-  }
-
-  for (var key in obj) {
-    if (Object.prototype.hasOwnProperty.call(obj, key)) {
-      obj["isActiveClone"] = null;
-      temp[key] = await clone(obj[key]);
-      delete obj["isActiveClone"];
-    }
-  }
-  return temp;
 }
 
 export default new AudioManager();

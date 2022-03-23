@@ -1,15 +1,15 @@
-import Hero from './Node/Hero';
-import Car from './Node/Car';
-import Log from './Node/Log';
-import Road from './Node/Road';
-import Grass from './Node/Grass';
-import River from './Node/River';
-import Tree from './Node/Tree';
-import Train from './Node/Train';
-import Boulder from './Node/Boulder';
-import RailRoad from './Node/RailRoad';
-import TrainLight from './Node/TrainLight';
-import LilyPad from './Node/LilyPad';
+import Hero from "./Node/Hero";
+import Car from "./Node/Car";
+import Log from "./Node/Log";
+import Road from "./Node/Road";
+import Grass from "./Node/Grass";
+import River from "./Node/River";
+import Tree from "./Node/Tree";
+import Train from "./Node/Train";
+import Boulder from "./Node/Boulder";
+import RailRoad from "./Node/RailRoad";
+import TrainLight from "./Node/TrainLight";
+import LilyPad from "./Node/LilyPad";
 
 class ModelLoader {
   loadModels = async () => {
@@ -41,10 +41,11 @@ class ModelLoader {
       this._hero.setup(),
       this._trainLight.setup(),
     ]);
-    console.log('Done Loading 3D Models!');
+    console.log("Done Loading 3D Models!");
     // } catch (error) {
     //   console.warn(`:( We had a problem loading the 3D Models: ${error}`);
     // }
+    return true;
   };
 }
 

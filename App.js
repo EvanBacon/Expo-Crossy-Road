@@ -1,12 +1,15 @@
-import { loadAsync } from "expo-font";
+import EXAppLoading from "expo-app-loading";
+import { useFonts } from "expo-font";
 import React from "react";
 import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
-import { SafeAreaProvider } from "react-native-safe-area-context";
 import { AppearanceProvider } from "react-native-appearance";
-import GameProvider from "./context/GameProvider";
+import { SafeAreaProvider } from "react-native-safe-area-context";
+import useWindowDimensions from "react-native/Libraries/Utilities/useWindowDimensions";
 
+import GameProvider from "./context/GameProvider";
 import GameScreen from "./screens/GameScreen";
 import AudioManager from "./src/AudioManager";
+import { useResolvedValue } from "./src/hooks/useResolvedValue";
 import ModelLoader from "./src/ModelLoader";
 
 console.ignoredYellowBox = [
@@ -15,61 +18,60 @@ console.ignoredYellowBox = [
   "THREE.WebGLProgram",
 ];
 
-const DEBUG_DONT_LOAD_ASSETS = false;
-
 export default function App() {
   return (
-    <AppearanceProvider>
-      <SafeAreaProvider>
-        <GameProvider>
-          <AppLoading />
-        </GameProvider>
-      </SafeAreaProvider>
-    </AppearanceProvider>
+    <AssetLoading>
+      <AppearanceProvider>
+        <SafeAreaProvider>
+          <GameProvider>
+            <GameScreen />
+          </GameProvider>
+        </SafeAreaProvider>
+      </AppearanceProvider>
+    </AssetLoading>
   );
 }
 
-function AppLoading() {
-  const [appIsReady, setReady] = React.useState(DEBUG_DONT_LOAD_ASSETS);
-  const [error, setError] = React.useState(null);
+function AssetLoading({ children }) {
+  const [fontLoaded] = useFonts({
+    retro: require("./assets/fonts/retro.ttf"),
+  });
 
-  React.useEffect(() => {
-    if (DEBUG_DONT_LOAD_ASSETS) {
-      return;
-    }
-    (async () => {
-      // Test error screen
-      // setError(new Error('testing screen'));
-      try {
-        await Promise.all([
-          AudioManager.setupAsync(),
-          loadAsync({ retro: require("./assets/fonts/retro.ttf") }),
-        ]);
-      } catch ({ message }) {
-        console.error("App: Error loading assets: " + message);
-      }
-      try {
-        await ModelLoader.loadModels();
-        setReady(true);
-      } catch (e) {
-        console.error(e);
-        setError(e);
-      }
-    })();
-  }, []);
+  const [audioLoaded, audioLoadingError] = useResolvedValue(() =>
+    AudioManager.setupAsync()
+  );
 
-  if (DEBUG_DONT_LOAD_ASSETS) {
-    return <GameScreen />;
+  const [modelsLoaded, modelLoadingError] = useResolvedValue(() =>
+    ModelLoader.loadModels()
+  );
+
+  console.log("Loading:", {
+    fonts: fontLoaded,
+    audio: audioLoaded,
+    models: modelsLoaded,
+  });
+
+  if (modelLoadingError) {
+    return (
+      <ErrorScreen
+        message={modelLoadingError.message}
+        stack={modelLoadingError.stack}
+      />
+    );
+  }
+  if (audioLoadingError) {
+    return (
+      <ErrorScreen
+        message={audioLoadingError.message}
+        stack={audioLoadingError.stack}
+      />
+    );
+  }
+  if (modelsLoaded && fontLoaded && audioLoaded) {
+    return children;
   }
 
-  if (error) {
-    return <ErrorScreen message={error.message} stack={error.stack} />;
-  }
-  if (appIsReady) {
-    return <GameScreen />;
-  }
-
-  return <SplashScreen />;
+  return <EXAppLoading />;
 }
 
 const ErrorScreen = ({ message, stack }) => (
@@ -91,14 +93,9 @@ const ErrorScreen = ({ message, stack }) => (
   </View>
 );
 
-const SplashScreen = () => (
-  <Image style={styles.splash} source={require("./assets/icons/loading.png")} />
-);
-
 const styles = StyleSheet.create({
   splash: {
     backgroundColor: "#87C6FF",
-    flex: 1,
     resizeMode: "contain",
   },
   errorContainer: {
