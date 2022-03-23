@@ -7,8 +7,8 @@ import {
   Platform,
   Vibration,
   View,
+  useColorScheme,
 } from "react-native";
-import { useColorScheme } from "react-native-appearance";
 
 import GestureRecognizer, { swipeDirections } from "../components/GestureView";
 import Score from "../components/ScoreText";

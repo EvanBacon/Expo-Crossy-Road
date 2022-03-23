@@ -1,10 +1,8 @@
 import EXAppLoading from "expo-app-loading";
 import { useFonts } from "expo-font";
 import React from "react";
-import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
-import { AppearanceProvider } from "react-native-appearance";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import useWindowDimensions from "react-native/Libraries/Utilities/useWindowDimensions";
 
 import GameProvider from "./context/GameProvider";
 import GameScreen from "./screens/GameScreen";
@@ -21,13 +19,11 @@ console.ignoredYellowBox = [
 export default function App() {
   return (
     <AssetLoading>
-      <AppearanceProvider>
-        <SafeAreaProvider>
-          <GameProvider>
-            <GameScreen />
-          </GameProvider>
-        </SafeAreaProvider>
-      </AppearanceProvider>
+      <SafeAreaProvider>
+        <GameProvider>
+          <GameScreen />
+        </GameProvider>
+      </SafeAreaProvider>
     </AssetLoading>
   );
 }
