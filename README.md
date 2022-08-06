@@ -65,6 +65,11 @@ Learn about how I made this game perform well in the browser: [performance](perf
 - [GSAP](https://greensock.com/) for animating
 - [Webpack](https://www.npmjs.com/package/@expo/webpack-config)
 
+## How to run?
+Build the web app with ```bash expo build:web ```
+
+Start the aplication with ```bash expo start:web ```
+
 ## Disclaimer
 
 I am in no way associated with Hipster Whale.
