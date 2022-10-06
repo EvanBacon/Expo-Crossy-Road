@@ -1,0 +1,15 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+path="res://.import/pig7 #010799.mp3-4a86a3cb73ac8202a959e7fd790c248e.mp3str"
+
+[deps]
+
+source_file="res://Assets/audio/pig7 #010799.mp3"
+dest_files=[ "res://.import/pig7 #010799.mp3-4a86a3cb73ac8202a959e7fd790c248e.mp3str" ]
+
+[params]
+
+loop=true
+loop_offset=0

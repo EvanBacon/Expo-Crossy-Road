@@ -1,0 +1,23 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/frog1 #010607.wav-97b1e8047ff80ca29b18619157f1943a.sample"
+
+[deps]
+
+source_file="res://Assets/audio/frog1 #010607.wav"
+dest_files=[ "res://.import/frog1 #010607.wav-97b1e8047ff80ca29b18619157f1943a.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=0

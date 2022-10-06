@@ -1,0 +1,20 @@
+[remap]
+
+importer="wavefront_obj"
+type="Mesh"
+path="res://.import/palmer.obj-c5f1560d64b39de94b886e654ebf5a40.mesh"
+
+[deps]
+
+files=[ "res://.import/palmer.obj-c5f1560d64b39de94b886e654ebf5a40.mesh" ]
+
+source_file="res://Assets/models/characters/palmer/palmer.obj"
+dest_files=[ "res://.import/palmer.obj-c5f1560d64b39de94b886e654ebf5a40.mesh", "res://.import/palmer.obj-c5f1560d64b39de94b886e654ebf5a40.mesh" ]
+
+[params]
+
+generate_tangents=true
+scale_mesh=Vector3( 1, 1, 1 )
+offset_mesh=Vector3( 0, 0, 0 )
+octahedral_compression=true
+optimize_mesh_flags=4286

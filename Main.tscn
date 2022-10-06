@@ -1,0 +1,47 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://vox/laeb.vox" type="ArrayMesh" id=1]
+[ext_resource path="res://Player/scripts/PlayerController.gd" type="Script" id=2]
+
+[sub_resource type="BoxShape" id=2]
+extents = Vector3( 2, 0, 1 )
+
+[sub_resource type="PlaneMesh" id=3]
+
+[sub_resource type="BoxShape" id=1]
+extents = Vector3( 0.203771, 0.205057, 0.204851 )
+
+[node name="Main" type="Spatial"]
+
+[node name="Terrain" type="Area" parent="."]
+
+[node name="CollisionShape" type="CollisionShape" parent="Terrain"]
+transform = Transform( 1.02287, 0, 0, 0, 1, 0, 0, 0, 1.48776, 2, -0.00604324, 1 )
+shape = SubResource( 2 )
+
+[node name="MeshInstance" type="MeshInstance" parent="Terrain"]
+transform = Transform( 17, 0, 0, 0, 1, 0, 0, 0, 4, 17, 0, 4 )
+mesh = SubResource( 3 )
+
+[node name="Player" type="KinematicBody" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0.005, 1 )
+script = ExtResource( 2 )
+
+[node name="CollisionShape" type="CollisionShape" parent="Player"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.00042779, 0 )
+shape = SubResource( 1 )
+
+[node name="laeb" type="MeshInstance" parent="Player"]
+transform = Transform( -4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0.721719, 0, 3.20101 )
+mesh = ExtResource( 1 )
+skeleton = NodePath("../..")
+
+[node name="MeshInstance" type="MeshInstance" parent="Player"]
+transform = Transform( -4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, -0.00042779, 0 )
+skeleton = NodePath("")
+
+[node name="ARVROrigin" type="ARVROrigin" parent="Player"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -1, -0.00042779, 0 )
+
+[node name="ARVRCamera" type="ARVRCamera" parent="Player/ARVROrigin"]
+transform = Transform( -4.37114e-08, 0.5, -0.866025, 0, 0.866025, 0.5, 1, 2.18557e-08, -3.78552e-08, -2, 4, 0 )

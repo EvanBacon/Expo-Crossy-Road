@@ -1,0 +1,15 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+path="res://.import/watersplashlow.mp3-b51b21a72631f42f4fd6c894172f7f50.mp3str"
+
+[deps]
+
+source_file="res://Assets/audio/watersplashlow.mp3"
+dest_files=[ "res://.import/watersplashlow.mp3-b51b21a72631f42f4fd6c894172f7f50.mp3str" ]
+
+[params]
+
+loop=true
+loop_offset=0

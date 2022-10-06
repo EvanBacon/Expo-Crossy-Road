@@ -1,0 +1,16 @@
+[remap]
+
+importer="MagicaVoxel.With.Extensions"
+type="Mesh"
+path="res://.import/zambivaka.vox-f243f8101091cb09b49f04b8861fcea1.mesh"
+
+[deps]
+
+source_file="res://vox/zambivaka.vox"
+dest_files=[ "res://.import/zambivaka.vox-f243f8101091cb09b49f04b8861fcea1.mesh" ]
+
+[params]
+
+Scale=0.1
+GreedyMeshGenerator=true
+SnapToGround=false

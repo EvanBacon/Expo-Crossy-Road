@@ -1,0 +1,23 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/train_pass_shorter.wav-f0fb43c8b84a646ffd9e506fc99b6ee2.sample"
+
+[deps]
+
+source_file="res://Assets/audio/train_pass_shorter.wav"
+dest_files=[ "res://.import/train_pass_shorter.wav-f0fb43c8b84a646ffd9e506fc99b6ee2.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=0

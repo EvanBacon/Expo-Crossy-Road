@@ -1,0 +1,20 @@
+[remap]
+
+importer="wavefront_obj"
+type="Mesh"
+path="res://.import/avocoder.obj-0eaf3f51c12a3b03249516375301253d.mesh"
+
+[deps]
+
+files=[ "res://.import/avocoder.obj-0eaf3f51c12a3b03249516375301253d.mesh" ]
+
+source_file="res://Assets/models/characters/avocoder/avocoder.obj"
+dest_files=[ "res://.import/avocoder.obj-0eaf3f51c12a3b03249516375301253d.mesh", "res://.import/avocoder.obj-0eaf3f51c12a3b03249516375301253d.mesh" ]
+
+[params]
+
+generate_tangents=true
+scale_mesh=Vector3( 1, 1, 1 )
+offset_mesh=Vector3( 0, 0, 0 )
+octahedral_compression=true
+optimize_mesh_flags=4286

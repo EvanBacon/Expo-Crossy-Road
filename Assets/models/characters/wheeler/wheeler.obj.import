@@ -1,0 +1,20 @@
+[remap]
+
+importer="wavefront_obj"
+type="Mesh"
+path="res://.import/wheeler.obj-ca992d00fa47b4e69dc172c7e67ac657.mesh"
+
+[deps]
+
+files=[ "res://.import/wheeler.obj-ca992d00fa47b4e69dc172c7e67ac657.mesh" ]
+
+source_file="res://Assets/models/characters/wheeler/wheeler.obj"
+dest_files=[ "res://.import/wheeler.obj-ca992d00fa47b4e69dc172c7e67ac657.mesh", "res://.import/wheeler.obj-ca992d00fa47b4e69dc172c7e67ac657.mesh" ]
+
+[params]
+
+generate_tangents=true
+scale_mesh=Vector3( 1, 1, 1 )
+offset_mesh=Vector3( 0, 0, 0 )
+octahedral_compression=true
+optimize_mesh_flags=4286

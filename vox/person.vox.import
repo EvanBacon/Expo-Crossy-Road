@@ -1,0 +1,16 @@
+[remap]
+
+importer="MagicaVoxel.With.Extensions"
+type="Mesh"
+path="res://.import/person.vox-65e0ea378a3c875bcd5262a3fc053d54.mesh"
+
+[deps]
+
+source_file="res://vox/person.vox"
+dest_files=[ "res://.import/person.vox-65e0ea378a3c875bcd5262a3fc053d54.mesh" ]
+
+[params]
+
+Scale=0.1
+GreedyMeshGenerator=true
+SnapToGround=false

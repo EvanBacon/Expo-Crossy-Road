@@ -1,0 +1,16 @@
+[remap]
+
+importer="MagicaVoxel.With.Extensions"
+type="Mesh"
+path="res://.import/zakumi.vox-3570b2b4f82cfb1ee391d43291d6ccf6.mesh"
+
+[deps]
+
+source_file="res://vox/zakumi.vox"
+dest_files=[ "res://.import/zakumi.vox-3570b2b4f82cfb1ee391d43291d6ccf6.mesh" ]
+
+[params]
+
+Scale=0.1
+GreedyMeshGenerator=true
+SnapToGround=false

@@ -1,0 +1,15 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+path="res://.import/carexplosion2 #010856.mp3-0c29a880d519aff80a0bce256c4bbe6a.mp3str"
+
+[deps]
+
+source_file="res://Assets/audio/carexplosion2 #010856.mp3"
+dest_files=[ "res://.import/carexplosion2 #010856.mp3-0c29a880d519aff80a0bce256c4bbe6a.mp3str" ]
+
+[params]
+
+loop=true
+loop_offset=0

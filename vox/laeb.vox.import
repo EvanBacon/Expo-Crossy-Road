@@ -1,0 +1,16 @@
+[remap]
+
+importer="MagicaVoxel.With.Extensions"
+type="Mesh"
+path="res://.import/laeb.vox-5635f22101763b3127c999358b6cb291.mesh"
+
+[deps]
+
+source_file="res://vox/laeb.vox"
+dest_files=[ "res://.import/laeb.vox-5635f22101763b3127c999358b6cb291.mesh" ]
+
+[params]
+
+Scale=0.1
+GreedyMeshGenerator=true
+SnapToGround=false

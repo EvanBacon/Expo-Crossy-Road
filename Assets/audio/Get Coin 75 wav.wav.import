@@ -1,0 +1,23 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/Get Coin 75 wav.wav-372d7b0cd11ca9f919acd9a9ad0abd16.sample"
+
+[deps]
+
+source_file="res://Assets/audio/Get Coin 75 wav.wav"
+dest_files=[ "res://.import/Get Coin 75 wav.wav-372d7b0cd11ca9f919acd9a9ad0abd16.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=0

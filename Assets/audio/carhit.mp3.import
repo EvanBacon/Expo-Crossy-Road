@@ -1,0 +1,15 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+path="res://.import/carhit.mp3-6a426cc9c7ddfe2b72c41ab34e183dbf.mp3str"
+
+[deps]
+
+source_file="res://Assets/audio/carhit.mp3"
+dest_files=[ "res://.import/carhit.mp3-6a426cc9c7ddfe2b72c41ab34e183dbf.mp3str" ]
+
+[params]
+
+loop=true
+loop_offset=0
