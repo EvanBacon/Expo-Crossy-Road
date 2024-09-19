@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Bouncy Bacon",
-    "slug": "bouncy-bacon",
+    "slug": "crossyroad",
     "privacy": "public",
     "orientation": "portrait",
     "primaryColor": "#87C6FF",
@@ -20,8 +20,10 @@
       "icon": "./assets/icons/app.png",
       "versionCode": 1
     },
-    "plugins": [
-      "expo-asset"
-    ]
+    "extra": {
+      "eas": {
+        "projectId": "6625b135-4ac8-4e1f-881a-5a40853dbb6d"
+      }
+    }
   }
 }

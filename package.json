@@ -5,10 +5,9 @@
   "author": "Evan Bacon",
   "private": false,
   "scripts": {
-    "serve": "npx serve ./dist",
-    "build:web": "expo export -p web",
-    "start:web": "expo start",
-    "deploy:web": "netlify deploy --prod --dir dist"
+    "start": "expo",
+    "predeploy:web": "expo export -p web",
+    "deploy:web": "EXPO_STAGING=1 eas deploy"
   },
   "dependencies": {
     "@expo/metro-runtime": "~3.2.3",

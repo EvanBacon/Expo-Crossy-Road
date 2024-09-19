@@ -10,14 +10,14 @@ export default function useAppState() {
   }
 
   useEffect(() => {
-    AppState.addEventListener("change", onChange);
+    const listener = AppState.addEventListener("change", onChange);
     if (Platform.OS === "web") {
       window.onfocus = () => onChange("active");
       window.onblur = () => onChange("background");
     }
 
     return () => {
-      AppState.removeEventListener("change", onChange);
+      listener.remove();
     };
   });
 

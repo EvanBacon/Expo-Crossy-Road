@@ -33,7 +33,7 @@ This is **strictly** for educational purposes only. (plz don't sue me)
 
 ## Models
 
-I created the models using the open source project [MagicaVoxel](https://ephtracy.github.io/). 
+I created the models using the open source project [MagicaVoxel](https://ephtracy.github.io/).
 
 All of the characters are based on other open source developers:
 
@@ -48,13 +48,9 @@ If you'd like to see someone else in the game, please open an issue!
 
 <!-- Expo: https://exp.host/@bacon/crossy-road -->
 
-![Why did the chicken cross the road? Because, yolo](https://media.giphy.com/media/UAxmnxRLkmHEQ/200w_d.gif?raw=true 'Preview Gif 😀 ...I love you')
+![Why did the chicken cross the road? Because, yolo](https://media.giphy.com/media/UAxmnxRLkmHEQ/200w_d.gif?raw=true "Preview Gif 😀 ...I love you")
 
 [![reactnative.gallery](https://img.shields.io/badge/reactnative.gallery-%F0%9F%8E%AC-green.svg)](https://reactnative.gallery)
-
-## Performance
-
-Learn about how I made this game perform well in the browser: [performance](performance.md).
 
 ## Stack
 
@@ -63,7 +59,6 @@ Learn about how I made this game perform well in the browser: [performance](perf
 - [React Native](http://reactnative.dev/) (ios, android)
 - [THREE.js](https://threejs.org/) for rendering
 - [GSAP](https://greensock.com/) for animating
-- [Webpack](https://www.npmjs.com/package/@expo/webpack-config)
 
 ## Disclaimer
 
