@@ -1,11 +1,11 @@
 import { Component } from "react";
 import { Share, StyleSheet, Text, View } from "react-native";
 
-import Characters from "../src/Characters";
-import Colors from "../src/Colors";
-import Button from "../components/Button";
-import Carousel from "../components/CharacterSelect/Carousel";
-import Images from "../src/Images";
+import Characters from "@/Characters";
+import Colors from "@/Colors";
+import Button from "../../components/Button";
+import Carousel from "../../components/CharacterSelect/Carousel";
+import Images from "@/Images";
 
 // import connectCharacter from '../../utils/connectCharacter';
 class CharacterSelect extends Component {

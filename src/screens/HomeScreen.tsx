@@ -11,9 +11,9 @@ import {
 } from "react-native";
 import { useSafeArea } from "react-native-safe-area-context";
 
-import Hand from "../components/HandCTA";
-import Footer from "../components/Home/Footer";
-import GameContext from "../src/context/GameContext";
+import Hand from "../../components/HandCTA";
+import Footer from "../../components/Home/Footer";
+import GameContext from "@/context/GameContext";
 
 let hasShownTitle = false;
 
@@ -103,7 +103,7 @@ function Screen(props) {
       >
         <Text style={styles.coins}>{props.coins}</Text>
         <Animated.Image
-          source={require("../assets/images/title.png")}
+          source={require("../../assets/images/title.png")}
           style={[styles.title, animatedTitleStyle]}
         />
 

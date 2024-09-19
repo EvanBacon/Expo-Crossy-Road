@@ -1,29 +1,29 @@
-import React, { Component } from 'react';
-import { Share, StyleSheet, Text, View } from 'react-native';
+import React, { Component } from "react";
+import { Share, StyleSheet, Text, View } from "react-native";
 
-import Button from '../components/Button';
-import Characters from '../src/Characters';
-import Colors from '../src/Colors';
-import Images from '../src/Images';
+import Button from "../../components/Button";
+import Characters from "@/Characters";
+import Colors from "@/Colors";
+import Images from "@/Images";
 
 // import Footer from './Footer';
 
 const TitleButton = ({ text, imageStyle, source, onPress }) => (
   <View
     style={{
-      justifyContent: 'center',
+      justifyContent: "center",
       width: 115,
       height: 100,
-      alignItems: 'center',
+      alignItems: "center",
       marginHorizontal: 4,
     }}
   >
     <Button imageStyle={imageStyle} source={source} onPress={onPress} />
     <Text
       style={{
-        fontFamily: 'retro',
-        textAlign: 'center',
-        color: 'white',
+        fontFamily: "retro",
+        textAlign: "center",
+        color: "white",
         fontSize: 12,
         marginTop: 8,
       }}
@@ -36,7 +36,7 @@ const TitleButton = ({ text, imageStyle, source, onPress }) => (
 class Settings extends Component {
   state = {
     currentIndex: 0,
-    characters: Object.keys(Characters).map(val => Characters[val]),
+    characters: Object.keys(Characters).map((val) => Characters[val]),
   };
   dismiss = () => {
     this.props.goBack();
@@ -56,21 +56,21 @@ class Settings extends Component {
     Share.share(
       {
         message: `Check out Bouncy Bacon by @baconbrix`,
-        url: 'https://crossyroad.netlify.com',
-        title: 'Bouncy Bacon',
+        url: "https://crossyroad.netlify.com",
+        title: "Bouncy Bacon",
       },
       {
-        dialogTitle: 'Share Bouncy Bacon',
+        dialogTitle: "Share Bouncy Bacon",
         excludedActivityTypes: [
-          'com.apple.UIKit.activity.AirDrop', // This speeds up showing the share sheet by a lot
-          'com.apple.UIKit.activity.AddToReadingList', // This is just lame :)
+          "com.apple.UIKit.activity.AirDrop", // This speeds up showing the share sheet by a lot
+          "com.apple.UIKit.activity.AddToReadingList", // This is just lame :)
         ],
         tintColor: Colors.blue,
-      },
+      }
     );
   };
 
-  _showResult = result => {
+  _showResult = (result) => {
     // if (result.action === Share.sharedAction) {
     //   if (result.activityType) {
     //     this.setState({result: 'shared with an activityType: ' + result.activityType});
@@ -94,64 +94,64 @@ class Settings extends Component {
 
     const buttons = [
       {
-        text: 'Language',
+        text: "Language",
         source: Images.button.language,
         imageStyle: imageStyle,
-        onPress: _ => { },
+        onPress: (_) => {},
       },
       {
-        text: 'Restore\nPurchases',
+        text: "Restore\nPurchases",
         source: Images.button.purchase,
         imageStyle: imageStyle,
-        onPress: _ => { },
+        onPress: (_) => {},
       },
       {
-        text: 'Credits',
+        text: "Credits",
         source: Images.button.credits,
         imageStyle: imageStyle,
-        onPress: _ => { },
+        onPress: (_) => {},
       },
       {
-        text: 'Conserve\nBattery',
+        text: "Conserve\nBattery",
         source: Images.button.conserve_battery,
         imageStyle: imageStyle,
-        onPress: _ => { },
+        onPress: (_) => {},
       },
       {
-        text: 'Mute',
+        text: "Mute",
         source: Images.button.mute,
         imageStyle: imageStyle,
-        onPress: _ => { },
+        onPress: (_) => {},
       },
       {
-        text: 'No Shadows',
+        text: "No Shadows",
         source: Images.button.shadows,
         imageStyle: imageStyle,
-        onPress: _ => { },
+        onPress: (_) => {},
       },
       {
-        text: 'Reminders',
+        text: "Reminders",
         source: Images.button.alerts,
         imageStyle: imageStyle,
-        onPress: _ => { },
+        onPress: (_) => {},
       },
       {
-        text: 'Save Your Figurines',
+        text: "Save Your Figurines",
         source: Images.button.facebook,
         imageStyle: { width: 120, height: 48 },
-        onPress: _ => { },
+        onPress: (_) => {},
       },
     ];
 
     return (
       <View style={[styles.container, this.props.style]}>
         <View
-          style={{ flexDirection: 'row', marginTop: 8, paddingHorizontal: 4 }}
+          style={{ flexDirection: "row", marginTop: 8, paddingHorizontal: 4 }}
         >
           <Button
             source={Images.button.back}
             imageStyle={imageStyle}
-            onPress={_ => {
+            onPress={(_) => {
               this.dismiss();
             }}
           />
@@ -161,19 +161,19 @@ class Settings extends Component {
           key="content"
           style={{
             flex: 1,
-            flexDirection: 'row',
-            flexWrap: 'wrap',
-            justifyContent: 'center',
-            alignItems: 'center',
+            flexDirection: "row",
+            flexWrap: "wrap",
+            justifyContent: "center",
+            alignItems: "center",
           }}
         >
           <View
             key="content"
             style={{
-              flexDirection: 'row',
-              flexWrap: 'wrap',
-              justifyContent: 'center',
-              alignItems: 'center',
+              flexDirection: "row",
+              flexWrap: "wrap",
+              justifyContent: "center",
+              alignItems: "center",
             }}
           >
             {buttons.map((val, index) => (
@@ -193,7 +193,7 @@ class Settings extends Component {
     );
   }
 }
-export default Settings
+export default Settings;
 // export default connect(
 //   state => ({}),
 //   {},
@@ -206,16 +206,16 @@ Settings.defaultProps = {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    backgroundColor: 'rgba(105, 201, 230, 0.8)',
-    flexWrap: 'wrap',
-    maxWidth: '100%',
+    justifyContent: "center",
+    backgroundColor: "rgba(105, 201, 230, 0.8)",
+    flexWrap: "wrap",
+    maxWidth: "100%",
   },
   paragraph: {
     margin: 24,
     fontSize: 18,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    color: '#34495e',
+    fontWeight: "bold",
+    textAlign: "center",
+    color: "#34495e",
   },
 });

@@ -16,9 +16,9 @@ import GestureRecognizer, {
 import Score from "../../components/ScoreText";
 import Engine from "@/GameEngine";
 import State from "@/state";
-import GameOverScreen from "../../screens/GameOverScreen";
-import HomeScreen from "../../screens/HomeScreen";
-import SettingsScreen from "../../screens/SettingsScreen";
+import GameOverScreen from "@/screens/GameOverScreen";
+import HomeScreen from "@/screens/HomeScreen";
+import SettingsScreen from "@/screens/SettingsScreen";
 import GameContext from "../context/GameContext";
 
 const DEBUG_CAMERA_CONTROLS = false;

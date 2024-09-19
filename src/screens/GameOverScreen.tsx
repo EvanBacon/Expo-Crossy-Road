@@ -9,11 +9,11 @@ import {
 } from "react-native";
 import { useSafeArea } from "react-native-safe-area-context";
 
-import Banner from "../components/GameOver/Banner";
-import Footer from "../components/GameOver/Footer";
-import AudioManager from "../src/AudioManager";
-import Characters from "../src/Characters";
-import Images from "../src/Images";
+import Banner from "../../components/GameOver/Banner";
+import Footer from "../../components/GameOver/Footer";
+import AudioManager from "@/AudioManager";
+import Characters from "@/Characters";
+import Images from "@/Images";
 
 // import { setGameState } from '../src/actions/game';
 
