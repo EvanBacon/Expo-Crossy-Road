@@ -9,7 +9,7 @@ export default function Banner(props) {
       onPress={onPress}
       imageStyle={[styles.button, style]}
       source={source}
-      style={{ marginLeft: 8, width: 90, flex: undefined }}
+      style={{ flex: 0 }}
     />
   );
 
@@ -45,6 +45,7 @@ const styles = StyleSheet.create({
   },
   banner: {
     flex: 1,
+    gap: 24,
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
@@ -60,6 +61,5 @@ const styles = StyleSheet.create({
   },
   button: {
     height: 56,
-    marginLeft: 24,
   },
 });

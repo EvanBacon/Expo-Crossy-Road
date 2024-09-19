@@ -8,12 +8,6 @@ import AudioManager from "@/AudioManager";
 import { useResolvedValue } from "@/hooks/useResolvedValue";
 import ModelLoader from "@/ModelLoader";
 
-console.ignoredYellowBox = [
-  "WebGL",
-  "THREE.WebGLRenderer",
-  "THREE.WebGLProgram",
-];
-
 export default function App() {
   return (
     <AssetLoading>
@@ -36,12 +30,6 @@ function AssetLoading({ children }) {
   const [modelsLoaded, modelLoadingError] = useResolvedValue(() =>
     ModelLoader.loadModels()
   );
-
-  console.log("Loading:", {
-    fonts: fontLoaded,
-    audio: audioLoaded,
-    models: modelsLoaded,
-  });
 
   if (modelLoadingError) {
     return (

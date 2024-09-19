@@ -38,15 +38,13 @@ function Screen(props) {
   React.useEffect(() => {
     if (!hasShownTitle) {
       hasShownTitle = true;
-      InteractionManager.runAfterInteractions(() => {
-        Animated.timing(animation, {
-          useNativeDriver: true,
-          toValue: 1,
-          duration: 800,
-          delay: 0,
-          easing: Easing.in(Easing.qubic),
-        }).start();
-      });
+
+      Animated.timing(animation, {
+        useNativeDriver: process.env.EXPO_OS !== "web",
+        toValue: 1,
+        duration: 800,
+        delay: 0,
+      }).start();
     }
   }, []);
 
@@ -91,7 +89,7 @@ function Screen(props) {
           Animated.timing(animation, {
             toValue: 0,
             duration: 400,
-            useNativeDriver: true,
+            useNativeDriver: process.env.EXPO_OS !== "web",
             easing: Easing.in(Easing.qubic),
             onComplete: ({ finished }) => {
               if (finished) {

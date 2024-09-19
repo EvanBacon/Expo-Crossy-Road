@@ -36,9 +36,9 @@ class AudioManager {
     );
   };
 
-  _soundCache = {};
+  _soundCache: Record<number, Audio.Sound[]> = {};
 
-  getIdleSoundAsync = async (resourceId) => {
+  getIdleSoundAsync = async (resourceId: number) => {
     if (this._soundCache[resourceId]) {
       for (const sound of this._soundCache[resourceId]) {
         const status = await sound.getStatusAsync();
@@ -62,11 +62,8 @@ class AudioManager {
     return sound;
   };
 
-  playAsync = async (soundObject, isLooping, startOver = true) => {
+  playAsync = async (soundObject: number) => {
     if (MUTED) return;
-    // if (store.getState().muted) {
-    //   return;
-    // }
 
     let sound = await this.getIdleSoundAsync(soundObject);
     if (!sound) {
