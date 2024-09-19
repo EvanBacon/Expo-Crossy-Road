@@ -6,3 +6,4 @@ release/builds
 /web-build/
 /web-report
 .DS_Store
+/dist

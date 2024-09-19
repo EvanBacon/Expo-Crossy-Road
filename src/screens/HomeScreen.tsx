@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { useSafeArea } from "react-native-safe-area-context";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import Hand from "@/components/HandCTA";
 import Footer from "@/components/Home/Footer";
@@ -38,7 +38,7 @@ function Screen(props) {
   React.useEffect(() => {
     if (!hasShownTitle) {
       hasShownTitle = true;
-      InteractionManager.runAfterInteractions((_) => {
+      InteractionManager.runAfterInteractions(() => {
         Animated.timing(animation, {
           useNativeDriver: true,
           toValue: 1,
@@ -50,7 +50,7 @@ function Screen(props) {
     }
   }, []);
 
-  const { top, bottom, left, right } = useSafeArea();
+  const { top, bottom, left, right } = useSafeAreaInsets();
 
   const animatedTitleStyle = {
     transform: [

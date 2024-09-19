@@ -20,6 +20,7 @@ import SettingsScreen from "@/screens/SettingsScreen";
 import GameContext from "../context/GameContext";
 
 const DEBUG_CAMERA_CONTROLS = false;
+
 class Game extends Component {
   /// Reserve State for UI related updates...
   state = {
@@ -304,8 +305,6 @@ const GestureView = ({ onStartGesture, onSwipe, ...props }) => {
 function GameScreen(props) {
   const scheme = useColorScheme();
   const { character } = React.useContext(GameContext);
-
-  // const appState = useAppState();
 
   return (
     <Game {...props} character={character} isDarkMode={scheme === "dark"} />
