@@ -32,7 +32,7 @@ export class CrossyScene extends Scene {
     this.worldWithCamera.add(this.world);
     this.add(this.worldWithCamera);
 
-    const light = new DirectionalLight(0xdfebff, 1.75);
+    const light = new DirectionalLight(0xffffff, 0.5);
     light.position.set(20, 30, 0.05);
     light.castShadow = useShadows;
     light.shadow.mapSize.width = 1024 * 2;
