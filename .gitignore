@@ -5,3 +5,4 @@ release/builds
 .vscode
 /web-build/
 /web-report
+.DS_Store

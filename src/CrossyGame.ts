@@ -1,14 +1,20 @@
-import { Renderer } from 'expo-three';
-import { TweenMax } from 'gsap';
-import { Vibration } from 'react-native';
-import { AmbientLight, DirectionalLight, Group, OrthographicCamera, Scene } from 'three';
+import { Renderer } from "expo-three";
+import { TweenMax } from "gsap";
+import { Vibration } from "react-native";
+import {
+  AmbientLight,
+  DirectionalLight,
+  Group,
+  OrthographicCamera,
+  Scene,
+} from "three";
 
-import AudioManager from '../src/AudioManager';
-import { MAP_OFFSET, maxRows } from './GameSettings';
-import Feathers from './Particles/Feathers';
-import Water from './Particles/Water';
-import Rows from './Row';
-import { Fill } from './Row/Grass';
+import AudioManager from "./AudioManager";
+import { MAP_OFFSET, maxRows } from "./GameSettings";
+import Feathers from "./Particles/Feathers";
+import Water from "./Particles/Water";
+import Rows from "./Row";
+import { Fill } from "./Row/Grass";
 
 // TODO Add to state - disable/enable when battery is low
 const useParticles = true;
@@ -17,7 +23,7 @@ const useShadows = true;
 export class CrossyScene extends Scene {
   constructor({ gl }) {
     super();
-    this.__gl = gl
+    this.__gl = gl;
 
     this.worldWithCamera = new Group();
     this.world = new CrossyWorld();
@@ -51,7 +57,7 @@ export class CrossyScene extends Scene {
     this.light.castShadow = enabled;
   }
 
-  resetParticles = position => {
+  resetParticles = (position) => {
     if (!useParticles) return;
     this.featherParticles.mesh.position.copy(position);
     this.waterParticles.mesh.position.copy(position);
@@ -62,11 +68,11 @@ export class CrossyScene extends Scene {
   useParticle = (model, type, direction = 0) => {
     if (!useParticles) return;
     requestAnimationFrame(async () => {
-      if (type === 'water') {
+      if (type === "water") {
         this.waterParticles.mesh.position.copy(model.position);
         this.waterParticles.run(type);
         await AudioManager.playAsync(AudioManager.sounds.water);
-      } else if (type === 'feathers') {
+      } else if (type === "feathers") {
         this.featherParticles.mesh.position.copy(model.position);
         this.featherParticles.run(type, direction);
       }
@@ -161,11 +167,11 @@ export class GameMap {
   }
 
   // Detect collisions with trees/cars
-  treeCollision = position => {
+  treeCollision = (position) => {
     const targetZ = `${position.z | 0}`;
     if (targetZ in this.floorMap) {
       const { type, entity } = this.floorMap[targetZ];
-      if (type === 'grass') {
+      if (type === "grass") {
         const key = `${position.x | 0}`;
         if (key in entity.obstacleMap) {
           return true;
@@ -221,7 +227,7 @@ export class CrossyGameMap extends GameMap {
   }
 
   // Scene generators
-  newRow = rowKind => {
+  newRow = (rowKind) => {
     if (this.grasses.count === maxRows) {
       this.grasses.count = 0;
     }
@@ -235,32 +241,32 @@ export class CrossyGameMap extends GameMap {
       this.railRoads.count = 0;
     }
     if (this.rowCount < 10) {
-      rowKind = 'grass';
+      rowKind = "grass";
     }
 
-    const ROW_TYPES = ['grass', 'roadtype', 'water'];
+    const ROW_TYPES = ["grass", "roadtype", "water"];
     if (rowKind == null) {
       rowKind = ROW_TYPES[Math.floor(Math.random() * ROW_TYPES.length)];
     }
 
     switch (rowKind) {
-      case 'grass':
+      case "grass":
         this.grasses.items[this.grasses.count].position.z = this.rowCount;
         this.grasses.items[this.grasses.count].generate(
-          this.mapRowToObstacle(this.rowCount),
+          this.mapRowToObstacle(this.rowCount)
         );
         this.setRow(this.rowCount, {
-          type: 'grass',
+          type: "grass",
           entity: this.grasses.items[this.grasses.count],
         });
         this.grasses.count++;
         break;
-      case 'roadtype':
+      case "roadtype":
         if (((Math.random() * 4) | 0) === 0) {
           this.railRoads.items[this.railRoads.count].position.z = this.rowCount;
           this.railRoads.items[this.railRoads.count].active = true;
           this.setRow(this.rowCount, {
-            type: 'railRoad',
+            type: "railRoad",
             entity: this.railRoads.items[this.railRoads.count],
           });
           this.railRoads.count++;
@@ -268,21 +274,23 @@ export class CrossyGameMap extends GameMap {
           this.roads.items[this.roads.count].position.z = this.rowCount;
 
           const previousRowType = (this.getRow(this.rowCount - 1) || {}).type;
-          this.roads.items[this.roads.count].isFirstLane(previousRowType !== 'road')
+          this.roads.items[this.roads.count].isFirstLane(
+            previousRowType !== "road"
+          );
           this.roads.items[this.roads.count].active = true;
           this.setRow(this.rowCount, {
-            type: 'road',
+            type: "road",
             entity: this.roads.items[this.roads.count],
           });
           this.roads.count++;
         }
         break;
-      case 'water':
+      case "water":
         this.water.items[this.water.count].position.z = this.rowCount;
         this.water.items[this.water.count].active = true;
         this.water.items[this.water.count].generate();
         this.setRow(this.rowCount, {
-          type: 'water',
+          type: "water",
           entity: this.water.items[this.water.count],
         });
         this.water.count++;
@@ -317,7 +325,7 @@ export class CrossyGameMap extends GameMap {
 
     this.grasses.items[this.grasses.count].position.z = this.rowCount;
     this.grasses.items[this.grasses.count].generate(
-      this.mapRowToObstacle(this.rowCount),
+      this.mapRowToObstacle(this.rowCount)
     );
     this.grasses.count++;
     this.rowCount++;
@@ -327,7 +335,7 @@ export class CrossyGameMap extends GameMap {
     }
   };
 
-  mapRowToObstacle = row => {
+  mapRowToObstacle = (row) => {
     if (this.rowCount < 5) {
       return Fill.solid;
     } else if (this.rowCount < 10) {

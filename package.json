@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "description": "The infinite retro bouncer you'll never need to put down",
   "author": "Evan Bacon",
+  "main": "expo-router/entry",
   "private": false,
   "scripts": {
     "start": "expo",
@@ -18,7 +19,10 @@
     "expo-asset": "~10.0.10",
     "expo-av": "~14.0.7",
     "expo-gl": "~14.0.2",
+    "expo-linking": "^6.3.1",
+    "expo-router": "^3.5.23",
     "expo-sharing": "~12.0.1",
+    "expo-status-bar": "~1.12.1",
     "expo-three": "^6.1.0",
     "gsap": "^2.0.2",
     "react": "18.2.0",

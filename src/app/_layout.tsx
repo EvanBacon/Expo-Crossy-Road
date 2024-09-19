@@ -1,13 +1,12 @@
 import { useFonts } from "expo-font";
 import React from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
-import { SafeAreaProvider } from "react-native-safe-area-context";
+import { Slot } from "expo-router";
 
-import GameProvider from "./context/GameProvider";
-import GameScreen from "./screens/GameScreen";
-import AudioManager from "./src/AudioManager";
-import { useResolvedValue } from "./src/hooks/useResolvedValue";
-import ModelLoader from "./src/ModelLoader";
+import GameProvider from "../../context/GameProvider";
+import AudioManager from "@/AudioManager";
+import { useResolvedValue } from "@/hooks/useResolvedValue";
+import ModelLoader from "@/ModelLoader";
 
 console.ignoredYellowBox = [
   "WebGL",
@@ -18,18 +17,16 @@ console.ignoredYellowBox = [
 export default function App() {
   return (
     <AssetLoading>
-      <SafeAreaProvider>
-        <GameProvider>
-          <GameScreen />
-        </GameProvider>
-      </SafeAreaProvider>
+      <GameProvider>
+        <Slot />
+      </GameProvider>
     </AssetLoading>
   );
 }
 
 function AssetLoading({ children }) {
   const [fontLoaded] = useFonts({
-    retro: require("./assets/fonts/retro.ttf"),
+    retro: require("../../assets/fonts/retro.ttf"),
   });
 
   const [audioLoaded, audioLoadingError] = useResolvedValue(() =>

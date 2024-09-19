@@ -1,9 +1,9 @@
-import { Power2, TweenMax } from 'gsap';
-import { Object3D, Box3 } from 'three';
+import { Power2, TweenMax } from "gsap";
+import { Object3D, Box3 } from "three";
 
-import ModelLoader from '../../src/ModelLoader';
-import { disableDriftwood } from '../GameSettings';
-import Foam from '../Particles/Foam';
+import ModelLoader from "../ModelLoader";
+import { disableDriftwood } from "../GameSettings";
+import Foam from "../Particles/Foam";
 
 export default class Water extends Object3D {
   active = false;
@@ -12,7 +12,7 @@ export default class Water extends Object3D {
   sineInc = Math.PI / 50;
   top = 0.25;
 
-  getWidth = mesh => {
+  getWidth = (mesh) => {
     let box3 = new Box3();
     box3.setFromObject(mesh);
     // console.log( box.min, box.max, box.size() );
@@ -20,7 +20,7 @@ export default class Water extends Object3D {
   };
 
   generate = () => {
-    this.entities.map(val => {
+    this.entities.map((val) => {
       this.floor.remove(val.mesh);
       val = null;
     });
@@ -68,7 +68,7 @@ export default class Water extends Object3D {
       });
 
       xPos += Math.floor(Math.random() * 2 + 2);
-      x++
+      x++;
     }
   };
 
@@ -155,7 +155,7 @@ export default class Water extends Object3D {
   }
 
   ///Is Lily
-  isStaticRow = index => {
+  isStaticRow = (index) => {
     return index % 2 === 0; //&& (Math.random() * 2 == 0)
   };
 
@@ -163,11 +163,11 @@ export default class Water extends Object3D {
     if (!this.active) {
       return;
     }
-    this.entities.map(entity => this.move({ dt, player, entity }));
+    this.entities.map((entity) => this.move({ dt, player, entity }));
 
     if (!player.moving && !player.ridingOn) {
-      this.entities.map(entity =>
-        this.shouldCheckCollision({ dt, player, entity }),
+      this.entities.map((entity) =>
+        this.shouldCheckCollision({ dt, player, entity })
       );
       this.shouldCheckHazardCollision({ player });
     }
@@ -186,7 +186,7 @@ export default class Water extends Object3D {
     }
   };
 
-  getRidableForPosition = position => {
+  getRidableForPosition = (position) => {
     if (Math.round(position.z) !== this.position.z) {
       return null;
     }
@@ -195,7 +195,7 @@ export default class Water extends Object3D {
   };
 
   // When the player jumps onto a lily or log we want it to be smooth, predict the position ahead of time.
-  getPlayerLowerBouncePositionForEntity = entity => {
+  getPlayerLowerBouncePositionForEntity = (entity) => {
     return entity.top + entity.mid;
   };
 
@@ -207,7 +207,7 @@ export default class Water extends Object3D {
     if (Math.round(player.position.z) === this.position.z && !player.moving) {
       if (!player.ridingOn) {
         if (player.isAlive) {
-          this.onCollide(this.floor, 'water');
+          this.onCollide(this.floor, "water");
         } else {
           let y = this.getPlayerSunkenPosition();
           this.sineCount += this.sineInc;
@@ -220,7 +220,7 @@ export default class Water extends Object3D {
     }
   };
 
-  getCollisionLog = position => {
+  getCollisionLog = (position) => {
     for (const entity of this.entities) {
       const log = this.willCollideWithLog2D({ position, entity });
       if (log) {

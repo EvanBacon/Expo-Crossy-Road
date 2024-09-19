@@ -1,12 +1,12 @@
-import { Object3D } from 'three';
+import { Object3D } from "three";
 
-import ModelLoader from '../../src/ModelLoader';
-import { groundLevel } from '../GameSettings';
+import ModelLoader from "../ModelLoader";
+import { groundLevel } from "../GameSettings";
 
 export const Fill = {
-  empty: 'empty',
-  solid: 'solid',
-  random: 'random',
+  empty: "empty",
+  solid: "solid",
+  random: "random",
 };
 
 const HAS_WALLS = true;
@@ -30,7 +30,7 @@ export default class Grass extends Object3D {
 */
 
   generate = (type = Fill.random) => {
-    this.entities.map(val => {
+    this.entities.map((val) => {
       this.floor.remove(val.mesh);
       val = null;
     });
@@ -40,7 +40,7 @@ export default class Grass extends Object3D {
   };
 
   obstacleMap = {};
-  addObstacle = x => {
+  addObstacle = (x) => {
     let mesh;
     if (HAS_VARIETY) {
       mesh =
@@ -56,7 +56,7 @@ export default class Grass extends Object3D {
     mesh.position.set(x, groundLevel, 0);
   };
 
-  treeGen = type => {
+  treeGen = (type) => {
     // 0 - 8
     let _rowCount = 0;
     const count = Math.round(Math.random() * 2) + 1;

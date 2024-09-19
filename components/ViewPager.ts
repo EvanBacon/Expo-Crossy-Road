@@ -1,6 +1,6 @@
-import PropTypes from 'prop-types';
-import React, { Component } from 'react';
-import { Animated, FlatList, Platform } from 'react-native';
+import PropTypes from "prop-types";
+import { Component } from "react";
+import { Animated, FlatList, Platform } from "react-native";
 
 const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 class ViewPager extends Component {
@@ -14,10 +14,10 @@ class ViewPager extends Component {
     decelerationRate: 0,
     keyExtractor: (item, index) => `vp-${index}`,
     onScroll: () => {},
-    snapToAlignment: 'start',
+    snapToAlignment: "start",
     onEndReachedThreshold: 50,
     horizontal: true,
-    useNativeDriver: Platform.OS !== 'web',
+    useNativeDriver: Platform.OS !== "web",
     initialIndex: 0,
     scroll: new Animated.Value(0),
   };
@@ -50,7 +50,7 @@ class ViewPager extends Component {
   constructor(props) {
     super(props);
     const { scroll, horizontal, size, useNativeDriver } = props;
-    scroll.addListener(event => this.props.onScroll(event));
+    scroll.addListener((event) => this.props.onScroll(event));
 
     this.state = {
       width: horizontal ? size : 0,
@@ -83,13 +83,13 @@ class ViewPager extends Component {
     }
   };
 
-  next = animated => this.scrollToIndex({ index: this.index + 1, animated });
+  next = (animated) => this.scrollToIndex({ index: this.index + 1, animated });
 
-  previous = animated =>
+  previous = (animated) =>
     this.scrollToIndex({ index: this.index - 1, animated });
 
   setupOnScroll = (useNativeDriver, horizontal) => {
-    const key = horizontal ? 'x' : 'y';
+    const key = horizontal ? "x" : "y";
     return Animated.event(
       [
         {
@@ -98,7 +98,7 @@ class ViewPager extends Component {
       ],
       {
         useNativeDriver,
-      },
+      }
     );
   };
   UNSAFE_componentWillReceiveProps(nextProps) {
@@ -110,7 +110,7 @@ class ViewPager extends Component {
       this.setState({
         onScroll: this.setupOnScroll(
           nextProps.useNativeDriver,
-          nextProps.horizontal,
+          nextProps.horizontal
         ),
       });
     }
@@ -142,7 +142,7 @@ class ViewPager extends Component {
     }
   }
 
-  onLayout = event => {
+  onLayout = (event) => {
     const { onLayout, horizontal } = this.props;
     const {
       nativeEvent: {
@@ -186,7 +186,7 @@ class ViewPager extends Component {
       <AnimatedFlatList
         onLayout={this.onLayout}
         onScroll={this.state.onScroll}
-        ref={ref => {
+        ref={(ref) => {
           this.list = ref;
           onRef && onRef(ref);
         }}

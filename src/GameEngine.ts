@@ -1,8 +1,7 @@
 import { Dimensions } from "react-native";
 
 import { swipeDirections } from "../components/GestureView";
-import AudioManager from "../src/AudioManager";
-import ModelLoader from "../src/ModelLoader";
+import AudioManager from "./AudioManager";
 import Characters from "./Characters";
 import {
   CrossyCamera,

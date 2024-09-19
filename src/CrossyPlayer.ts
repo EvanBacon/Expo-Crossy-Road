@@ -1,9 +1,15 @@
-import { Group } from 'three';
-import { utils } from 'expo-three';
-import { BASE_ANIMATION_TIME, groundLevel, IDLE_DURING_GAME_PLAY, PLAYER_IDLE_SCALE, startingRow } from './GameSettings';
-import ModelLoader from '../src/ModelLoader';
+import { Group } from "three";
+import { utils } from "expo-three";
+import {
+  BASE_ANIMATION_TIME,
+  groundLevel,
+  IDLE_DURING_GAME_PLAY,
+  PLAYER_IDLE_SCALE,
+  startingRow,
+} from "./GameSettings";
+import ModelLoader from "./ModelLoader";
 
-const normalizeAngle = angle => {
+const normalizeAngle = (angle) => {
   return Math.atan2(Math.sin(angle), Math.cos(angle));
 };
 
@@ -65,7 +71,7 @@ class PlayerPositionAnimation extends TimelineMax {
         x: targetPosition.x,
         y: targetPosition.y,
         z: targetPosition.z,
-      },
+      }
     );
   }
 }
@@ -79,13 +85,14 @@ export default class CrossyPlayer extends Group {
     if (this._character === character) return;
     this._character = character;
     const node = ModelLoader._hero.getNode(character);
-    if (!node) throw new Error(`Failed to get node for character: ${character}`);
+    if (!node)
+      throw new Error(`Failed to get node for character: ${character}`);
     if (this.node) {
       this.remove(this.node);
     }
 
     utils.scaleLongestSideToSize(node, 1);
-    utils.alignMesh(node, { x: 0.5, z: 0.5, y: 1.0})
+    utils.alignMesh(node, { x: 0.5, z: 0.5, y: 1.0 });
     this.node = node;
     this.add(node);
   }
@@ -117,7 +124,7 @@ export default class CrossyPlayer extends Group {
   }
 
   stopAnimations() {
-    this.animations.map(val => {
+    this.animations.map((val) => {
       if (val.pause) {
         val.pause();
       }
@@ -147,7 +154,7 @@ export default class CrossyPlayer extends Group {
     this.position.set(
       this.targetPosition.x,
       this.targetPosition.y,
-      this.targetPosition.z,
+      this.targetPosition.z
     );
     if (this.targetRotation) {
       this.rotation.y = normalizeAngle(this.targetRotation);
@@ -242,8 +249,7 @@ export default class CrossyPlayer extends Group {
   }
 
   getRunOverByCar(road, car) {
-
-    this.position.y = (road.top - 0.05);
+    this.position.y = road.top - 0.05;
 
     TweenLite.to(this.scale, 0.2, {
       y: 0.05,
