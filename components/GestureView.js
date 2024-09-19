@@ -1,11 +1,6 @@
 "use strict";
 import React, { Component } from "react";
-import {
-  PanResponder,
-  View,
-  StyleSheet,
-  TouchableWithoutFeedback,
-} from "react-native";
+import { PanResponder, View } from "react-native";
 import { findDOMNode } from "react-dom";
 
 const getElement = (component) => {

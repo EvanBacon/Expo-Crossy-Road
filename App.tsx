@@ -1,4 +1,3 @@
-import EXAppLoading from "expo-app-loading";
 import { useFonts } from "expo-font";
 import React from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
@@ -67,7 +66,7 @@ function AssetLoading({ children }) {
     return children;
   }
 
-  return <EXAppLoading />;
+  return null;
 }
 
 const ErrorScreen = ({ message, stack }) => (

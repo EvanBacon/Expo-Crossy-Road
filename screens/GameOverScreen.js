@@ -1,12 +1,18 @@
-import React, { Component } from "react";
-import { Alert, Animated, Easing, StyleSheet, View } from "react-native";
+import React from "react";
+import {
+  Alert,
+  Animated,
+  Easing,
+  StyleSheet,
+  useWindowDimensions,
+  View,
+} from "react-native";
 import { useSafeArea } from "react-native-safe-area-context";
 
 import Banner from "../components/GameOver/Banner";
 import Footer from "../components/GameOver/Footer";
 import AudioManager from "../src/AudioManager";
 import Characters from "../src/Characters";
-import useDimensions from "../src/hooks/useDimensions";
 import Images from "../src/Images";
 
 // import { setGameState } from '../src/actions/game';
@@ -47,9 +53,7 @@ const banner = [
 // const AnimatedBanner = Animated.createAnimatedComponent(Banner);
 
 function GameOver({ ...props }) {
-  const {
-    window: { width },
-  } = useDimensions();
+  const { width } = useWindowDimensions();
   const [currentIndex, setCurrentIndex] = React.useState(0);
   const [characters, setCharacters] = React.useState(
     Object.keys(Characters).map((val) => Characters[val])

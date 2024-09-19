@@ -1,8 +1,6 @@
-import React from 'react';
-import { Animated, StyleSheet, Text, View } from 'react-native';
+import { Animated, StyleSheet, Text, useWindowDimensions } from "react-native";
 
-import useDimensions from '../../src/hooks/useDimensions';
-import Button from '../Button';
+import Button from "../Button";
 
 export default function Banner(props) {
   const renderButton = ({ onPress, source, style }, key) => (
@@ -16,9 +14,11 @@ export default function Banner(props) {
   );
 
   const { animatedValue, style } = props;
-  const { window: { width } } = useDimensions()
+  const { width } = useWindowDimensions();
   return (
-    <Animated.View style={[styles.container, { minWidth: width, maxWidth: width }, style]}>
+    <Animated.View
+      style={[styles.container, { minWidth: width, maxWidth: width }, style]}
+    >
       <Animated.View
         style={[
           styles.banner,
@@ -34,27 +34,26 @@ export default function Banner(props) {
       </Animated.View>
     </Animated.View>
   );
-
 }
 
 const styles = StyleSheet.create({
   text: {
     fontSize: 18,
-    color: 'white',
-    fontFamily: 'retro',
-    textAlign: 'center',
+    color: "white",
+    fontFamily: "retro",
+    textAlign: "center",
   },
   banner: {
     flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
   },
   container: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexDirection: 'row',
-    backgroundColor: 'red',
+    alignItems: "center",
+    justifyContent: "center",
+    flexDirection: "row",
+    backgroundColor: "red",
     height: 56,
     paddingHorizontal: 8,
     marginVertical: 8,

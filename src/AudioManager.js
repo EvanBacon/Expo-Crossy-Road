@@ -11,7 +11,6 @@ class AudioManager {
   audioFileMoveIndex = 0;
 
   playMoveSound = async () => {
-    console.log("move sound");
     await this.playAsync(
       this.sounds.chicken.move[`${this.audioFileMoveIndex}`]
     );

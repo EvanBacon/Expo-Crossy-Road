@@ -11,9 +11,6 @@
       "resizeMode": "contain",
       "backgroundColor": "#87C6FF"
     },
-    "packagerOpts": {
-      "assetExts": ["ttf", "mp4", "mp3", "obj", "wav"]
-    },
     "ios": {
       "icon": "./assets/icons/app.png",
       "supportsTablet": true,
@@ -23,12 +20,8 @@
       "icon": "./assets/icons/app.png",
       "versionCode": 1
     },
-    "web": {
-      "build": {
-        "babel": {
-          "include": ["expo-three", "three"]
-        }
-      }
-    }
+    "plugins": [
+      "expo-asset"
+    ]
   }
 }
