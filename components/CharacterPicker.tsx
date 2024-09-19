@@ -2,7 +2,7 @@ import React from "react";
 import { StyleSheet } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 
-import GameContext from "../context/GameContext";
+import GameContext from "../src/context/GameContext";
 import Characters from "../src/Characters";
 
 export default function CharacterPicker(props) {

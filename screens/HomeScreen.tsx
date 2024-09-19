@@ -13,7 +13,7 @@ import { useSafeArea } from "react-native-safe-area-context";
 
 import Hand from "../components/HandCTA";
 import Footer from "../components/Home/Footer";
-import GameContext from "../context/GameContext";
+import GameContext from "../src/context/GameContext";
 
 let hasShownTitle = false;
 

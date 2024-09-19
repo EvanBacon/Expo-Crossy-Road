@@ -3,7 +3,7 @@ import React from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { Slot } from "expo-router";
 
-import GameProvider from "../../context/GameProvider";
+import GameProvider from "../context/GameProvider";
 import AudioManager from "@/AudioManager";
 import { useResolvedValue } from "@/hooks/useResolvedValue";
 import ModelLoader from "@/ModelLoader";

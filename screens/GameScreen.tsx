@@ -17,7 +17,7 @@ import State from "../src/state";
 import GameOverScreen from "./GameOverScreen";
 import HomeScreen from "./HomeScreen";
 import SettingsScreen from "./SettingsScreen";
-import GameContext from "../context/GameContext";
+import GameContext from "../src/context/GameContext";
 
 const DEBUG_CAMERA_CONTROLS = false;
 class Game extends Component {
