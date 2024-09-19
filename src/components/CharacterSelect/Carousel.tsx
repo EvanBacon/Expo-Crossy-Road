@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Animated, Dimensions, StyleSheet, Text, View } from "react-native";
 
-import Characters from "../../src/Characters";
+import Characters from "@/Characters";
 import ViewPager from "../ViewPager";
 import CharacterCard from "./CharacterCard";
 

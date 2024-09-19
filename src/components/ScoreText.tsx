@@ -1,7 +1,7 @@
 import React from "react";
 import { StyleSheet, Text, Platform, View } from "react-native";
 import { useSafeArea } from "react-native-safe-area-context";
-import GameContext from "../src/context/GameContext";
+import GameContext from "@/context/GameContext";
 
 function generateTextShadow(width) {
   return Platform.select({

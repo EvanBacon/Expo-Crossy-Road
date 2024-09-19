@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { LayoutAnimation, Animated, StyleSheet, View } from "react-native";
 
-import Images from "../../src/Images";
+import Images from "@/Images";
 import Button from "../Button";
 import CharacterPicker from "../CharacterPicker";
 

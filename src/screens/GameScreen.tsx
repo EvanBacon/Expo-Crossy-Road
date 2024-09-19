@@ -10,14 +10,14 @@ import {
   useColorScheme,
 } from "react-native";
 
-import GestureRecognizer, { swipeDirections } from "../components/GestureView";
-import Score from "../components/ScoreText";
-import Engine from "../src/GameEngine";
-import State from "../src/state";
+import GestureRecognizer, { swipeDirections } from "@/components/GestureView";
+import Score from "@/components/ScoreText";
+import Engine from "@/GameEngine";
+import State from "@/state";
 import GameOverScreen from "./GameOverScreen";
 import HomeScreen from "./HomeScreen";
 import SettingsScreen from "./SettingsScreen";
-import GameContext from "../src/context/GameContext";
+import GameContext from "@/context/GameContext";
 
 const DEBUG_CAMERA_CONTROLS = false;
 class Game extends Component {

@@ -21,6 +21,8 @@ const useParticles = true;
 const useShadows = true;
 
 export class CrossyScene extends Scene {
+  world: CrossyWorld;
+  worldWithCamera: Group;
   constructor({ gl }) {
     super();
     this.__gl = gl;
@@ -78,6 +80,9 @@ export class CrossyScene extends Scene {
       }
     });
   };
+
+  waterParticles: Water | undefined;
+  featherParticles: Feathers | undefined;
 
   createParticles = () => {
     if (!useParticles) return;

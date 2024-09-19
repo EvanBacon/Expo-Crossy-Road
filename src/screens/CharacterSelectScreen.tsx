@@ -3,8 +3,8 @@ import { Share, StyleSheet, Text, View } from "react-native";
 
 import Characters from "@/Characters";
 import Colors from "@/Colors";
-import Button from "../../components/Button";
-import Carousel from "../../components/CharacterSelect/Carousel";
+import Button from "@/components/Button";
+import Carousel from "@/components/CharacterSelect/Carousel";
 import Images from "@/Images";
 
 // import connectCharacter from '../../utils/connectCharacter';

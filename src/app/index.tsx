@@ -10,10 +10,8 @@ import {
   useColorScheme,
 } from "react-native";
 
-import GestureRecognizer, {
-  swipeDirections,
-} from "../../components/GestureView";
-import Score from "../../components/ScoreText";
+import GestureRecognizer, { swipeDirections } from "@/components/GestureView";
+import Score from "@/components/ScoreText";
 import Engine from "@/GameEngine";
 import State from "@/state";
 import GameOverScreen from "@/screens/GameOverScreen";

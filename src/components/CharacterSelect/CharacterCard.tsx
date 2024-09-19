@@ -9,8 +9,8 @@ import {
   Scene,
 } from "three";
 
-import { CrossyRenderer } from "../../src/CrossyGame";
-import ModelLoader from "../../src/ModelLoader";
+import { CrossyRenderer } from "@/CrossyGame";
+import ModelLoader from "@/ModelLoader";
 
 const size = 200;
 

@@ -6,7 +6,7 @@ import {
   TouchableOpacity as TouchableBounce,
 } from "react-native";
 
-import Images from "../../src/Images";
+import Images from "@/Images";
 
 export default function Button({
   onPress,

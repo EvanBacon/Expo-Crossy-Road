@@ -2,9 +2,9 @@ import { isAvailableAsync } from "expo-sharing";
 import React, { useEffect, useState } from "react";
 import { LayoutAnimation, Share, StyleSheet, View } from "react-native";
 
-import Colors from "../../src/Colors";
-import Images from "../../src/Images";
-import State from "../../src/state";
+import Colors from "@/Colors";
+import Images from "@/Images";
+import State from "@/state";
 import Button from "../Button";
 
 async function shareAsync() {

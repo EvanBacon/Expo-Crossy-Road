@@ -7,10 +7,10 @@ import {
   useWindowDimensions,
   View,
 } from "react-native";
-import { useSafeArea } from "react-native-safe-area-context";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import Banner from "../../components/GameOver/Banner";
-import Footer from "../../components/GameOver/Footer";
+import Banner from "@/components/GameOver/Banner";
+import Footer from "@/components/GameOver/Footer";
 import AudioManager from "@/AudioManager";
 import Characters from "@/Characters";
 import Images from "@/Images";
@@ -123,7 +123,7 @@ function GameOver({ ...props }) {
     dismiss();
   };
 
-  const { top, bottom, left, right } = useSafeArea();
+  const { top, bottom, left, right } = useSafeAreaInsets();
 
   const imageStyle = { width: 60, height: 48 };
 
