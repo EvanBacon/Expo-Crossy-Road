@@ -9,6 +9,8 @@ import {
   Scene,
 } from "three";
 
+import * as THREE from "three";
+
 import AudioManager from "./AudioManager";
 import { MAP_OFFSET, maxRows } from "./GameSettings";
 import Feathers from "./Particles/Feathers";
@@ -32,7 +34,7 @@ export class CrossyScene extends Scene {
     this.worldWithCamera.add(this.world);
     this.add(this.worldWithCamera);
 
-    const light = new DirectionalLight(0xffffff, 0.5);
+    const light = new DirectionalLight(0x666666, 0.8);
     light.position.set(20, 30, 0.05);
     light.castShadow = useShadows;
     light.shadow.mapSize.width = 1024 * 2;
@@ -131,7 +133,8 @@ export class CrossyCamera extends OrthographicCamera {
 export class CrossyWorld extends Group {
   constructor() {
     super();
-    this.add(new AmbientLight(0x666666, 0.8));
+
+    this.add(new AmbientLight(0xffffff, 0.8));
   }
 
   createParticles = () => {
@@ -148,6 +151,9 @@ export class CrossyRenderer extends Renderer {
     super(props);
     this.__gl = props.gl;
     this.setShadowsEnabled(useShadows);
+
+    // this.toneMapping = THREE.NoToneMapping; // Or experiment with other mappings like LinearToneMapping
+    // this.toneMappingExposure = 1; // Increase if the scene is too dim
   }
 
   setShadowsEnabled(enabled) {

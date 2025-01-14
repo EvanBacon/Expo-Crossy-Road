@@ -8,34 +8,34 @@
   "scripts": {
     "start": "expo",
     "predeploy:web": "expo export -p web",
-    "deploy:web": "EXPO_STAGING=1 eas deploy"
+    "deploy:web": "eas deploy"
   },
   "dependencies": {
-    "@expo/metro-runtime": "~3.2.3",
     "@react-native-async-storage/async-storage": "1.23.1",
-    "@react-native-picker/picker": "2.7.5",
+    "@react-native-picker/picker": "2.9.0",
     "@tweenjs/tween.js": "^17.2.0",
-    "expo": "^51.0.32",
-    "expo-asset": "~10.0.10",
-    "expo-av": "~14.0.7",
-    "expo-gl": "~14.0.2",
-    "expo-linking": "^6.3.1",
-    "expo-router": "^3.5.23",
-    "expo-sharing": "~12.0.1",
-    "expo-status-bar": "~1.12.1",
+    "expo": "^52.0.25",
+    "expo-asset": "~11.0.2",
+    "expo-av": "~15.0.2",
+    "expo-gl": "~15.0.3",
+    "expo-linking": "~7.0.4",
+    "expo-router": "~4.0.16",
+    "expo-sharing": "~13.0.1",
+    "expo-status-bar": "~2.0.1",
     "expo-three": "^6.1.0",
     "gsap": "^2.0.2",
-    "react": "18.2.0",
-    "react-dom": "18.2.0",
-    "react-native": "0.74.5",
-    "react-native-safe-area-context": "4.10.5",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "react-native": "0.76.6",
+    "react-native-safe-area-context": "4.12.0",
     "react-native-web": "~0.19.10",
-    "three": "^0.138.3"
+    "three": "0.132.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
-    "@types/react": "~18.2.79",
+    "@types/react": "~18.3.12",
     "@types/react-native": "~0.64.12",
+    "@types/three": "^0.172.0",
     "typescript": "~5.3.3"
   }
 }

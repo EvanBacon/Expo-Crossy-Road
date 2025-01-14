@@ -1,5 +1,11 @@
-import { Bounce, Power2, TweenMax } from 'gsap';
-import { MeshPhongMaterial, DoubleSide, Mesh, PlaneBufferGeometry, Object3D } from 'three';
+import { Bounce, Power2, TweenMax } from "gsap";
+import {
+  MeshPhongMaterial,
+  DoubleSide,
+  Mesh,
+  PlaneGeometry,
+  Object3D,
+} from "three";
 
 const size = 0.6;
 
@@ -8,7 +14,7 @@ const material = new MeshPhongMaterial({
   flatShading: true,
   side: DoubleSide,
 });
-const geometry = new PlaneBufferGeometry(size, size, 1);
+const geometry = new PlaneGeometry(size, size, 1);
 
 export default class Foam extends Object3D {
   parts = [];
@@ -42,7 +48,7 @@ export default class Foam extends Object3D {
       n.position.set(
         rand({ min: -0.1, max: 0.1 }),
         0,
-        (0.6 / this.parts.length) * i + 0.2,
+        (0.6 / this.parts.length) * i + 0.2
       );
       n.visible = true;
 
@@ -65,7 +71,7 @@ export default class Foam extends Object3D {
         z: mScale,
         delay: startDelay,
         ease: Bounce.easeOut,
-        onComplete: _ => {
+        onComplete: (_) => {
           const lScale = 0.01;
           TweenLite.to(n.scale, lDuration, {
             x: lScale,

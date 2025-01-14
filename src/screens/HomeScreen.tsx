@@ -3,7 +3,6 @@ import {
   Animated,
   Dimensions,
   Easing,
-  InteractionManager,
   StyleSheet,
   Text,
   TouchableOpacity,

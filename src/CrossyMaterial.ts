@@ -4,16 +4,16 @@ import { MeshPhongMaterial, NearestFilter } from "three";
 const textureCache = {};
 
 export function loadTexture(resource) {
-  if (textureCache[resource]) {
-    return textureCache[resource].clone();
+  const resKey = typeof resource === "string" ? resource : resource.uri;
+  if (textureCache[resKey]) {
+    return textureCache[resKey].clone();
   }
-
-  const texture = new TextureLoader().load(resource);
+  const texture = new TextureLoader().load(resKey);
 
   texture.magFilter = NearestFilter;
   texture.minFilter = NearestFilter;
 
-  textureCache[resource] = texture;
+  textureCache[resKey] = texture;
   return texture;
 }
 
@@ -23,17 +23,19 @@ export default class CrossyMaterial extends MeshPhongMaterial {
   static loadTexture = loadTexture;
 
   static load(resource) {
-    if (materialCache[resource]) {
-      return materialCache[resource].clone();
+    const resKey = typeof resource === "string" ? resource : resource.uri;
+
+    if (materialCache[resKey]) {
+      return materialCache[resKey].clone();
     }
-    materialCache[resource] = new MeshPhongMaterial({
-      map: loadTexture(resource),
+    materialCache[resKey] = new MeshPhongMaterial({
+      map: loadTexture(resKey),
       flatShading: true,
       emissiveIntensity: 0,
       shininess: 0,
       reflectivity: 0,
     });
 
-    return materialCache[resource];
+    return materialCache[resKey];
   }
 }

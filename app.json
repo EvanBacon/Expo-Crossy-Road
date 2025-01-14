@@ -20,10 +20,9 @@
       "icon": "./assets/icons/app.png",
       "versionCode": 1
     },
-    "extra": {
-      "eas": {
-        "projectId": "6625b135-4ac8-4e1f-881a-5a40853dbb6d"
-      }
-    }
+    "web": {
+      "output": "static"
+    },
+    "plugins": ["expo-asset", "expo-router"]
   }
 }

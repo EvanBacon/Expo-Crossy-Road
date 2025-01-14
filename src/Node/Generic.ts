@@ -3,6 +3,7 @@ import { Box3, Mesh } from "three";
 
 import Models from "../Models";
 import CrossyMaterial from "../CrossyMaterial";
+import { OBJLoader } from "three/examples/jsm/loaders/OBJLoader";
 
 function setShadows(mesh, { castShadow, receiveShadow }) {
   mesh.traverse((child) => {
@@ -39,9 +40,8 @@ export default class Generic {
     receiveShadow,
   }) => {
     const material = CrossyMaterial.load(texture);
-
-    const _model = await loadObjAsync({ asset: model });
-
+    const loader = new OBJLoader();
+    const _model = await loader.loadAsync(model);
     _model.traverse((child) => {
       if (child instanceof Mesh) {
         child.material = material;
