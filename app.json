@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "Bouncy Bacon",
+    "name": "Crossy Road",
     "slug": "crossyroad",
     "privacy": "public",
     "orientation": "portrait",
@@ -23,10 +23,7 @@
     "web": {
       "output": "static"
     },
-    "plugins": [
-      "expo-asset",
-      "expo-router"
-    ],
+    "plugins": ["expo-asset", "expo-router"],
     "extra": {
       "router": {
         "origin": false
