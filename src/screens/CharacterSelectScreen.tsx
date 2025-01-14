@@ -31,7 +31,7 @@ class CharacterSelect extends Component {
     Share.share(
       {
         message: `${character}! #BouncyBacon @expo`,
-        url: "https://crossyroad.netlify.com",
+        url: "https://crossyroad.expo.app",
         title: "Bouncy Bacon",
       },
       {

@@ -1,6 +1,6 @@
 <!-- Banner Image -->
 
-[![Expo](/.style/header.png)](https://crossyroad.netlify.com/)
+[![Expo](/.style/header.png)](https://crossyroad.expo.app/)
 
 <p align="center"> 
   <a aria-label="Expo Bouncy Bacon is free to use" href="/LICENSE" target="_blank">
@@ -13,7 +13,7 @@
 </p>
 
 <p align="center">
-  <a aria-label="try expo crossy road in the browser" href="https://crossyroad.netlify.com/"><b>Try in the Browser</b></a>
+  <a aria-label="try expo crossy road in the browser" href="https://crossyroad.expo.app/"><b>Try in the Browser</b></a>
  |
   <a aria-label="subscribe on youtube" href="https://www.youtube.com/channel/UCx_YiR733cfqVPRsQ1n8Fag">Check out my youtube channel</a>
 </p>
@@ -34,17 +34,6 @@ This is **strictly** for educational purposes only. (plz don't sue me)
 ## Models
 
 I created the models using the open source project [MagicaVoxel](https://ephtracy.github.io/).
-
-All of the characters are based on other open source developers:
-
-- Wheeler: [Ken Wheeler](https://twitter.com/ken_wheeler)
-- Avocoder: [Lydia Hallie](https://twitter.com/lydiahallie)
-- Palmer: [Jared Palmer](https://twitter.com/jaredpalmer)
-- Brent: [Brent Vatne](https://twitter.com/notbrent)
-- Juwan: [Juwan Wheatley](https://twitter.com/FiberJW)
-- Bacon: [Evan Bacon](https://twitter.com/baconbrix)
-
-If you'd like to see someone else in the game, please open an issue!
 
 <!-- Expo: https://exp.host/@bacon/crossy-road -->
 

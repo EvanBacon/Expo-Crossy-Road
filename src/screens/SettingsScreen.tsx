@@ -56,7 +56,7 @@ class Settings extends Component {
     Share.share(
       {
         message: `Check out Bouncy Bacon by @baconbrix`,
-        url: "https://crossyroad.netlify.com",
+        url: "https://crossyroad.expo.app",
         title: "Bouncy Bacon",
       },
       {
