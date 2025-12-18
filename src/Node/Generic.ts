@@ -1,9 +1,9 @@
-import { loadObjAsync } from "expo-three";
-import { Box3, Mesh } from "three";
+import { Box3, Mesh, Group } from "three";
 
 import Models from "../Models";
 import CrossyMaterial from "../CrossyMaterial";
 import { OBJLoader } from "three/examples/jsm/loaders/OBJLoader";
+import { Asset } from "expo-asset";
 
 function setShadows(mesh, { castShadow, receiveShadow }) {
   mesh.traverse((child) => {
@@ -39,9 +39,14 @@ export default class Generic {
     castShadow,
     receiveShadow,
   }) => {
-    const material = CrossyMaterial.load(texture);
+    const material = await CrossyMaterial.loadAsync(texture);
     const loader = new OBJLoader();
-    const _model = await loader.loadAsync(model);
+
+    const fileContents = await fetch(Asset.fromModule(model).uri).then((res) =>
+      res.text()
+    );
+    const _model = await loader.parse(fileContents);
+
     _model.traverse((child) => {
       if (child instanceof Mesh) {
         child.material = material;

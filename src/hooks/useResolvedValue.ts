@@ -17,6 +17,7 @@ export function useResolvedValue<T>(
       })
       .catch((error) => {
         if (isMounted) {
+          throw error;
           setError(error);
         }
       });

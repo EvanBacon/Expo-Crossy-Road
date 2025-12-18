@@ -1,0 +1,35 @@
+name: PR Preview
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  publish:
+    type: custom
+    image: latest
+    outputs:
+      update_output: ${{ steps.update.outputs.update_output }}
+    steps:
+      - name: 🗄️ Setup project
+        uses: eas/checkout
+
+      - name: 📦 Install dependencies
+        uses: eas/install_node_modules
+
+      - name: 🚀 Publish update
+        id: update
+        run: |
+          OUTPUT=$(npx eas-cli update --branch "pr-${{ github.event.pull_request.number }}" --message "${{ github.event.pull_request.title }}" --json --non-interactive)
+          set-output update_output "$OUTPUT"
+
+  comment:
+    type: github-comment
+    needs: [publish]
+    params:
+      payload: |
+        📱 **Preview is ready!**
+
+          [Open in Expo Go](https://302.expo.app/u?url=${{ replaceAll(fromJSON(needs.publish.outputs.update_output)[0].manifestPermalink, 'https://', 'exp://') }})
+          
+          ${{ replaceAll(fromJSON(needs.publish.outputs.update_output)[0].manifestPermalink, 'https://', 'exp://') }}

@@ -1,41 +1,67 @@
-import { TextureLoader } from "expo-three";
-import { MeshPhongMaterial, NearestFilter } from "three";
+import { Asset } from "expo-asset";
+import { loadAsync } from "expo-three";
+import {
+  MeshPhongMaterial,
+  NearestFilter,
+  Texture,
+  TextureLoader,
+} from "three";
 
-const textureCache = {};
+const textureCache: Record<string, Texture> = {};
+const materialCache: Record<string, MeshPhongMaterial> = {};
 
-export function loadTexture(resource) {
-  const resKey = typeof resource === "string" ? resource : resource.uri;
-  if (textureCache[resKey]) {
-    return textureCache[resKey].clone();
+async function loadTextureAsync(
+  resource: string | number | { uri: string }
+): Promise<Texture> {
+  const key = JSON.stringify(resource);
+  const cacheKey = String(key);
+
+  if (textureCache[cacheKey]) {
+    return textureCache[cacheKey].clone();
   }
-  const texture = new TextureLoader().load(resKey);
 
+  if (process.env.EXPO_OS === "web") {
+    const texture = await new TextureLoader().loadAsync(
+      typeof resource === "string" ? resource : resource.uri
+    );
+
+    texture.magFilter = NearestFilter;
+    texture.minFilter = NearestFilter;
+
+    textureCache[cacheKey] = texture;
+    return texture;
+  }
+  const texture = (await loadAsync(resource)) as Texture;
   texture.magFilter = NearestFilter;
   texture.minFilter = NearestFilter;
 
-  textureCache[resKey] = texture;
+  textureCache[cacheKey] = texture;
   return texture;
 }
 
-const materialCache = {};
-
 export default class CrossyMaterial extends MeshPhongMaterial {
-  static loadTexture = loadTexture;
+  static loadTextureAsync = loadTextureAsync;
 
-  static load(resource) {
-    const resKey = typeof resource === "string" ? resource : resource.uri;
+  static async loadAsync(
+    resource: string | number | { uri: string }
+  ): Promise<MeshPhongMaterial> {
+    const asset = Asset.fromModule(resource);
 
-    if (materialCache[resKey]) {
-      return materialCache[resKey].clone();
+    const cacheKey = asset.uri;
+
+    if (materialCache[cacheKey]) {
+      return materialCache[cacheKey].clone();
     }
-    materialCache[resKey] = new MeshPhongMaterial({
-      map: loadTexture(resKey),
+
+    const texture = await loadTextureAsync(asset.uri);
+    materialCache[cacheKey] = new MeshPhongMaterial({
+      map: texture,
       flatShading: true,
       emissiveIntensity: 0,
       shininess: 0,
       reflectivity: 0,
     });
 
-    return materialCache[resKey];
+    return materialCache[cacheKey];
   }
 }
