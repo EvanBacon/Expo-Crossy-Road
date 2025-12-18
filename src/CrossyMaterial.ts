@@ -1,53 +1,47 @@
-import { TextureLoader } from "expo-three";
-import { MeshPhongMaterial, NearestFilter } from "three";
-import { Asset } from "expo-asset";
+import { loadAsync } from "expo-three";
+import { MeshPhongMaterial, NearestFilter, Texture } from "three";
 
-const textureCache = {};
+const textureCache: Record<string, Texture> = {};
+const materialCache: Record<string, MeshPhongMaterial> = {};
 
-export function loadTexture(resource) {
-  const resKey =
-    typeof resource === "string"
-      ? resource
-      : typeof resource === "number"
-      ? Asset.fromModule(resource).uri
-      : resource.uri;
+export async function loadTextureAsync(
+  resource: string | number | { uri: string }
+): Promise<Texture> {
+  const cacheKey = String(resource);
 
-  if (textureCache[resKey]) {
-    return textureCache[resKey].clone();
+  if (textureCache[cacheKey]) {
+    return textureCache[cacheKey].clone();
   }
-  const texture = new TextureLoader().load(resKey);
 
+  const texture = (await loadAsync(resource)) as Texture;
   texture.magFilter = NearestFilter;
   texture.minFilter = NearestFilter;
 
-  textureCache[resKey] = texture;
+  textureCache[cacheKey] = texture;
   return texture;
 }
 
-const materialCache = {};
-
 export default class CrossyMaterial extends MeshPhongMaterial {
-  static loadTexture = loadTexture;
+  static loadTextureAsync = loadTextureAsync;
 
-  static load(resource) {
-    const resKey =
-      typeof resource === "string"
-        ? resource
-        : typeof resource === "number"
-        ? Asset.fromModule(resource).uri
-        : resource.uri;
+  static async loadAsync(
+    resource: string | number | { uri: string }
+  ): Promise<MeshPhongMaterial> {
+    const cacheKey = String(resource);
 
-    if (materialCache[resKey]) {
-      return materialCache[resKey].clone();
+    if (materialCache[cacheKey]) {
+      return materialCache[cacheKey].clone();
     }
-    materialCache[resKey] = new MeshPhongMaterial({
-      map: loadTexture(resKey),
+
+    const texture = await loadTextureAsync(resource);
+    materialCache[cacheKey] = new MeshPhongMaterial({
+      map: texture,
       flatShading: true,
       emissiveIntensity: 0,
       shininess: 0,
       reflectivity: 0,
     });
 
-    return materialCache[resKey];
+    return materialCache[cacheKey];
   }
 }
