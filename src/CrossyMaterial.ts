@@ -1,10 +1,17 @@
 import { TextureLoader } from "expo-three";
 import { MeshPhongMaterial, NearestFilter } from "three";
+import { Asset } from "expo-asset";
 
 const textureCache = {};
 
 export function loadTexture(resource) {
-  const resKey = typeof resource === "string" ? resource : resource.uri;
+  const resKey =
+    typeof resource === "string"
+      ? resource
+      : typeof resource === "number"
+      ? Asset.fromModule(resource).uri
+      : resource.uri;
+
   if (textureCache[resKey]) {
     return textureCache[resKey].clone();
   }
@@ -23,7 +30,12 @@ export default class CrossyMaterial extends MeshPhongMaterial {
   static loadTexture = loadTexture;
 
   static load(resource) {
-    const resKey = typeof resource === "string" ? resource : resource.uri;
+    const resKey =
+      typeof resource === "string"
+        ? resource
+        : typeof resource === "number"
+        ? Asset.fromModule(resource).uri
+        : resource.uri;
 
     if (materialCache[resKey]) {
       return materialCache[resKey].clone();

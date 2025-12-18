@@ -2,6 +2,7 @@
   "expo": {
     "name": "Crossy Road",
     "slug": "crossyroad",
+    "scheme": "cross",
     "privacy": "public",
     "orientation": "portrait",
     "primaryColor": "#87C6FF",
@@ -25,9 +26,6 @@
     },
     "plugins": ["expo-asset", "expo-router"],
     "extra": {
-      "router": {
-        "origin": false
-      },
       "eas": {
         "projectId": "63c6199d-ad0f-4796-871b-b8d65e05680a"
       }
