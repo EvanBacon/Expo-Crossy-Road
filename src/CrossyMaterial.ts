@@ -1,5 +1,10 @@
 import { loadAsync } from "expo-three";
-import { MeshPhongMaterial, NearestFilter, Texture } from "three";
+import {
+  MeshPhongMaterial,
+  NearestFilter,
+  Texture,
+  TextureLoader,
+} from "three";
 
 const textureCache: Record<string, Texture> = {};
 const materialCache: Record<string, MeshPhongMaterial> = {};
@@ -13,6 +18,17 @@ export async function loadTextureAsync(
     return textureCache[cacheKey].clone();
   }
 
+  if (process.env.EXPO_OS === "web") {
+    const texture = new TextureLoader().load(
+      typeof resource === "string" ? resource : resource.uri
+    );
+
+    texture.magFilter = NearestFilter;
+    texture.minFilter = NearestFilter;
+
+    textureCache[cacheKey] = texture;
+    return texture;
+  }
   const texture = (await loadAsync(resource)) as Texture;
   texture.magFilter = NearestFilter;
   texture.minFilter = NearestFilter;
