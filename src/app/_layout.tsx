@@ -1,4 +1,4 @@
-import "@/utils/polyfill-fetch";
+// import "@/utils/polyfill-fetch";
 import { useFonts } from "expo-font";
 import React from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";

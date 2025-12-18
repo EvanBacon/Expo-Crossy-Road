@@ -11,7 +11,7 @@
         "eas-cli": "^16.28.0",
         "expo": "^54.0.30",
         "expo-asset": "~12.0.12",
-        "expo-av": "~16.0.8",
+        "expo-audio": "~1.1.1",
         "expo-gl": "~16.0.9",
         "expo-linking": "~8.0.11",
         "expo-router": "~6.0.21",
@@ -823,7 +823,7 @@
 
     "expo-asset-utils": ["expo-asset-utils@3.0.0", "", { "peerDependencies": { "expo-asset": "*", "expo-file-system": "*", "expo-font": "*", "expo-modules-core": "*", "react-native": "*" } }, "sha512-CgIbNvTqKqQi1lrlptmwoaCMu4ZVOZf8tghmytlor23CjIOuorw6cfuOqiqWkJLz23arTt91maYEU9XLMPB23A=="],
 
-    "expo-av": ["expo-av@16.0.8", "", { "peerDependencies": { "expo": "*", "react": "*", "react-native": "*", "react-native-web": "*" }, "optionalPeers": ["react-native-web"] }, "sha512-cmVPftGR/ca7XBgs7R6ky36lF3OC0/MM/lpgX/yXqfv0jASTsh7AYX9JxHCwFmF+Z6JEB1vne9FDx4GiLcGreQ=="],
+    "expo-audio": ["expo-audio@1.1.1", "", { "peerDependencies": { "expo": "*", "expo-asset": "*", "react": "*", "react-native": "*" } }, "sha512-CPCpJ+0AEHdzWROc0f00Zh6e+irLSl2ALos/LPvxEeIcJw1APfBa4DuHPkL4CQCWsVe7EnUjFpdwpqsEUWcP0g=="],
 
     "expo-constants": ["expo-constants@18.0.12", "", { "dependencies": { "@expo/config": "~12.0.12", "@expo/env": "~2.0.8" }, "peerDependencies": { "expo": "*", "react-native": "*" } }, "sha512-WzcKYMVNRRu4NcSzfIVRD5aUQFnSpTZgXFrlWmm19xJoDa4S3/PQNi6PNTBRc49xz9h8FT7HMxRKaC8lr0gflA=="],
 

@@ -1,4 +1,4 @@
-import { Audio } from "expo-av";
+import { createAudioPlayer, AudioPlayer } from "expo-audio";
 import AudioFiles from "./Audio";
 
 // Web just can't seem to handle audio
@@ -36,48 +36,54 @@ class AudioManager {
     );
   };
 
-  _soundCache: Record<number, Audio.Sound[]> = {};
+  _soundCache: Record<number, AudioPlayer[]> = {};
 
   getIdleSoundAsync = async (resourceId: number) => {
     if (this._soundCache[resourceId]) {
-      for (const sound of this._soundCache[resourceId]) {
-        const status = await sound.getStatusAsync();
-        if (!status.isPlaying) {
-          return sound;
+      for (const player of this._soundCache[resourceId]) {
+        if (!player.playing) {
+          return player;
         }
       }
     }
     return null;
   };
 
-  createIdleSoundAsync = async (resourceId) => {
+  createIdleSoundAsync = async (resourceId: number) => {
     if (!this._soundCache[resourceId]) {
       this._soundCache[resourceId] = [];
     }
     const tag = "loaded-sound-" + resourceId;
     console.time(tag);
-    const { sound } = await Audio.Sound.createAsync(resourceId);
+    const player = createAudioPlayer(resourceId);
     console.timeEnd(tag);
-    this._soundCache[resourceId].push(sound);
-    return sound;
+    this._soundCache[resourceId].push(player);
+    return player;
   };
 
   playAsync = async (soundObject: number) => {
     if (MUTED) return;
 
-    let sound = await this.getIdleSoundAsync(soundObject);
-    if (!sound) {
-      sound = await this.createIdleSoundAsync(soundObject);
+    let player = await this.getIdleSoundAsync(soundObject);
+    if (!player) {
+      player = await this.createIdleSoundAsync(soundObject);
     } else {
-      await sound.setPositionAsync(0);
+      player.seekTo(0);
     }
-    return await sound.playAsync();
+    player.play();
   };
-  stopAsync = async (name) => {
+
+  stopAsync = async (name: string) => {
     if (name in this.sounds) {
       const soundObject = this.sounds[name];
       try {
-        await soundObject.stopAsync();
+        // Stop all cached players for this sound
+        if (this._soundCache[soundObject]) {
+          for (const player of this._soundCache[soundObject]) {
+            player.pause();
+            player.seekTo(0);
+          }
+        }
       } catch (error) {
         console.warn("Error stopping audio", { error });
       }
@@ -85,11 +91,17 @@ class AudioManager {
       console.warn("Audio doesn't exist", name);
     }
   };
-  volumeAsync = async (name, volume) => {
+
+  volumeAsync = async (name: string, volume: number) => {
     if (name in this.sounds) {
       const soundObject = this.sounds[name];
       try {
-        await soundObject.setVolumeAsync(volume);
+        // Set volume on all cached players for this sound
+        if (this._soundCache[soundObject]) {
+          for (const player of this._soundCache[soundObject]) {
+            player.volume = volume;
+          }
+        }
       } catch (error) {
         console.warn("Error setting volume of audio", { error });
       }
@@ -98,11 +110,16 @@ class AudioManager {
     }
   };
 
-  pauseAsync = async (name) => {
+  pauseAsync = async (name: string) => {
     if (name in this.sounds) {
       const soundObject = this.sounds[name];
       try {
-        await soundObject.pauseAsync();
+        // Pause all cached players for this sound
+        if (this._soundCache[soundObject]) {
+          for (const player of this._soundCache[soundObject]) {
+            player.pause();
+          }
+        }
       } catch (error) {
         console.warn("Error pausing audio", { error });
       }
