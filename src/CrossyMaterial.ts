@@ -1,3 +1,4 @@
+import { Asset } from "expo-asset";
 import { loadAsync } from "expo-three";
 import {
   MeshPhongMaterial,
@@ -9,17 +10,18 @@ import {
 const textureCache: Record<string, Texture> = {};
 const materialCache: Record<string, MeshPhongMaterial> = {};
 
-export async function loadTextureAsync(
+async function loadTextureAsync(
   resource: string | number | { uri: string }
 ): Promise<Texture> {
-  const cacheKey = String(resource);
+  const key = JSON.stringify(resource);
+  const cacheKey = String(key);
 
   if (textureCache[cacheKey]) {
     return textureCache[cacheKey].clone();
   }
 
   if (process.env.EXPO_OS === "web") {
-    const texture = new TextureLoader().load(
+    const texture = await new TextureLoader().loadAsync(
       typeof resource === "string" ? resource : resource.uri
     );
 
@@ -43,13 +45,15 @@ export default class CrossyMaterial extends MeshPhongMaterial {
   static async loadAsync(
     resource: string | number | { uri: string }
   ): Promise<MeshPhongMaterial> {
-    const cacheKey = String(resource);
+    const asset = Asset.fromModule(resource);
+
+    const cacheKey = asset.uri;
 
     if (materialCache[cacheKey]) {
       return materialCache[cacheKey].clone();
     }
 
-    const texture = await loadTextureAsync(resource);
+    const texture = await loadTextureAsync(asset.uri);
     materialCache[cacheKey] = new MeshPhongMaterial({
       map: texture,
       flatShading: true,
