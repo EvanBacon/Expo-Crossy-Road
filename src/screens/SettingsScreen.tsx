@@ -43,11 +43,11 @@ class Settings extends Component {
   };
 
   pickRandom = () => {
-    const { characters, currentIndex } = this.state;
+    const { characters } = this.state;
 
-    const randomIndex = Math.floor(Math.random() * (characters.length - 1));
+    const randomIndex = Math.floor(Math.random() * characters.length);
     const randomCharacter = characters[randomIndex];
-    this.props.setCharacter(randomCharacter);
+    this.props.setCharacter(randomCharacter.id);
     this.dismiss();
   };
   share = () => {
@@ -85,7 +85,7 @@ class Settings extends Component {
   select = () => {
     const { characters, currentIndex } = this.state;
 
-    this.props.setCharacter(characters[currentIndex]);
+    this.props.setCharacter(characters[currentIndex].id);
     this.dismiss();
   };
 

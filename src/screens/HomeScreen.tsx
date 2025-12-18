@@ -119,7 +119,7 @@ function Screen(props) {
           </View>
           <Footer
             onCharacterSelect={() => {
-              // TODO(Bacon): Create a character select page
+              props.onShowCharacterSelect?.();
             }}
             onShop={() => {}}
             onMultiplayer={() => {}}

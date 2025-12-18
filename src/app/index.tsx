@@ -14,6 +14,7 @@ import GestureRecognizer, { swipeDirections } from "@/components/GestureView";
 import Score from "@/components/ScoreText";
 import Engine from "@/GameEngine";
 import State from "@/state";
+import CharacterSelectScreen from "@/screens/CharacterSelectScreen";
 import GameOverScreen from "@/screens/GameOverScreen";
 import HomeScreen from "@/screens/HomeScreen";
 import SettingsScreen from "@/screens/SettingsScreen";
@@ -29,6 +30,7 @@ class Game extends Component {
     viewKey: 0,
     gameState: State.Game.none,
     showSettings: false,
+    showCharacterSelect: false,
     // gameState: State.Game.gameOver
   };
 
@@ -217,6 +219,9 @@ class Game extends Component {
           onPlay={() => {
             this.updateWithGameState(State.Game.playing);
           }}
+          onShowCharacterSelect={() => {
+            this.setState({ showCharacterSelect: true });
+          }}
         />
       </View>
     );
@@ -225,7 +230,21 @@ class Game extends Component {
   renderSettingsScreen() {
     return (
       <View style={StyleSheet.absoluteFillObject}>
-        <SettingsScreen goBack={() => this.setState({ showSettings: false })} />
+        <SettingsScreen
+          goBack={() => this.setState({ showSettings: false })}
+          setCharacter={this.props.setCharacter}
+        />
+      </View>
+    );
+  }
+
+  renderCharacterSelectScreen() {
+    return (
+      <View style={StyleSheet.absoluteFillObject}>
+        <CharacterSelectScreen
+          navigation={{ goBack: () => this.setState({ showCharacterSelect: false }) }}
+          setCharacter={this.props.setCharacter}
+        />
       </View>
     );
   }
@@ -260,6 +279,8 @@ class Game extends Component {
         {this.renderHomeScreen()}
 
         {this.state.showSettings && this.renderSettingsScreen()}
+
+        {this.state.showCharacterSelect && this.renderCharacterSelectScreen()}
 
         {isPaused && (
           <View
@@ -304,10 +325,15 @@ const GestureView = ({ onStartGesture, onSwipe, ...props }) => {
 
 function GameScreen(props) {
   const scheme = useColorScheme();
-  const { character } = React.useContext(GameContext);
+  const { character, setCharacter } = React.useContext(GameContext);
 
   return (
-    <Game {...props} character={character} isDarkMode={scheme === "dark"} />
+    <Game
+      {...props}
+      character={character}
+      setCharacter={setCharacter}
+      isDarkMode={scheme === "dark"}
+    />
   );
 }
 
