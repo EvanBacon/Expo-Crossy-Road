@@ -1,15 +1,8 @@
-import PropTypes from "prop-types";
 import { Component } from "react";
 import { Animated, FlatList, Platform } from "react-native";
 
 const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 class ViewPager extends Component {
-  static propTypes = {
-    size: PropTypes.number,
-    data: PropTypes.array.isRequired,
-    renderItem: PropTypes.func.isRequired,
-  };
-
   static defaultProps = {
     decelerationRate: 0,
     keyExtractor: (item, index) => `vp-${index}`,
