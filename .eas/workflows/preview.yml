@@ -9,6 +9,7 @@ jobs:
     type: custom
     image: latest
     outputs:
+      project_id: ${{ steps.project.outputs.id }}
       update_output: ${{ steps.update.outputs.update_output }}
     steps:
       - name: 🗄️ Setup project
@@ -17,10 +18,13 @@ jobs:
       - name: 📦 Install dependencies
         uses: eas/install_node_modules
 
+      - name: 👷 Preparing project
+        run: set-output id "${ eas.env.EAS_BUILD_PROJECT_ID }"
+
       - name: 🚀 Publish update
         id: update
         run: |
-          OUTPUT=$(npx eas-cli update --branch "pr-${{ github.event.pull_request.number }}" --message "${{ github.event.pull_request.title }}" --json --non-interactive)
+          OUTPUT=$(npx eas-cli update --branch "pr-${{ github.event.pull_request.number }}" --message "${{ github.event.pull_request.number }}" --json --non-interactive)
           set-output update_output "$OUTPUT"
 
   comment:
@@ -30,6 +34,6 @@ jobs:
       payload: |
         📱 **Preview is ready!**
 
-          [Open in Expo Go](https://302.expo.app/u?url=${{ replaceAll(fromJSON(needs.publish.outputs.update_output)[0].manifestPermalink, 'https://', 'exp://') }})
-          
-          ${{ replaceAll(fromJSON(needs.publish.outputs.update_output)[0].manifestPermalink, 'https://', 'exp://') }}
+          [Open in Expo Go](https://302.expo.app/u?url=exp://u.expo.dev/63c6199d-ad0f-4796-871b-b8d65e05680a/group/${{ fromJSON(needs.publish.outputs.update_output)[0].group }})
+
+          exp://u.expo.dev/63c6199d-ad0f-4796-871b-b8d65e05680a/group/${{ fromJSON(needs.publish.outputs.update_output)[0].group }}
