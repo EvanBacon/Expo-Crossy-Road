@@ -121,6 +121,7 @@ class Game extends Component {
 
   componentWillUnmount() {
     cancelAnimationFrame(this.engine.raf);
+    Dimensions.removeEventListener("change", this.onScreenResize);
   }
 
   async componentDidMount() {
@@ -135,10 +136,6 @@ class Game extends Component {
   onScreenResize = ({ window }) => {
     this.engine.updateScale();
   };
-
-  componentWillUnmount() {
-    Dimensions.removeEventListener("change", this.onScreenResize);
-  }
 
   UNSAFE_componentWillMount() {
     this.engine = new Engine();

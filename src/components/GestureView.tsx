@@ -1,13 +1,15 @@
 import React, { Component } from "react";
 import { PanResponder, View } from "react-native";
-import { findDOMNode } from "react-dom";
 
 const getElement = (component) => {
-  try {
-    return findDOMNode(component);
-  } catch (e) {
+  // On web, the ref may be a DOM element directly or have a native element
+  if (!component) return null;
+  // If it's already a DOM element (has addEventListener), return it
+  if (typeof component.addEventListener === "function") {
     return component;
   }
+  // Otherwise return the component itself
+  return component;
 };
 export const swipeDirections = {
   SWIPE_UP: "SWIPE_UP",

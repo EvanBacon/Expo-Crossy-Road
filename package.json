@@ -8,7 +8,8 @@
   "scripts": {
     "start": "expo",
     "predeploy:web": "expo export -p web",
-    "deploy:web": "eas deploy"
+    "deploy:web": "eas deploy",
+    "lint": "expo lint"
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "2.2.0",
@@ -36,6 +37,8 @@
     "@types/react": "~19.1.10",
     "@types/react-native": "~0.64.12",
     "@types/three": "0.182.0",
+    "eslint": "^9.39.2",
+    "eslint-config-expo": "^10.0.0",
     "typescript": "~5.9.2"
   }
 }

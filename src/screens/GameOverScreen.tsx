@@ -14,7 +14,7 @@ import Footer from "@/components/GameOver/Footer";
 import AudioManager from "@/AudioManager";
 import Characters from "@/Characters";
 import GameContext from "@/context/GameContext";
-import Images from "@/Images";;
+import Images from "@/Images";
 
 // import { setGameState } from '../src/actions/game';
 
