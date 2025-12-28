@@ -20,7 +20,7 @@ async function rehydrateAsync() {
     const item = await AsyncStorage.getItem(STORAGE_KEY);
     const data = JSON.parse(item);
     return data;
-  } catch (ignored) {
+  } catch {
     return defaultState;
   }
 }
@@ -33,7 +33,7 @@ export default function GameProvider({ children }) {
     const parseModulesAsync = async () => {
       try {
         const { character, highscore } = await rehydrateAsync();
-        setCharacter(character);
+        // setCharacter(character);
         setHighscore(highscore);
       } catch (ignored) {}
       //   setLoaded(true);
