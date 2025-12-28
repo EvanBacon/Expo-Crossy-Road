@@ -134,7 +134,7 @@ export class CrossyWorld extends Group {
   constructor() {
     super();
 
-    this.add(new AmbientLight(0xffffff, 0.6));
+    this.add(new AmbientLight(0xffffff, 1.8));
   }
 
   createParticles = () => {
