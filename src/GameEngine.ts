@@ -19,12 +19,6 @@ import {
   startingRow,
 } from "./GameSettings";
 
-const initialState = {
-  id: Characters.bacon.id,
-  name: Characters.bacon.name,
-  index: Characters.bacon.index,
-};
-
 const normalizeAngle = (angle) => {
   return Math.atan2(Math.sin(angle), Math.cos(angle));
 };

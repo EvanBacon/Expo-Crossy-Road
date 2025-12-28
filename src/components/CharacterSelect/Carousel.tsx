@@ -122,6 +122,6 @@ const styles = StyleSheet.create({
     backgroundColor: "transparent",
     textAlign: "center",
     color: "white",
-    fontSize: "2rem",
+    fontSize: 36,
   },
 });

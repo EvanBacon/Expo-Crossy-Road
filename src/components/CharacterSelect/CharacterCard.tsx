@@ -124,7 +124,7 @@ export default class CharacterCard extends Component {
             <GLView
               style={{
                 flex: 1,
-                backgroundColor: "orange",
+
                 height: "100%",
                 overflow: "hidden",
               }}

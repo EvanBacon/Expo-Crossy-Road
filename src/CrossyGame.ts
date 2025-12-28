@@ -34,7 +34,7 @@ export class CrossyScene extends Scene {
     this.worldWithCamera.add(this.world);
     this.add(this.worldWithCamera);
 
-    const light = new DirectionalLight(0x666666, 0.8);
+    const light = new DirectionalLight(0xffffff, 1.0);
     light.position.set(20, 30, 0.05);
     light.castShadow = useShadows;
     light.shadow.mapSize.width = 1024 * 2;
@@ -125,7 +125,7 @@ export class CrossyCamera extends OrthographicCamera {
     this.right = width * scale;
     this.top = height * scale;
     this.bottom = -(height * scale);
-    this.zoom = 300;
+    this.zoom = 400;
     this.updateProjectionMatrix();
   };
 }
@@ -134,7 +134,7 @@ export class CrossyWorld extends Group {
   constructor() {
     super();
 
-    this.add(new AmbientLight(0xffffff, 0.8));
+    this.add(new AmbientLight(0xffffff, 0.6));
   }
 
   createParticles = () => {
@@ -152,13 +152,11 @@ export class CrossyRenderer extends Renderer {
     this.__gl = props.gl;
     this.setShadowsEnabled(useShadows);
 
-    // this.toneMapping = THREE.NoToneMapping; // Or experiment with other mappings like LinearToneMapping
-    // this.toneMappingExposure = 1; // Increase if the scene is too dim
+    // Set proper color space for vibrant colors
+    this.outputColorSpace = THREE.SRGBColorSpace;
   }
 
   setShadowsEnabled(enabled) {
-    this.gammaInput = enabled;
-    this.gammaOutput = enabled;
     this.shadowMap.enabled = enabled;
   }
 }

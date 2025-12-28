@@ -121,7 +121,7 @@ class Game extends Component {
 
   componentWillUnmount() {
     cancelAnimationFrame(this.engine.raf);
-    Dimensions.removeEventListener("change", this.onScreenResize);
+    // Dimensions.removeEventListener("change", this.onScreenResize);
   }
 
   async componentDidMount() {
@@ -239,7 +239,9 @@ class Game extends Component {
     return (
       <View style={StyleSheet.absoluteFillObject}>
         <CharacterSelectScreen
-          navigation={{ goBack: () => this.setState({ showCharacterSelect: false }) }}
+          navigation={{
+            goBack: () => this.setState({ showCharacterSelect: false }),
+          }}
           setCharacter={this.props.setCharacter}
         />
       </View>

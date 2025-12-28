@@ -1,30 +1,30 @@
 export default {
-  // chicken: {
-  //   name: 'Chicken',
-  //   id: 'chicken',
-  // },
+  chicken: {
+    name: "Chicken",
+    id: "chicken",
+  },
   bacon: {
     name: "Bacon",
-    id: "bacon"
+    id: "bacon",
   },
   brent: {
     name: "Brent Vatne",
-    id: "brent"
+    id: "brent",
   },
   avocoder: {
     name: "Avocoder",
-    id: "avocoder"
+    id: "avocoder",
   },
   wheeler: {
     name: "Wheeler",
-    id: "wheeler"
+    id: "wheeler",
   },
   palmer: {
     name: "Palmer",
-    id: "palmer"
+    id: "palmer",
   },
   juwan: {
     name: "Juwan",
-    id: "juwan"
+    id: "juwan",
   },
 };

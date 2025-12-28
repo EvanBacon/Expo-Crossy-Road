@@ -1,14 +1,15 @@
 import { Asset } from "expo-asset";
 import { loadAsync } from "expo-three";
 import {
-  MeshPhongMaterial,
+  MeshLambertMaterial,
   NearestFilter,
+  SRGBColorSpace,
   Texture,
   TextureLoader,
 } from "three";
 
 const textureCache: Record<string, Texture> = {};
-const materialCache: Record<string, MeshPhongMaterial> = {};
+const materialCache: Record<string, MeshLambertMaterial> = {};
 
 async function loadTextureAsync(
   resource: string | number | { uri: string }
@@ -27,6 +28,7 @@ async function loadTextureAsync(
 
     texture.magFilter = NearestFilter;
     texture.minFilter = NearestFilter;
+    texture.colorSpace = SRGBColorSpace;
 
     textureCache[cacheKey] = texture;
     return texture;
@@ -34,17 +36,18 @@ async function loadTextureAsync(
   const texture = (await loadAsync(resource)) as Texture;
   texture.magFilter = NearestFilter;
   texture.minFilter = NearestFilter;
+  texture.colorSpace = SRGBColorSpace;
 
   textureCache[cacheKey] = texture;
   return texture;
 }
 
-export default class CrossyMaterial extends MeshPhongMaterial {
+export default class CrossyMaterial extends MeshLambertMaterial {
   static loadTextureAsync = loadTextureAsync;
 
   static async loadAsync(
     resource: string | number | { uri: string }
-  ): Promise<MeshPhongMaterial> {
+  ): Promise<MeshLambertMaterial> {
     const asset = Asset.fromModule(resource);
 
     const cacheKey = asset.uri;
@@ -54,12 +57,8 @@ export default class CrossyMaterial extends MeshPhongMaterial {
     }
 
     const texture = await loadTextureAsync(asset.uri);
-    materialCache[cacheKey] = new MeshPhongMaterial({
+    materialCache[cacheKey] = new MeshLambertMaterial({
       map: texture,
-      flatShading: true,
-      emissiveIntensity: 0,
-      shininess: 0,
-      reflectivity: 0,
     });
 
     return materialCache[cacheKey];
