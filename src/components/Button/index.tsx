@@ -39,6 +39,8 @@ export default function Button({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
   image: {
     flex: 1,

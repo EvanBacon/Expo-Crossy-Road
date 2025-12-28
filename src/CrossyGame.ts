@@ -235,6 +235,20 @@ export class CrossyGameMap extends GameMap {
     }
   }
 
+  // Helper to get clear positions (positions without obstacles) from a grass row
+  getClearPositionsFromGrass = (grassEntity): number[] => {
+    const blockedPositions = grassEntity.getBlockedPositions();
+    const blockedSet = new Set(blockedPositions);
+    // Playable x range is typically -4 to 4 (center area)
+    const clearPositions: number[] = [];
+    for (let x = -4; x <= 4; x++) {
+      if (!blockedSet.has(x)) {
+        clearPositions.push(x);
+      }
+    }
+    return clearPositions;
+  };
+
   // Scene generators
   newRow = (rowKind) => {
     if (this.grasses.count === maxRows) {
@@ -258,11 +272,22 @@ export class CrossyGameMap extends GameMap {
       rowKind = ROW_TYPES[Math.floor(Math.random() * ROW_TYPES.length)];
     }
 
+    // Get the previous row info for coordination
+    const previousRow = this.getRow(this.rowCount - 1);
+
     switch (rowKind) {
       case "grass":
         this.grasses.items[this.grasses.count].position.z = this.rowCount;
+
+        // If previous row is water, ensure lily pad positions are kept clear
+        let requiredClearPositions: number[] = [];
+        if (previousRow && previousRow.type === "water") {
+          requiredClearPositions = previousRow.entity.getLilyPadPositions();
+        }
+
         this.grasses.items[this.grasses.count].generate(
-          this.mapRowToObstacle(this.rowCount)
+          this.mapRowToObstacle(this.rowCount),
+          requiredClearPositions
         );
         this.setRow(this.rowCount, {
           type: "grass",
@@ -297,7 +322,14 @@ export class CrossyGameMap extends GameMap {
       case "water":
         this.water.items[this.water.count].position.z = this.rowCount;
         this.water.items[this.water.count].active = true;
-        this.water.items[this.water.count].generate();
+
+        // If previous row is grass, get clear positions so lily pads are accessible
+        let clearPositions: number[] = [];
+        if (previousRow && previousRow.type === "grass") {
+          clearPositions = this.getClearPositionsFromGrass(previousRow.entity);
+        }
+
+        this.water.items[this.water.count].generate(clearPositions);
         this.setRow(this.rowCount, {
           type: "water",
           entity: this.water.items[this.water.count],

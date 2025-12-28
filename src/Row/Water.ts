@@ -11,6 +11,7 @@ export default class Water extends Object3D {
   sineCount = 0;
   sineInc = Math.PI / 50;
   top = 0.25;
+  lilyPadPositions: number[] = [];
 
   getWidth = (mesh) => {
     let box3 = new Box3();
@@ -19,28 +20,61 @@ export default class Water extends Object3D {
     return Math.round(box3.max.x - box3.min.x);
   };
 
-  generate = () => {
+  generate = (clearPositions: number[] = []) => {
     this.entities.map((val) => {
       this.floor.remove(val.mesh);
       val = null;
     });
     this.entities = [];
+    this.lilyPadPositions = [];
 
     if (this.isStaticRow(this.position.z | 0)) {
-      this.generateStatic();
+      this.generateStatic(clearPositions);
     } else if (!disableDriftwood) {
       this.generateDynamic();
     }
   };
 
-  generateStatic = () => {
+  // Returns all x positions that have lily pads (rounded to integers)
+  getLilyPadPositions = (): number[] => {
+    return this.lilyPadPositions;
+  };
+
+  generateStatic = (clearPositions: number[] = []) => {
     // Speeds: .01 through .08
     // Number of cars: 1 through 3
     let numItems = Math.floor(Math.random() * 2) + 2;
 
+    // Generate initial positions
+    const positions: number[] = [];
     let xPos = Math.floor(Math.random() * 2 - 4);
+    for (let i = 0; i < numItems; i++) {
+      positions.push(xPos);
+      xPos += Math.floor(Math.random() * 2 + 2);
+    }
+
+    // Ensure at least one lily pad is at a clear position for a winnable path
+    if (clearPositions.length > 0) {
+      const hasAccessibleLilyPad = positions.some((pos) =>
+        clearPositions.includes(pos | 0)
+      );
+
+      if (!hasAccessibleLilyPad) {
+        // Pick a random clear position and place a lily pad there
+        const clearPos =
+          clearPositions[Math.floor(Math.random() * clearPositions.length)];
+        // Replace the first lily pad position with the clear position
+        positions[0] = clearPos;
+        // Sort to maintain left-to-right order
+        positions.sort((a, b) => a - b);
+      }
+    }
+
+    // Store positions for coordination with adjacent rows
+    this.lilyPadPositions = positions.map((p) => p | 0);
+
     let x = 0;
-    while (x < numItems) {
+    for (const pos of positions) {
       if (this.entities.length - 1 < x) {
         let mesh = ModelLoader._lilyPad.getRandom();
         const width = this.getWidth(mesh);
@@ -56,9 +90,8 @@ export default class Water extends Object3D {
         this.floor.add(mesh);
       }
 
-      this.entities[x].mesh.position.set(xPos, 0.125, 0);
+      this.entities[x].mesh.position.set(pos, 0.125, 0);
       this.entities[x].speed = 0;
-      // this.entities[x].mesh.rotation.y = (Math.PI / 2) * xDir;
 
       TweenMax.to(this.entities[x].mesh.rotation, Math.random() * 2 + 2, {
         y: Math.random() * 1.5 + 0.5,
@@ -67,7 +100,6 @@ export default class Water extends Object3D {
         ease: Power2.easeInOut,
       });
 
-      xPos += Math.floor(Math.random() * 2 + 2);
       x++;
     }
   };
