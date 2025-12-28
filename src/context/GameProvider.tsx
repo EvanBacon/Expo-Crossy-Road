@@ -43,7 +43,7 @@ export default function GameProvider({ children }) {
   }, []);
 
   return (
-    <GameContext.Provider
+    <GameContext
       value={{
         character,
         setCharacter: (character) => {
@@ -58,6 +58,6 @@ export default function GameProvider({ children }) {
       }}
     >
       {children}
-    </GameContext.Provider>
+    </GameContext>
   );
 }

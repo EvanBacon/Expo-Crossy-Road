@@ -43,19 +43,6 @@ class Game extends Component {
     if (this.engine && nextProps.character !== this.props.character) {
       this.engine._hero.setCharacter(nextProps.character);
     }
-    // if ((this.state.gameState === State.Game.playing || this.state.gameState === State.Game.paused) && nextProps.isPaused !== this.props.isPaused) {
-    //   this.setState({ gameState: nextProps.isPaused ? State.Game.paused : State.Game.playing })
-    // }
-    // if (nextProps.character.id !== this.props.character.id) {
-    //   (async () => {
-    //     this.world.remove(this._hero);
-    //     this._hero = this.hero.getNode(nextProps.character.id);
-    //     this.world.add(this._hero);
-    //     this._hero.position.set(0, groundLevel, startingRow);
-    //     this._hero.scale.set(1, 1, 1);
-    //     this.init();
-    //   })();
-    // }
   }
 
   transitionToGamePlayingState = () => {

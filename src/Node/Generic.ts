@@ -1,4 +1,4 @@
-import { Box3, Mesh, Group } from "three";
+import { Box3, Mesh } from "three";
 
 import Models from "../Models";
 import CrossyMaterial from "../CrossyMaterial";

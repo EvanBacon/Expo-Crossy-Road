@@ -1,5 +1,5 @@
-import Characters from '../Characters';
-import Generic from './Generic';
+import Characters from "../Characters";
+import Generic from "./Generic";
 
 export default class Hero extends Generic {
   setup = async () => {
