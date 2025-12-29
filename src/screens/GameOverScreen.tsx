@@ -13,6 +13,7 @@ import Banner from "@/components/GameOver/Banner";
 import Footer from "@/components/GameOver/Footer";
 import AudioManager from "@/AudioManager";
 import Characters from "@/Characters";
+import GameContext from "@/context/GameContext";
 import Images from "@/Images";
 
 // import { setGameState } from '../src/actions/game';
@@ -54,6 +55,7 @@ const banner = [
 
 function GameOver({ ...props }) {
   const { width } = useWindowDimensions();
+  const { setCharacter } = React.useContext(GameContext);
   const [currentIndex, setCurrentIndex] = React.useState(0);
   const [characters, setCharacters] = React.useState(
     Object.keys(Characters).map((val) => Characters[val])
@@ -68,9 +70,9 @@ function GameOver({ ...props }) {
   };
 
   const pickRandom = () => {
-    const randomIndex = Math.floor(Math.random() * (characters.length - 1));
+    const randomIndex = Math.floor(Math.random() * characters.length);
     const randomCharacter = characters[randomIndex];
-    // props.setCharacter(randomCharacter);
+    setCharacter(randomCharacter.id);
     dismiss();
   };
 
@@ -119,7 +121,7 @@ function GameOver({ ...props }) {
   };
 
   const select = () => {
-    // props.setCharacter(characters[currentIndex]);
+    setCharacter(characters[currentIndex].id);
     dismiss();
   };
 

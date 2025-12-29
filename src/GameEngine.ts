@@ -19,12 +19,6 @@ import {
   startingRow,
 } from "./GameSettings";
 
-const initialState = {
-  id: Characters.bacon.id,
-  name: Characters.bacon.name,
-  index: Characters.bacon.index,
-};
-
 const normalizeAngle = (angle) => {
   return Math.atan2(Math.sin(angle), Math.cos(angle));
 };
@@ -115,14 +109,10 @@ export default class Engine {
     this.scene.world.position.z -=
       (this._hero.position.z - startingRow + this.scene.world.position.z) *
       CAMERA_EASING;
-    this.scene.world.position.x = -Math.min(
-      2,
-      Math.max(
-        -2,
-        this.scene.world.position.x +
-          (this._hero.position.x - this.scene.world.position.x) * CAMERA_EASING
-      )
-    );
+    // Camera horizontal clamp
+    const targetCameraX = Math.max(-3, Math.min(2, -this._hero.position.x));
+    this.scene.world.position.x +=
+      (targetCameraX - this.scene.world.position.x) * CAMERA_EASING;
 
     // normal camera speed
     if (-this.scene.world.position.z - this.camCount > 1.0) {

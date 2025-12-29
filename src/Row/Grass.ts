@@ -29,18 +29,26 @@ export default class Grass extends Object3D {
 
 */
 
-  generate = (type = Fill.random) => {
+  generate = (type = Fill.random, requiredClearPositions: number[] = []) => {
     this.entities.map((val) => {
       this.floor.remove(val.mesh);
       val = null;
     });
     this.entities = [];
     this.obstacleMap = {};
+    this.requiredClearPositions = new Set(requiredClearPositions);
     this.treeGen(type);
   };
 
   obstacleMap = {};
+  requiredClearPositions: Set<number> = new Set();
+
   addObstacle = (x) => {
+    // Don't add obstacles at positions that must be clear for a winnable path
+    if (this.requiredClearPositions.has(x | 0)) {
+      return;
+    }
+
     let mesh;
     if (HAS_VARIETY) {
       mesh =
@@ -54,6 +62,11 @@ export default class Grass extends Object3D {
     this.entities.push({ mesh });
     this.floor.add(mesh);
     mesh.position.set(x, groundLevel, 0);
+  };
+
+  // Returns all x positions that have obstacles
+  getBlockedPositions = (): number[] => {
+    return Object.keys(this.obstacleMap).map((k) => parseInt(k, 10));
   };
 
   treeGen = (type) => {

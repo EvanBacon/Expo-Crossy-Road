@@ -6,7 +6,7 @@ import GameContext from "./GameContext";
 const STORAGE_KEY = "@BouncyBacon:Character";
 const SHOULD_REHYDRATE = true;
 
-const defaultState = { character: "bacon", highscore: 0 };
+const defaultState = { character: "chicken", highscore: 0 };
 
 async function cacheAsync(value) {
   await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(value));
@@ -20,7 +20,7 @@ async function rehydrateAsync() {
     const item = await AsyncStorage.getItem(STORAGE_KEY);
     const data = JSON.parse(item);
     return data;
-  } catch (ignored) {
+  } catch {
     return defaultState;
   }
 }
@@ -33,7 +33,7 @@ export default function GameProvider({ children }) {
     const parseModulesAsync = async () => {
       try {
         const { character, highscore } = await rehydrateAsync();
-        setCharacter(character);
+        // setCharacter(character);
         setHighscore(highscore);
       } catch (ignored) {}
       //   setLoaded(true);
@@ -43,7 +43,7 @@ export default function GameProvider({ children }) {
   }, []);
 
   return (
-    <GameContext.Provider
+    <GameContext
       value={{
         character,
         setCharacter: (character) => {
@@ -58,6 +58,6 @@ export default function GameProvider({ children }) {
       }}
     >
       {children}
-    </GameContext.Provider>
+    </GameContext>
   );
 }

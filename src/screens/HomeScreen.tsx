@@ -115,16 +115,16 @@ function Screen(props) {
           }}
         >
           <View style={{ height: 64, marginBottom: 48, alignItems: "center" }}>
-            {!__DEV__ && <Hand style={{ width: 36 }} />}
+            {/* {!__DEV__ && <Hand style={{ width: 36 }} />} */}
           </View>
-          <Footer
+          {/* <Footer
             onCharacterSelect={() => {
-              // TODO(Bacon): Create a character select page
+              props.onShowCharacterSelect?.();
             }}
             onShop={() => {}}
             onMultiplayer={() => {}}
             onCamera={() => {}}
-          />
+          /> */}
         </View>
       </TouchableOpacity>
     </View>

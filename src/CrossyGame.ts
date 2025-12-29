@@ -34,7 +34,7 @@ export class CrossyScene extends Scene {
     this.worldWithCamera.add(this.world);
     this.add(this.worldWithCamera);
 
-    const light = new DirectionalLight(0x666666, 0.8);
+    const light = new DirectionalLight(0xffffff, 1.0);
     light.position.set(20, 30, 0.05);
     light.castShadow = useShadows;
     light.shadow.mapSize.width = 1024 * 2;
@@ -125,7 +125,7 @@ export class CrossyCamera extends OrthographicCamera {
     this.right = width * scale;
     this.top = height * scale;
     this.bottom = -(height * scale);
-    this.zoom = 300;
+    this.zoom = 400;
     this.updateProjectionMatrix();
   };
 }
@@ -134,7 +134,7 @@ export class CrossyWorld extends Group {
   constructor() {
     super();
 
-    this.add(new AmbientLight(0xffffff, 0.8));
+    this.add(new AmbientLight(0xffffff, 1.8));
   }
 
   createParticles = () => {
@@ -152,13 +152,11 @@ export class CrossyRenderer extends Renderer {
     this.__gl = props.gl;
     this.setShadowsEnabled(useShadows);
 
-    // this.toneMapping = THREE.NoToneMapping; // Or experiment with other mappings like LinearToneMapping
-    // this.toneMappingExposure = 1; // Increase if the scene is too dim
+    // Set proper color space for vibrant colors
+    this.outputColorSpace = THREE.SRGBColorSpace;
   }
 
   setShadowsEnabled(enabled) {
-    this.gammaInput = enabled;
-    this.gammaOutput = enabled;
     this.shadowMap.enabled = enabled;
   }
 }
@@ -237,6 +235,20 @@ export class CrossyGameMap extends GameMap {
     }
   }
 
+  // Helper to get clear positions (positions without obstacles) from a grass row
+  getClearPositionsFromGrass = (grassEntity): number[] => {
+    const blockedPositions = grassEntity.getBlockedPositions();
+    const blockedSet = new Set(blockedPositions);
+    // Playable x range is typically -4 to 4 (center area)
+    const clearPositions: number[] = [];
+    for (let x = -4; x <= 4; x++) {
+      if (!blockedSet.has(x)) {
+        clearPositions.push(x);
+      }
+    }
+    return clearPositions;
+  };
+
   // Scene generators
   newRow = (rowKind) => {
     if (this.grasses.count === maxRows) {
@@ -260,11 +272,22 @@ export class CrossyGameMap extends GameMap {
       rowKind = ROW_TYPES[Math.floor(Math.random() * ROW_TYPES.length)];
     }
 
+    // Get the previous row info for coordination
+    const previousRow = this.getRow(this.rowCount - 1);
+
     switch (rowKind) {
       case "grass":
         this.grasses.items[this.grasses.count].position.z = this.rowCount;
+
+        // If previous row is water, ensure lily pad positions are kept clear
+        let requiredClearPositions: number[] = [];
+        if (previousRow && previousRow.type === "water") {
+          requiredClearPositions = previousRow.entity.getLilyPadPositions();
+        }
+
         this.grasses.items[this.grasses.count].generate(
-          this.mapRowToObstacle(this.rowCount)
+          this.mapRowToObstacle(this.rowCount),
+          requiredClearPositions
         );
         this.setRow(this.rowCount, {
           type: "grass",
@@ -299,7 +322,14 @@ export class CrossyGameMap extends GameMap {
       case "water":
         this.water.items[this.water.count].position.z = this.rowCount;
         this.water.items[this.water.count].active = true;
-        this.water.items[this.water.count].generate();
+
+        // If previous row is grass, get clear positions so lily pads are accessible
+        let clearPositions: number[] = [];
+        if (previousRow && previousRow.type === "grass") {
+          clearPositions = this.getClearPositionsFromGrass(previousRow.entity);
+        }
+
+        this.water.items[this.water.count].generate(clearPositions);
         this.setRow(this.rowCount, {
           type: "water",
           entity: this.water.items[this.water.count],

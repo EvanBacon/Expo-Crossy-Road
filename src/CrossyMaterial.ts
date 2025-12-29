@@ -1,19 +1,18 @@
 import { Asset } from "expo-asset";
-import { loadAsync } from "expo-three";
 import {
-  MeshPhongMaterial,
+  MeshLambertMaterial,
   NearestFilter,
+  SRGBColorSpace,
   Texture,
   TextureLoader,
 } from "three";
+import { Image } from "react-native";
 
 const textureCache: Record<string, Texture> = {};
-const materialCache: Record<string, MeshPhongMaterial> = {};
+const materialCache: Record<string, MeshLambertMaterial> = {};
 
-async function loadTextureAsync(
-  resource: string | number | { uri: string }
-): Promise<Texture> {
-  const key = JSON.stringify(resource);
+async function loadTextureAsync(resource: Asset): Promise<Texture> {
+  const key = JSON.stringify(resource.uri);
   const cacheKey = String(key);
 
   if (textureCache[cacheKey]) {
@@ -21,31 +20,44 @@ async function loadTextureAsync(
   }
 
   if (process.env.EXPO_OS === "web") {
-    const texture = await new TextureLoader().loadAsync(
-      typeof resource === "string" ? resource : resource.uri
-    );
+    const texture = await new TextureLoader().loadAsync(resource.uri);
 
     texture.magFilter = NearestFilter;
     texture.minFilter = NearestFilter;
+    texture.colorSpace = SRGBColorSpace;
 
     textureCache[cacheKey] = texture;
     return texture;
   }
-  const texture = (await loadAsync(resource)) as Texture;
-  texture.magFilter = NearestFilter;
-  texture.minFilter = NearestFilter;
+  //
+
+  const { width, height } = await Image.getSize(resource.uri);
+  const texture = new Texture(
+    {
+      data: resource,
+      width: width,
+      height: height,
+    },
+    undefined,
+    undefined,
+    undefined,
+    NearestFilter,
+    NearestFilter
+  );
+  texture["isDataTexture"] = true; // Forces passing to `gl.texImage2D(...)` verbatim
+  texture.colorSpace = SRGBColorSpace;
+  texture.needsUpdate = true;
 
   textureCache[cacheKey] = texture;
   return texture;
 }
 
-export default class CrossyMaterial extends MeshPhongMaterial {
-  static loadTextureAsync = loadTextureAsync;
-
+export default class CrossyMaterial extends MeshLambertMaterial {
   static async loadAsync(
     resource: string | number | { uri: string }
-  ): Promise<MeshPhongMaterial> {
+  ): Promise<MeshLambertMaterial> {
     const asset = Asset.fromModule(resource);
+    await asset.downloadAsync();
 
     const cacheKey = asset.uri;
 
@@ -53,13 +65,9 @@ export default class CrossyMaterial extends MeshPhongMaterial {
       return materialCache[cacheKey].clone();
     }
 
-    const texture = await loadTextureAsync(asset.uri);
-    materialCache[cacheKey] = new MeshPhongMaterial({
+    const texture = await loadTextureAsync(asset);
+    materialCache[cacheKey] = new MeshLambertMaterial({
       map: texture,
-      flatShading: true,
-      emissiveIntensity: 0,
-      shininess: 0,
-      reflectivity: 0,
     });
 
     return materialCache[cacheKey];

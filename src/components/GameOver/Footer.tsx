@@ -45,7 +45,8 @@ export default function Footer({
     <View style={[styles.container, style]}>
       <Button
         onPress={() => {
-          showSettings();
+          // showSettings();
+          alert("Settings pressed");
         }}
         imageStyle={[styles.button, { aspectRatio: 1.25 }]}
         source={Images.button.settings}
@@ -69,7 +70,7 @@ export default function Footer({
       />
       <Button
         onPress={() => {
-          console.log("Game Center"); //TODO: Add GC
+          alert("Leaderboard pressed");
         }}
         imageStyle={[styles.button, { aspectRatio: 1.25 }]}
         source={Images.button.rank}
@@ -81,7 +82,7 @@ export default function Footer({
 const styles = StyleSheet.create({
   container: {
     alignItems: "stretch",
-    justifyContent: "space-around",
+    justifyContent: "space-between",
     flexDirection: "row",
     paddingHorizontal: 4,
     minHeight: 56,
