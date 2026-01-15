@@ -24,6 +24,26 @@ const normalizeAngle = (angle) => {
 };
 
 export default class Engine {
+  // Public properties
+  _hero: any;
+  raf: number = 0;
+  gameState?: string;
+
+  // Callback properties - to be set by parent component
+  onUpdateScore: (position: number) => void = () => {};
+  onGameInit: () => void = () => {};
+  onGameReady: () => void = () => {};
+  onGameEnded: () => void = () => {};
+  _isGameStateEnded: () => boolean = () => false;
+
+  // Scene and rendering properties
+  scene: any;
+  camera: any;
+  renderer: any;
+  gameMap: any;
+  debugControls?: any;
+  camCount: number = 0;
+
   updateScale = () => {
     const { width, height, scale } = Dimensions.get("window");
     if (this.camera) {
