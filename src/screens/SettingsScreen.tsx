@@ -8,6 +8,12 @@ import Images from "@/Images";
 
 // import Footer from './Footer';
 
+interface SettingsProps {
+  goBack: () => void;
+  setCharacter: (character: string) => void;
+  style?: any;
+}
+
 const TitleButton = ({ text, imageStyle, source, onPress }) => (
   <View
     style={{
@@ -33,7 +39,7 @@ const TitleButton = ({ text, imageStyle, source, onPress }) => (
   </View>
 );
 
-class Settings extends Component {
+class Settings extends Component<SettingsProps> {
   state = {
     currentIndex: 0,
     characters: Object.keys(Characters).map((val) => Characters[val]),
@@ -198,10 +204,6 @@ export default Settings;
 //   state => ({}),
 //   {},
 // )(Settings);
-
-Settings.defaultProps = {
-  coins: 0,
-};
 
 const styles = StyleSheet.create({
   container: {

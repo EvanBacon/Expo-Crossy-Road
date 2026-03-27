@@ -7,8 +7,13 @@ import Button from "@/components/Button";
 import Carousel from "@/components/CharacterSelect/Carousel";
 import Images from "@/Images";
 
+interface CharacterSelectProps {
+  navigation: { goBack: () => void };
+  setCharacter: (character: string) => void;
+}
+
 // import connectCharacter from '../../utils/connectCharacter';
-class CharacterSelect extends Component {
+class CharacterSelect extends Component<CharacterSelectProps> {
   state = {
     currentIndex: 0,
     characters: Object.keys(Characters).map((val) => Characters[val]),

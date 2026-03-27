@@ -22,7 +22,17 @@ import GameContext from "@/context/GameContext";
 
 const DEBUG_CAMERA_CONTROLS = false;
 
-class Game extends Component {
+interface GameProps {
+  character: string;
+  setCharacter: (character: string) => void;
+  isDarkMode: boolean;
+  isPaused?: boolean;
+  style?: any;
+}
+
+class Game extends Component<GameProps> {
+  engine!: Engine;
+
   /// Reserve State for UI related updates...
   state = {
     ready: false,
@@ -38,7 +48,7 @@ class Game extends Component {
 
   UNSAFE_componentWillReceiveProps(nextProps, nextState) {
     if (nextState.gameState && nextState.gameState !== this.state.gameState) {
-      this.updateWithGameState(nextState.gameState, this.state.gameState);
+      this.updateWithGameState(nextState.gameState);
     }
     if (this.engine && nextProps.character !== this.props.character) {
       this.engine._hero.setCharacter(nextProps.character);
@@ -50,19 +60,18 @@ class Game extends Component {
       toValue: 0,
       useNativeDriver: true,
       duration: 200,
-      onComplete: ({ finished }) => {
-        this.engine.setupGame(this.props.character);
-        this.engine.init();
+    }).start(({ finished }) => {
+      this.engine.setupGame(this.props.character);
+      this.engine.init();
 
-        if (finished) {
-          Animated.timing(this.transitionScreensValue, {
-            toValue: 1,
-            useNativeDriver: true,
-            duration: 300,
-          }).start();
-        }
-      },
-    }).start();
+      if (finished) {
+        Animated.timing(this.transitionScreensValue, {
+          toValue: 1,
+          useNativeDriver: true,
+          duration: 300,
+        }).start();
+      }
+    });
   };
 
   updateWithGameState = (gameState) => {

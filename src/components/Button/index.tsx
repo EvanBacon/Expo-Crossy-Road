@@ -17,8 +17,8 @@ export default function Button({
 }: {
   source: ImageSourcePropType;
   onPress: (event: GestureResponderEvent) => void;
-  style: StyleProp<any>;
-  imageStyle: StyleProp<any>;
+  style?: StyleProp<any>;
+  imageStyle?: StyleProp<any>;
 }) {
   return (
     <TouchableBounce

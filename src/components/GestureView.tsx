@@ -11,6 +11,19 @@ const getElement = (component) => {
   // Otherwise return the component itself
   return component;
 };
+
+interface GestureViewProps {
+  onSwipe?: (direction: string) => void;
+  onTap?: () => void;
+  config?: {
+    velocityThreshold?: number;
+    directionalOffsetThreshold?: number;
+  };
+  style?: any;
+  children?: React.ReactNode;
+  onResponderGrant?: () => void;
+}
+
 export const swipeDirections = {
   SWIPE_UP: "SWIPE_UP",
   SWIPE_DOWN: "SWIPE_DOWN",
@@ -50,7 +63,11 @@ function isValidSwipe(
 const freezeBody = (e) => {
   e.preventDefault();
 };
-class GestureView extends Component {
+class GestureView extends Component<GestureViewProps> {
+  swipeConfig: any;
+  _panResponder: any;
+  view: any;
+
   constructor(props, context) {
     super(props, context);
     this.swipeConfig = Object.assign(swipeConfig, props.config);
